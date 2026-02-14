@@ -3,92 +3,266 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portafolio de Yonatha Mendoza - Ingeniero de Sistemas y Docente de Tecnología e Inglés.">
-  <title>Yonatha Mendoza | Portafolio</title>
+  <meta name="description" content="Portafolio de Yonatha Mendoza - Ingeniero de Sistemas, Docente y Estratega Digital.">
+  <title>Yonatha Mendoza | Estrategia & Tecnología</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="./css/style.css" />
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 </head>
 <body>
+
   <header>
     <div class="nav-container">
-      <h1 data-aos="fade-down">Yonatha Mendoza</h1>
+      <div class="logo">MENDOZATIC.</div>
       <nav>
-        <a href="#about">Sobre mí</a>
-        <a href="#projects">Proyectos</a>
-        <a href="#contact">Contacto</a>
+        <a href="#about">Perfil</a>
+        <a href="#methodology">Enfoque</a> <a href="#services">Verticales</a>
+        <a href="#projects">Portafolio</a>
+        <a href="#contact" class="btn-nav">Contacto</a>
       </nav>
+    </div>
+  </header>
 
-      <!-- Foto interactiva -->
-      <div class="profile-pic-container">
-        <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-pic" id="profilePic" />
-        <div class="profile-card" id="profileCard">
-          <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-card-img" />
-          <h3>Yonatha Mendoza</h3>
-          <p>
-            👋 ¡Hola! Soy <strong>Ingeniero de Sistemas y Docente</strong> apasionado por la tecnología, el inglés y la innovación educativa.
-          </p>
-          <div class="profile-social">
-            <a href="https://wa.me/573014032934?text=Hola%20Yonatha%20👋%2C%20vi%20tu%20portafolio%20y%20me%20gustaría%20saber%20más%20sobre%20tus%20proyectos%20o%20servicios." target="_blank">💬 WhatsApp</a>
-            <a href="https://www.instagram.com/itsmendoza" target="_blank">📷 Instagram</a>
-            <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank">💼 LinkedIn</a>
-          </div>
+  <section class="hero-section">
+    <div class="profile-pic-container" data-aos="zoom-in">
+      <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-pic" id="profilePic" />
+      
+      <div class="profile-card" id="profileCard">
+        <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-card-img" style="display:none;" /> 
+        <h3>Yonatha Mendoza</h3>
+        <p>Ingeniero & Estratega</p>
+        <div class="profile-social">
+          <a href="https://wa.me/573014032934" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank"><i class="fab fa-linkedin"></i></a>
         </div>
       </div>
     </div>
 
-    <p class="phrase" data-aos="fade-up">“Seguir avanzando... siempre queda tarde o temprano.”</p>
-  </header>
+    <h1 data-aos="fade-up">Ingeniero de Sistemas | Docente Bilingüe</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="100">
+      <strong>Diseño sistemas que optimizan el aprendizaje y el rendimiento humano.</strong><br>
+      Combino ingeniería, pedagogía y métricas para crear soluciones de alto impacto.
+    </p>
+    <div style="margin-top: 30px;" data-aos="fade-in">
+       <a href="#projects" class="btn-nav" style="background:transparent; border:1px solid var(--primary); color:var(--primary)!important; margin-right:10px;">Ver Soluciones</a>
+       <a href="#contact" class="btn-nav">Hablemos</a>
+    </div>
+  </section>
 
   <section id="about" data-aos="fade-up">
-    <h2>Sobre mí</h2>
-    <p>
-      Soy <strong>Ingeniero de Sistemas y Docente</strong> con pasión por la tecnología, la innovación y la enseñanza.  
-      Busco conectar el conocimiento con la práctica, desarrollando soluciones tecnológicas útiles para el ámbito educativo y social.
-    </p>
+    <div class="section-header">
+      <h2>Perfil Estratégico</h2>
+      <p>Mi enfoque profesional une la estructura de la ingeniería con la pedagogía y la disciplina del alto rendimiento.</p>
+    </div>
+    
+    <div class="about-content">
+      <div class="about-split">
+        <div class="service-column">
+          <h3><i class="fas fa-brain" style="color:var(--primary);"></i> Mentalidad & Métricas</h3>
+          <ul class="service-list">
+            <li><i class="fas fa-check"></i> Pensamiento analítico basado en datos.</li>
+            <li><i class="fas fa-check"></i> Diseño de sistemas escalables (SaaS).</li>
+            <li><i class="fas fa-check"></i> Disciplina y mejora continua (Kaizen).</li>
+            <li><i class="fas fa-check"></i> Optimización de procesos.</li>
+          </ul>
+        </div>
+        <div class="service-column">
+          <h3><i class="fas fa-chalkboard-teacher" style="color:var(--primary);"></i> Enfoque Pedagógico</h3>
+          <ul class="service-list">
+            <li><i class="fas fa-check"></i> Diseño de experiencias (Design Thinking).</li>
+            <li><i class="fas fa-check"></i> Evaluaciones por competencias.</li>
+            <li><i class="fas fa-check"></i> Gamificación educativa.</li>
+            <li><i class="fas fa-check"></i> Comunicación bilingüe efectiva.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="methodology" style="background: white;" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Cómo Trabajo</h2>
+      <p>Un proceso estructurado para garantizar resultados, sea en software o en el aula.</p>
+    </div>
+    <div class="methodology-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h4>Diagnóstico</h4>
+        <p>Entender la necesidad real del usuario o estudiante.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h4>Diseño</h4>
+        <p>Planificación estratégica de la solución o currículo.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h4>Desarrollo</h4>
+        <p>Ejecución técnica con código limpio o pedagogía activa.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h4>Implementación</h4>
+        <p>Puesta en marcha y medición de impacto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" data-aos="fade-up">
+    <div class="section-header">
+      <h2>3 Verticales de Impacto</h2>
+      <p>Desarrollo soluciones tecnológicas adaptadas a contextos específicos.</p>
+    </div>
+    <div class="services-grid">
+      
+      <div class="service-column">
+        <h3><i class="fas fa-graduation-cap"></i> EdTech & Metodología</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Transformación digital para el aula.</p>
+        <ul class="service-list">
+          <li><i class="fas fa-angle-right"></i> Currículos digitales y bilingües.</li>
+          <li><i class="fas fa-angle-right"></i> Evaluaciones tipo ICFES/A1.</li>
+          <li><i class="fas fa-angle-right"></i> Formación docente en TIC.</li>
+        </ul>
+      </div>
+
+      <div class="service-column">
+        <h3><i class="fas fa-laptop-code"></i> Desarrollo & Software</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Ingeniería de software pura.</p>
+        <ul class="service-list">
+          <li><i class="fas fa-angle-right"></i> Automatización de procesos.</li>
+          <li><i class="fas fa-angle-right"></i> Sistemas de Gestión (SGA/CRM).</li>
+          <li><i class="fas fa-angle-right"></i> Desarrollo Web Full Stack.</li>
+        </ul>
+      </div>
+
+      <div class="service-column" style="border-left-color: #ea580c;"> 
+        <h3><i class="fas fa-heartbeat"></i> Performance Tech</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Tecnología aplicada al bienestar.</p>
+        <ul class="service-list">
+          <li><i class="fas fa-angle-right"></i> Plataformas de gestión deportiva.</li>
+          <li><i class="fas fa-angle-right"></i> Dashboards de métricas físicas.</li>
+          <li><i class="fas fa-angle-right"></i> Algoritmos de seguimiento.</li>
+        </ul>
+      </div>
+
+    </div>
   </section>
 
   <section id="projects">
-    <h2 data-aos="fade-up">Proyectos</h2>
+    <div class="section-header" data-aos="fade-up">
+      <h2>Portafolio de Soluciones</h2>
+      <p>Evidencia tangible: Desde el aula hasta el centro de alto rendimiento.</p>
+    </div>
+
     <div class="project-grid">
-      <div class="project" data-aos="fade-up">
-        <h3>Plataforma Docente</h3>
-        <p>Sistema integral de gestión académica con módulos personalizados para instituciones educativas.</p>
+      
+      <div class="project-card" data-aos="fade-up">
+        <div class="card-icon blue-bg">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="card-content">
+          <h3>M-Escolar</h3>
+          <p>Plataforma de gestión académica. <strong>Impacto:</strong> Centralización del 100% de notas y automatización de boletines.</p>
+          <div class="tags">
+            <span>PHP/MySQL</span>
+            <span>EdTech</span>
+            <span>Automatización</span>
+          </div>
+        </div>
       </div>
-      <div class="project" data-aos="fade-up" data-aos-delay="100">
-        <h3>Integración IA para Docentes</h3>
-        <p>Asistentes inteligentes para mejorar la planeación y la evaluación educativa.</p>
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-icon green-bg">
+          <i class="fas fa-building"></i>
+        </div>
+        <div class="card-content">
+          <h3>SGA Institutos</h3>
+          <p>Software administrativo financiero. <strong>Impacto:</strong> Control total de cartera y flujo de caja institucional.</p>
+          <div class="tags">
+            <span>SaaS</span>
+            <span>Fintech</span>
+            <span>Reportes</span>
+          </div>
+        </div>
       </div>
-      <div class="project" data-aos="fade-up" data-aos-delay="200">
-        <h3>Módulos Institucionales</h3>
-        <p>Soluciones adaptadas para automatizar procesos administrativos y pedagógicos.</p>
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-icon orange-bg">
+          <i class="fas fa-dumbbell"></i>
+        </div>
+        <div class="card-content">
+          <h3>MFit Suite | Performance</h3>
+          <p>Plataforma tecnológica para la gestión del rendimiento físico. Integra control de métricas, planes automatizados y dashboard de progreso para centros deportivos.</p>
+          <div class="tags">
+            <span>Performance Tech</span>
+            <span>SaaS Deportivo</span>
+            <span>Data Analytics</span>
+          </div>
+        </div>
       </div>
-      <div class="project" data-aos="fade-up" data-aos-delay="300">
-        <h3>Rutinas de Gym</h3>
-        <p>Aplicaciones y metodologías enfocadas en el bienestar físico y mental.</p>
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="card-icon purple-bg">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div class="card-content">
+          <h3>Teacher AI</h3>
+          <p>Inteligencia Artificial aplicada a la docencia. <strong>Resultado:</strong> Creación ágil de planeadores y evaluaciones por competencias.</p>
+          <div class="tags">
+            <span>IA / Python</span>
+            <span>Prompt Engineering</span>
+            <span>Innovación</span>
+          </div>
+        </div>
       </div>
+
     </div>
   </section>
 
   <section id="contact" data-aos="fade-up">
-    <h2>Contacto</h2>
-    <form id="contactForm">
-      <input type="text" id="name" name="name" placeholder="Tu nombre" required />
-      <input type="email" id="email" name="email" placeholder="Tu correo" required />
-      <textarea id="message" name="message" placeholder="Escribe tu mensaje..." required></textarea>
-      <button type="submit">Enviar mensaje</button>
-    </form>
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2>Conectemos visiones</h2>
+        <p>¿Buscas optimizar procesos educativos, tecnológicos o deportivos? Tengo la estrategia y el código.</p>
+        
+        <div class="social-links-vertical">
+          <a href="mailto:yonathamdz@gmail.com" class="contact-link">
+            <i class="fas fa-envelope"></i> yonathamdz@gmail.com
+          </a>
+          <a href="https://wa.me/573014032934" class="contact-link">
+            <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+          </a>
+          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" class="contact-link">
+            <i class="fab fa-linkedin"></i> Perfil LinkedIn
+          </a>
+        </div>
+      </div>
 
-    <div class="social">
-      <a href="mailto:yonathamdz@gmail.com">📧 yonathamdz@gmail.com</a>
-      <a href="https://wa.me/573014032934?text=Hola%20Yonatha%20👋%2C%20vi%20tu%20portafolio%20y%20me%20gustaría%20saber%20más%20sobre%20tus%20proyectos%20o%20servicios.">💬 WhatsApp</a>
-      <a href="https://www.instagram.com/itsmendoza" target="_blank">📷 Instagram</a>
-      <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank">💼 LinkedIn</a>
+      <form id="contactForm" class="clean-form">
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+            <label>Correo</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+            <label>Mensaje</label>
+            <textarea id="message" name="message" required></textarea>
+        </div>
+        <button type="submit">Enviar Propuesta</button>
+      </form>
     </div>
   </section>
 
   <footer>
-    <p>© 2025 Yonatha Mendoza | Ingeniero de Sistemas</p>
+    <p>© 2025 Yonatha Mendoza | Estrategia, Tecnología y Educación.</p>
   </footer>
 
   <script src="./js/main.js"></script>

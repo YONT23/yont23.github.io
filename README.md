@@ -1,27 +1,43 @@
-# Portafolio
+# MENDOZATIC | Portafolio Profesional
 
-Este es un portafolio personal diseñado para mostrar proyectos y habilidades en desarrollo web.
+Portafolio estratégico de **Yonatha Mendoza**, Ingeniero de Sistemas y Docente. 
+Este proyecto no es solo una muestra de código, sino una plataforma diseñada bajo principios de **Soft UI** y **Glassmorphism** para comunicar una propuesta de valor híbrida: Tecnología, Educación y Rendimiento.
 
-## Estructura del Proyecto
+![Estado del Proyecto](https://img.shields.io/badge/Estado-Terminado-success?style=for-the-badge)
+![Enfoque](https://img.shields.io/badge/Enfoque-Estrat%C3%A9gico-blue?style=for-the-badge)
 
-- `index.html`: Documento HTML principal que incluye la estructura de la página web, navegación, secciones de contenido y un formulario de contacto.
-- `css/styles.css`: Archivo que contiene los estilos del portafolio, definiendo el diseño, colores, fuentes y otros aspectos visuales de los elementos HTML.
-- `js/main.js`: Archivo que contiene el código JavaScript para el portafolio, incluyendo funcionalidades para interactividad, como validación de formularios o actualizaciones de contenido dinámico.
-- `.gitignore`: Archivo que especifica qué archivos y directorios deben ser ignorados por el control de versiones de Git.
+## 🎯 Propuesta de Valor
 
-## Instrucciones de Configuración
+El sitio web está estructurado para guiar al reclutador o cliente a través de una narrativa lógica:
+1.  **Hero Section:** Impacto inmediato y claridad de perfil.
+2.  **Metodología:** Demostración de procesos estructurados (Diagnóstico → Implementación).
+3.  **3 Verticales:** Segmentación clara de servicios (EdTech, Dev, Performance).
+4.  **Contacto Premium:** Experiencia de usuario elevada con efectos visuales modernos.
 
-1. Clona este repositorio en tu máquina local.
-2. Abre el archivo `index.html` en tu navegador para ver el portafolio en acción.
-3. Personaliza el contenido en `index.html`, `css/styles.css` y `js/main.js` según tus necesidades.
+## 🛠 Tecnologías y Herramientas
 
-## Características
+El proyecto fue construido utilizando tecnologías estándar modernas, optimizadas para rendimiento y SEO:
 
-- Navegación sencilla y clara.
-- Secciones dedicadas para proyectos y contacto.
-- Diseño responsivo (asegúrate de agregar estilos CSS para dispositivos móviles).
-- Formulario de contacto funcional.
+* **HTML5 Semántico:** Estructura limpia y accesible.
+* **CSS3 Moderno:**
+    * Uso de **Variables CSS (`:root`)** para paletas de colores mantenibles.
+    * **CSS Grid & Flexbox** para diseños responsivos complejos.
+    * **Glassmorphism:** Efectos de vidrio esmerilado en formularios y navegación.
+    * **Soft UI:** Sombras suaves y tarjetas elevadas para una apariencia limpia.
+* **JavaScript (ES6+):** Lógica para interactividad y manejo del DOM.
+* **Librerías Externas:**
+    * [AOS (Animate On Scroll)](https://michalsnik.github.io/aos/): Para animaciones de entrada fluidas.
+    * [FontAwesome 6](https://fontawesome.com/): Iconografía vectorial.
+    * [Google Fonts](https://fonts.google.com/): Tipografías *Inter* (Lectura) y *Poppins* (Títulos).
 
-## Contribuciones
+## 📂 Estructura del Proyecto
 
-Las contribuciones son bienvenidas. Si deseas mejorar este portafolio, siéntete libre de hacer un fork del repositorio y enviar un pull request.
+```text
+/
+├── index.html       # Arquitectura principal y contenido semántico
+├── css/
+│   └── style.css    # Estilos globales, variables y diseño responsivo
+├── js/
+│   └── main.js      # Lógica de interacción y animaciones
+├── img/             # Activos gráficos optimizados
+└── README.md        # Documentación técnica
