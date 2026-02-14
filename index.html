@@ -9,8 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <link rel="stylesheet" href="./css/style.css" />
+  
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 </head>
@@ -19,9 +22,15 @@
   <header>
     <div class="nav-container">
       <div class="logo">MENDOZATIC.</div>
-      <nav>
+      
+      <button class="mobile-toggle" aria-label="Abrir menú">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <nav class="nav-links">
         <a href="#about">Perfil</a>
-        <a href="#methodology">Enfoque</a> <a href="#services">Verticales</a>
+        <a href="#methodology">Enfoque</a>
+        <a href="#services">Verticales</a>
         <a href="#projects">Portafolio</a>
         <a href="#contact" class="btn-nav">Contacto</a>
       </nav>
@@ -84,7 +93,7 @@
     </div>
   </section>
 
-  <section id="methodology" style="background: white;" data-aos="fade-up">
+  <section id="methodology" data-aos="fade-up">
     <div class="section-header">
       <h2>Cómo Trabajo</h2>
       <p>Un proceso estructurado para garantizar resultados, sea en software o en el aula.</p>
@@ -197,7 +206,7 @@
         </div>
         <div class="card-content">
           <h3>MFit Suite | Performance</h3>
-          <p>Plataforma tecnológica para la gestión del rendimiento físico. Integra control de métricas, planes automatizados y dashboard de progreso para centros deportivos.</p>
+          <p>Plataforma tecnológica para la gestión del rendimiento físico. Integra control de métricas, planes automatizados y dashboard de progreso.</p>
           <div class="tags">
             <span>Performance Tech</span>
             <span>SaaS Deportivo</span>
@@ -223,6 +232,66 @@
 
     </div>
   </section>
+
+<section id="redesigns" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Transformaciones Digitales</h2>
+      <p>Rediseños estratégicos enfocados en UX, velocidad e identidad visual.</p>
+    </div>
+
+    <div class="redesign-grid">
+      
+      <div class="redesign-card">
+        <div class="redesign-preview">
+          <img src="./img/1.png" alt="Después" class="img-cover" /> <div class="preview-info">
+            <h3>Rediseño Web Corporativa</h3>
+            <span class="btn-expand"><i class="fas fa-chevron-down"></i> Ver el cambio</span>
+          </div>
+        </div>
+        
+        <div class="redesign-hidden">
+          <div class="comparison-content">
+            <p><strong>El Reto:</strong> El sitio anterior no era responsivo y tenía una carga lenta.</p>
+            <div class="gallery-row">
+              <div class="gallery-item">
+                <span>Antes</span>
+                <img src="./img/1A.png" alt="Antes" /> </div>
+              <div class="gallery-item">
+                <span>Versión Móvil</span>
+                <img src="./img/1M.png" alt="Móvil" /> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="redesign-card">
+        <div class="redesign-preview">
+          <img src="./img/2.png" alt="Después" class="img-cover" />
+          <div class="preview-info">
+            <h3>Optimización Dashboard</h3>
+            <span class="btn-expand"><i class="fas fa-chevron-down"></i> Ver detalles</span>
+          </div>
+        </div>
+        
+        <div class="redesign-hidden">
+          <div class="comparison-content">
+            <p><strong>El Reto:</strong> Interfaz confusa para el usuario final.</p>
+            <div class="gallery-row">
+              <div class="gallery-item">
+                <span>Innovador</span>
+                <img src="./img/2A.png" alt="Antes" />
+              </div>
+              <div class="gallery-item">
+                <span>Versión Móvil</span>
+                <img src="./img/2M.png" alt="Móvil" /> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
 
   <section id="contact" data-aos="fade-up">
     <div class="contact-container">
