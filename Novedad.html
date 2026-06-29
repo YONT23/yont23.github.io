@@ -154,7 +154,7 @@
             color: var(--texto-oscuro);
         }
 
-        input[type="text"], input[type="date"], select {
+        input[type="text"], input[type="date"], select, input[type="tel"] {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--gris-borde);
@@ -164,14 +164,14 @@
             transition: var(--transicion);
         }
 
-        input[type="text"]:focus, input[type="date"]:focus, select:focus {
+        input[type="text"]:focus, input[type="date"]:focus, select:focus, input[type="tel"]:focus {
             outline: none;
             border-color: var(--azul-oscuro);
             box-shadow: 0 0 0 3px rgba(107, 182, 232, 0.3);
         }
 
         /* ==========================================================================
-           3. ENCABEZADO Y MODAL DE DOCENTE
+           3. ENCABEZADO Y MODAL DE CONFIGURACIÓN
            ========================================================================== */
         header {
             text-align: center;
@@ -200,7 +200,13 @@
             gap: 16px;
         }
 
-        .docente-display-container {
+        .config-display-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .config-box {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -210,10 +216,17 @@
             border: 1px solid var(--gris-borde);
         }
 
-        .docente-name {
+        .config-label {
+            font-size: 0.8rem;
+            color: var(--texto-mutado);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .config-value {
             font-weight: 700;
             color: var(--azul-profundo);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .overlay {
@@ -447,6 +460,7 @@
         @media (min-width: 576px) {
             .grid-header { grid-template-columns: 1fr 1fr; }
             .grid-header .form-group-full { grid-column: span 2; }
+            .config-display-container { grid-template-columns: 1fr 1fr; }
             .table-controls { grid-template-columns: 2fr 1fr 1fr; }
             .actions-panel { grid-template-columns: repeat(2, 1fr); }
             .actions-panel .btn-full { grid-column: span 2; }
@@ -468,13 +482,24 @@
         </header>
 
         <section class="card">
-            <h2 class="section-title">Datos del Período Semanal</h2>
+            <h2 class="section-title">Configuración del Período Semanal</h2>
             <div class="grid-header">
                 <div class="form-group form-group-full">
-                    <label>Docente Responsable</label>
-                    <div class="docente-display-container">
-                        <span id="txt-docente-nombre" class="docente-name">No configurado</span>
-                        <button type="button" class="btn btn-secondary btn-sm" id="btn-cambiar-docente">Cambiar docente</button>
+                    <div class="config-display-container">
+                        <div class="config-box">
+                            <div>
+                                <span class="config-label">Docente Responsable</span>
+                                <span id="txt-docente-nombre" class="config-value">No configurado</span>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="btn-cambiar-docente">Cambiar</button>
+                        </div>
+                        <div class="config-box">
+                            <div>
+                                <span class="config-label">WhatsApp Destinatario</span>
+                                <span id="txt-whatsapp-destino" class="config-value">3184800091</span>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="btn-cambiar-telefono">Cambiar</button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -608,15 +633,22 @@
         </section>
     </div>
 
-    <div class="overlay" id="modal-docente">
+    <div class="overlay" id="modal-config">
         <div class="modal-content">
-            <h3 style="margin-bottom: 12px;">Identificación del Docente</h3>
-            <p style="font-size: 0.9rem; color: var(--texto-mutado); margin-bottom: 16px;">Ingrese su nombre para personalizar el sistema. Se guardará de forma automática.</p>
+            <h3 style="margin-bottom: 12px; color: var(--azul-profundo);">Configuración de Perfil</h3>
+            <p style="font-size: 0.9rem; color: var(--texto-mutado); margin-bottom: 16px;">Complete los datos. Se guardarán localmente para los envíos semanales.</p>
+            
             <div class="form-group">
                 <label for="input-modal-docente">Nombre del Docente</label>
                 <input type="text" id="input-modal-docente" placeholder="Ej. Prof. María Rodríguez">
             </div>
-            <button type="button" class="btn btn-primary" id="btn-guardar-docente" style="width: 100%; margin-top: 10px;">Guardar y Continuar</button>
+            
+            <div class="form-group">
+                <label for="input-modal-telefono">Número de WhatsApp (Sin espacios/guiones)</label>
+                <input type="tel" id="input-modal-telefono" placeholder="Ej. 3184800091 o con código de país">
+            </div>
+            
+            <button type="button" class="btn btn-primary" id="btn-guardar-config" style="width: 100%; margin-top: 10px;">Guardar Cambios</button>
         </div>
     </div>
 
@@ -627,22 +659,23 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script>
-        let state = { docente: "", fechaDesde: "", fechaHasta: "", estudiantes: [] };
-        const WHATSAPP_NUMBER = "3184800091";
+        // Inicialización por defecto en caso de no haber datos previos
+        let state = { docente: "", whatsappDestino: "3184800091", fechaDesde: "", fechaHasta: "", estudiantes: [] };
 
         document.addEventListener("DOMContentLoaded", () => {
             loadFromLocalStorage();
             initEventHandlers();
             render();
-            checkDocenteRequerido();
+            checkConfigRequerida();
         });
 
         function loadFromLocalStorage() {
-            const stored = localStorage.getItem("novedades_docente_state");
+            const stored = localStorage.getItem("novedades_docente_state_v2");
             if (stored) {
                 try {
                     state = JSON.parse(stored);
                     if (!state.estudiantes) state.estudiantes = [];
+                    if (!state.whatsappDestino) state.whatsappDestino = "3184800091";
                 } catch(e) { console.error(e); }
             }
         }
@@ -650,22 +683,30 @@
         function saveToLocalStorage() {
             state.fechaDesde = document.getElementById("fecha-desde").value;
             state.fechaHasta = document.getElementById("fecha-hasta").value;
-            localStorage.setItem("novedades_docente_state", JSON.stringify(state));
+            localStorage.setItem("novedades_docente_state_v2", JSON.stringify(state));
         }
 
         function initEventHandlers() {
             document.getElementById("fecha-desde").addEventListener("change", saveToLocalStorage);
             document.getElementById("fecha-hasta").addEventListener("change", saveToLocalStorage);
-            document.getElementById("btn-cambiar-docente").addEventListener("click", () => showDocenteModal(true));
             
-            document.getElementById("btn-guardar-docente").addEventListener("click", () => {
+            // Botones de cambio abren la misma modal unificada
+            document.getElementById("btn-cambiar-docente").addEventListener("click", () => showConfigModal(true));
+            document.getElementById("btn-cambiar-telefono").addEventListener("click", () => showConfigModal(true));
+            
+            document.getElementById("btn-guardar-config").addEventListener("click", () => {
                 const nombre = document.getElementById("input-modal-docente").value.trim();
-                if (!nombre) { showToast("Por favor, ingrese un nombre.", "error"); return; }
+                const telefono = document.getElementById("input-modal-telefono").value.trim().replace(/[\s\-\(\)]/g, ""); // Limpia caracteres extraños
+                
+                if (!nombre) { showToast("Por favor, ingrese el nombre del docente.", "error"); return; }
+                if (!telefono) { showToast("Por favor, ingrese el número telefónico.", "error"); return; }
+                
                 state.docente = nombre;
+                state.whatsappDestino = telefono;
                 saveToLocalStorage();
-                renderDocente();
-                showDocenteModal(false);
-                showToast("Docente configurado.", "success");
+                renderConfigData();
+                showConfigModal(false);
+                showToast("Configuración guardada correctamente.", "success");
             });
 
             document.querySelectorAll(".chk-novedad").forEach(chk => {
@@ -686,28 +727,34 @@
             document.getElementById("btn-nueva-semana").addEventListener("click", iniciarNuevaSemana);
         }
 
-        function checkDocenteRequerido() {
-            if (!state.docente || state.docente.trim() === "") showDocenteModal(true);
+        function checkConfigRequerida() {
+            if (!state.docente || state.docente.trim() === "") showConfigModal(true);
         }
 
-        function showDocenteModal(show) {
-            const modal = document.getElementById("modal-docente");
+        function showConfigModal(show) {
+            const modal = document.getElementById("modal-config");
             if (show) {
                 document.getElementById("input-modal-docente").value = state.docente || "";
+                document.getElementById("input-modal-telefono").value = state.whatsappDestino || "3184800091";
                 modal.classList.add("active");
                 document.getElementById("input-modal-docente").focus();
             } else { modal.classList.remove("active"); }
         }
 
+        document.getElementById("modal-config").addEventListener("click", function(e) {
+            if (e.target === this && state.docente) showConfigModal(false);
+        });
+
         function render() {
-            renderDocente();
+            renderConfigData();
             document.getElementById("fecha-desde").value = state.fechaDesde || "";
             document.getElementById("fecha-hasta").value = state.fechaHasta || "";
             renderTabla();
         }
 
-        function renderDocente() {
+        function renderConfigData() {
             document.getElementById("txt-docente-nombre").textContent = state.docente || "No configurado";
+            document.getElementById("txt-whatsapp-destino").textContent = state.whatsappDestino || "3184800091";
         }
 
         function renderTabla() {
@@ -899,7 +946,10 @@
             state.estudiantes.forEach((e, i) => {
                 msg += `*${i+1}. ${e.nombre}* (${e.grado})\n• _Faltas:_ ${e.observaciones.join(", ")}\n\n`;
             });
-            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}`, '_blank');
+            
+            // Usa el número dinámico configurado en el estado
+            const telefonoDestino = state.whatsappDestino || "3184800091";
+            window.open(`https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function showToast(m, type) {
