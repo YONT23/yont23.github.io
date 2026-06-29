@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Transformación Física de Joha</title>
+<meta name="description" content="Plan de entrenamiento personalizado para Joha: rutina, nutrición, seguimiento y progreso.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='7' r='3.2' fill='%23D9879A'/%3E%3Ccircle cx='12' cy='17' r='3.2' fill='%23D9879A'/%3E%3Ccircle cx='7' cy='12' r='3.2' fill='%23D9879A'/%3E%3Ccircle cx='17' cy='12' r='3.2' fill='%23D9879A'/%3E%3Ccircle cx='12' cy='12' r='2.6' fill='%23FBF5F2'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --cream:#FBF5F2;
+    --cream-2:#F6E9E4;
+    --ink:#3A2C35;
+    --plum:#46213A;
+    --plum-soft:#7C4F6B;
+    --rose:#D9879A;
+    --rose-deep:#BD6A82;
+    --blush:#F6DEE3;
+    --sage:#8FAE87;
+    --sage-deep:#6F9468;
+    --gold:#E3A857;
+    --shadow: 0 14px 34px -12px rgba(74,31,58,0.22);
+    --shadow-sm: 0 8px 18px -10px rgba(74,31,58,0.18);
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-sm:12px;
+    --font-display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-body);color:var(--ink);background:var(--cream);line-height:1.55;-webkit-font-smoothing:antialiased}
+  img,svg{display:block}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  a{color:inherit;text-decoration:none}
+  ul{list-style:none}
+  input{font-family:inherit}
+  a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--rose-deep);outline-offset:2px;border-radius:6px}
+
+  .container{width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
+  .section{padding:84px 0}
+  .section--alt{background:var(--cream-2)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--rose-deep);font-weight:700;margin-bottom:14px}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--rose-deep);display:inline-block;border-radius:2px}
+  .section-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.4vw,2.5rem);color:var(--plum);font-weight:600;margin-bottom:14px;letter-spacing:-.01em}
+  .section-lead{max-width:600px;color:var(--plum-soft);font-size:1.02rem;margin-bottom:46px}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.is-visible{opacity:1;transform:translateY(0)}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(251,245,242,0.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(74,31,58,0.08)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:13px 24px;max-width:1120px;margin:0 auto;gap:14px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-size:1.12rem;color:var(--plum);font-weight:700;flex:0 0 auto}
+  .brand svg{width:24px;height:24px;color:var(--rose)}
+  .nav-links{display:flex;gap:4px;overflow-x:auto}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{flex:0 0 auto;padding:8px 13px;border-radius:999px;font-size:.83rem;color:var(--plum-soft);font-weight:600;white-space:nowrap;transition:background .25s,color .25s}
+  .nav-links a:hover{background:var(--blush);color:var(--plum)}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;padding:84px 0 56px;text-align:center}
+  .hero-blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;z-index:0;pointer-events:none}
+  .hero-blob.b1{width:320px;height:320px;background:var(--blush);top:-110px;left:-90px}
+  .hero-blob.b2{width:260px;height:260px;background:rgba(143,174,135,0.35);bottom:-100px;right:-70px}
+  .hero-inner{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px}
+  .hero-flower{width:60px;height:60px;margin:0 auto 20px;color:var(--rose-deep);animation:bloom 1.2s cubic-bezier(.22,1,.36,1)}
+  .hero h1{font-family:var(--font-display);font-size:clamp(2.1rem,5vw,3.3rem);color:var(--plum);font-weight:700;margin-bottom:16px;letter-spacing:-.01em}
+  .hero p.subtitle{font-size:1.08rem;color:var(--plum-soft);margin-bottom:28px}
+  .meta-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .pill{background:#fff;border:1px solid var(--blush);padding:8px 16px;border-radius:999px;font-size:.83rem;font-weight:700;color:var(--rose-deep);box-shadow:var(--shadow-sm)}
+
+  @keyframes bloom{from{transform:scale(.4) rotate(-18deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
+  /* PROFILE CARDS */
+  .cards-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+  .profile-card{background:#fff;border-radius:var(--radius-md);padding:24px 20px;box-shadow:var(--shadow-sm);text-align:left;transition:transform .3s,box-shadow .3s}
+  .profile-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .profile-card svg{width:28px;height:28px;margin-bottom:14px;color:var(--rose-deep)}
+  .profile-card .label{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;color:var(--plum-soft);font-weight:700;margin-bottom:5px}
+  .profile-card .value{font-family:var(--font-display);font-size:1.25rem;color:var(--plum);font-weight:700;line-height:1.3}
+  .profile-card .extra{font-size:.8rem;color:var(--plum-soft);margin-top:6px;line-height:1.4}
+
+  .session-strip{display:flex;gap:12px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+  .chip-pill{background:var(--blush);color:var(--plum);padding:10px 18px;border-radius:999px;font-weight:700;font-size:.86rem}
+
+  /* GOALS */
+  .goals-list{display:flex;flex-direction:column;gap:26px;max-width:680px}
+  .goal-head{display:flex;justify-content:space-between;margin-bottom:9px;font-weight:700;color:var(--plum);font-size:.96rem}
+  .goal-head span.pct{color:var(--rose-deep)}
+  .goal-track{height:13px;background:var(--blush);border-radius:999px;overflow:hidden}
+  .goal-fill{height:100%;border-radius:999px;width:0%;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width 1.3s cubic-bezier(.16,1,.3,1)}
+  .goal-fill.sage{background:linear-gradient(90deg,var(--sage),var(--sage-deep))}
+
+  /* CALENDAR */
+  .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  details.day-card{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden;height:fit-content}
+  details.day-card summary{list-style:none;cursor:pointer;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  details.day-card summary::-webkit-details-marker{display:none}
+  .day-title-wrap{display:flex;align-items:center;gap:12px}
+  .day-emoji{font-size:1.6rem;line-height:1}
+  .day-name{font-family:var(--font-display);font-size:1.1rem;color:var(--plum);font-weight:700}
+  .day-sub{font-size:.8rem;color:var(--plum-soft);margin-top:2px}
+  .chevron{width:18px;height:18px;color:var(--rose-deep);transition:transform .3s;flex:0 0 auto}
+  details[open] .chevron{transform:rotate(180deg)}
+  .day-body{padding:0 22px 20px}
+  .exercise-row{padding:13px 0;border-top:1px solid var(--cream-2)}
+  .exercise-row .ex-name{font-weight:700;color:var(--plum);margin-bottom:8px;font-size:.95rem}
+  .ex-stats{display:flex;gap:7px;flex-wrap:wrap}
+  .ex-chip{background:var(--cream-2);color:var(--plum-soft);font-size:.74rem;font-weight:700;padding:5px 10px;border-radius:999px}
+
+  /* NUTRITION */
+  .nutri-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+  .nutri-card{background:#fff;border-radius:var(--radius-md);padding:24px 16px;text-align:center;box-shadow:var(--shadow-sm);transition:transform .3s}
+  .nutri-card:hover{transform:translateY(-4px)}
+  .nutri-card .tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--sage-deep);font-weight:700;margin-bottom:10px}
+  .nutri-card .emoji{font-size:1.9rem;margin-bottom:10px}
+  .nutri-card h3{font-family:var(--font-display);font-size:1rem;color:var(--plum);margin-bottom:6px}
+  .nutri-card p{font-size:.8rem;color:var(--plum-soft)}
+
+  /* TRACKING TABLE */
+  .tracking-actions{display:flex;justify-content:flex-end;margin-bottom:16px}
+  .btn{background:var(--rose);color:#fff;padding:11px 20px;border-radius:999px;font-weight:700;font-size:.86rem;box-shadow:var(--shadow-sm);transition:background .25s,transform .25s}
+  .btn:hover{background:var(--rose-deep);transform:translateY(-2px)}
+  .table-wrap{overflow-x:auto;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);background:#fff}
+  table.tracking{min-width:660px;width:100%;border-collapse:collapse}
+  table.tracking th{background:var(--blush);color:var(--plum);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;padding:14px 12px;text-align:left;font-weight:800}
+  table.tracking td{padding:9px 12px;border-bottom:1px solid var(--cream-2)}
+  table.tracking input[type=date],table.tracking input[type=number]{width:100%;border:1px solid var(--cream-2);border-radius:8px;padding:7px 9px;font-size:.85rem;background:var(--cream);color:var(--ink)}
+  .checkbox-cell{text-align:center}
+  .checkbox-cell input[type=checkbox]{width:18px;height:18px;accent-color:var(--rose-deep)}
+  .btn-delete{color:var(--rose-deep);font-weight:800;font-size:1rem;padding:5px 9px;border-radius:8px}
+  .btn-delete:hover{background:var(--blush)}
+  .empty-row td{text-align:center;color:var(--plum-soft);padding:28px;font-style:italic;font-size:.9rem}
+
+  /* CHARTS */
+  .charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .chart-box{background:#fff;border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm);position:relative;min-height:228px}
+  .chart-box h3{font-family:var(--font-display);color:var(--plum);font-size:1rem;margin-bottom:3px}
+  .chart-unit{font-size:.76rem;color:var(--plum-soft);margin-bottom:10px;display:block}
+  .chart-box canvas{width:100%;height:150px;display:block}
+  .chart-box.empty canvas{display:none}
+  .chart-box .placeholder{display:none;color:var(--plum-soft);font-size:.85rem;text-align:center;padding:46px 6px;font-style:italic}
+  .chart-box.empty .placeholder{display:block}
+
+  /* MOTIVATION */
+  .motivation-box{max-width:660px;margin:0 auto;text-align:center;background:linear-gradient(135deg,var(--blush),var(--cream-2));border-radius:var(--radius-lg);padding:48px 32px;box-shadow:var(--shadow)}
+  .motivation-box svg{width:32px;height:32px;color:var(--rose-deep);margin:0 auto 16px}
+  #quoteText{font-family:var(--font-display);font-size:1.25rem;color:var(--plum);font-weight:700;margin-bottom:22px;min-height:64px;transition:opacity .25s;display:flex;align-items:center;justify-content:center}
+  .btn-ghost{border:1.5px solid var(--rose-deep);color:var(--rose-deep);padding:10px 22px;border-radius:999px;font-weight:700;font-size:.85rem;background:transparent;transition:all .25s}
+  .btn-ghost:hover{background:var(--rose-deep);color:#fff}
+
+  /* SAFETY */
+  .safety-box{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1.5px solid var(--rose);border-left:6px solid var(--rose-deep);border-radius:var(--radius-md);padding:26px 24px;box-shadow:var(--shadow-sm);max-width:780px;margin:0 auto}
+  .safety-box svg{width:28px;height:28px;flex-shrink:0;color:var(--rose-deep);margin-top:2px}
+  .safety-box h3{color:var(--plum);font-family:var(--font-display);font-size:1.02rem;margin-bottom:6px}
+  .safety-box p{color:var(--plum-soft);font-size:.92rem}
+
+  footer{padding:44px 0;text-align:center;color:var(--plum-soft);font-size:.84rem;background:var(--cream-2)}
+  footer .footnote{margin-top:8px;font-size:.76rem;opacity:.85}
+
+  /* RESPONSIVE */
+  @media (max-width:980px){
+    .cards-grid{grid-template-columns:repeat(2,1fr)}
+    .day-grid{grid-template-columns:1fr}
+    .nutri-grid{grid-template-columns:repeat(2,1fr)}
+    .charts-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .section{padding:60px 0}
+    .cards-grid{grid-template-columns:1fr}
+    .nutri-grid{grid-template-columns:1fr}
+    .brand span{display:none}
+    .hero{padding:64px 0 44px}
+    .motivation-box{padding:36px 20px}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2" fill="currentColor"/><circle cx="12" cy="17" r="3.2" fill="currentColor"/><circle cx="7" cy="12" r="3.2" fill="currentColor"/><circle cx="17" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="2.6" fill="#FBF5F2"/></svg>
+      <span>Joha · Plan</span>
+    </div>
+    <nav class="nav-links" aria-label="Navegación de secciones">
+      <a href="#perfil">Perfil</a>
+      <a href="#objetivos">Objetivos</a>
+      <a href="#rutina">Rutina</a>
+      <a href="#nutricion">Nutrición</a>
+      <a href="#seguimiento">Seguimiento</a>
+      <a href="#progreso">Progreso</a>
+    </nav>
+  </div>
+</header>
+<section class="hero">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-inner">
+    <svg class="hero-flower" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2" fill="currentColor"/><circle cx="12" cy="17" r="3.2" fill="currentColor"/><circle cx="7" cy="12" r="3.2" fill="currentColor"/><circle cx="17" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="2.6" fill="var(--cream)"/></svg>
+    <h1>Plan de Entrenamiento de Joha</h1>
+    <p class="subtitle">Fuerza, constancia y cuidado: el camino de Joha hacia un cuerpo más fuerte, una espalda más definida y una salud que avanza paso a paso.</p>
+    <div class="meta-pills">
+      <span class="pill">50 min / sesión</span>
+      <span class="pill">3 días / semana</span>
+      <span class="pill">Enfoque: piernas y glúteos</span>
+    </div>
+  </div>
+</section>
+
+<!-- PERFIL -->
+<section id="perfil" class="section section--alt">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Quién es Joha</span>
+      <h2 class="section-title">Perfil inicial</h2>
+      <p class="section-lead">El punto de partida de este plan: una base sedentaria, con una condición médica en tratamiento y muchas ganas de transformar su cuerpo de forma segura.</p>
+    </div>
+
+    <div class="cards-grid reveal">
+      <div class="profile-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="20" rx="2"/><path d="M8 7h3M8 11h3M8 15h3M8 19h3"/></svg>
+        <div class="label">Estatura</div>
+        <div class="value">1.63 m</div>
+      </div>
+      <div class="profile-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 7v10M4 9v6M20 9v6M17.5 7v10M6.5 12h11"/></svg>
+        <div class="label">Peso</div>
+        <div class="value">50 kg</div>
+      </div>
+      <div class="profile-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18v-4M10 18V9M16 18v-7M20 18V5"/></svg>
+        <div class="label">Nivel actual</div>
+        <div class="value">Sedentaria</div>
+      </div>
+      <div class="profile-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+        <div class="label">Objetivo</div>
+        <div class="value">Ganar masa muscular</div>
+        <div class="extra">Prioridad: piernas y glúteos · Secundario: espalda definida</div>
+      </div>
+      <div class="profile-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-12 2 6h6"/></svg>
+        <div class="label">Condición médica</div>
+        <div class="value">Anemia</div>
+        <div class="extra">Tratamiento actual: ácido fólico · Formulado: Ferrimed por 3 meses</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJETIVOS -->
+<section id="objetivos" class="section">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">A dónde vamos</span>
+      <h2 class="section-title">Objetivos físicos</h2>
+      <p class="section-lead">El plan está distribuido según prioridad: la mayor parte del esfuerzo va para piernas y glúteos, con trabajo constante en espalda y un mantenimiento general del tren superior.</p>
+    </div>
+
+    <div class="goals-list reveal">
+      <div class="goal-row">
+        <div class="goal-head"><span>Piernas y glúteos</span><span class="pct">70%</span></div>
+        <div class="goal-track"><div class="goal-fill" data-target="70"></div></div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-head"><span>Espalda definida</span><span class="pct">20%</span></div>
+        <div class="goal-track"><div class="goal-fill sage" data-target="20"></div></div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-head"><span>Tren superior general</span><span class="pct">10%</span></div>
+        <div class="goal-track"><div class="goal-fill" data-target="10"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RUTINA -->
+<section id="rutina" class="section section--alt">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">La semana</span>
+      <h2 class="section-title">Calendario semanal</h2>
+      <p class="section-lead">Tres sesiones de 50 minutos. Toca cada tarjeta para ver series, repeticiones y descanso de cada ejercicio.</p>
+    </div>
+
+    <div class="day-grid reveal">
+      <details class="day-card" open>
+        <summary>
+          <div class="day-title-wrap">
+            <span class="day-emoji">🦵</span>
+            <div>
+              <div class="day-name">Día 1 · Piernas y Glúteos</div>
+              <div class="day-sub">Fuerza y volumen en tren inferior</div>
+            </div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="day-body">
+          <div class="exercise-row">
+            <div class="ex-name">Sentadilla</div>
+            <div class="ex-stats"><span class="ex-chip">4 series</span><span class="ex-chip">10-12 reps</span><span class="ex-chip">90s descanso</span></div>
+          </div>
+          <div class="exercise-row">
+            <div class="ex-name">Prensa</div>
+            <div class="ex-stats"><span class="ex-chip">3 series</span><span class="ex-chip">12 reps</span><span class="ex-chip">75s descanso</span></div>
+          </div>
+          <div class="exercise-row">
+            <div class="ex-name">Hip Thrust</div>
+            <div class="ex-stats"><span class="ex-chip">4 series</span><span class="ex-chip">12 reps</span><span class="ex-chip">75s descanso</span></div>
+          </div>
+          <div class="exercise-row">
+            <div class="ex-name">Abducciones</div>
+            <div class="ex-stats"><span class="ex-chip">3 series</span><span class="ex-chip">15 reps</span><span class="ex-chip">45s descanso</span></div>
+          </div>
+          <div class="exercise-row">
+            <div class="ex-name">Pantorrillas</div>
+            <div class="ex-stats"><span class="ex-chip">3 series</span><span class="ex-chip">15 reps</span><span class="ex-chip">45s descanso</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details clas
