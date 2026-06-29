@@ -447,3 +447,239 @@
         <div class="tag">30-45 min antes</div>
         <div class="emoji">🥪</div>
         <h3>Sándwich simple</h3>
+<p>Pan integral con proteína magra, ideal a media mañana.</p>
+      </div>
+      <div class="nutri-card">
+        <div class="tag">1-2 horas antes</div>
+        <div class="emoji">🍽️</div>
+        <h3>Almuerzo balanceado</h3>
+        <p>Proteína, carbohidrato y vegetales si entrenas después de almorzar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEGUIMIENTO -->
+<section id="seguimiento" class="section">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Tu bitácora</span>
+      <h2 class="section-title">Seguimiento</h2>
+      <p class="section-lead">Registra cada sesión: peso corporal, energía, horas de sueño y si completaste el entrenamiento. Todo se guarda automáticamente en este dispositivo.</p>
+    </div>
+
+    <div class="reveal">
+      <div class="tracking-actions">
+        <button class="btn" id="addRowBtn" type="button">+ Agregar registro</button>
+      </div>
+      <div class="table-wrap">
+        <table class="tracking">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Peso (kg)</th>
+              <th>Energía (1-10)</th>
+              <th>Horas de sueño</th>
+              <th>Entrenó</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody id="trackingBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESO -->
+<section id="progreso" class="section section--alt">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Lo que dicen los números</span>
+      <h2 class="section-title">Progreso corporal</h2>
+      <p class="section-lead">Estos gráficos se construyen automáticamente con los datos que registres en la bitácora de seguimiento.</p>
+    </div>
+
+    <div class="charts-grid reveal">
+      <div class="chart-box empty" id="weightChartBox">
+        <h3>Peso corporal</h3>
+        <span class="chart-unit">kilogramos</span>
+        <canvas id="weightChart"></canvas>
+        <p class="placeholder">Aún no hay datos. Registra tu primer día en la bitácora.</p>
+      </div>
+      <div class="chart-box empty" id="energyChartBox">
+        <h3>Nivel de energía</h3>
+        <span class="chart-unit">escala 1-10</span>
+        <canvas id="energyChart"></canvas>
+        <p class="placeholder">Aún no hay datos. Registra tu primer día en la bitácora.</p>
+      </div>
+      <div class="chart-box empty" id="attendanceChartBox">
+        <h3>Asistencia al gimnasio</h3>
+        <span class="chart-unit" id="attendanceSummary">por sesión registrada</span>
+        <canvas id="attendanceChart"></canvas>
+        <p class="placeholder">Aún no hay datos. Registra tu primer día en la bitácora.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOTIVACIÓN -->
+<section id="motivacion" class="section">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:36px">
+      <span class="eyebrow">Para los días difíciles</span>
+      <h2 class="section-title">Motivación</h2>
+    </div>
+    <div class="motivation-box reveal">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/></svg>
+      <p id="quoteText" aria-live="polite"></p>
+      <button class="btn-ghost" id="newQuoteBtn" type="button">Otra frase</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Plan diseñado para Joha · Actualiza tu progreso cada semana 🌸</p>
+    <p class="footnote">Este plan es una guía de entrenamiento general y no sustituye la valoración de un profesional de la salud.</p>
+  </div>
+</footer>
+
+<script>
+  /* ---------- REVEAL ON SCROLL ---------- */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ---------- GOAL BARS ---------- */
+  const goalObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fill = entry.target.querySelector('.goal-fill');
+        if (fill) fill.style.width = fill.dataset.target + '%';
+        goalObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.goal-row').forEach(el => goalObserver.observe(el));
+
+  /* ---------- MOTIVATIONAL QUOTES ---------- */
+  const quotes = [
+    "Cada repetición te acerca a la versión más fuerte de ti misma.",
+    "No se trata de ser perfecta, se trata de ser constante.",
+    "Tu cuerpo puede hacerlo, es tu mente la que tienes que convencer.",
+    "Hoy entrenas, mañana lo agradeces.",
+    "La fuerza que buscas ya está dentro de ti, solo hay que despertarla.",
+    "Pequeños pasos constantes construyen grandes transformaciones.",
+    "Eres más fuerte que la excusa de hoy.",
+    "El progreso no se mide en un día, se mide en disciplina.",
+    "Cuídate, fortalécete y florece.",
+    "Tu mejor versión te está esperando al final de cada serie."
+  ];
+  let lastQuoteIndex = -1;
+  function setQuote(immediate) {
+    let idx;
+    do { idx = Math.floor(Math.random() * quotes.length); } while (quotes.length > 1 && idx === lastQuoteIndex);
+    lastQuoteIndex = idx;
+    const el = document.getElementById('quoteText');
+    if (immediate) {
+      el.textContent = quotes[idx];
+      el.style.opacity = 1;
+    } else {
+      el.style.opacity = 0;
+      setTimeout(() => { el.textContent = quotes[idx]; el.style.opacity = 1; }, 220);
+    }
+  }
+  document.getElementById('newQuoteBtn').addEventListener('click', () => setQuote(false));
+
+  /* ---------- TRACKING (LocalStorage) ---------- */
+  const STORAGE_KEY = 'joha_tracking_v1';
+  let trackingData = [];
+
+  function loadTracking() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      trackingData = raw ? JSON.parse(raw) : [];
+    } catch (e) { trackingData = []; }
+  }
+  function saveTracking() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(trackingData)); }
+    catch (e) { console.warn('No se pudo guardar el progreso en este navegador.'); }
+  }
+  function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function todayISO() { return new Date().toISOString().slice(0, 10); }
+
+  function addTrackingRow() {
+    trackingData.push({ id: genId(), fecha: todayISO(), peso: '', energia: '', sueno: '', completado: false });
+    saveTracking();
+    renderTrackingTable();
+    renderCharts();
+    const tbody = document.getElementById('trackingBody');
+    const lastRowInput = tbody.querySelector('tr:last-child input');
+    if (lastRowInput) lastRowInput.focus();
+  }
+
+  function renderTrackingTable() {
+    const tbody = document.getElementById('trackingBody');
+    if (!trackingData.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Aún no hay registros. Pulsa "Agregar registro" para comenzar tu bitácora. 🌸</td></tr>';
+      return;
+    }
+    const sorted = [...trackingData].sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
+    tbody.innerHTML = sorted.map(r => `
+      <tr data-id="${r.id}">
+        <td><input type="date" data-field="fecha" value="${r.fecha || ''}"></td>
+        <td><input type="number" step="0.1" min="0" data-field="peso" value="${r.peso}" placeholder="kg"></td>
+        <td><input type="number" step="1" min="1" max="10" data-field="energia" value="${r.energia}" placeholder="1-10"></td>
+        <td><input type="number" step="0.5" min="0" max="24" data-field="sueno" value="${r.sueno}" placeholder="hrs"></td>
+        <td class="checkbox-cell"><input type="checkbox" data-field="completado" ${r.completado ? 'checked' : ''}></td>
+        <td class="checkbox-cell"><button class="btn-delete" type="button" aria-label="Eliminar registro" title="Eliminar registro">✕</button></td>
+      </tr>`).join('');
+  }
+
+  function handleTableEvent(e) {
+    const field = e.target.dataset.field;
+    if (!field) return;
+    const tr = e.target.closest('tr');
+    const id = tr.dataset.id;
+    const rec = trackingData.find(r => r.id === id);
+    if (!rec) return;
+    rec[field] = field === 'completado' ? e.target.checked : e.target.value;
+    saveTracking();
+    renderCharts();
+  }
+
+  const trackingBody = document.getElementById('trackingBody');
+  trackingBody.addEventListener('input', handleTableEvent);
+  trackingBody.addEventListener('change', handleTableEvent);
+  trackingBody.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-delete');
+    if (!btn) return;
+    const tr = btn.closest('tr');
+    trackingData = trackingData.filter(r => r.id !== tr.dataset.id);
+    saveTracking();
+    renderTrackingTable();
+    renderCharts();
+  });
+  document.getElementById('addRowBtn').addEventListener('click', addTrackingRow);
+
+  /* ---------- CHARTS (canvas, sin librerías) ---------- */
+  function fmtShort(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' });
+  }
+
+  function setupCanvas(canvas) {
+    const ratio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.max(rect.width, 1);
+    const h = Math.max(rect.height, 1);
+    canvas.width = w * ratio;
