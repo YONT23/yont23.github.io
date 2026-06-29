@@ -565,4 +565,356 @@
                 <select id="filter-grado">
                     <option value="Todos">🔍 Todos los grados</option>
                     <option value="Transición">Transición</option>
-                    <option value="Primero">Primer
+                    <option value="Primero">Primero</option>
+                    <option value="Segundo">Segundo</option>
+                    <option value="Tercero">Tercero</option>
+                    <option value="Cuarto">Cuarto</option>
+                    <option value="Quinto">Quinto</option>
+                    <option value="Sexto">Sexto</option>
+                    <option value="Séptimo">Séptimo</option>
+                    <option value="Octavo">Octavo</option>
+                    <option value="Noveno">Noveno</option>
+                    <option value="Décimo">Décimo</option>
+                    <option value="Once">Once</option>
+                </select>
+
+                <select id="sort-order">
+                    <option value="none">⇅ Orden natural</option>
+                    <option value="asc">A - Z (Alfabético)</option>
+                    <option value="desc">Z - A (Alfabético)</option>
+                </select>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tabla-estudiantes">
+                    <thead>
+                        <tr>
+                            <th>Grado</th>
+                            <th>Nombre</th>
+                            <th>Observaciones</th>
+                            <th style="width: 140px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-estudiantes"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="actions-panel">
+            <button type="button" class="btn btn-secondary" id="btn-export-txt">📄 Descargar TXT</button>
+            <button type="button" class="btn btn-secondary" id="btn-export-pdf">📕 Descargar PDF</button>
+            <button type="button" class="btn btn-success" id="btn-share-whatsapp">💬 Enviar WhatsApp</button>
+            <button type="button" class="btn btn-danger btn-full" id="btn-nueva-semana">🔄 Iniciar nueva semana</button>
+        </section>
+    </div>
+
+    <div class="overlay" id="modal-docente">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 12px;">Identificación del Docente</h3>
+            <p style="font-size: 0.9rem; color: var(--texto-mutado); margin-bottom: 16px;">Ingrese su nombre para personalizar el sistema. Se guardará de forma automática.</p>
+            <div class="form-group">
+                <label for="input-modal-docente">Nombre del Docente</label>
+                <input type="text" id="input-modal-docente" placeholder="Ej. Prof. María Rodríguez">
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-guardar-docente" style="width: 100%; margin-top: 10px;">Guardar y Continuar</button>
+        </div>
+    </div>
+
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; font-weight: 600; color: var(--azul-profundo);" id="loader-text">Procesando...</p>
+    </div>
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        let state = { docente: "", fechaDesde: "", fechaHasta: "", estudiantes: [] };
+        const WHATSAPP_NUMBER = "3184800091";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadFromLocalStorage();
+            initEventHandlers();
+            render();
+            checkDocenteRequerido();
+        });
+
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem("novedades_docente_state");
+            if (stored) {
+                try {
+                    state = JSON.parse(stored);
+                    if (!state.estudiantes) state.estudiantes = [];
+                } catch(e) { console.error(e); }
+            }
+        }
+
+        function saveToLocalStorage() {
+            state.fechaDesde = document.getElementById("fecha-desde").value;
+            state.fechaHasta = document.getElementById("fecha-hasta").value;
+            localStorage.setItem("novedades_docente_state", JSON.stringify(state));
+        }
+
+        function initEventHandlers() {
+            document.getElementById("fecha-desde").addEventListener("change", saveToLocalStorage);
+            document.getElementById("fecha-hasta").addEventListener("change", saveToLocalStorage);
+            document.getElementById("btn-cambiar-docente").addEventListener("click", () => showDocenteModal(true));
+            
+            document.getElementById("btn-guardar-docente").addEventListener("click", () => {
+                const nombre = document.getElementById("input-modal-docente").value.trim();
+                if (!nombre) { showToast("Por favor, ingrese un nombre.", "error"); return; }
+                state.docente = nombre;
+                saveToLocalStorage();
+                renderDocente();
+                showDocenteModal(false);
+                showToast("Docente configurado.", "success");
+            });
+
+            document.querySelectorAll(".chk-novedad").forEach(chk => {
+                chk.addEventListener("change", (e) => {
+                    const label = document.getElementById(e.target.getAttribute("data-lbl"));
+                    if (e.target.checked) label.classList.add("checked");
+                    else label.classList.remove("checked");
+                });
+            });
+
+            document.getElementById("btn-agregar-estudiante").addEventListener("click", handleAgregarEstudiante);
+            document.getElementById("search-nombre").addEventListener("input", renderTabla);
+            document.getElementById("filter-grado").addEventListener("change", renderTabla);
+            document.getElementById("sort-order").addEventListener("change", renderTabla);
+            document.getElementById("btn-export-txt").addEventListener("click", exportarTXT);
+            document.getElementById("btn-export-pdf").addEventListener("click", exportarPDF);
+            document.getElementById("btn-share-whatsapp").addEventListener("click", enviarWhatsApp);
+            document.getElementById("btn-nueva-semana").addEventListener("click", iniciarNuevaSemana);
+        }
+
+        function checkDocenteRequerido() {
+            if (!state.docente || state.docente.trim() === "") showDocenteModal(true);
+        }
+
+        function showDocenteModal(show) {
+            const modal = document.getElementById("modal-docente");
+            if (show) {
+                document.getElementById("input-modal-docente").value = state.docente || "";
+                modal.classList.add("active");
+                document.getElementById("input-modal-docente").focus();
+            } else { modal.classList.remove("active"); }
+        }
+
+        function render() {
+            renderDocente();
+            document.getElementById("fecha-desde").value = state.fechaDesde || "";
+            document.getElementById("fecha-hasta").value = state.fechaHasta || "";
+            renderTabla();
+        }
+
+        function renderDocente() {
+            document.getElementById("txt-docente-nombre").textContent = state.docente || "No configurado";
+        }
+
+        function renderTabla() {
+            const tbody = document.getElementById("tbody-estudiantes");
+            const query = document.getElementById("search-nombre").value.toLowerCase().trim();
+            const gradoFiltro = document.getElementById("filter-grado").value;
+            const orden = document.getElementById("sort-order").value;
+
+            let listado = state.estudiantes.map((est, index) => ({ ...est, originalIndex: index }));
+
+            if (query) listado = listado.filter(e => e.nombre.toLowerCase().includes(query));
+            if (gradoFiltro !== "Todos") listado = listado.filter(e => e.grado === gradoFiltro);
+
+            if (orden === "asc") listado.sort((a,b) => a.nombre.localeCompare(b.nombre, 'es'));
+            else if (orden === "desc") listado.sort((a,b) => b.nombre.localeCompare(a.nombre, 'es'));
+
+            tbody.innerHTML = "";
+            document.getElementById("total-badge").textContent = listado.length;
+
+            if (listado.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="no-records">Aún no se han agregado estudiantes con estos criterios.</td></tr>`;
+                return;
+            }
+
+            listado.forEach(est => {
+                const tr = document.createElement("tr");
+                
+                const tdG = document.createElement("td"); tdG.textContent = est.grado; tr.appendChild(tdG);
+                const tdN = document.createElement("td"); tdN.style.fontWeight = "600"; tdN.textContent = est.nombre; tr.appendChild(tdN);
+                
+                const tdO = document.createElement("td");
+                est.observaciones.forEach(o => {
+                    const span = document.createElement("span"); span.className = "obs-tag"; span.textContent = o; tdO.appendChild(span);
+                });
+                tr.appendChild(tdO);
+
+                const tdA = document.createElement("td"); tdA.className = "actions-cell";
+                tdA.innerHTML = `<button class="btn btn-secondary btn-sm" onclick="prepararEdicion(${est.originalIndex})">Editar</button>
+                                 <button class="btn btn-danger btn-sm" onclick="eliminarEstudiante(${est.originalIndex})">Eliminar</button>`;
+                tr.appendChild(tdA);
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleAgregarEstudiante() {
+            const nombre = document.getElementById("estudiante-nombre").value.trim();
+            const grado = document.getElementById("estudiante-grado").value;
+            const editIndex = parseInt(document.getElementById("edit-index").value, 10);
+
+            if (!nombre) { showToast("Debe ingresar el nombre del estudiante.", "error"); return; }
+
+            const observaciones = [];
+            document.querySelectorAll(".chk-novedad:checked").forEach(chk => observaciones.push(chk.value));
+
+            if (observaciones.length === 0) { showToast("Debe seleccionar al menos una observación.", "error"); return; }
+
+            const estData = { grado, nombre, observaciones };
+
+            if (editIndex === -1) {
+                state.estudiantes.push(estData);
+                showToast("Estudiante agregado correctamente.", "success");
+            } else {
+                state.estudiantes[editIndex] = estData;
+                showToast("Registro actualizado correctamente.", "success");
+            }
+
+            saveToLocalStorage();
+            limpiarCamposEstudiante();
+            renderTabla();
+        }
+
+        function limpiarCamposEstudiante() {
+            document.getElementById("estudiante-nombre").value = "";
+            document.querySelectorAll(".chk-novedad").forEach(chk => {
+                chk.checked = false;
+                document.getElementById(chk.getAttribute("data-lbl")).classList.remove("checked");
+            });
+            document.getElementById("edit-index").value = "-1";
+            document.getElementById("btn-agregar-estudiante").textContent = "Agregar estudiante";
+            document.getElementById("btn-agregar-estudiante").className = "btn btn-primary";
+        }
+
+        function prepararEdicion(index) {
+            const est = state.estudiantes[index];
+            if (!est) return;
+
+            document.getElementById("estudiante-nombre").value = est.nombre;
+            document.getElementById("estudiante-grado").value = est.grado;
+            document.getElementById("edit-index").value = index;
+
+            document.querySelectorAll(".chk-novedad").forEach(chk => {
+                const label = document.getElementById(chk.getAttribute("data-lbl"));
+                if (est.observaciones.includes(chk.value)) { chk.checked = true; label.classList.add("checked"); }
+                else { chk.checked = false; label.classList.remove("checked"); }
+            });
+
+            document.getElementById("btn-agregar-estudiante").textContent = "💾 Actualizar Registro";
+            document.getElementById("btn-agregar-estudiante").className = "btn btn-success";
+            document.getElementById("form-estudiante").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function eliminarEstudiante(index) {
+            if (confirm(`¿Está seguro de eliminar este registro?`)) {
+                state.estudiantes.splice(index, 1);
+                saveToLocalStorage();
+                limpiarCamposEstudiante();
+                renderTabla();
+                showToast("Registro eliminado.", "success");
+            }
+        }
+
+        function iniciarNuevaSemana() {
+            if (confirm("¿Está seguro de iniciar una nueva semana? Los registros actuales serán eliminados.")) {
+                state.estudiantes = [];
+                state.fechaDesde = "";
+                state.fechaHasta = "";
+                saveToLocalStorage();
+                limpiarCamposEstudiante();
+                render();
+                showToast("Nueva semana iniciada.", "success");
+            }
+        }
+
+        function formatF(f) { return f || "[No establecida]"; }
+
+        function exportarTXT() {
+            if (state.estudiantes.length === 0) { showToast("No hay datos para exportar.", "error"); return; }
+            let txt = `REPORTE DE NOVEDADES ACADÉMICAS\nDocente: ${state.docente}\nDesde: ${formatF(state.fechaDesde)} Hasta: ${formatF(state.fechaHasta)}\n\n`;
+            state.estudiantes.forEach((e, i) => {
+                txt += `${i + 1}. Estudiante: ${e.nombre}\n   Grado: ${e.grado}\n   Observaciones: ${e.observaciones.join(", ")}\n\n`;
+            });
+            const blob = new Blob([txt], { type: "text/plain;charset=utf-8;" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `Novedades_${state.fechaDesde || "Semana"}.txt`;
+            a.click();
+            showToast("TXT Descargado.", "success");
+        }
+
+        function exportarPDF() {
+            if (state.estudiantes.length === 0) { showToast("No hay registros para generar el PDF.", "error"); return; }
+            showLoader(true, "Generando PDF...");
+
+            const wrapper = document.createElement("div");
+            wrapper.style.padding = "30px";
+            wrapper.style.fontFamily = "Arial, sans-serif";
+
+            let html = `
+                <div style="border-bottom: 2px solid #3F8FC6; padding-bottom: 10px; margin-bottom: 20px;">
+                    <h2 style="color: #1E5F8A;">Reporte Institucional de Novedades Académicas</h2>
+                </div>
+                <p><strong>Docente:</strong> ${state.docente}</p>
+                <p><strong>Rango Semanal:</strong> ${formatF(state.fechaDesde)} al ${formatF(state.fechaHasta)}</p>
+                <p><strong>Cantidad de Estudiantes Registrados:</strong> ${state.estudiantes.length}</p>
+                <br>
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead>
+                        <tr style="background-color: #A7D8F5; color: #1E5F8A;">
+                            <th style="border: 1px solid #CBD5E0; padding: 8px;">Grado</th>
+                            <th style="border: 1px solid #CBD5E0; padding: 8px;">Nombre Completo</th>
+                            <th style="border: 1px solid #CBD5E0; padding: 8px;">Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            state.estudiantes.forEach(e => {
+                html += `<tr>
+                    <td style="border: 1px solid #CBD5E0; padding: 8px;">${e.grado}</td>
+                    <td style="border: 1px solid #CBD5E0; padding: 8px; font-weight: bold;">${e.nombre}</td>
+                    <td style="border: 1px solid #CBD5E0; padding: 8px;">${e.observaciones.join(", ")}</td>
+                </tr>`;
+            });
+
+            html += `</tbody></table>
+                <div style="margin-top: 40px; text-align: center; font-size: 9px; color: #718096; border-top: 1px solid #E2E8F0; padding-top: 10px;">
+                    Reporte generado automáticamente el: ${new Date().toLocaleString()}
+                </div>`;
+
+            wrapper.innerHTML = html;
+
+            html2pdf().from(wrapper).set({
+                margin: 15, filename: `Reporte_Novedades.pdf`,
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            }).save().then(() => { showLoader(false); showToast("PDF descargado.", "success"); });
+        }
+
+        function enviarWhatsApp() {
+            let msg = `*REPORTE DE NOVEDADES ACADÉMICAS*\n\n*Docente:* ${state.docente}\n*Periodo:* ${formatF(state.fechaDesde)} al ${formatF(state.fechaHasta)}\n\n`;
+            state.estudiantes.forEach((e, i) => {
+                msg += `*${i+1}. ${e.nombre}* (${e.grado})\n• _Faltas:_ ${e.observaciones.join(", ")}\n\n`;
+            });
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function showToast(m, type) {
+            const container = document.getElementById("toast-container");
+            const t = document.createElement("div"); t.className = `toast ${type}`;
+            t.innerHTML = `<span>${m}</span><span style="cursor:pointer;" onclick="this.parentElement.remove()">×</span>`;
+            container.appendChild(t);
+            setTimeout(() => { if(t.parentNode) t.remove(); }, 3500);
+        }
+
+        function showLoader(show, text) {
+            const l = document.getElementById("loader");
+            document.getElementById("loader-text").textContent = text;
+            l.style.display = show ? "flex" : "none";
+        }
+    </script>
+</body>
+</html>
