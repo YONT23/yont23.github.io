@@ -229,3 +229,249 @@ table td{padding:9px 8px;font-size:.84rem;border-bottom:1px solid #232323;}
 
 <div class="toast" id="toast"></div>
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+</head>
+<body>
+
+<div id="splash">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAEA..." alt="MLab">
+  <h1>MLab</h1>
+  <div class="sub">Mendoza Molina Performance Lab</div>
+  <div class="slogan">Entrena con inteligencia. Registra todo. Mejora siempre.</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<div id="app">
+  <aside id="sidebar">
+    <div class="side-logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAEA..." alt="">
+      <div>
+        <div class="t">M<span style="color:var(--red)">Lab</span></div>
+        <div class="s">PERFORMANCE LAB</div>
+      </div>
+    </div>
+    <nav class="navlist" id="navlist"></nav>
+    <div class="side-foot">v1.0 · Mendoza Molina<br>Performance Lab © 2025</div>
+  </aside>
+
+  <main id="main">
+    <div id="topbar">
+      <button id="menuBtn">☰</button>
+      <div class="greet">
+        <h2 id="greetTitle"></h2>
+        <p id="greetSub"></p>
+      </div>
+      <div class="xpchip mono">
+        <span>Nivel</span><b id="xpLevel">1</b>
+        <span style="margin-left:8px">XP</span><b id="xpPts">0/150</b>
+      </div>
+    </div>
+    <div id="views"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<script>
+/* ============================================================
+   MLab — Mendoza Molina Performance Lab
+   Aplicación de entrenamiento y seguimiento fitness
+   © 2025 Yonatha Mendoza Molina
+   ============================================================ */
+
+/* ---------------- DATA MODEL ---------------- */
+function defaultData(){
+  return {
+    profile: {
+      name: 'Atleta',
+      bodyweight: 75,
+      calorieGoal: 2500,
+      proteinGoal: 180,
+      carbGoal: 280,
+      fatGoal: 70,
+      waterGoal: 3,
+      weeklyGoal: 'Ganar masa muscular y mejorar fuerza'
+    },
+    xp: 0,
+    level: 1,
+    workoutLog: [],
+    nutritionLog: [],
+    waterLog: [],
+    bodyLog: [],
+    goalLog: [],
+    supplementLog: [],
+    recoveryLog: [],
+    injuryLog: [],
+    completedDays: [],
+    routine: {
+      name: 'PPL 6 días',
+      days: [
+        {
+          day: 'Lunes', label: 'Push A — Pecho + Hombro + Tríceps',
+          exercises: [
+            {name:'Press banca plano',sets:4,reps:'6-10',rest:'2-3 min',notes:'Barra o mancuernas. Control excéntrico 2s.',variants:'Press inclinado, Press con mancuernas.'},
+            {name:'Press inclinado mancuernas',sets:3,reps:'8-12',rest:'90s',notes:'45°. Codos a 75°.',variants:'Press inclinado barra, Aperturas inclinadas.'},
+            {name:'Aperturas en polea alta',sets:3,reps:'12-15',rest:'60s',notes:'Movimiento arco. Contrae pecho al centro.',variants:'Aperturas con mancuernas, Peck deck.'},
+            {name:'Press militar mancuernas',sets:4,reps:'8-12',rest:'2 min',notes:'De pie o sentado. Core activado.',variants:'Press militar barra, Press Arnold.'},
+            {name:'Elevaciones laterales',sets:3,reps:'15-20',rest:'60s',notes:'Ligero. Codo ligeramente flexionado.',variants:'Cable lateral, Mancuerna sentado.'},
+            {name:'Extensiones tríceps polea',sets:3,reps:'12-15',rest:'60s',notes:'Codo fijo. Extensión completa.',variants:'Patada tríceps, Extensión sobre cabeza.'},
+          ]
+        },
+        {
+          day: 'Martes', label: 'Pull A — Espalda + Bíceps',
+          exercises: [
+            {name:'Jalón al pecho',sets:4,reps:'8-12',rest:'2 min',notes:'Agarre prono. Escápulas depresas al final.',variants:'Jalón neutro, Jalón supino.'},
+            {name:'Remo con barra',sets:4,reps:'6-10',rest:'2 min',notes:'Torso 45°. Jala ombligo. Columna neutra.',variants:'Remo mancuerna, Remo máquina.'},
+            {name:'Remo en polea baja',sets:3,reps:'10-14',rest:'90s',notes:'Pecho erguido. Retracción escapular.',variants:'Remo en máquina, TRX Row.'},
+            {name:'Curl bíceps barra EZ',sets:3,reps:'10-12',rest:'90s',notes:'Codo fijo. Supinación completa.',variants:'Curl mancuernas alterno, Curl martillo.'},
+            {name:'Curl concentrado',sets:3,reps:'12-15',rest:'60s',notes:'Apoya codo en muslo. Pico contracción.',variants:'Curl araña, Curl predicador.'},
+          ]
+        },
+        {
+          day: 'Miércoles', label: 'Legs A — Cuádriceps dominante',
+          exercises: [
+            {name:'Sentadilla barra',sets:5,reps:'5-8',rest:'3 min',notes:'Profundidad paralela o más. Rodillas siguen punta.',variants:'Sentadilla hack, Prensa 45°.'},
+            {name:'Prensa de pierna',sets:4,reps:'10-12',rest:'2 min',notes:'Pies a altura hombros. Rodillas no colapsen.',variants:'Prensa unilateral.'},
+            {name:'Extensiones de cuádriceps',sets:3,reps:'12-15',rest:'60s',notes:'Control excéntrico. Pausa arriba.',variants:'Extensión con banda.'},
+            {name:'Curl femoral tumbado',sets:3,reps:'12-15',rest:'90s',notes:'Cadera neutra. No rebotes.',variants:'Curl femoral sentado, Peso muerto rumano.'},
+            {name:'Pantorrillas de pie',sets:4,reps:'15-20',rest:'60s',notes:'Rango completo. Pausa abajo y arriba.',variants:'Pantorrillas sentado, Prensa pantorrilla.'},
+          ]
+        },
+        {
+          day: 'Jueves', label: 'Push B — Pecho + Hombro + Tríceps',
+          exercises: [
+            {name:'Press con mancuernas plano',sets:4,reps:'8-12',rest:'2 min',notes:'Rango completo. Mayor estiramiento.',variants:'Press barra, Press máquina.'},
+            {name:'Fondos en paralelas',sets:3,reps:'8-12',rest:'90s',notes:'Ligero lean adelante para pecho.',variants:'Fondos en banco, Fondos máquina.'},
+            {name:'Cruce de poleas bajo',sets:3,reps:'12-15',rest:'60s',notes:'Foco contracción esternal inferior.',variants:'Aperturas plano, Cable crossover.'},
+            {name:'Press Arnold',sets:3,reps:'10-12',rest:'2 min',notes:'Rotación muñeca durante ascenso.',variants:'Press militar sentado, Press neutro.'},
+            {name:'Pájaros con mancuernas',sets:3,reps:'15-20',rest:'60s',notes:'Espalda inclinada. Deltoides posterior.',variants:'Pájaros en polea, Rear delt machine.'},
+            {name:'Jalón tríceps cuerda',sets:3,reps:'12-15',rest:'60s',notes:'Separar cuerda al final. Giro de muñeca.',variants:'Jalón barra, Press banca cerrado.'},
+          ]
+        },
+        {
+          day: 'Viernes', label: 'Pull B — Espalda + Bíceps',
+          exercises: [
+            {name:'Dominadas',sets:4,reps:'6-10',rest:'2 min',notes:'Rango completo. Bajan hasta extensión.',variants:'Dominadas asistidas, Jalón.'},
+            {name:'Remo mancuerna unilateral',sets:4,reps:'8-12',rest:'90s',notes:'Neutro. Codo pegado. Retracción escapular.',variants:'Remo polea, Remo en máquina.'},
+            {name:'Pullover en polea',sets:3,reps:'12-15',rest:'60s',notes:'Brazos casi rectos. Gran dorsal.',variants:'Pullover mancuerna.'},
+            {name:'Curl inclinado mancuernas',sets:3,reps:'10-12',rest:'90s',notes:'Mayor estiramiento bíceps. Control.',variants:'Curl predicador, Curl araña.'},
+            {name:'Curl martillo',sets:3,reps:'12-15',rest:'60s',notes:'Braquial y braquiorradial. Neutro.',variants:'Curl de cuerda.'},
+          ]
+        },
+        {
+          day: 'Sábado', label: 'Legs B — Isquiotibiales + Glúteos + Pantorrillas',
+          exercises: [
+            {name:'Peso muerto rumano',sets:4,reps:'8-10',rest:'2 min',notes:'Bisagra cadera. Espalda neutra. Sientes isquios.',variants:'Peso muerto rumano mancuernas, Peso muerto piernas rígidas.'},
+            {name:'Curl femoral sentado',sets:4,reps:'10-12',rest:'90s',notes:'Rango completo. Pausa abajo.',variants:'Curl tumbado, Nordic curl.'},
+            {name:'Hip thrust',sets:4,reps:'10-15',rest:'2 min',notes:'Barra sobre cadera. Contrae glúteo arriba.',variants:'Hip thrust en máquina, Puente de glúteos.'},
+            {name:'Zancadas',sets:3,reps:'10-12 c/pierna',rest:'90s',notes:'Paso largo. Rodilla trasera roza suelo.',variants:'Zancada con mancuernas, Zancadas búlgaras.'},
+            {name:'Pantorrillas sentado',sets:4,reps:'12-20',rest:'60s',notes:'Sóleo. Rango completo.',variants:'Pantorrillas de pie.'},
+          ]
+        },
+        {
+          day: 'Domingo', label: 'Descanso activo / Cardio ligero',
+          exercises: []
+        }
+      ]
+    }
+  };
+}
+
+let DATA = defaultData();
+
+function save(){ try{ localStorage.setItem('mlabData', JSON.stringify(DATA)); }catch(e){} }
+function load(){ try{ const s=localStorage.getItem('mlabData'); if(s){ DATA=JSON.parse(s); merge(); } }catch(e){} }
+
+function merge(){
+  const def = defaultData();
+  if(!DATA.profile) DATA.profile = def.profile;
+  else { for(const k of Object.keys(def.profile)){ if(DATA.profile[k]===undefined) DATA.profile[k]=def.profile[k]; } }
+  if(!DATA.xp) DATA.xp = 0;
+  if(!DATA.level) DATA.level = 1;
+  if(!DATA.workoutLog) DATA.workoutLog = [];
+  if(!DATA.nutritionLog) DATA.nutritionLog = [];
+  if(!DATA.waterLog) DATA.waterLog = [];
+  if(!DATA.bodyLog) DATA.bodyLog = [];
+  if(!DATA.goalLog) DATA.goalLog = [];
+  if(!DATA.supplementLog) DATA.supplementLog = [];
+  if(!DATA.recoveryLog) DATA.recoveryLog = [];
+  if(!DATA.injuryLog) DATA.injuryLog = [];
+  if(!DATA.completedDays) DATA.completedDays = [];
+  if(!DATA.routine) DATA.routine = def.routine;
+}
+
+/* ---------------- UTILS ---------------- */
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function openModal(html){
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('show'); }
+document.getElementById('modalBg').addEventListener('click', e=>{ if(e.target.id==='modalBg') closeModal(); });
+
+/* ---------------- NAVIGATION ---------------- */
+const NAV = [
+  {id:'inicio',   icon:'🏠', label:'Inicio'},
+  {id:'hoy',      icon:'📅', label:'Entrenamiento Hoy'},
+  {id:'rutina',   icon:'📋', label:'Mi Rutina'},
+  {id:'progresion',icon:'📈',label:'Progresión'},
+  {id:'registro', icon:'📝', label:'Registro'},
+  {id:'objetivos',icon:'🎯', label:'Objetivos'},
+  {id:'calendario',icon:'🗓',label:'Calendario'},
+  {id:'estadisticas',icon:'📊',label:'Estadísticas'},
+  {id:'nutricion',icon:'🥗', label:'Nutrición'},
+  {id:'suplementos',icon:'💊',label:'Suplementos'},
+  {id:'recuperacion',icon:'😴',label:'Recuperación'},
+  {id:'lesiones', icon:'🩹', label:'Lesiones'},
+  {id:'corporal', icon:'📏', label:'Medidas Corporales'},
+  {id:'filosofia',icon:'🧠', label:'Filosofía'},
+  {id:'config',   icon:'⚙️', label:'Configuración'},
+  {id:'respaldos',icon:'💾', label:'Respaldos'},
+];
+let currentView = 'inicio';
+function buildNav(){
+  const nav = document.getElementById('navlist');
+  nav.innerHTML = NAV.map(n=>`<div class="navitem" data-view="${n.id}"><span class="ic">${n.icon}</span>${n.label}</div>`).join('');
+  nav.querySelectorAll('.navitem').forEach(el=>{
+    el.addEventListener('click', ()=>{ goTo(el.dataset.view); document.getElementById('sidebar').classList.remove('open'); });
+  });
+}
+function goTo(view){
+  currentView = view;
+  document.querySelectorAll('.navitem').forEach(el=>el.classList.toggle('active', el.dataset.view===view));
+  renderView(view);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('menuBtn').addEventListener('click', ()=>document.getElementById('sidebar').classList.toggle('open'));
+
+function renderTop(){
+  document.getElementById('xpLevel').textContent = DATA.level;
+  document.getElementById('xpPts').textContent = DATA.xp+'/'+(DATA.level*150);
+  const now = new Date();
+  const dayNames = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  document.getElementById('greetSub').textContent = dayNames[now.getDay()]+' · '+now.toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})+' · '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  const hr = now.getHours();
+  const greet = hr<12?'Buenos días':hr<19?'Buenas tardes':'Buenas noches';
+  document.getElementById('greetTitle').textContent = greet+', '+(DATA.profile.name||'Atleta');
+}
+
+/* ---------------- VIEW DISPATCH ---------------- */
+function renderView(view){
+  const root = document.getElementById('views');
+  const fns = {
+    inicio: viewInicio, hoy: viewHoy, rutina: viewRutina, progresion: viewProgresion,
+    registro: viewRegistro, objetivos: viewObjetivos, calendario: viewCalendario,
+    estadisticas: viewEstadisticas, nutricion: viewNutricion, suplementos: viewSuplementos,
+    recuperacion: viewRecuperacion, lesiones: viewLesiones, corporal: viewCorporal,
+    filosofia: viewFilosofia, config: viewConfig, respaldos: viewRespaldos,
+  };
+  root.innerHTML = `<div class="view active">${(fns[view]||viewInicio)()}</div>`;
+  bindView(view);
+}
