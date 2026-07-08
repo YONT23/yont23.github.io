@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLab — Mendoza Performance Lab</title>
+<title>MLab v3 — Mendoza Molina Performance Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -199,7 +199,7 @@ table td{padding:9px 8px;font-size:.83rem;border-bottom:1px solid #232323;}
     <text x="50" y="96" font-family="Sora,sans-serif" font-size="16" font-weight="800" fill="white" text-anchor="middle">MLab</text>
   </svg>
   <h1>MLab</h1>
-  <div class="sub">Mendoza Performance Lab</div>
+  <div class="sub">Mendoza Molina Performance Lab</div>
   <div class="slogan">Entrena con inteligencia. Registra todo. Mejora siempre.</div>
   <div class="bar"><i></i></div>
 </div>
@@ -311,56 +311,64 @@ const REST_SECS = {compound:150, secondary:90, isolation:72};
 const ROUTINE = {
 lunes:[
   {id:'l1',name:'Sentadilla trasera',      level:'S',restType:'compound', equipment:'barbell',    bilateral:true, weightMult:1,category:'compound',
-   muscles:'Cuádriceps, glúteo, core',sets:4,repRange:[6,10],rest:'2-3 min',rir:2,approx:1,effective:4,
-   science:'Mayor tensión mecánica posible sobre cuádriceps; base de toda progresión de fuerza en pierna.',
+   muscles:'Cuádriceps, glúteo, core',sets:3,repRange:[6,8],rest:'2-3 min',rir:2,approx:1,effective:3,
+   science:'Mayor tensión mecánica posible sobre cuádriceps; base de toda progresión de fuerza en pierna. Series de aproximación automáticas antes de las 3 efectivas.',
    errors:'Valgo de rodilla, perder tensión abdominal, profundidad inconsistente.',
    tips:'Pecho alto, empuja el piso, excéntrica 2-3s.',variants:'Goblet, frontal, Hack squat.'},
   {id:'l2',name:'Prensa inclinada',        level:'A',restType:'secondary',equipment:'machine',    bilateral:true, weightMult:1,category:'compound',
-   muscles:'Cuádriceps, glúteo',sets:3,repRange:[10,14],rest:'90-120s',rir:1,approx:1,effective:3,
+   muscles:'Cuádriceps, glúteo',sets:3,repRange:[8,10],rest:'90-120s',rir:1,approx:1,effective:3,
    science:'Acumula volumen de cuádriceps con bajo estrés sistémico.',
    errors:'Bloquear rodillas, rango incompleto.',tips:'Pies medios, descenso hasta 90°.',variants:'Prensa unilateral.'},
   {id:'l3',name:'Bulgarian Split Squat',   level:'A',restType:'secondary',equipment:'dumbbell',   bilateral:false,weightMult:2,category:'compound',
-   muscles:'Cuádriceps, glúteo (unilateral)',sets:3,repRange:[8,12],rest:'90s',rir:2,approx:1,effective:3,
+   muscles:'Cuádriceps, glúteo (unilateral)',sets:3,repRange:[10,12],rest:'90s',rir:2,approx:1,effective:3,
    science:'Patrón unilateral que corrige desbalances y maximiza tensión en cuádriceps y glúteo.',
    errors:'Rodilla colapsando, torso inclinado.',tips:'Descenso vertical, rodilla sigue la punta del pie.',variants:'Zancada inversa.'},
-  {id:'l4',name:'Extensión de cuádriceps', level:'B',restType:'isolation', equipment:'machine',    bilateral:true, weightMult:1,category:'isolation',
+  {id:'l4',name:'Extensión de cuádriceps (curl sentado)', level:'B',restType:'isolation', equipment:'machine',    bilateral:true, weightMult:1,category:'isolation',
    muscles:'Cuádriceps (aislado)',sets:3,repRange:[12,15],rest:'60-75s',rir:1,approx:0,effective:3,
    science:'Tensión directa en recto femoral sin fatiga sistémica.',
    errors:'Impulso, sin pausa arriba.',tips:'Pausa 1s en contracción, control total.',variants:'Extensión unilateral.'},
-  {id:'l5',name:'Pantorrilla de pie',      level:'B',restType:'isolation', equipment:'machine',    bilateral:true, weightMult:1,category:'isolation',
-   muscles:'Gastrocnemio',sets:4,repRange:[10,15],rest:'60s',rir:1,approx:0,effective:4,
+  {id:'l5',name:'Elevación de pantorrilla de pie', level:'B',restType:'isolation', equipment:'machine',    bilateral:true, weightMult:1,category:'isolation',
+   muscles:'Gastrocnemio',sets:4,repRange:[8,12],rest:'60s',rir:1,approx:0,effective:4,
    science:'Gastrocnemio responde mejor con rodilla extendida y rango completo.',
    errors:'Rango parcial, rebotar.',tips:'Pausa en estiramiento y contracción.',variants:'Unilateral, en prensa.'},
-  {id:'l6',name:'Step Down',               level:'C',restType:'isolation', equipment:'bodyweight',  bilateral:false,weightMult:1,category:'isolation',
-   muscles:'Cuádriceps, estabilidad rodilla',sets:3,repRange:[10,12],rest:'60s',rir:2,approx:0,effective:3,
-   science:'Excéntrico unilateral que previene dolor anterior de rodilla.',
-   errors:'Caer sin control, rodilla en valgo.',tips:'Descenso 3-4s, toque suave.',variants:'Step Up.'}
+  {id:'l6',name:'Elevación de pantorrilla sentado', level:'B',restType:'isolation', equipment:'machine',    bilateral:true, weightMult:1,category:'isolation',
+   muscles:'Sóleo',sets:4,repRange:[12,15],rest:'45-60s',rir:1,approx:0,effective:4,
+   science:'Rodilla flexionada aísla el sóleo; complementa la pantorrilla de pie.',
+   errors:'Rango incompleto.',tips:'Tempo lento, foco en contracción.',variants:'Máquina o mancuerna sobre rodilla.'}
 ],
 martes:[
   {id:'m1',name:'Dominadas lastradas',     level:'S',restType:'compound', equipment:'bodyweight',  bilateral:true, weightMult:1,category:'compound',
-   muscles:'Dorsal, bíceps',sets:4,repRange:[5,10],rest:'2-3 min',rir:2,approx:1,effective:4,
+   muscles:'Dorsal, bíceps',sets:3,repRange:[6,8],rest:'2-3 min',rir:2,approx:1,effective:3,
    science:'Mayor tensión mecánica en dorsal; patrón de tracción vertical fundamental.',
    errors:'Kipping, rango parcial.',tips:'Dead-hang, pecho a la barra, controla 2s la bajada.',variants:'Jalón con agarre supino.'},
-  {id:'m2',name:'Remo con barra',          level:'S',restType:'compound', equipment:'barbell',    bilateral:true, weightMult:1,category:'compound',
-   muscles:'Espalda media, dorsal',sets:4,repRange:[6,10],rest:'2 min',rir:2,approx:1,effective:4,
-   science:'Grosor de espalda y postura general; alta carga posible.',
-   errors:'Rebote lumbar, torso demasiado vertical.',tips:'Tronco a 45°, barra al abdomen, escápulas activas.',variants:'Remo Pendlay, remo en T.'},
-  {id:'m3',name:'Jalón al pecho',          level:'A',restType:'secondary',equipment:'cable',      bilateral:true, weightMult:1,category:'compound',
-   muscles:'Dorsal, bíceps',sets:3,repRange:[10,12],rest:'90s',rir:1,approx:0,effective:3,
-   science:'Volumen adicional de dorsal con tensión constante.',
-   errors:'Barra atrás de la nuca, rango incompleto.',tips:'Agarre pronado, pecho hacia la barra.',variants:'Agarre supino, neutro.'},
-  {id:'m4',name:'Curl EZ',                 level:'B',restType:'isolation', equipment:'barbell',    bilateral:true, weightMult:1,category:'isolation',
-   muscles:'Bíceps braquial',sets:3,repRange:[8,12],rest:'60-75s',rir:1,approx:0,effective:3,
-   science:'Aislamiento de bíceps con menor tensión en muñecas.',
-   errors:'Balanceo de cadera, codos desplazados.',tips:'Codos fijos al torso, control en bajada.',variants:'Curl con barra.'},
-  {id:'m5',name:'Curl martillo',           level:'B',restType:'isolation', equipment:'dumbbell',   bilateral:true, weightMult:2,category:'isolation',
-   muscles:'Bíceps, braquial anterior',sets:3,repRange:[10,14],rest:'60s',rir:1,approx:0,effective:3,
+  {id:'m2',name:'Jalón al pecho agarre ancho', level:'S',restType:'compound', equipment:'cable',    bilateral:true, weightMult:1,category:'compound',
+   muscles:'Dorsal ancho',sets:3,repRange:[8,10],rest:'2 min',rir:2,approx:1,effective:3,
+   science:'Agarre ancho enfatiza la anchura del dorsal; segundo movimiento de tracción vertical de la sesión.',
+   errors:'Balancear el torso, rango incompleto.',tips:'Pecho hacia la barra, controla la fase excéntrica.',variants:'Jalón con agarre supino.'},
+  {id:'m3',name:'Jalón al pecho agarre estrecho', level:'A',restType:'secondary',equipment:'cable', bilateral:true, weightMult:1,category:'compound',
+   muscles:'Dorsal, bíceps',sets:3,repRange:[10,12],rest:'90s',rir:1,approx:1,effective:3,
+   science:'Agarre estrecho aumenta la contribución de bíceps y espesor del dorsal medio.',
+   errors:'Barra atrás de la nuca, rango incompleto.',tips:'Codos cerca del cuerpo, pausa en contracción.',variants:'Agarre neutro.'},
+  {id:'m4',name:'Remo (barra o polea)',    level:'A',restType:'secondary',equipment:'barbell',     bilateral:true, weightMult:1,category:'compound',
+   muscles:'Espalda media, dorsal',sets:3,repRange:[8,10],rest:'90-120s',rir:1,approx:1,effective:3,
+   science:'Tracción horizontal — grosor de espalda y postura general. Usar barra o polea según disponibilidad del gimnasio.',
+   errors:'Rebote lumbar, torso demasiado vertical.',tips:'Tronco a 45°, barra o agarre al abdomen, escápulas activas.',variants:'Remo Pendlay, remo en T, remo en polea baja.'},
+  {id:'m5',name:'Face Pull',               level:'B',restType:'isolation', equipment:'cable',      bilateral:true, weightMult:1,category:'isolation',
+   muscles:'Deltoides posterior, rotadores externos',sets:3,repRange:[12,15],rest:'60s',rir:1,approx:0,effective:3,
+   science:'Equilibra el volumen de tracción y fortalece la cápsula posterior del hombro; clave para salud articular.',
+   errors:'Demasiado peso, perder rotación externa.',tips:'Codos altos, rota externamente al final.',variants:'Con banda.'},
+  {id:'m6',name:'Curl con barra EZ',       level:'B',restType:'isolation', equipment:'barbell',    bilateral:true, weightMult:1,category:'isolation',
+   muscles:'Bíceps braquial',sets:3,repRange:[8,10],rest:'60-75s',rir:1,approx:0,effective:3,
+   science:'Aislamiento de bíceps con menor tensión en muñecas gracias al ángulo de la barra EZ.',
+   errors:'Balanceo de cadera, codos desplazados.',tips:'Codos fijos al torso, control en bajada.',variants:'Curl con barra recta.'},
+  {id:'m7',name:'Curl martillo',           level:'B',restType:'isolation', equipment:'dumbbell',   bilateral:true, weightMult:2,category:'isolation',
+   muscles:'Bíceps, braquial anterior',sets:3,repRange:[10,12],rest:'60s',rir:1,approx:0,effective:3,
    science:'Agarre neutro enfatiza el braquial, aumenta grosor del brazo.',
    errors:'Impulso de hombro.',tips:'Solo movimiento del codo.',variants:'Curl con cuerda en polea.'},
-  {id:'m6',name:'Farmer Carry',            level:'C',restType:'secondary',equipment:'kettlebell',  bilateral:true, weightMult:2,category:'compound',
-   muscles:'Antebrazo, trapecio, core',sets:3,repRange:[1,1],rest:'90s',rir:0,approx:0,effective:3,unit:'distancia/tiempo',
-   science:'Fortalecimiento de agarre y estabilidad de tronco bajo carga.',
-   errors:'Encorvar espalda, pasos largos.',tips:'Pecho alto, pasos cortos.',variants:'Suitcase carry.'}
+  {id:'m8',name:'Farmer Carry',            level:'C',restType:'secondary',equipment:'kettlebell',  bilateral:true, weightMult:2,category:'compound',
+   muscles:'Antebrazo, trapecio, core',sets:3,repRange:[1,1],rest:'90s',rir:0,approx:0,effective:3,unit:'metros',distanceMeters:[30,40],
+   science:'Fortalecimiento de agarre y estabilidad de tronco bajo carga máxima; cierre de la sesión de espalda.',
+   errors:'Encorvar espalda, pasos demasiado largos.',tips:'Pecho alto, pasos cortos y rápidos, agarre firme hasta el final.',variants:'Suitcase carry (unilateral).'}
 ],
 miercoles:[
   {id:'w1',name:'Peso muerto rumano',      level:'S',restType:'compound', equipment:'barbell',    bilateral:true, weightMult:1,category:'compound',
