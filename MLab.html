@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLab v3 — Mendoza Molina Performance Lab</title>
+<title>MLab — Mendoza Performance Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -142,14 +142,21 @@ table td{padding:9px 8px;font-size:.83rem;border-bottom:1px solid #232323;}
 .train-set-row.set-done{border-color:var(--green);background:rgba(54,194,107,.06);}
 .train-set-row.set-done .done-btn{background:var(--green);color:#fff;border-color:var(--green);}
 
-/* REST TIMER */
-#restTimer{display:none;position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 20px;z-index:2000;box-shadow:0 8px 32px rgba(0,0,0,.5);min-width:165px;text-align:center;}
-#restTimer.show{display:block;}
-#restTimer .rt-label{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;font-family:'Space Mono',monospace;margin-bottom:5px;}
-#restTimer .rt-time{font-size:2.2rem;font-weight:800;font-family:'Space Mono',monospace;color:var(--red);}
-#restTimer .rt-bar{height:3px;background:#2a2a2a;border-radius:3px;margin-top:8px;overflow:hidden;}
-#restTimer .rt-bar i{display:block;height:100%;background:var(--red);transition:width 1s linear;}
-#restTimer button{margin-top:10px;width:100%;padding:6px;}
+/* REST TIMER — pantalla completa */
+#restTimer{display:none;position:fixed;inset:0;background:rgba(10,10,10,.97);z-index:3000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;}
+#restTimer.show{display:flex;}
+#restTimer .rt-label{font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.22em;font-family:'Space Mono',monospace;margin-bottom:10px;}
+#restTimer .rt-exname{font-size:1rem;color:var(--text2);font-weight:600;margin-bottom:30px;max-width:340px;}
+#restTimer .rt-ring-wrap{position:relative;width:260px;height:260px;margin-bottom:36px;}
+#restTimer .rt-ring-wrap svg{position:absolute;inset:0;transform:rotate(-90deg);}
+#restTimer .rt-ring-bg{fill:none;stroke:#242424;stroke-width:10;}
+#restTimer .rt-ring-progress{fill:none;stroke:var(--red);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s linear;}
+#restTimer .rt-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#restTimer .rt-time{font-size:5rem;font-weight:800;font-family:'Space Mono',monospace;color:#fff;line-height:1;}
+#restTimer .rt-sub{font-size:.68rem;color:var(--text3);letter-spacing:.14em;margin-top:10px;font-family:'Space Mono',monospace;}
+#restTimer .rt-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+#restTimer .rt-actions button{min-width:130px;padding:13px 22px;font-size:.88rem;}
+#restTimer .rt-extra{margin-top:18px;font-size:.68rem;color:var(--text3);font-family:'Space Mono',monospace;letter-spacing:.08em;}
 
 /* CALENDAR & GOALS */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
@@ -192,17 +199,32 @@ table td{padding:9px 8px;font-size:.83rem;border-bottom:1px solid #232323;}
     <text x="50" y="96" font-family="Sora,sans-serif" font-size="16" font-weight="800" fill="white" text-anchor="middle">MLab</text>
   </svg>
   <h1>MLab</h1>
-  <div class="sub">Mendoza Molina Performance Lab</div>
+  <div class="sub">Mendoza Performance Lab</div>
   <div class="slogan">Entrena con inteligencia. Registra todo. Mejora siempre.</div>
   <div class="bar"><i></i></div>
 </div>
 
-<!-- REST TIMER -->
+<!-- REST TIMER — pantalla completa con anillo circular -->
 <div id="restTimer">
   <div class="rt-label">Descanso</div>
-  <div class="rt-time" id="rtTime">2:00</div>
-  <div class="rt-bar"><i id="rtBar" style="width:100%"></i></div>
-  <button class="btn small" onclick="stopRestTimer()">Saltar ⏭</button>
+  <div class="rt-exname" id="rtExName"></div>
+  <div class="rt-ring-wrap">
+    <svg viewBox="0 0 260 260" width="260" height="260">
+      <circle class="rt-ring-bg" cx="130" cy="130" r="115"/>
+      <circle class="rt-ring-progress" id="rtRing" cx="130" cy="130" r="115"
+        stroke-dasharray="722.6" stroke-dashoffset="0"/>
+    </svg>
+    <div class="rt-inner">
+      <div class="rt-time" id="rtTime">2:00</div>
+      <div class="rt-sub" id="rtSub">DESCANSO</div>
+    </div>
+  </div>
+  <div class="rt-actions">
+    <button class="btn primary" onclick="stopRestTimer()">⏭ Saltar</button>
+    <button class="btn" onclick="addRestTime(30)">+30s</button>
+    <button class="btn" onclick="addRestTime(-15)">-15s</button>
+  </div>
+  <div class="rt-extra" id="rtExtra"></div>
 </div>
 
 <!-- MODO ENTRENAMIENTO -->
@@ -755,23 +777,60 @@ function openModal(html){ document.getElementById('modalBody').innerHTML=html; d
 function closeModal(){ document.getElementById('modalBg').classList.remove('show'); }
 document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target.id==='modalBg') closeModal(); });
 
-/* REST TIMER */
+/* REST TIMER — pantalla completa con anillo SVG */
 let restInterval=null;
-function startRestTimer(seconds){
+let restRemaining=0, restTotal=0;
+const RING_CIRCUMFERENCE = 2 * Math.PI * 115; // 722.6px
+
+function startRestTimer(seconds, exName){
   clearInterval(restInterval);
-  const el=document.getElementById('restTimer'), timeEl=document.getElementById('rtTime'), barEl=document.getElementById('rtBar');
+  restRemaining = seconds; restTotal = seconds;
+  const el    = document.getElementById('restTimer');
+  const timeEl= document.getElementById('rtTime');
+  const subEl = document.getElementById('rtSub');
+  const ring  = document.getElementById('rtRing');
+  const exEl  = document.getElementById('rtExName');
+  const extraEl = document.getElementById('rtExtra');
+  if(exEl)   exEl.textContent  = exName || '';
+  if(subEl)  subEl.textContent = 'DESCANSO';
+  if(extraEl) extraEl.textContent = `${seconds}s recomendados`;
   el.classList.add('show');
-  let remaining=seconds; const total=seconds;
+  // Prevent body scroll when timer is fullscreen
+  document.body.style.overflow='hidden';
+
   function tick(){
-    const m=Math.floor(remaining/60), s=remaining%60;
-    timeEl.textContent=`${m}:${s<10?'0'+s:s}`;
-    barEl.style.width=(remaining/total*100)+'%';
-    if(remaining<=0){ clearInterval(restInterval); el.classList.remove('show'); toast('⏰ ¡Descansa terminado!'); return; }
-    remaining--;
+    const m = Math.floor(restRemaining/60);
+    const s = restRemaining % 60;
+    if(timeEl) timeEl.textContent = `${m}:${s<10?'0'+s:s}`;
+    // Update SVG ring: offset goes from 0 (full) to CIRCUMFERENCE (empty)
+    const progress = restRemaining / restTotal;
+    if(ring) ring.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - progress);
+    // Color shift: green when >50%, yellow when >25%, red when <=25%
+    if(ring){
+      ring.style.stroke = progress > 0.5 ? '#36C26B' : progress > 0.25 ? '#E6B400' : '#E53935';
+    }
+    if(restRemaining <= 0){
+      clearInterval(restInterval);
+      stopRestTimer();
+      toast('⏰ ¡A levantar!');
+      return;
+    }
+    restRemaining--;
   }
-  tick(); restInterval=setInterval(tick,1000);
+  tick();
+  restInterval = setInterval(tick, 1000);
 }
-function stopRestTimer(){ clearInterval(restInterval); document.getElementById('restTimer').classList.remove('show'); }
+
+function stopRestTimer(){
+  clearInterval(restInterval);
+  document.getElementById('restTimer').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+function addRestTime(delta){
+  restRemaining = Math.max(0, restRemaining + delta);
+  restTotal = Math.max(restTotal, restRemaining);
+}
 
 /* ──────────────────────────────────────────────
    NAVIGATION
