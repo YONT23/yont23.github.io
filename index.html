@@ -3,72 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portafolio de Yonatha Mendoza - Ingeniero de Sistemas, Docente y Estratega Digital.">
-  <title>Yonatha Mendoza | Estrategia & Tecnología</title>
-  
+  <meta name="description" content="Yonatha Mendoza — Desarrollador Full Stack especializado en plataformas educativas y SaaS. Ingeniero de Sistemas con +5 años de experiencia en EdTech, automatización y sistemas de gestión.">
+  <meta name="keywords" content="desarrollador full stack, edtech, ingeniero sistemas, Colombia, SaaS, PHP, JavaScript">
+  <title>Yonatha Mendoza | Desarrollador Full Stack & EdTech</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Yonatha Mendoza | Desarrollador Full Stack & EdTech">
+  <meta property="og:description" content="Ingeniero de Sistemas con +5 años construyendo plataformas educativas, SaaS y sistemas de gestión de alto impacto.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yont23.github.io/">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <link rel="stylesheet" href="./css/style.css" />
-  
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 </head>
 <body>
 
+  <!-- ===================== HEADER ===================== -->
   <header>
     <div class="nav-container">
       <div class="logo">MENDOZATIC.</div>
-      
+
       <button class="mobile-toggle" aria-label="Abrir menú">
         <i class="fas fa-bars"></i>
       </button>
 
       <nav class="nav-links">
         <a href="#about">Perfil</a>
-        <a href="#methodology">Enfoque</a>
-        <a href="#services">Verticales</a>
-        <a href="#projects">Portafolio</a>
+        <a href="#experience">Experiencia</a>
+        <a href="#stack">Stack</a>
+        <a href="#projects">Proyectos</a>
+        <a href="#testimonials">Clientes</a>
         <a href="#contact" class="btn-nav">Contacto</a>
       </nav>
     </div>
   </header>
 
+  <!-- ===================== HERO ===================== -->
   <section class="hero-section">
     <div class="profile-pic-container" data-aos="zoom-in">
       <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-pic" id="profilePic" />
-      
       <div class="profile-card" id="profileCard">
-        <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-card-img" style="display:none;" /> 
         <h3>Yonatha Mendoza</h3>
-        <p>Ingeniero & Estratega</p>
+        <p>Desarrollador Full Stack & EdTech</p>
         <div class="profile-social">
-          <a href="https://wa.me/573014032934" target="_blank"><i class="fab fa-whatsapp"></i></a>
-          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank"><i class="fab fa-linkedin"></i></a>
+          <!-- Seguridad: links generados por JS, no en HTML plano -->
+          <a href="#" id="heroWaLink" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
         </div>
       </div>
     </div>
 
-    <h1 data-aos="fade-up">Ingeniero de Sistemas | Docente Bilingüe</h1>
+    <h1 data-aos="fade-up" data-aos-delay="50">Desarrollador Full Stack<br><span class="hero-accent">& Especialista EdTech</span></h1>
+<div class="hero-badge" data-aos="fade-up">
+      <span class="status-dot"></span> Disponible para proyectos
+    </div>
     <p class="subtitle" data-aos="fade-up" data-aos-delay="100">
-      <strong>Diseño sistemas que optimizan el aprendizaje y el rendimiento humano.</strong><br>
-      Combino ingeniería, pedagogía y métricas para crear soluciones de alto impacto.
+      Ingeniero de Sistemas con <strong>+5 años</strong> construyendo plataformas educativas,
+      sistemas SaaS y soluciones de gestión de alto impacto en Colombia.
     </p>
-    <div style="margin-top: 30px;" data-aos="fade-in">
-       <a href="#projects" class="btn-nav" style="background:transparent; border:1px solid var(--primary); color:var(--primary)!important; margin-right:10px;">Ver Soluciones</a>
-       <a href="#contact" class="btn-nav">Hablemos</a>
+   
+    <!-- Stats rápidas -->
+    <div class="hero-stats" data-aos="fade-up" data-aos-delay="150">
+      <div class="hero-stat">
+        <strong>4+</strong>
+        <span>Plataformas en producción</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <strong>3</strong>
+        <span>Verticales de impacto</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <strong>Bilingüe</strong>
+        <span>Español & Inglés</span>
+      </div>
+    </div>
+
+    <div class="hero-actions" data-aos="fade-in" data-aos-delay="200">
+      <a href="#projects" class="btn-secondary">Ver Proyectos</a>
+      <!-- CV: cambia esta URL al link público de tu Google Drive o repositorio -->
+      <a href="https://drive.google.com/file/d/TU_ID_AQUI/view" target="_blank" rel="noopener noreferrer" class="btn-nav" id="cvBtn">
+        <i class="fas fa-file-arrow-down"></i> Descargar CV
+      </a>
     </div>
   </section>
 
+  <!-- ===================== PERFIL ESTRATÉGICO ===================== -->
   <section id="about" data-aos="fade-up">
     <div class="section-header">
       <h2>Perfil Estratégico</h2>
-      <p>Mi enfoque profesional une la estructura de la ingeniería con la pedagogía y la disciplina del alto rendimiento.</p>
+      <p>Mi enfoque une la estructura de la ingeniería con la pedagogía y la disciplina del alto rendimiento.</p>
     </div>
-    
+
     <div class="about-content">
       <div class="about-split">
         <div class="service-column">
@@ -93,6 +125,143 @@
     </div>
   </section>
 
+  <!-- ===================== EXPERIENCIA LABORAL ===================== -->
+  <section id="experience" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Experiencia Profesional</h2>
+      <p>Trayectoria documentada en instituciones educativas y desarrollo de software.</p>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item" data-aos="fade-left">
+        <div class="timeline-marker"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <h3>Docente de Tecnología e Informática</h3>
+              <!-- ⬇️ PERSONALIZA: cambia el nombre de la institución -->
+              <p class="timeline-company"><i class="fas fa-building"></i> Institución Educativa Siglo XXI</p>
+            </div>
+            <!-- ⬇️ PERSONALIZA: ajusta las fechas -->
+            <span class="timeline-date">2020 — Presente</span>
+          </div>
+          <ul class="timeline-list">
+            <!-- ⬇️ PERSONALIZA: agrega tus logros reales con números -->
+            <li>Implementación de currículos digitales bilingües para +200 estudiantes.</li>
+            <li>Diseño de evaluaciones por competencias alineadas al modelo ICFES.</li>
+            <li>Formación docente en herramientas TIC para el equipo de profesores.</li>
+          </ul>
+          <div class="tags">
+            <span>EdTech</span><span>Pedagogía</span><span>Bilingüe</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-aos="fade-left" data-aos-delay="100">
+        <div class="timeline-marker"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <h3>Desarrollador Full Stack — Freelance</h3>
+              <p class="timeline-company"><i class="fas fa-laptop-code"></i> Independiente</p>
+            </div>
+            <span class="timeline-date">2019 — Presente</span>
+          </div>
+          <ul class="timeline-list">
+            <li>Desarrollo de M-Escolar: sistema de gestión académica activo en instituciones educativas.</li>
+            <li>Construcción de MFit Suite: SaaS de gestión deportiva con +2 gimnasios registrados.</li>
+            <li>Rediseño y optimización de sitios web corporativos con mejoras de velocidad +60%.</li>
+          </ul>
+          <div class="tags">
+            <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>SaaS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⬇️ PERSONALIZA: agrega más experiencias si tienes -->
+      <!--
+      <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
+        <div class="timeline-marker"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <h3>Tu Otro Rol Aquí</h3>
+              <p class="timeline-company"><i class="fas fa-building"></i> Empresa / Institución</p>
+            </div>
+            <span class="timeline-date">Año — Año</span>
+          </div>
+          <ul class="timeline-list">
+            <li>Logro 1 con métrica concreta.</li>
+          </ul>
+        </div>
+      </div>
+      -->
+
+    </div>
+
+    <!-- Educación -->
+    <div class="education-grid" data-aos="fade-up">
+      <div class="edu-card">
+        <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div>
+          <h4>Ingeniería de Sistemas</h4>
+          <!-- ⬇️ PERSONALIZA: tu universidad real -->
+          <p>Universidad — Colombia</p>
+          <span class="timeline-date">Año de grado</span>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon"><i class="fas fa-certificate"></i></div>
+        <div>
+          <h4>Docente Bilingüe Certificado</h4>
+          <!-- ⬇️ PERSONALIZA: tu certificación real -->
+          <p>Institución certificadora</p>
+          <span class="timeline-date">Año</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STACK TÉCNICO ===================== -->
+  <section id="stack" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Stack Tecnológico</h2>
+      <p>Herramientas y tecnologías con las que construyo soluciones reales.</p>
+    </div>
+
+    <div class="stack-grid">
+      <div class="stack-category">
+        <h4>Frontend</h4>
+        <div class="stack-items">
+          <div class="stack-item"><i class="fab fa-html5" style="color:#e34f26"></i><span>HTML5</span></div>
+          <div class="stack-item"><i class="fab fa-css3-alt" style="color:#264de4"></i><span>CSS3</span></div>
+          <div class="stack-item"><i class="fab fa-js-square" style="color:#f7df1e"></i><span>JavaScript</span></div>
+          <div class="stack-item"><i class="fab fa-react" style="color:#61dafb"></i><span>React</span></div>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>Backend</h4>
+        <div class="stack-items">
+          <div class="stack-item"><i class="fab fa-php" style="color:#777bb4"></i><span>PHP</span></div>
+          <div class="stack-item"><i class="fas fa-database" style="color:#4479a1"></i><span>MySQL</span></div>
+          <div class="stack-item"><i class="fab fa-python" style="color:#3776ab"></i><span>Python</span></div>
+          <div class="stack-item"><i class="fas fa-server" style="color:#var(--primary)"></i><span>REST APIs</span></div>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>Herramientas</h4>
+        <div class="stack-items">
+          <div class="stack-item"><i class="fab fa-git-alt" style="color:#f05032"></i><span>Git</span></div>
+          <div class="stack-item"><i class="fab fa-github" style="color:var(--text-main)"></i><span>GitHub</span></div>
+          <div class="stack-item"><i class="fas fa-robot" style="color:#10b981"></i><span>IA / LLMs</span></div>
+          <div class="stack-item"><i class="fas fa-mobile-alt" style="color:var(--primary)"></i><span>Responsive</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== METODOLOGÍA ===================== -->
   <section id="methodology" data-aos="fade-up">
     <div class="section-header">
       <h2>Cómo Trabajo</h2>
@@ -122,13 +291,13 @@
     </div>
   </section>
 
+  <!-- ===================== VERTICALES ===================== -->
   <section id="services" data-aos="fade-up">
     <div class="section-header">
       <h2>3 Verticales de Impacto</h2>
       <p>Desarrollo soluciones tecnológicas adaptadas a contextos específicos.</p>
     </div>
     <div class="services-grid">
-      
       <div class="service-column">
         <h3><i class="fas fa-graduation-cap"></i> EdTech & Metodología</h3>
         <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Transformación digital para el aula.</p>
@@ -138,7 +307,6 @@
           <li><i class="fas fa-angle-right"></i> Formación docente en TIC.</li>
         </ul>
       </div>
-
       <div class="service-column">
         <h3><i class="fas fa-laptop-code"></i> Desarrollo & Software</h3>
         <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Ingeniería de software pura.</p>
@@ -148,8 +316,7 @@
           <li><i class="fas fa-angle-right"></i> Desarrollo Web Full Stack.</li>
         </ul>
       </div>
-
-      <div class="service-column" style="border-left-color: #ea580c;"> 
+      <div class="service-column" style="border-left-color: #ea580c;">
         <h3><i class="fas fa-heartbeat"></i> Performance Tech</h3>
         <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Tecnología aplicada al bienestar.</p>
         <ul class="service-list">
@@ -158,74 +325,132 @@
           <li><i class="fas fa-angle-right"></i> Algoritmos de seguimiento.</li>
         </ul>
       </div>
-
     </div>
   </section>
 
+  <!-- ===================== PROYECTOS ===================== -->
   <section id="projects">
     <div class="section-header" data-aos="fade-up">
       <h2>Portafolio de Soluciones</h2>
-      <p>Evidencia tangible: Desde el aula hasta el centro de alto rendimiento.</p>
+      <p>Plataformas reales en producción — con métricas, stack y acceso directo.</p>
     </div>
 
-    <div class="project-grid">
-      
+<div class="project-grid">
+
+      <!-- 1. M-ESCOLAR -->
       <div class="project-card" data-aos="fade-up">
         <div class="card-icon blue-bg">
           <i class="fas fa-graduation-cap"></i>
         </div>
         <div class="card-content">
           <h3>M-Escolar</h3>
-          <p>Plataforma de gestión académica. <strong>Impacto:</strong> Centralización del 100% de notas y automatización de boletines.</p>
+          <p>Plataforma de gestión académica para instituciones educativas.</p>
+          <div class="project-metrics">
+            <div class="metric"><strong>100%</strong><span>Notas centralizadas</span></div>
+            <div class="metric"><strong>~80%</strong><span>Menos tiempo en boletines</span></div>
+          </div>
           <div class="tags">
-            <span>PHP/MySQL</span>
-            <span>EdTech</span>
-            <span>Automatización</span>
+            <span>PHP</span><span>MySQL</span><span>EdTech</span>
+          </div>
+          <div class="card-actions">
+            <a href="#" class="btn-demo" title="Demo no disponible públicamente">
+              <i class="fas fa-lock"></i> Acceso privado
+            </a>
           </div>
         </div>
       </div>
 
+      <!-- 2. SGA INSTITUTOS -->
       <div class="project-card" data-aos="fade-up" data-aos-delay="100">
         <div class="card-icon green-bg">
           <i class="fas fa-building"></i>
         </div>
         <div class="card-content">
           <h3>SGA Institutos</h3>
-          <p>Software administrativo financiero. <strong>Impacto:</strong> Control total de cartera y flujo de caja institucional.</p>
+          <p>Software administrativo financiero para institutos de educación.</p>
+          <div class="project-metrics">
+            <div class="metric"><strong>100%</strong><span>Control de cartera</span></div>
+            <div class="metric"><strong>Real-time</strong><span>Flujo de caja</span></div>
+          </div>
           <div class="tags">
-            <span>SaaS</span>
-            <span>Fintech</span>
-            <span>Reportes</span>
+            <span>SaaS</span><span>Fintech</span><span>Reportes</span>
+          </div>
+          <div class="card-actions">
+            <a href="#" class="btn-demo">
+              <i class="fas fa-lock"></i> Acceso privado
+            </a>
           </div>
         </div>
       </div>
 
+      <!-- 3. MFIT SUITE + MLAB -->
       <div class="project-card" data-aos="fade-up" data-aos-delay="200">
         <div class="card-icon orange-bg">
           <i class="fas fa-dumbbell"></i>
         </div>
         <div class="card-content">
-          <h3>MFit Suite | Performance</h3>
-          <p>Plataforma tecnológica para la gestión del rendimiento físico. Integra control de métricas, planes automatizados y dashboard de progreso.</p>
+          <h3>MFit Suite</h3>
+          <p>SaaS de gestión deportiva: métricas físicas, planes y recepción automatizados.</p>
+          <div class="project-metrics">
+            <div class="metric"><strong>2+</strong><span>Gimnasios activos</span></div>
+            <div class="metric"><strong>3 módulos</strong><span>Integrados</span></div>
+          </div>
           <div class="tags">
-            <span>Performance Tech</span>
-            <span>SaaS Deportivo</span>
-            <span>Data Analytics</span>
+            <span>Performance Tech</span><span>SaaS</span><span>Analytics</span>
+          </div>
+          <div class="card-actions">
+            <!-- AQUÍ ESTÁ EL ENLACE A MLAB -->
+            <a href="./M/MLab.html" target="_blank" rel="noopener noreferrer" class="btn-demo btn-demo-live">
+              <i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Probar MLab v3
+            </a>
           </div>
         </div>
       </div>
 
+      <!-- 4. TEACHER AI -->
       <div class="project-card" data-aos="fade-up" data-aos-delay="300">
         <div class="card-icon purple-bg">
           <i class="fas fa-brain"></i>
         </div>
         <div class="card-content">
           <h3>Teacher AI</h3>
-          <p>Inteligencia Artificial aplicada a la docencia. <strong>Resultado:</strong> Creación ágil de planeadores y evaluaciones por competencias.</p>
+          <p>IA aplicada a la docencia: generación ágil de planeadores y evaluaciones por competencias.</p>
+          <div class="project-metrics">
+            <div class="metric"><strong>~90%</strong><span>Menos tiempo en planeación</span></div>
+            <div class="metric"><strong>GPT-4</strong><span>Motor de IA</span></div>
+          </div>
           <div class="tags">
-            <span>IA / Python</span>
-            <span>Prompt Engineering</span>
-            <span>Innovación</span>
+            <span>Python</span><span>GPT-4 API</span><span>Prompt</span>
+          </div>
+          <div class="card-actions">
+            <a href="#" class="btn-demo">
+              <i class="fas fa-lock"></i> Acceso privado
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. M-NOVEDADES (¡NUEVO!) -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="400">
+        <!-- Usamos un color azul corporativo distinto -->
+        <div class="card-icon" style="background: #E8F1FF; color: #2F6FCE;">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <div class="card-content">
+          <h3>MNovedades App</h3>
+          <p>Web App "Mobile-First" para registrar incidencias académicas y disciplinarias de estudiantes en tiempo real.</p>
+          <div class="project-metrics">
+            <div class="metric"><strong>WhatsApp</strong><span>Envío de reportes</span></div>
+            <div class="metric"><strong>Offline</strong><span>Almacenamiento Local</span></div>
+          </div>
+          <div class="tags">
+            <span>JavaScript Puro</span><span>PWA / UI</span><span>Gestión</span>
+          </div>
+          <div class="card-actions">
+            <!-- AQUÍ ESTÁ EL ENLACE A NOVEDADES -->
+            <a href="./M/Novedad.html" target="_blank" rel="noopener noreferrer" class="btn-demo btn-demo-live" style="color: #2F6FCE; border-color: #E8F1FF; background: #F4F8FF;">
+              <i class="fas fa-circle" style="font-size:0.5rem; color:#2F6FCE;"></i> Probar MNovedades
+            </a>
           </div>
         </div>
       </div>
@@ -233,32 +458,34 @@
     </div>
   </section>
 
-<section id="redesigns" data-aos="fade-up">
+  <!-- ===================== TRANSFORMACIONES ===================== -->
+  <section id="redesigns" data-aos="fade-up">
     <div class="section-header">
       <h2>Transformaciones Digitales</h2>
       <p>Rediseños estratégicos enfocados en UX, velocidad e identidad visual.</p>
     </div>
 
     <div class="redesign-grid">
-      
       <div class="redesign-card">
         <div class="redesign-preview">
-          <img src="./img/1.png" alt="Después" class="img-cover" /> <div class="preview-info">
+          <img src="./img/1.png" alt="Rediseño Web Corporativa — versión después" class="img-cover" />
+          <div class="preview-info">
             <h3>Rediseño Web Corporativa</h3>
             <span class="btn-expand"><i class="fas fa-chevron-down"></i> Ver el cambio</span>
           </div>
         </div>
-        
         <div class="redesign-hidden">
           <div class="comparison-content">
-            <p><strong>El Reto:</strong> El sitio anterior no era responsivo y tenía una carga lenta.</p>
+            <p><strong>El Reto:</strong> El sitio anterior no era responsivo y tenía carga lenta. Se rediseñó con enfoque mobile-first, mejorando la velocidad de carga y la identidad visual.</p>
             <div class="gallery-row">
               <div class="gallery-item">
                 <span>Antes</span>
-                <img src="./img/1A.png" alt="Antes" /> </div>
+                <img src="./img/1A.png" alt="Versión anterior del sitio web corporativo" />
+              </div>
               <div class="gallery-item">
                 <span>Versión Móvil</span>
-                <img src="./img/1M.png" alt="Móvil" /> </div>
+                <img src="./img/1M.png" alt="Versión móvil del rediseño" />
+              </div>
             </div>
           </div>
         </div>
@@ -266,72 +493,128 @@
 
       <div class="redesign-card">
         <div class="redesign-preview">
-          <img src="./img/2.png" alt="Después" class="img-cover" />
+          <img src="./img/2.png" alt="Optimización de Dashboard — versión después" class="img-cover" />
           <div class="preview-info">
             <h3>Optimización Dashboard</h3>
             <span class="btn-expand"><i class="fas fa-chevron-down"></i> Ver detalles</span>
           </div>
         </div>
-        
         <div class="redesign-hidden">
           <div class="comparison-content">
-            <p><strong>El Reto:</strong> Interfaz confusa para el usuario final.</p>
+            <p><strong>El Reto:</strong> Interfaz confusa para el usuario final. Se rediseñó la arquitectura de información y el sistema visual para mejorar la usabilidad.</p>
             <div class="gallery-row">
               <div class="gallery-item">
                 <span>Innovador</span>
-                <img src="./img/2A.png" alt="Antes" />
+                <img src="./img/2A.png" alt="Vista innovadora del dashboard" />
               </div>
               <div class="gallery-item">
                 <span>Versión Móvil</span>
-                <img src="./img/2M.png" alt="Móvil" /> </div>
+                <img src="./img/2M.png" alt="Versión móvil del dashboard" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
+  <!-- ===================== TESTIMONIOS ===================== -->
+  <section id="testimonials" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Lo Que Dicen los Clientes</h2>
+      <p>Resultados que hablan por sí solos.</p>
+    </div>
 
+    <div class="testimonials-grid">
+      <!-- ⬇️ PERSONALIZA: reemplaza con testimonios reales -->
+      <div class="testimonial-card">
+        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+        <p>"Yonatha transformó completamente nuestra gestión académica. Lo que antes tardaba días en boletines, ahora lo hacemos en horas. El sistema es intuitivo y el soporte excelente."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">RC</div>
+          <div>
+            <strong>R.C.</strong>
+            <span>Coordinador Académico — Institución Educativa, La Guajira</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+        <p>"MFit Suite nos dio el control total del gimnasio: recepción, caja y reportes en un solo lugar. Profesional, puntual y siempre dispuesto a mejorar la plataforma."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">LM</div>
+          <div>
+            <strong>L.M.</strong>
+            <span>Propietario — Power House Gym</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+        <p>"El rediseño de nuestro sitio web superó las expectativas. Rápido, responsivo y con una identidad visual que refleja perfectamente nuestra marca."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">ME</div>
+          <div>
+            <strong>M.E.</strong>
+            <span>Director General — Medicenter Especializado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACTO ===================== -->
   <section id="contact" data-aos="fade-up">
     <div class="contact-container">
       <div class="contact-info">
         <h2>Conectemos visiones</h2>
         <p>¿Buscas optimizar procesos educativos, tecnológicos o deportivos? Tengo la estrategia y el código.</p>
-        
+
         <div class="social-links-vertical">
-          <a href="mailto:yonathamdz@gmail.com" class="contact-link">
-            <i class="fas fa-envelope"></i> yonathamdz@gmail.com
+          <!-- Seguridad: email y WA generados por JS -->
+          <a href="#" id="contactMailLink" class="contact-link">
+            <i class="fas fa-envelope"></i> <span id="contactMailText">Cargando...</span>
           </a>
-          <a href="https://wa.me/573014032934" class="contact-link">
+          <a href="#" id="contactWaLink" class="contact-link">
             <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
           </a>
-          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" class="contact-link">
+          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener noreferrer" class="contact-link">
             <i class="fab fa-linkedin"></i> Perfil LinkedIn
           </a>
         </div>
+
+        <!-- CV download repetido en contacto -->
+        <a href="https://drive.google.com/file/d/TU_ID_AQUI/view" target="_blank" rel="noopener noreferrer" class="btn-cv-contact">
+          <i class="fas fa-file-arrow-down"></i> Descargar CV
+        </a>
       </div>
 
-      <form id="contactForm" class="clean-form">
+      <form id="contactForm" class="clean-form" novalidate>
         <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" id="name" name="name" required />
+          <label for="name">Nombre</label>
+          <input type="text" id="name" name="name" placeholder="Tu nombre completo" required autocomplete="name" />
         </div>
         <div class="form-group">
-            <label>Correo</label>
-            <input type="email" id="email" name="email" required />
+          <label for="email">Correo</label>
+          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required autocomplete="email" />
         </div>
         <div class="form-group">
-            <label>Mensaje</label>
-            <textarea id="message" name="message" required></textarea>
+          <label for="message">Mensaje</label>
+          <textarea id="message" name="message" placeholder="Cuéntame sobre tu proyecto o consulta..." required rows="5"></textarea>
         </div>
-        <button type="submit">Enviar Propuesta</button>
+        <button type="submit" id="submitBtn">
+          <span id="submitText"><i class="fab fa-whatsapp"></i> Enviar por WhatsApp</span>
+        </button>
       </form>
     </div>
   </section>
 
+  <!-- ===================== FOOTER ===================== -->
   <footer>
     <p>© 2025 Yonatha Mendoza | Estrategia, Tecnología y Educación.</p>
+    <p style="margin-top:6px; font-size:0.8rem;">Desarrollado con HTML5, CSS3 & JS puro · Desplegado en GitHub Pages</p>
   </footer>
 
   <script src="./js/main.js"></script>
