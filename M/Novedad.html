@@ -1,323 +1,1219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteo Dinámico de Grupos</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>MNovedades · Registro de Novedades Académicas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & TOKENS ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --blue-900:#0F2A52;
+  --blue-800:#153A70;
+  --blue-700:#1B4B8F;
+  --blue-600:#245DAE;
+  --blue-500:#2F6FCE;
+  --blue-200:#C9DEFB;
+  --blue-100:#E8F1FF;
+  --blue-50:#F4F8FF;
+  --surface:#FFFFFF;
+  --bg:#F0F4FA;
+  --ink:#16233B;
+  --ink-soft:#5B6B82;
+  --ink-faint:#8C9AB0;
+  --border:#E1E8F2;
+  --border-soft:#EDF2F9;
+  --amber:#D98A2B;
+  --amber-100:#FCF0DE;
+  --red:#D2483E;
+  --red-100:#FBEAE8;
+  --green:#2A9463;
+  --green-100:#E4F5EC;
+  --purple:#6E56C4;
+  --purple-100:#EEEAFA;
+  --radius-lg:22px;
+  --radius-md:16px;
+  --radius-sm:11px;
+  --radius-pill:999px;
+  --shadow-sm:0 1px 2px rgba(15,42,82,.07), 0 1px 1px rgba(15,42,82,.04);
+  --shadow-md:0 10px 30px -8px rgba(15,42,82,.18);
+  --shadow-lg:0 20px 50px -12px rgba(15,42,82,.28);
+  --font-display:'Poppins',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100dvh;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font-family:inherit;font-size:16px;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+input,select,textarea{outline:none;}
+:focus-visible{outline:2.5px solid var(--blue-500);outline-offset:2px;border-radius:6px;}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}}
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            box-sizing: border-box;
-        }
+/* ============ LAYOUT SHELL ============ */
+#app{max-width:640px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
 
-        h1 {
-            font-size: 2.5rem;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: 700;
-        }
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,var(--blue-900),var(--blue-800));
+  padding:14px 18px calc(14px + env(safe-area-inset-top)) 18px;
+  padding-top:calc(14px + env(safe-area-inset-top));
+  color:#fff;
+  box-shadow:var(--shadow-md);
+}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+.brand{display:flex;align-items:center;gap:9px;}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:15px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+  flex-shrink:0;
+}
+.brand-text{font-family:var(--font-display);font-weight:700;font-size:16.5px;letter-spacing:.2px;}
+.brand-sub{font-size:11px;color:var(--blue-200);font-weight:500;letter-spacing:.3px;}
+.btn-week{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;padding:8px 12px;border-radius:var(--radius-pill);
+  font-size:12.5px;font-weight:600;white-space:nowrap;
+  transition:background .15s;
+}
+.btn-week:active{background:rgba(255,255,255,.22);}
 
-        p.subtitle {
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
+/* Step rail */
+.rail{display:flex;align-items:center;gap:0;position:relative;}
+.rail-track{
+  position:absolute;left:17px;right:17px;top:16px;height:3px;
+  background:rgba(255,255,255,.16);border-radius:3px;z-index:0;
+}
+.rail-fill{
+  position:absolute;left:17px;top:16px;height:3px;
+  background:linear-gradient(90deg,var(--blue-200),#fff);
+  border-radius:3px;z-index:1;
+  transition:width .45s cubic-bezier(.65,0,.35,1);
+}
+.rail-step{
+  position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:none;padding:0;
+}
+.rail-dot{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--blue-800);border:2px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:700;font-size:13px;color:rgba(255,255,255,.6);
+  transition:all .25s;
+}
+.rail-step.active .rail-dot{background:#fff;border-color:#fff;color:var(--blue-800);transform:scale(1.08);box-shadow:0 4px 14px rgba(0,0,0,.25);}
+.rail-step.done .rail-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.rail-label{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.2px;}
+.rail-step.active .rail-label{color:#fff;}
+.rail-step.done .rail-label{color:var(--blue-200);}
 
-        .config-panel {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 900px;
-            margin-bottom: 40px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            border-top: 5px solid #8b5cf6;
-        }
+/* ============ MAIN CONTENT ============ */
+main{flex:1;padding:20px 16px 110px 16px;}
+.screen{display:none;animation:screenIn .35s cubic-bezier(.25,.7,.35,1);}
+.screen.active{display:block;}
+@keyframes screenIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-        .input-group {
-            flex: 1;
-            min-width: 250px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+.section-title{
+  font-family:var(--font-display);font-weight:700;font-size:19px;color:var(--blue-900);
+  margin-bottom:3px;display:flex;align-items:center;gap:8px;
+}
+.section-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;}
 
-        .input-group label {
-            font-weight: 600;
-            color: var(--text-main);
-        }
+.card{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:18px;box-shadow:var(--shadow-sm);border:1px solid var(--border-soft);
+  margin-bottom:14px;
+}
+.field{margin-bottom:13px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;}
+.field input[type=text],.field input[type=number],.field input[type=date],.field input[type=tel],.field select,.field textarea{
+  width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--blue-50);transition:border-color .15s,background .15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue-500);background:#fff;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-        textarea {
-            width: 100%;
-            height: 200px;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            resize: vertical;
-            transition: border-color 0.3s;
-            box-sizing: border-box;
-        }
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:12px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;
+  transition:transform .12s,box-shadow .12s,background .15s;white-space:nowrap;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--blue-600),var(--blue-700));color:#fff;box-shadow:0 6px 16px -4px rgba(27,75,143,.5);}
+.btn-secondary{background:var(--blue-100);color:var(--blue-700);}
+.btn-ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--border);}
+.btn-danger{background:var(--red-100);color:var(--red);}
+.btn-block{width:100%;}
+.btn-sm{padding:8px 13px;font-size:12.5px;}
+.btn:disabled{opacity:.45;pointer-events:none;}
 
-        textarea:focus, input[type="number"]:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+/* Contact agenda */
+.contact-form{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;}
+.contact-list{display:flex;flex-direction:column;gap:8px;}
+.contact-item{
+  display:flex;align-items:center;gap:11px;padding:11px 12px;
+  border:1.5px solid var(--border);border-radius:var(--radius-md);background:var(--blue-50);
+  transition:border-color .15s,background .15s;
+}
+.contact-item.checked{border-color:var(--blue-500);background:var(--blue-100);}
+.contact-item input[type=checkbox]{width:19px;height:19px;accent-color:var(--blue-600);flex-shrink:0;}
+.contact-info{flex:1;min-width:0;}
+.contact-name{font-weight:600;font-size:13.5px;color:var(--ink);}
+.contact-meta{font-size:11.5px;color:var(--ink-soft);}
+.contact-del{color:var(--red);font-size:16px;padding:4px 8px;flex-shrink:0;}
 
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1.2rem;
-            box-sizing: border-box;
-        }
+/* Chips (asignaturas) */
+.chip-input-row{display:flex;gap:8px;}
+.chip-input-row input{flex:1;}
+.chip-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.chip{
+  display:flex;align-items:center;gap:7px;padding:8px 8px 8px 14px;
+  background:var(--blue-100);color:var(--blue-800);border-radius:var(--radius-pill);
+  font-size:13px;font-weight:600;border:1.5px solid transparent;
+  animation:chipPop .25s cubic-bezier(.34,1.56,.64,1);cursor:pointer;
+  transition:border-color .15s,background .15s;
+}
+.chip.active{background:var(--blue-700);color:#fff;}
+.chip .chip-count{
+  background:rgba(255,255,255,.35);font-size:10.5px;font-weight:700;
+  padding:1px 6px;border-radius:var(--radius-pill);min-width:16px;text-align:center;
+}
+.chip-x{
+  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.08);font-size:12px;flex-shrink:0;
+}
+.chip.active .chip-x{background:rgba(255,255,255,.22);}
+@keyframes chipPop{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
 
-        .action-group {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            min-width: 200px;
-        }
+/* Category cards */
+.cat-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+.cat-card{
+  display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--radius-md);
+  border:2px solid var(--border);background:var(--surface);text-align:left;
+  transition:border-color .15s,transform .12s,box-shadow .15s;
+}
+.cat-card:active{transform:scale(.98);}
+.cat-card .cat-icon{
+  width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.cat-card.cat-academicas .cat-icon{background:var(--blue-100);}
+.cat-card.cat-plataformas .cat-icon{background:var(--purple-100);}
+.cat-card.cat-disciplinarias .cat-icon{background:var(--red-100);}
+.cat-card.selected.cat-academicas{border-color:var(--blue-500);}
+.cat-card.selected.cat-plataformas{border-color:var(--purple);}
+.cat-card.selected.cat-disciplinarias{border-color:var(--red);}
+.cat-title{font-weight:700;font-size:14.5px;color:var(--ink);}
+.cat-desc{font-size:11.5px;color:var(--ink-soft);margin-top:1px;}
 
-        .btn-sortear {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
-            width: 100%;
-        }
+.falta-list{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.falta-item{
+  display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);background:var(--blue-50);font-size:13.5px;font-weight:500;
+  transition:border-color .15s,background .15s;
+}
+.falta-item.checked{border-color:var(--blue-500);background:var(--blue-100);font-weight:600;}
+.falta-item input{width:19px;height:19px;accent-color:var(--blue-600);flex-shrink:0;margin-top:1px;}
 
-        .btn-sortear:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 15px 20px -5px rgba(37, 99, 235, 0.4);
-        }
+/* Estilo para la opción de falta escrita personalizada */
+.custom-falta-box {
+  display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);
+}
 
-        .btn-sortear:active {
-            transform: translateY(1px);
-        }
+/* Dependencias */
+.dep-grid{display:grid;grid-template-columns:1fr;gap:9px;}
+.dep-item{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:var(--radius-md);
+  border:2px solid var(--border);background:var(--surface);transition:all .15s;
+}
+.dep-item.checked{background:var(--blue-50);}
+.dep-item input{width:20px;height:20px;flex-shrink:0;}
+.dep-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dep-coordinacion .dep-dot{background:var(--amber);}
+.dep-psicologia .dep-dot{background:var(--purple);}
+.dep-rectoria .dep-dot{background:var(--red);}
+.dep-item.dep-coordinacion.checked{border-color:var(--amber);}
+.dep-item.dep-psicologia.checked{border-color:var(--purple);}
+.dep-item.dep-rectoria.checked{border-color:var(--red);}
+.dep-name{font-weight:600;font-size:14px;flex:1;}
 
-        .groups-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-        }
+.badge-dep{
+  display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
+  padding:3px 9px;border-radius:var(--radius-pill);
+}
+.badge-dep.dep-coordinacion{background:var(--amber-100);color:#96631C;}
+.badge-dep.dep-psicologia{background:var(--purple-100);color:var(--purple);}
+.badge-dep.dep-rectoria{background:var(--red-100);color:var(--red);}
 
-        .group-card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            border-top: 5px solid var(--primary);
-            transition: transform 0.3s ease;
-            animation: popIn 0.4s ease forwards;
-        }
+/* Consolidado */
+.stat-strip{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,var(--blue-700),var(--blue-600));color:#fff;
+  border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow-md);
+}
+.stat-num{font-family:var(--font-display);font-weight:800;font-size:32px;line-height:1;}
+.stat-label{font-size:12px;color:var(--blue-200);font-weight:600;margin-top:3px;}
 
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
+.toolbar{display:flex;gap:8px;margin-bottom:14px;}
+.search-box{flex:1;position:relative;}
+.search-box input{width:100%;padding:11px 13px 11px 36px;border:1.5px solid var(--border);border-radius:var(--radius-pill);background:var(--surface);font-size:13.5px;}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--ink-faint);}
+.filter-select{padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-pill);background:var(--surface);font-size:13px;font-weight:600;color:var(--blue-700);}
 
-        .group-card:hover {
-            transform: translateY(-5px);
-        }
+.reg-item{
+  background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-md);
+  margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow-sm);
+}
+.reg-head{display:flex;align-items:center;gap:12px;padding:13px 14px;}
+.reg-avatar{
+  width:38px;height:38px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:14px;flex-shrink:0;
+}
+.reg-info{flex:1;min-width:0;}
+.reg-name{font-weight:700;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.reg-grado{font-size:11.5px;color:var(--ink-soft);}
+.reg-chevron{font-size:13px;color:var(--ink-faint);transition:transform .2s;flex-shrink:0;}
+.reg-item.open .reg-chevron{transform:rotate(180deg);}
+.reg-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.reg-item.open .reg-body{max-height:900px;}
+.reg-body-inner{padding:0 14px 14px 14px;border-top:1px dashed var(--border);}
+.reg-asig-block{margin-top:12px;}
+.reg-asig-name{font-weight:700;font-size:12.5px;color:var(--blue-700);margin-bottom:6px;}
 
-        .group-title {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.export-row{display:flex;gap:10px;margin:16px 0;}
+.export-row .btn{flex:1;}
 
-        .group-badge {
-            background-color: #e2e8f0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
+/* Modal & Toast */
+.overlay{
+  position:fixed;inset:0;background:rgba(15,26,48,.55);z-index:100;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:#fff;border-radius:24px 24px 0 0;padding:26px 22px calc(22px + env(safe-area-inset-bottom)) 22px;
+  width:100%;max-width:640px;max-height:85dvh;overflow-y:auto;
+}
+@media (min-width:660px){
+  .overlay{align-items:center;}
+  .modal{border-radius:24px;margin:20px;}
+}
+.modal-icon{
+  width:56px;height:56px;border-radius:16px;background:var(--green-100);color:var(--green);
+  display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px auto;
+}
+.modal-title{font-family:var(--font-display);font-weight:700;font-size:18px;text-align:center;color:var(--blue-900);margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:20px;}
+.modal-actions{display:flex;flex-direction:column;gap:10px;}
 
-        .student-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .student-item {
-            padding: 10px 12px;
-            background-color: #f8fafc;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            font-size: 1.05rem;
-            color: var(--text-main);
-            border-left: 4px solid transparent;
-            transition: all 0.2s ease;
-        }
-
-        .student-item:hover {
-            background-color: #f1f5f9;
-            border-left-color: var(--primary);
-        }
-
-        .stats {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-align: center;
-        }
-    </style>
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:11px 20px;border-radius:var(--radius-pill);
+  font-size:13px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:all .25s;
+  box-shadow:var(--shadow-lg);white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
 </head>
 <body>
 
-    <h1>Generador Dinámico de Grupos</h1>
-    <p class="subtitle">Agrega o elimina estudiantes, y elige cuántos grupos quieres formar.</p>
+<div id="app">
 
-    <div class="config-panel">
-        <div class="input-group" style="flex: 2;">
-            <label for="listaNombres">Lista de Estudiantes (uno por línea):</label>
-            <textarea id="listaNombres">Barrios Nicoll
-Gomez Jesus
-Hernandez Thomas
-Liñan Samuel
-Londoño Samuel
-Mejía Ilder
-Oviedo Matias
-Perez Edier
-Pestana Francheska
-Vidal Liz
-Sharon</textarea>
-            <div class="stats" id="contador">11 estudiantes en la lista</div>
+  <header class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <div class="brand-mark">MN</div>
+        <div>
+          <div class="brand-text">MNovedades</div>
+          <div class="brand-sub" id="topbarSub">Gestión semanal de faltas</div>
         </div>
-        
-        <div class="input-group">
-            <label for="numGrupos">Cantidad de Grupos a crear:</label>
-            <input type="number" id="numGrupos" value="3" min="1">
-            
-            <div class="action-group" style="margin-top: auto;">
-                <button class="btn-sortear" onclick="generarGrupos()">🎲 Generar Grupos</button>
+      </div>
+      <button class="btn-week" id="btnNuevaSemana" title="Iniciar nueva semana">🗓️ Nueva semana</button>
+    </div>
+    <nav class="rail">
+      <div class="rail-track"></div>
+      <div class="rail-fill" id="railFill"></div>
+      <button class="rail-step" data-step="1">
+        <div class="rail-dot">1</div>
+        <div class="rail-label">Config</div>
+      </button>
+      <button class="rail-step" data-step="2">
+        <div class="rail-dot">2</div>
+        <div class="rail-label">Registro</div>
+      </button>
+      <button class="rail-step" data-step="3">
+        <div class="rail-dot">3</div>
+        <div class="rail-label">Consolidado</div>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ======================= PANTALLA 1 — CONFIGURACIÓN ======================= -->
+    <section class="screen" id="screen1">
+      <div class="section-title">⚙️ Configuración inicial</div>
+      <div class="section-sub">Completa esta información una sola vez por semana.</div>
+
+      <div class="card">
+        <div class="field">
+          <label for="cfgInstitucion">Institución educativa</label>
+          <input type="text" id="cfgInstitucion" placeholder="Ej. Colegio Nacional">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="cfgAnio">Año lectivo</label>
+            <input type="text" id="cfgAnio" placeholder="2026">
+          </div>
+          <div class="field">
+            <label for="cfgPeriodo">Período académico</label>
+            <select id="cfgPeriodo">
+              <option value="Primer Período">Primer Período</option>
+              <option value="Segundo Período">Segundo Período</option>
+              <option value="Tercer Período">Tercer Período</option>
+              <option value="Cuarto Período">Cuarto Período</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cfgDocente">Docente responsable</label>
+          <input type="text" id="cfgDocente" placeholder="Ej. Prof. María Rodríguez">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="cfgDesde">Fecha desde</label>
+            <input type="date" id="cfgDesde">
+          </div>
+          <div class="field">
+            <label for="cfgHasta">Fecha hasta</label>
+            <input type="date" id="cfgHasta">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:20px;">👥 Agenda de contactos (WhatsApp)</div>
+      <div class="section-sub">Agrega destinatarios permanentes para el envío automático del reporte.</div>
+
+      <div class="card">
+        <div class="contact-form">
+          <div class="field">
+            <label for="cntNombre">Nombre del contacto</label>
+            <input type="text" id="cntNombre" placeholder="Ej. Coordinador Juan">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cntCargo">Cargo</label>
+              <select id="cntCargo">
+                <option value="Coordinación">Coordinación</option>
+                <option value="Psicología">Psicología</option>
+                <option value="Rectoría">Rectoría</option>
+                <option value="Otro">Otro</option>
+              </select>
             </div>
+            <div class="field">
+              <label for="cntPhone">Número WhatsApp</label>
+              <input type="tel" id="cntPhone" placeholder="3184800091">
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-block" id="btnAddContact">➕ Guardar en agenda</button>
         </div>
+
+        <div class="contact-list" id="contactList"></div>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="btnNext1" style="margin-top:10px;">Guardar y continuar ➔</button>
+    </section>
+
+    <!-- ======================= PANTALLA 2 — REGISTRO DE ESTUDIANTES ======================= -->
+    <section class="screen" id="screen2">
+      <div class="section-title">📝 Registro de novedades</div>
+      <div class="section-sub">Ingresa la información del estudiante y sus faltas cometidas.</div>
+
+      <div class="card">
+        <div class="field-row">
+          <div class="field">
+            <label for="estGrado">Grado / Curso</label>
+            <select id="estGrado">
+              <option value="Transición">Transición</option>
+              <option value="Primero">Primero</option>
+              <option value="Segundo">Segundo</option>
+              <option value="Tercero">Tercero</option>
+              <option value="Cuarto">Cuarto</option>
+              <option value="Quinto">Quinto</option>
+              <option value="Sexto">Sexto</option>
+              <option value="Séptimo">Séptimo</option>
+              <option value="Octavo">Octavo</option>
+              <option value="Noveno">Noveno</option>
+              <option value="Décimo">Décimo</option>
+              <option value="Once">Once</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column: span 1;">
+            <label for="estNombre">Nombre completo</label>
+            <input type="text" id="estNombre" placeholder="Ej. Juan Pérez">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:10px;">
+          <label>Asignaturas evaluadas</label>
+          <div class="chip-input-row">
+            <input type="text" id="inputAsignatura" placeholder="Ej. Tecnología, Inglés...">
+            <button class="btn btn-secondary btn-sm" id="btnAddChip">Añadir</button>
+          </div>
+          <div class="chip-container" id="chipContainer"></div>
+        </div>
+      </div>
+
+      <div class="section-title">⚠️ Selección de novedades</div>
+      <div class="section-sub">Toca la categoría y marca las faltas o añade una personalizada.</div>
+
+      <div class="cat-grid">
+        <button class="cat-card cat-academicas" data-cat="academicas">
+          <div class="cat-icon">📚</div>
+          <div>
+            <div class="cat-title">Académicas</div>
+            <div class="cat-desc">Incumplimiento de tareas y aula</div>
+          </div>
+        </button>
+        <button class="cat-card cat-plataformas" data-cat="plataformas">
+          <div class="cat-icon">💻</div>
+          <div>
+            <div class="cat-title">Plataformas virtuales</div>
+            <div class="cat-desc">Incumplimiento en entornos digitales</div>
+          </div>
+        </button>
+        <button class="cat-card cat-disciplinarias" data-cat="disciplinarias">
+          <div class="cat-icon">⚠️</div>
+          <div>
+            <div class="cat-title">Disciplinarias</div>
+            <div class="cat-desc">Conducta y convivencia escolar</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Contenedor dinámico de faltas de la categoría activa -->
+      <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
+        <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
+        <div class="falta-list" id="faltaList"></div>
+        
+        <!-- Opciones para escribir una falta que no esté en la lista -->
+        <div class="custom-falta-box">
+          <input type="text" id="inputCustomFalta" placeholder="Escribir otra falta no listada...">
+          <button class="btn btn-secondary btn-sm" id="btnAddCustomFalta">➕ Añadir</button>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:20px;">📢 Dependencias a notificar</div>
+      <div class="section-sub">Selecciona los estamentos que deben recibir este reporte.</div>
+
+      <div class="dep-grid">
+        <label class="dep-item dep-coordinacion" id="lblDepCoor">
+          <input type="checkbox" value="Coordinación" class="chk-dep" data-lbl="lblDepCoor">
+          <span class="dep-dot"></span>
+          <span class="dep-name">🟡 Coordinación</span>
+        </label>
+        <label class="dep-item dep-psicologia" id="lblDepPsi">
+          <input type="checkbox" value="Psicología" class="chk-dep" data-lbl="lblDepPsi">
+          <span class="dep-dot"></span>
+          <span class="dep-name">🟠 Psicología</span>
+        </label>
+        <label class="dep-item dep-rectoria" id="lblDepRec">
+          <input type="checkbox" value="Rectoría" class="chk-dep" data-lbl="lblDepRec">
+          <span class="dep-dot"></span>
+          <span class="dep-name">🔴 Rectoría</span>
+        </label>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="btnSaveEstudiante" style="margin-top:20px;">💾 Guardar estudiante</button>
+    </section>
+
+    <!-- ======================= PANTALLA 3 — CONSOLIDADO ======================= -->
+    <section class="screen" id="screen3">
+      <div class="stat-strip">
+        <div>
+          <div class="stat-num" id="statCount">0</div>
+          <div class="stat-label">Estudiantes registrados</div>
+        </div>
+        <div style="font-size:32px;">📊</div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchNombre" placeholder="Buscar por nombre...">
+        </div>
+        <select class="filter-select" id="filterGrado">
+          <option value="Todos">Todos</option>
+        </select>
+      </div>
+
+      <div id="consolidadoList"></div>
+
+      <div class="export-row">
+        <button class="btn btn-secondary" id="btnExportTXT">📄 Descargar TXT</button>
+        <button class="btn btn-success" id="btnShareWhatsApp">💬 Enviar WhatsApp</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal de confirmación tras guardar -->
+  <div class="overlay" id="popConfirm">
+    <div class="modal">
+      <div class="modal-icon">✅</div>
+      <div class="modal-title">¡Registro guardado!</div>
+      <div class="modal-sub">El estudiante fue incorporado al reporte semanal con éxito.</div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btnModalAddMore">➕ Registrar otro estudiante</button>
+        <button class="btn btn-secondary" id="btnModalGoList">📋 Ir al consolidado</button>
+      </div>
     </div>
+  </div>
 
-    <div class="groups-container" id="contenedorGrupos">
-        <!-- Los grupos se generarán aquí dinámicamente -->
-    </div>
+  <div class="toast" id="toast"></div>
 
-    <script>
-        // Actualizar contador al escribir
-        document.getElementById('listaNombres').addEventListener('input', function() {
-            const nombres = this.value.split('\n').filter(n => n.trim() !== '');
-            document.getElementById('contador').textContent = `${nombres.length} estudiantes en la lista`;
-        });
+</div>
 
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        }
+<script>
+/* ==========================================================================
+   STATE & CONSTANTS
+   ========================================================================== */
+const CAT_FALTAS = {
+  academicas: [
+    "No realiza tareas", "No desarrolla actividades", "No presenta talleres", 
+    "No presenta evaluaciones", "No escribe", "No participa", 
+    "No trabaja durante la clase", "No porta materiales", "Bajo rendimiento", 
+    "No cumple compromisos académicos"
+  ],
+  plataformas: [
+    "No ingresa a la plataforma", "No desarrolla actividades virtuales", 
+    "No entrega actividades virtuales", "No revisa el material publicado", 
+    "No participa en la plataforma", "No utiliza la plataforma institucional"
+  ],
+  disciplinarias: [
+    "Indisciplina", "Uso inadecuado del celular", "Irrespeto", 
+    "Agresión verbal", "Agresión física", "Llegadas tarde", 
+    "Ausencias injustificadas", "Incumplimiento del uniforme", 
+    "Sale del aula sin permiso", "Daños al mobiliario", 
+    "Interrumpe constantemente la clase", "Incumple instrucciones del docente"
+  ]
+};
 
-        function generarGrupos() {
-            // Obtener datos
-            const textoNombres = document.getElementById('listaNombres').value;
-            const cantidadGrupos = parseInt(document.getElementById('numGrupos').value);
-            
-            // Limpiar y filtrar nombres vacíos
-            let nombres = textoNombres.split('\n').map(n => n.trim()).filter(n => n !== '');
+let appState = {
+  config: { institucion: "", anio: "2026", periodo: "Primer Período", docente: "", fechaDesde: "", fechaHasta: "" },
+  contactos: [],
+  estudiantes: []
+};
 
-            // Validaciones
-            if (nombres.length === 0) {
-                alert('Por favor, ingresa al menos un nombre.');
-                return;
-            }
-            if (isNaN(cantidadGrupos) || cantidadGrupos < 1) {
-                alert('Por favor, ingresa una cantidad válida de grupos (mínimo 1).');
-                return;
-            }
-            if (cantidadGrupos > nombres.length) {
-                alert('No puedes crear más grupos que la cantidad de estudiantes.');
-                return;
-            }
+let currentStep = 1;
+let currentAsignaturas = []; 
+let currentFaltasByAsig = {}; 
+let activeCat = null;
+let activeChip = null;
+let editingIndex = -1;
 
-            // Mezclar aleatoriamente
-            nombres = shuffleArray(nombres);
+/* ==========================================================================
+   INITIALIZATION
+   ========================================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  cargarLocalStorage();
+  initGradosFilter();
+  bindEvents();
+  renderScreen(1);
+});
 
-            // Crear arreglo de grupos vacíos
-            const grupos = Array.from({ length: cantidadGrupos }, () => []);
+function cargarLocalStorage() {
+  const stored = localStorage.getItem("MNovedades_V41_Store");
+  if (stored) {
+    try {
+      const p = JSON.parse(stored);
+      if (p.config) appState.config = { ...appState.config, ...p.config };
+      if (p.contactos) appState.contactos = p.contactos;
+      if (p.estudiantes) appState.estudiantes = p.estudiantes;
+    } catch(e){ console.error(e); }
+  }
+  
+  const c = appState.config;
+  document.getElementById("cfgInstitucion").value = c.institucion || "";
+  document.getElementById("cfgAnio").value = c.anio || "2026";
+  document.getElementById("cfgPeriodo").value = c.periodo || "Primer Período";
+  document.getElementById("cfgDocente").value = c.docente || "";
+  document.getElementById("cfgDesde").value = c.fechaDesde || "";
+  document.getElementById("cfgHasta").value = c.fechaHasta || "";
+}
 
-            // Distribuir estudiantes (reparte uno por uno a cada grupo secuencialmente)
-            nombres.forEach((nombre, index) => {
-                grupos[index % cantidadGrupos].push(nombre);
-            });
+function guardarLocalStorage() {
+  appState.config.institucion = document.getElementById("cfgInstitucion").value.trim();
+  appState.config.anio = document.getElementById("cfgAnio").value.trim();
+  appState.config.periodo = document.getElementById("cfgPeriodo").value;
+  appState.config.docente = document.getElementById("cfgDocente").value.trim();
+  appState.config.fechaDesde = document.getElementById("cfgDesde").value;
+  appState.config.fechaHasta = document.getElementById("cfgHasta").value;
 
-            // Renderizar en el DOM
-            const contenedor = document.getElementById('contenedorGrupos');
-            contenedor.innerHTML = ''; // Limpiar grupos anteriores
+  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+}
 
-            grupos.forEach((grupo, idx) => {
-                const card = document.createElement('div');
-                card.className = 'group-card';
-                // Añadir un pequeño retraso a la animación de cada tarjeta
-                card.style.animationDelay = `${idx * 0.1}s`;
+function initGradosFilter() {
+  const fg = document.getElementById("filterGrado");
+  const grados = ["Transición", "Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Séptimo", "Octavo", "Noveno", "Décimo", "Once"];
+  fg.innerHTML = '<option value="Todos">Todos los grados</option>';
+  grados.forEach(g => {
+    const opt = document.createElement("option"); opt.value = g; opt.textContent = g;
+    fg.appendChild(opt);
+  });
+}
 
-                // Crear la lista de miembros en HTML
-                const listaHTML = grupo.map(miembro => `<li class="student-item">${miembro}</li>`).join('');
+/* ==========================================================================
+   NAVIGATION & STEP RAIL
+   ========================================================================== */
+function bindEvents() {
+  // Navigation rail clicks
+  document.querySelectorAll(".rail-step").forEach(stepBtn => {
+    stepBtn.addEventListener("click", () => {
+      const step = parseInt(stepBtn.getAttribute("data-step"), 10);
+      if (step > 1 && !validarPaso1()) {
+        showToast("Completa la institución y el docente en Config.");
+        return;
+      }
+      renderScreen(step);
+    });
+  });
 
-                card.innerHTML = `
-                    <h2 class="group-title">Grupo ${idx + 1} <span class="group-badge">${grupo.length} Miembros</span></h2>
-                    <ul class="student-list">
-                        ${listaHTML}
-                    </ul>
-                `;
-                
-                contenedor.appendChild(card);
-            });
-        }
+  document.getElementById("btnNext1").addEventListener("click", () => {
+    if (!validarPaso1()) { showToast("Completa los datos obligatorios."); return; }
+    guardarLocalStorage();
+    renderScreen(2);
+  });
 
-        // Generar los grupos la primera vez que carga la página
-        window.onload = generarGrupos;
-    </script>
+  document.getElementById("btnNuevaSemana").addEventListener("click", comandoNuevaSemana);
+
+  // Contacts
+  document.getElementById("btnAddContact").addEventListener("click", addContacto);
+
+  // Chips (Asignaturas)
+  document.getElementById("btnAddChip").addEventListener("click", addAsignaturaChip);
+  document.getElementById("inputAsignatura").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); addAsignaturaChip(); }
+  });
+
+  // Categorías
+  document.querySelectorAll(".cat-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const cat = card.getAttribute("data-cat");
+      selectCategory(cat);
+    });
+  });
+
+  document.getElementById("btnAddCustomFalta").addEventListener("click", addCustomFalta);
+
+  // Dependencias checkboxes
+  document.querySelectorAll(".chk-dep").forEach(chk => {
+    chk.addEventListener("change", (e) => {
+      const lbl = document.getElementById(e.target.getAttribute("data-lbl"));
+      if (e.target.checked) lbl.classList.add("checked");
+      else lbl.classList.remove("checked");
+    });
+  });
+
+  // Save Estudiante
+  document.getElementById("btnSaveEstudiante").addEventListener("click", saveEstudiante);
+
+  // Modal actions
+  document.getElementById("btnModalAddMore").addEventListener("click", () => {
+    document.getElementById("popConfirm").classList.remove("show");
+    resetFormEstudiante();
+    renderScreen(2);
+  });
+  document.getElementById("btnModalGoList").addEventListener("click", () => {
+    document.getElementById("popConfirm").classList.remove("show");
+    resetFormEstudiante();
+    renderScreen(3);
+  });
+
+  // Consolidado filters
+  document.getElementById("searchNombre").addEventListener("input", renderConsolidadoList);
+  document.getElementById("filterGrado").addEventListener("change", renderConsolidadoList);
+
+  // Export
+  document.getElementById("btnExportTXT").addEventListener("click", exportarTXT);
+  document.getElementById("btnShareWhatsApp").addEventListener("click", enviarWhatsApp);
+}
+
+function validarPaso1() {
+  const inst = document.getElementById("cfgInstitucion").value.trim();
+  const doc = document.getElementById("cfgDocente").value.trim();
+  return inst !== "" && doc !== "";
+}
+
+function renderScreen(step) {
+  currentStep = step;
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(`screen${step}`).classList.add("active");
+
+  // Rail update
+  const fill = document.getElementById("railFill");
+  fill.style.width = step === 1 ? "0%" : (step === 2 ? "50%" : "100%");
+
+  document.querySelectorAll(".rail-step").forEach(s => {
+    const st = parseInt(s.getAttribute("data-step"), 10);
+    s.classList.remove("active", "done");
+    if (st === step) s.classList.add("active");
+    else if (st < step) s.classList.add("done");
+  });
+
+  if (step === 1) renderContactos();
+  if (step === 3) renderConsolidadoList();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ==========================================================================
+   CONTACTS AGENDA
+   ========================================================================== */
+function addContacto() {
+  const name = document.getElementById("cntNombre").value.trim();
+  const cargo = document.getElementById("cntCargo").value;
+  const phone = document.getElementById("cntPhone").value.trim().replace(/[\s\-\(\)]/g, "");
+
+  if (!name || !phone) { showToast("Ingresa nombre y número válido."); return; }
+
+  appState.contactos.push({ id: Date.now(), name, cargo, phone, selected: true });
+  document.getElementById("cntNombre").value = "";
+  document.getElementById("cntPhone").value = "";
+
+  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+  renderContactos();
+  showToast("Contacto guardado en agenda.");
+}
+
+function removeContacto(id) {
+  appState.contactos = appState.contactos.filter(c => c.id !== id);
+  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+  renderContactos();
+}
+
+function renderContactos() {
+  const container = document.getElementById("contactList");
+  container.innerHTML = "";
+
+  if (appState.contactos.length === 0) {
+    container.innerHTML = '<div class="empty-note">No hay contactos guardados en la agenda.</div>';
+    return;
+  }
+
+  appState.contactos.forEach(c => {
+    const div = document.createElement("div");
+    div.className = `contact-item ${c.selected ? 'checked' : ''}`;
+    div.innerHTML = `
+      <input type="checkbox" ${c.selected ? 'checked' : ''} onchange="toggleContactoSelection(${c.id}, this.checked)">
+      <div class="contact-info">
+        <div class="contact-name">${c.name}</div>
+        <div class="contact-meta"><span class="tag-cargo">${c.cargo}</span> ${c.phone}</div>
+      </div>
+      <button class="contact-del" onclick="removeContacto(${c.id})">✕</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function toggleContactoSelection(id, checked) {
+  const c = appState.contactos.find(x => x.id === id);
+  if (c) c.selected = checked;
+  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+  renderContactos();
+}
+
+/* ==========================================================================
+   ASIGNATURAS & CHIPS
+   ========================================================================== */
+function addAsignaturaChip() {
+  const val = document.getElementById("inputAsignatura").value.trim();
+  if (!val) return;
+
+  if (!currentAsignaturas.includes(val)) {
+    currentAsignaturas.push(val);
+    if (!currentFaltasByAsig[val]) currentFaltasByAsig[val] = [];
+    activeChip = val;
+  }
+  document.getElementById("inputAsignatura").value = "";
+  renderChips();
+}
+
+function removeAsignaturaChip(val) {
+  currentAsignaturas = currentAsignaturas.filter(x => x !== val);
+  delete currentFaltasByAsig[val];
+  if (activeChip === val) activeChip = currentAsignaturas[0] || null;
+  renderChips();
+}
+
+function selectChip(val) {
+  activeChip = val;
+  renderChips();
+  if (activeCat) selectCategory(activeCat);
+}
+
+function renderChips() {
+  const container = document.getElementById("chipContainer");
+  container.innerHTML = "";
+
+  currentAsignaturas.forEach(asig => {
+    const faltasCount = currentFaltasByAsig[asig] ? currentFaltasByAsig[asig].length : 0;
+    const chip = document.createElement("div");
+    chip.className = `chip ${activeChip === asig ? 'active' : ''}`;
+    chip.innerHTML = `
+      <span onclick="selectChip('${asig}')">${asig}</span>
+      <span class="chip-count">${faltasCount}</span>
+      <span class="chip-x" onclick="removeAsignaturaChip('${asig}')">✕</span>
+    `;
+    container.appendChild(chip);
+  });
+}
+
+/* ==========================================================================
+   CATEGORIES & FALTAS
+   ========================================================================== */
+function selectCategory(cat) {
+  if (currentAsignaturas.length === 0) {
+    showToast("Añade primero una asignatura.");
+    return;
+  }
+  if (!activeChip) activeChip = currentAsignaturas[0];
+
+  activeCat = cat;
+  document.querySelectorAll(".cat-card").forEach(c => c.classList.remove("selected"));
+  document.querySelector(`.cat-${cat}`).classList.add("selected");
+
+  const panel = document.getElementById("faltaPanel");
+  panel.style.display = "block";
+  document.getElementById("faltaTitle").textContent = `Faltas (${cat.toUpperCase()}) — ${activeChip}`;
+
+  renderFaltaList();
+}
+
+function renderFaltaList() {
+  const container = document.getElementById("faltaList");
+  container.innerHTML = "";
+
+  const baseList = CAT_FALTAS[activeCat] || [];
+  const currentFaltas = currentFaltasByAsig[activeChip] || [];
+
+  // Unir la lista fija con cualquier falta personalizada escrita previamente
+  const combinedList = [...new Set([...baseList, ...currentFaltas])];
+
+  combinedList.forEach(falta => {
+    const isChecked = currentFaltas.includes(falta);
+    const item = document.createElement("label");
+    item.className = `falta-item ${isChecked ? 'checked' : ''}`;
+    item.innerHTML = `
+      <input type="checkbox" value="${falta}" ${isChecked ? 'checked' : ''} onchange="toggleFalta('${falta}', this.checked)">
+      <span>${falta}</span>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function toggleFalta(falta, checked) {
+  if (!currentFaltasByAsig[activeChip]) currentFaltasByAsig[activeChip] = [];
+
+  if (checked) {
+    if (!currentFaltasByAsig[activeChip].includes(falta)) {
+      currentFaltasByAsig[activeChip].push(falta);
+    }
+  } else {
+    currentFaltasByAsig[activeChip] = currentFaltasByAsig[activeChip].filter(x => x !== falta);
+  }
+
+  renderFaltaList();
+  renderChips();
+}
+
+function addCustomFalta() {
+  const input = document.getElementById("inputCustomFalta");
+  const val = input.value.trim();
+  if (!val) return;
+
+  toggleFalta(val, true);
+  input.value = "";
+  showToast("Falta personalizada añadida.");
+}
+
+/* ==========================================================================
+   SAVE & EDIT ESTUDIANTE
+   ========================================================================== */
+function saveEstudiante() {
+  const nombre = document.getElementById("estNombre").value.trim();
+  const grado = document.getElementById("estGrado").value;
+
+  if (!nombre) { showToast("Ingresa el nombre del estudiante."); return; }
+  if (currentAsignaturas.length === 0) { showToast("Añade al menos una asignatura."); return; }
+
+  // Verificar que al menos una asignatura tenga faltas
+  let hasFaltas = false;
+  Object.values(currentFaltasByAsig).forEach(arr => { if (arr.length > 0) hasFaltas = true; });
+  if (!hasFaltas) { showToast("Marca al menos una falta."); return; }
+
+  const deps = [];
+  document.querySelectorAll(".chk-dep:checked").forEach(c => deps.push(c.value));
+  if (deps.length === 0) { showToast("Selecciona al menos una dependencia."); return; }
+
+  const data = {
+    id: editingIndex >= 0 ? appState.estudiantes[editingIndex].id : Date.now(),
+    grado,
+    nombre,
+    asignaturas: [...currentAsignaturas],
+    faltasByAsig: JSON.parse(JSON.stringify(currentFaltasByAsig)),
+    dependencias: deps
+  };
+
+  if (editingIndex >= 0) {
+    appState.estudiantes[editingIndex] = data;
+    editingIndex = -1;
+    showToast("Registro actualizado.");
+    renderScreen(3);
+  } else {
+    appState.estudiantes.push(data);
+    localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+    document.getElementById("popConfirm").classList.add("show");
+  }
+}
+
+function resetFormEstudiante() {
+  document.getElementById("estNombre").value = "";
+  currentAsignaturas = [];
+  currentFaltasByAsig = {};
+  activeCat = null;
+  activeChip = null;
+  editingIndex = -1;
+
+  document.querySelectorAll(".cat-card").forEach(c => c.classList.remove("selected"));
+  document.getElementById("faltaPanel").style.display = "none";
+  document.querySelectorAll(".chk-dep").forEach(c => {
+    c.checked = false;
+    document.getElementById(c.getAttribute("data-lbl")).classList.remove("checked");
+  });
+
+  renderChips();
+  document.getElementById("btnSaveEstudiante").textContent = "💾 Guardar estudiante";
+}
+
+function editEstudiante(index) {
+  const est = appState.estudiantes[index];
+  if (!est) return;
+
+  editingIndex = index;
+  document.getElementById("estNombre").value = est.nombre;
+  document.getElementById("estGrado").value = est.grado;
+
+  currentAsignaturas = [...est.asignaturas];
+  currentFaltasByAsig = JSON.parse(JSON.stringify(est.faltasByAsig));
+  activeChip = currentAsignaturas[0] || null;
+
+  renderChips();
+
+  document.querySelectorAll(".chk-dep").forEach(chk => {
+    const isVal = est.dependencias.includes(chk.value);
+    chk.checked = isVal;
+    const lbl = document.getElementById(chk.getAttribute("data-lbl"));
+    if (isVal) lbl.classList.add("checked"); else lbl.classList.remove("checked");
+  });
+
+  document.getElementById("btnSaveEstudiante").textContent = "💾 Actualizar estudiante";
+  renderScreen(2);
+}
+
+function deleteEstudiante(index) {
+  if (confirm("¿Remover registro?")) {
+    appState.estudiantes.splice(index, 1);
+    localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+    renderConsolidadoList();
+    showToast("Registro eliminado.");
+  }
+}
+
+/* ==========================================================================
+   CONSOLIDADO SCREEN
+   ========================================================================== */
+function renderConsolidadoList() {
+  const container = document.getElementById("consolidadoList");
+  const qName = document.getElementById("searchNombre").value.toLowerCase().trim();
+  const fGrado = document.getElementById("filterGrado").value;
+
+  let list = appState.estudiantes;
+
+  if (qName) list = list.filter(e => e.nombre.toLowerCase().includes(qName));
+  if (fGrado !== "Todos") list = list.filter(e => e.grado === fGrado);
+
+  document.getElementById("statCount").textContent = appState.estudiantes.length;
+  container.innerHTML = "";
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <div class="empty-state-title">Sin registros</div>
+        <div class="empty-state-sub">Aún no hay estudiantes en el consolidado.</div>
+      </div>`;
+    return;
+  }
+
+  list.forEach((est, idx) => {
+    const origIndex = appState.estudiantes.findIndex(x => x.id === est.id);
+    const item = document.createElement("div");
+    item.className = "reg-item";
+
+    let badges = "";
+    est.dependencias.forEach(d => {
+      let cls = d === "Coordinación" ? "dep-coordinacion" : (d === "Psicología" ? "dep-psicologia" : "dep-rectoria");
+      badges += `<span class="badge-dep ${cls}">${d}</span>`;
+    });
+
+    let asigBlocks = "";
+    est.asignaturas.forEach(asig => {
+      const faltas = est.faltasByAsig[asig] || [];
+      if (faltas.length > 0) {
+        asigBlocks += `
+          <div class="reg-asig-block">
+            <div class="reg-asig-name">📖 ${asig}</div>
+            <div class="reg-faltas">
+              ${faltas.map(f => `<span class="mini-falta-tag cat-academicas">${f}</span>`).join('')}
+            </div>
+          </div>`;
+      }
+    });
+
+    item.innerHTML = `
+      <div class="reg-head" onclick="toggleRegItem(this.parentElement)">
+        <div class="reg-avatar">${est.nombre.charAt(0).toUpperCase()}</div>
+        <div class="reg-info">
+          <div class="reg-name">${est.nombre}</div>
+          <div class="reg-grado">${est.grado}</div>
+          <div class="reg-badges">${badges}</div>
+        </div>
+        <div class="reg-chevron">▼</div>
+      </div>
+      <div class="reg-body">
+        <div class="reg-body-inner">
+          ${asigBlocks}
+          <div class="reg-actions">
+            <button class="btn btn-secondary btn-sm" onclick="editEstudiante(${origIndex})">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteEstudiante(${origIndex})">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function toggleRegItem(el) {
+  el.classList.toggle("open");
+}
+
+/* ==========================================================================
+   EXPORTS & WEEK RESET
+   ========================================================================== */
+function exportarTXT() {
+  if (appState.estudiantes.length === 0) { showToast("No hay registros para exportar."); return; }
+  const c = appState.config;
+  let txt = `===========================================================\n`;
+  txt += `REPORTE CONSOLIDADO SEMANAL DE NOVEDADES\n`;
+  txt += `===========================================================\n`;
+  txt += `Institución : ${c.institucion || 'N/A'}\n`;
+  txt += `Año Lectivo : ${c.anio}  | Período: ${c.periodo}\n`;
+  txt += `Docente     : ${c.docente || 'N/A'}\n`;
+  txt += `Rango       : Del ${c.fechaDesde || 'N/A'} al ${c.fechaHasta || 'N/A'}\n`;
+  txt += `===========================================================\n\n`;
+
+  appState.estudiantes.forEach((e, i) => {
+    txt += `${i+1}. ALUMNO: ${e.nombre} [GRADO: ${e.grado}]\n`;
+    txt += `   NOTIFICADO A: ${e.dependencias.join(", ")}\n`;
+    e.asignaturas.forEach(asig => {
+      const faltas = e.faltasByAsig[asig] || [];
+      if (faltas.length > 0) {
+        txt += `   • ASIGNATURA: ${asig}\n`;
+        txt += `     Faltas: ${faltas.join(", ")}\n`;
+      }
+    });
+    txt += `-----------------------------------------------------------\n`;
+  });
+
+  const blob = new Blob([txt], { type: "text/plain;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `Reporte_Novedades.txt`;
+  a.click();
+  showToast("TXT Descargado.");
+}
+
+function enviarWhatsApp() {
+  if (appState.estudiantes.length === 0) { showToast("No hay registros para enviar."); return; }
+
+  const selectedContacts = appState.contactos.filter(c => c.selected);
+  if (selectedContacts.length === 0) {
+    showToast("Selecciona contactos en Config.");
+    return;
+  }
+
+  const c = appState.config;
+  let msg = `🏛️ *REPORTE DE NOVEDADES SEMANALES*\n`;
+  msg += `*Institución:* ${c.institucion || 'N/A'}\n`;
+  msg += `*Docente:* ${c.docente || 'N/A'}\n`;
+  msg += `*Rango:* ${c.fechaDesde || 'N/A'} al ${c.fechaHasta || 'N/A'}\n`;
+  msg += `-----------------------------------------\n\n`;
+
+  appState.estudiantes.forEach((e, idx) => {
+    msg += `*${idx+1}. ${e.nombre}* (${e.grado})\n📢 _Notificado a:_ ${e.dependencias.join(" + ")}\n`;
+    e.asignaturas.forEach(asig => {
+      const faltas = e.faltasByAsig[asig] || [];
+      if (faltas.length > 0) {
+        msg += `• _${asig}_: ${faltas.join(", ")}\n`;
+      }
+    });
+    msg += `\n`;
+  });
+
+  const encoded = encodeURIComponent(msg);
+  selectedContacts.forEach(contact => {
+    window.open(`https://api.whatsapp.com/send?phone=${contact.phone}&text=${encoded}`, '_blank');
+  });
+
+  showToast(`Enviando a ${selectedContacts.length} destinatarios.`);
+}
+
+function comandoNuevaSemana() {
+  if (confirm("¿Iniciar nueva semana? Se borrarán registros y fechas, conservando la institución, el docente y la agenda.")) {
+    appState.estudiantes = [];
+    appState.config.fechaDesde = "";
+    appState.config.fechaHasta = "";
+
+    localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+    cargarLocalStorage();
+    resetFormEstudiante();
+    renderScreen(1);
+    showToast("Nueva semana iniciada.");
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+</script>
 </body>
 </html>
