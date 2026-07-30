@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteo Aleatorio de Grupos</title>
+    <title>Sorteo Dinámico de Grupos</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -37,29 +37,91 @@
 
         p.subtitle {
             color: var(--text-muted);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             text-align: center;
             font-size: 1.1rem;
+        }
+
+        .config-panel {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            border-top: 5px solid #8b5cf6;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        textarea:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1.2rem;
+            box-sizing: border-box;
+        }
+
+        .action-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-width: 200px;
         }
 
         .btn-sortear {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 16px 32px;
+            padding: 16px 24px;
             font-size: 1.2rem;
             font-weight: 600;
-            border-radius: 50px;
+            border-radius: 12px;
             cursor: pointer;
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
             transition: all 0.3s ease;
-            margin-bottom: 50px;
+            width: 100%;
         }
 
         .btn-sortear:hover {
             background-color: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 15px 20px -5px rgba(37, 99, 235, 0.4);
         }
 
         .btn-sortear:active {
@@ -68,19 +130,25 @@
 
         .groups-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
         }
 
         .group-card {
             background-color: var(--card-bg);
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            padding: 25px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             border-top: 5px solid var(--primary);
             transition: transform 0.3s ease;
+            animation: popIn 0.4s ease forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .group-card:hover {
@@ -88,7 +156,7 @@
         }
 
         .group-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--primary);
             margin-top: 0;
             margin-bottom: 20px;
@@ -102,7 +170,7 @@
         .group-badge {
             background-color: #e2e8f0;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             padding: 4px 10px;
             border-radius: 20px;
             font-weight: 600;
@@ -112,21 +180,17 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            min-height: 180px; /* Mantiene el tamaño de la tarjeta unificado */
         }
 
         .student-item {
-            padding: 12px 15px;
+            padding: 10px 12px;
             background-color: #f8fafc;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 1.05rem;
             color: var(--text-main);
             border-left: 4px solid transparent;
             transition: all 0.2s ease;
-            opacity: 0;
-            transform: translateX(-10px);
-            animation: fadeIn 0.4s forwards;
         }
 
         .student-item:hover {
@@ -134,111 +198,126 @@
             border-left-color: var(--primary);
         }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .stats {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
         }
-
-        /* Animación escalonada para los elementos de la lista */
-        .student-item:nth-child(1) { animation-delay: 0.1s; }
-        .student-item:nth-child(2) { animation-delay: 0.2s; }
-        .student-item:nth-child(3) { animation-delay: 0.3s; }
-        .student-item:nth-child(4) { animation-delay: 0.4s; }
-
     </style>
 </head>
 <body>
 
-    <h1>Sorteo de Grupos</h1>
-    <p class="subtitle">Asignación aleatoria: Dos grupos de 4 y un grupo de 3 integrantes.</p>
+    <h1>Generador Dinámico de Grupos</h1>
+    <p class="subtitle">Agrega o elimina estudiantes, y elige cuántos grupos quieres formar.</p>
 
-    <button class="btn-sortear" onclick="sortearGrupos()">🎲 Generar Grupos Aleatorios</button>
-
-    <div class="groups-container">
-        <!-- Grupo 1 -->
-        <div class="group-card">
-            <h2 class="group-title">Grupo 1 <span class="group-badge">4 Miembros</span></h2>
-            <ul class="student-list" id="grupo1">
-                <li class="student-item" style="color: #cbd5e1; font-style: italic;">Esperando sorteo...</li>
-            </ul>
+    <div class="config-panel">
+        <div class="input-group" style="flex: 2;">
+            <label for="listaNombres">Lista de Estudiantes (uno por línea):</label>
+            <textarea id="listaNombres">Barrios Nicoll
+Gomez Jesus
+Hernandez Thomas
+Liñan Samuel
+Londoño Samuel
+Mejía Ilder
+Oviedo Matias
+Perez Edier
+Pestana Francheska
+Vidal Liz
+Sharon</textarea>
+            <div class="stats" id="contador">11 estudiantes en la lista</div>
         </div>
-
-        <!-- Grupo 2 -->
-        <div class="group-card">
-            <h2 class="group-title">Grupo 2 <span class="group-badge">4 Miembros</span></h2>
-            <ul class="student-list" id="grupo2">
-                <li class="student-item" style="color: #cbd5e1; font-style: italic;">Esperando sorteo...</li>
-            </ul>
-        </div>
-
-        <!-- Grupo 3 -->
-        <div class="group-card">
-            <h2 class="group-title">Grupo 3 <span class="group-badge">3 Miembros</span></h2>
-            <ul class="student-list" id="grupo3">
-                <li class="student-item" style="color: #cbd5e1; font-style: italic;">Esperando sorteo...</li>
-            </ul>
+        
+        <div class="input-group">
+            <label for="numGrupos">Cantidad de Grupos a crear:</label>
+            <input type="number" id="numGrupos" value="3" min="1">
+            
+            <div class="action-group" style="margin-top: auto;">
+                <button class="btn-sortear" onclick="generarGrupos()">🎲 Generar Grupos</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Lista original de estudiantes
-        const estudiantesOriginales = [
-            "Barrios Nicoll",
-            "Gomez Jesus",
-            "Hernandez Thomas",
-            "Liñan Samuel",
-            "Londoño Samuel",
-            "Mejía Ilder",
-            "Oviedo Matias",
-            "Perez Edier",
-            "Pestana Francheska",
-            "Vidal Liz",
-            "Sharon"
-        ];
+    <div class="groups-container" id="contenedorGrupos">
+        <!-- Los grupos se generarán aquí dinámicamente -->
+    </div>
 
-        // Función para desordenar un arreglo (Algoritmo Fisher-Yates)
+    <script>
+        // Actualizar contador al escribir
+        document.getElementById('listaNombres').addEventListener('input', function() {
+            const nombres = this.value.split('\n').filter(n => n.trim() !== '');
+            document.getElementById('contador').textContent = `${nombres.length} estudiantes en la lista`;
+        });
+
         function shuffleArray(array) {
             let currentIndex = array.length, randomIndex;
-            
             while (currentIndex !== 0) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex--;
-                
                 [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
             return array;
         }
 
-        // Función principal para sortear y renderizar
-        function sortearGrupos() {
-            // Hacemos una copia para no modificar el arreglo original y la mezclamos
-            const estudiantesMezclados = shuffleArray([...estudiantesOriginales]);
+        function generarGrupos() {
+            // Obtener datos
+            const textoNombres = document.getElementById('listaNombres').value;
+            const cantidadGrupos = parseInt(document.getElementById('numGrupos').value);
+            
+            // Limpiar y filtrar nombres vacíos
+            let nombres = textoNombres.split('\n').map(n => n.trim()).filter(n => n !== '');
 
-            // Dividimos el arreglo en los 3 grupos requeridos
-            const grupo1 = estudiantesMezclados.slice(0, 4);    // 4 integrantes (índices 0 al 3)
-            const grupo2 = estudiantesMezclados.slice(4, 8);    // 4 integrantes (índices 4 al 7)
-            const grupo3 = estudiantesMezclados.slice(8, 11);   // 3 integrantes (índices 8 al 10)
+            // Validaciones
+            if (nombres.length === 0) {
+                alert('Por favor, ingresa al menos un nombre.');
+                return;
+            }
+            if (isNaN(cantidadGrupos) || cantidadGrupos < 1) {
+                alert('Por favor, ingresa una cantidad válida de grupos (mínimo 1).');
+                return;
+            }
+            if (cantidadGrupos > nombres.length) {
+                alert('No puedes crear más grupos que la cantidad de estudiantes.');
+                return;
+            }
 
-            // Renderizamos en el HTML
-            renderLista('grupo1', grupo1);
-            renderLista('grupo2', grupo2);
-            renderLista('grupo3', grupo3);
-        }
+            // Mezclar aleatoriamente
+            nombres = shuffleArray(nombres);
 
-        // Función auxiliar para insertar los elementos <li> en el DOM
-        function renderLista(elementoId, integrantes) {
-            const lista = document.getElementById(elementoId);
-            lista.innerHTML = ""; // Limpiamos la lista actual
+            // Crear arreglo de grupos vacíos
+            const grupos = Array.from({ length: cantidadGrupos }, () => []);
 
-            integrantes.forEach(nombre => {
-                const li = document.createElement('li');
-                li.className = 'student-item';
-                li.textContent = nombre;
-                lista.appendChild(li);
+            // Distribuir estudiantes (reparte uno por uno a cada grupo secuencialmente)
+            nombres.forEach((nombre, index) => {
+                grupos[index % cantidadGrupos].push(nombre);
+            });
+
+            // Renderizar en el DOM
+            const contenedor = document.getElementById('contenedorGrupos');
+            contenedor.innerHTML = ''; // Limpiar grupos anteriores
+
+            grupos.forEach((grupo, idx) => {
+                const card = document.createElement('div');
+                card.className = 'group-card';
+                // Añadir un pequeño retraso a la animación de cada tarjeta
+                card.style.animationDelay = `${idx * 0.1}s`;
+
+                // Crear la lista de miembros en HTML
+                const listaHTML = grupo.map(miembro => `<li class="student-item">${miembro}</li>`).join('');
+
+                card.innerHTML = `
+                    <h2 class="group-title">Grupo ${idx + 1} <span class="group-badge">${grupo.length} Miembros</span></h2>
+                    <ul class="student-list">
+                        ${listaHTML}
+                    </ul>
+                `;
+                
+                contenedor.appendChild(card);
             });
         }
+
+        // Generar los grupos la primera vez que carga la página
+        window.onload = generarGrupos;
     </script>
 </body>
 </html>
