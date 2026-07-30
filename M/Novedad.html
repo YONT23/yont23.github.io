@@ -230,10 +230,11 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .falta-item.checked{border-color:var(--blue-500);background:var(--blue-100);font-weight:600;}
 .falta-item input{width:19px;height:19px;accent-color:var(--blue-600);flex-shrink:0;margin-top:1px;}
 
-/* Estilo para la opción de falta escrita personalizada */
+/* Custom Falta Box */
 .custom-falta-box {
-  display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);
+  display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);
 }
+.custom-falta-box input { flex:1; }
 
 /* Dependencias */
 .dep-grid{display:grid;grid-template-columns:1fr;gap:9px;}
@@ -294,9 +295,15 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .reg-body-inner{padding:0 14px 14px 14px;border-top:1px dashed var(--border);}
 .reg-asig-block{margin-top:12px;}
 .reg-asig-name{font-weight:700;font-size:12.5px;color:var(--blue-700);margin-bottom:6px;}
+.reg-faltas{display:flex;flex-wrap:wrap;gap:6px;}
+.mini-falta-tag{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  padding:4px 9px;border-radius:var(--radius-pill);margin:0 4px 4px 0;background:var(--blue-100);color:var(--blue-700);
+}
+.reg-actions{display:flex;gap:8px;margin-top:14px;}
 
-.export-row{display:flex;gap:10px;margin:16px 0;}
-.export-row .btn{flex:1;}
+.export-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;}
+@media(max-width:480px){.export-row{grid-template-columns:1fr;}}
 
 /* Modal & Toast */
 .overlay{
@@ -327,6 +334,11 @@ main{flex:1;padding:20px 16px 110px 16px;}
   box-shadow:var(--shadow-lg);white-space:nowrap;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.empty-state{text-align:center;padding:50px 20px;}
+.empty-state-icon{font-size:44px;margin-bottom:10px;}
+.empty-state-title{font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px;}
+.empty-state-sub{font-size:12.5px;color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -339,7 +351,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
         <div class="brand-mark">MN</div>
         <div>
           <div class="brand-text">MNovedades</div>
-          <div class="brand-sub" id="topbarSub">Gestión semanal de faltas</div>
+          <div class="brand-sub" id="topbarSub">Registro de novedades académicas</div>
         </div>
       </div>
       <button class="btn-week" id="btnNuevaSemana" title="Iniciar nueva semana">🗓️ Nueva semana</button>
@@ -372,7 +384,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
       <div class="card">
         <div class="field">
           <label for="cfgInstitucion">Institución educativa</label>
-          <input type="text" id="cfgInstitucion" placeholder="Ej. Colegio Nacional">
+          <input type="text" id="cfgInstitucion" placeholder="Ej. Colegio Nacional Siglo XXI">
         </div>
         <div class="field-row">
           <div class="field">
@@ -462,7 +474,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
               <option value="Once">Once</option>
             </select>
           </div>
-          <div class="field" style="grid-column: span 1;">
+          <div class="field">
             <label for="estNombre">Nombre completo</label>
             <input type="text" id="estNombre" placeholder="Ej. Juan Pérez">
           </div>
@@ -505,12 +517,12 @@ main{flex:1;padding:20px 16px 110px 16px;}
         </button>
       </div>
 
-      <!-- Contenedor dinámico de faltas de la categoría activa -->
+      <!-- Contenedor de Faltas -->
       <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
         <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
         <div class="falta-list" id="faltaList"></div>
         
-        <!-- Opciones para escribir una falta que no esté en la lista -->
+        <!-- Entrada para otra falta personalizada -->
         <div class="custom-falta-box">
           <input type="text" id="inputCustomFalta" placeholder="Escribir otra falta no listada...">
           <button class="btn btn-secondary btn-sm" id="btnAddCustomFalta">➕ Añadir</button>
@@ -563,10 +575,14 @@ main{flex:1;padding:20px 16px 110px 16px;}
 
       <div id="consolidadoList"></div>
 
+      <!-- Opciones de exportación e importación -->
       <div class="export-row">
         <button class="btn btn-secondary" id="btnExportTXT">📄 Descargar TXT</button>
+        <button class="btn btn-secondary" id="btnImportTXT">📥 Importar TXT</button>
         <button class="btn btn-success" id="btnShareWhatsApp">💬 Enviar WhatsApp</button>
       </div>
+      <!-- File input invisible para importar -->
+      <input type="file" id="fileImportInput" accept=".txt" style="display:none;">
     </section>
 
   </main>
@@ -590,7 +606,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 
 <script>
 /* ==========================================================================
-   STATE & CONSTANTS
+   ESTADO Y CONSTANTES
    ========================================================================== */
 const CAT_FALTAS = {
   academicas: [
@@ -627,7 +643,7 @@ let activeChip = null;
 let editingIndex = -1;
 
 /* ==========================================================================
-   INITIALIZATION
+   INICIALIZACIÓN
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   cargarLocalStorage();
@@ -678,15 +694,14 @@ function initGradosFilter() {
 }
 
 /* ==========================================================================
-   NAVIGATION & STEP RAIL
+   NAVEGACIÓN Y BARRA PASOS
    ========================================================================== */
 function bindEvents() {
-  // Navigation rail clicks
   document.querySelectorAll(".rail-step").forEach(stepBtn => {
     stepBtn.addEventListener("click", () => {
       const step = parseInt(stepBtn.getAttribute("data-step"), 10);
       if (step > 1 && !validarPaso1()) {
-        showToast("Completa la institución y el docente en Config.");
+        showToast("Completa institución y docente en Config.");
         return;
       }
       renderScreen(step);
@@ -701,16 +716,16 @@ function bindEvents() {
 
   document.getElementById("btnNuevaSemana").addEventListener("click", comandoNuevaSemana);
 
-  // Contacts
+  // Agenda
   document.getElementById("btnAddContact").addEventListener("click", addContacto);
 
-  // Chips (Asignaturas)
+  // Chips
   document.getElementById("btnAddChip").addEventListener("click", addAsignaturaChip);
   document.getElementById("inputAsignatura").addEventListener("keypress", (e) => {
     if (e.key === "Enter") { e.preventDefault(); addAsignaturaChip(); }
   });
 
-  // Categorías
+  // Categorías Faltas
   document.querySelectorAll(".cat-card").forEach(card => {
     card.addEventListener("click", () => {
       const cat = card.getAttribute("data-cat");
@@ -720,7 +735,7 @@ function bindEvents() {
 
   document.getElementById("btnAddCustomFalta").addEventListener("click", addCustomFalta);
 
-  // Dependencias checkboxes
+  // Checkboxes Dependencias
   document.querySelectorAll(".chk-dep").forEach(chk => {
     chk.addEventListener("change", (e) => {
       const lbl = document.getElementById(e.target.getAttribute("data-lbl"));
@@ -729,10 +744,10 @@ function bindEvents() {
     });
   });
 
-  // Save Estudiante
+  // Guardar Estudiante
   document.getElementById("btnSaveEstudiante").addEventListener("click", saveEstudiante);
 
-  // Modal actions
+  // Modal
   document.getElementById("btnModalAddMore").addEventListener("click", () => {
     document.getElementById("popConfirm").classList.remove("show");
     resetFormEstudiante();
@@ -744,12 +759,16 @@ function bindEvents() {
     renderScreen(3);
   });
 
-  // Consolidado filters
+  // Filtros Consolidado
   document.getElementById("searchNombre").addEventListener("input", renderConsolidadoList);
   document.getElementById("filterGrado").addEventListener("change", renderConsolidadoList);
 
-  // Export
+  // Exportar / Importar
   document.getElementById("btnExportTXT").addEventListener("click", exportarTXT);
+  document.getElementById("btnImportTXT").addEventListener("click", () => {
+    document.getElementById("fileImportInput").click();
+  });
+  document.getElementById("fileImportInput").addEventListener("change", importarTXT);
   document.getElementById("btnShareWhatsApp").addEventListener("click", enviarWhatsApp);
 }
 
@@ -764,7 +783,6 @@ function renderScreen(step) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(`screen${step}`).classList.add("active");
 
-  // Rail update
   const fill = document.getElementById("railFill");
   fill.style.width = step === 1 ? "0%" : (step === 2 ? "50%" : "100%");
 
@@ -782,7 +800,7 @@ function renderScreen(step) {
 }
 
 /* ==========================================================================
-   CONTACTS AGENDA
+   AGENDA DE CONTACTOS
    ========================================================================== */
 function addContacto() {
   const name = document.getElementById("cntNombre").value.trim();
@@ -838,7 +856,7 @@ function toggleContactoSelection(id, checked) {
 }
 
 /* ==========================================================================
-   ASIGNATURAS & CHIPS
+   ASIGNATURAS Y CHIPS
    ========================================================================== */
 function addAsignaturaChip() {
   const val = document.getElementById("inputAsignatura").value.trim();
@@ -858,6 +876,7 @@ function removeAsignaturaChip(val) {
   delete currentFaltasByAsig[val];
   if (activeChip === val) activeChip = currentAsignaturas[0] || null;
   renderChips();
+  if (!activeChip) document.getElementById("faltaPanel").style.display = "none";
 }
 
 function selectChip(val) {
@@ -884,7 +903,7 @@ function renderChips() {
 }
 
 /* ==========================================================================
-   CATEGORIES & FALTAS
+   CATEGORÍAS Y MANEJO DE FALTAS
    ========================================================================== */
 function selectCategory(cat) {
   if (currentAsignaturas.length === 0) {
@@ -911,7 +930,6 @@ function renderFaltaList() {
   const baseList = CAT_FALTAS[activeCat] || [];
   const currentFaltas = currentFaltasByAsig[activeChip] || [];
 
-  // Unir la lista fija con cualquier falta personalizada escrita previamente
   const combinedList = [...new Set([...baseList, ...currentFaltas])];
 
   combinedList.forEach(falta => {
@@ -952,7 +970,7 @@ function addCustomFalta() {
 }
 
 /* ==========================================================================
-   SAVE & EDIT ESTUDIANTE
+   GUARDAR Y EDITAR ESTUDIANTE
    ========================================================================== */
 function saveEstudiante() {
   const nombre = document.getElementById("estNombre").value.trim();
@@ -961,7 +979,6 @@ function saveEstudiante() {
   if (!nombre) { showToast("Ingresa el nombre del estudiante."); return; }
   if (currentAsignaturas.length === 0) { showToast("Añade al menos una asignatura."); return; }
 
-  // Verificar que al menos una asignatura tenga faltas
   let hasFaltas = false;
   Object.values(currentFaltasByAsig).forEach(arr => { if (arr.length > 0) hasFaltas = true; });
   if (!hasFaltas) { showToast("Marca al menos una falta."); return; }
@@ -982,6 +999,7 @@ function saveEstudiante() {
   if (editingIndex >= 0) {
     appState.estudiantes[editingIndex] = data;
     editingIndex = -1;
+    localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
     showToast("Registro actualizado.");
     renderScreen(3);
   } else {
@@ -1045,7 +1063,7 @@ function deleteEstudiante(index) {
 }
 
 /* ==========================================================================
-   CONSOLIDADO SCREEN
+   CONSOLIDADO Y RENDERIZADO
    ========================================================================== */
 function renderConsolidadoList() {
   const container = document.getElementById("consolidadoList");
@@ -1070,7 +1088,7 @@ function renderConsolidadoList() {
     return;
   }
 
-  list.forEach((est, idx) => {
+  list.forEach((est) => {
     const origIndex = appState.estudiantes.findIndex(x => x.id === est.id);
     const item = document.createElement("div");
     item.className = "reg-item";
@@ -1089,7 +1107,7 @@ function renderConsolidadoList() {
           <div class="reg-asig-block">
             <div class="reg-asig-name">📖 ${asig}</div>
             <div class="reg-faltas">
-              ${faltas.map(f => `<span class="mini-falta-tag cat-academicas">${f}</span>`).join('')}
+              ${faltas.map(f => `<span class="mini-falta-tag">${f}</span>`).join('')}
             </div>
           </div>`;
       }
@@ -1124,7 +1142,7 @@ function toggleRegItem(el) {
 }
 
 /* ==========================================================================
-   EXPORTS & WEEK RESET
+   EXPORTACIÓN, IMPORTACIÓN Y RESETEO SEMANAL
    ========================================================================== */
 function exportarTXT() {
   if (appState.estudiantes.length === 0) { showToast("No hay registros para exportar."); return; }
@@ -1132,23 +1150,26 @@ function exportarTXT() {
   let txt = `===========================================================\n`;
   txt += `REPORTE CONSOLIDADO SEMANAL DE NOVEDADES\n`;
   txt += `===========================================================\n`;
-  txt += `Institución : ${c.institucion || 'N/A'}\n`;
-  txt += `Año Lectivo : ${c.anio}  | Período: ${c.periodo}\n`;
-  txt += `Docente     : ${c.docente || 'N/A'}\n`;
-  txt += `Rango       : Del ${c.fechaDesde || 'N/A'} al ${c.fechaHasta || 'N/A'}\n`;
+  txt += `INSTITUCION: ${c.institucion || 'N/A'}\n`;
+  txt += `ANIO: ${c.anio}\n`;
+  txt += `PERIODO: ${c.periodo}\n`;
+  txt += `DOCENTE: ${c.docente || 'N/A'}\n`;
+  txt += `FECHA_DESDE: ${c.fechaDesde || 'N/A'}\n`;
+  txt += `FECHA_HASTA: ${c.fechaHasta || 'N/A'}\n`;
   txt += `===========================================================\n\n`;
 
-  appState.estudiantes.forEach((e, i) => {
-    txt += `${i+1}. ALUMNO: ${e.nombre} [GRADO: ${e.grado}]\n`;
-    txt += `   NOTIFICADO A: ${e.dependencias.join(", ")}\n`;
+  appState.estudiantes.forEach((e) => {
+    txt += `---\n`;
+    txt += `ESTUDIANTE: ${e.nombre}\n`;
+    txt += `GRADO: ${e.grado}\n`;
+    txt += `DEPENDENCIAS: ${e.dependencias.join(", ")}\n`;
     e.asignaturas.forEach(asig => {
       const faltas = e.faltasByAsig[asig] || [];
       if (faltas.length > 0) {
-        txt += `   • ASIGNATURA: ${asig}\n`;
-        txt += `     Faltas: ${faltas.join(", ")}\n`;
+        txt += `ASIGNATURA: ${asig}\n`;
+        txt += `FALTAS: ${faltas.join(", ")}\n`;
       }
     });
-    txt += `-----------------------------------------------------------\n`;
   });
 
   const blob = new Blob([txt], { type: "text/plain;charset=utf-8;" });
@@ -1157,6 +1178,81 @@ function exportarTXT() {
   a.download = `Reporte_Novedades.txt`;
   a.click();
   showToast("TXT Descargado.");
+}
+
+/* IMPORTACIÓN DE ARCHIVOS DE TEXTO PLANO (.TXT) */
+function importarTXT(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const text = evt.target.result;
+    parseAndImportTXT(text);
+    e.target.value = ""; // Limpiar el input file
+  };
+  reader.readAsText(file, "UTF-8");
+}
+
+function parseAndImportTXT(text) {
+  const lines = text.split("\n");
+  let importedCount = 0;
+  
+  // Bloques divididos por '---'
+  const blocks = text.split(/---/);
+
+  blocks.forEach(block => {
+    const blockLines = block.split("\n");
+    let estNombre = "";
+    let estGrado = "";
+    let estDeps = [];
+    let estAsignaturas = [];
+    let estFaltasByAsig = {};
+    let currentAsig = "";
+
+    blockLines.forEach(line => {
+      const cleanLine = line.trim();
+      if (cleanLine.startsWith("ESTUDIANTE:")) {
+        estNombre = cleanLine.replace("ESTUDIANTE:", "").trim();
+      } else if (cleanLine.startsWith("GRADO:")) {
+        estGrado = cleanLine.replace("GRADO:", "").trim();
+      } else if (cleanLine.startsWith("DEPENDENCIAS:")) {
+        const depsStr = cleanLine.replace("DEPENDENCIAS:", "").trim();
+        if (depsStr) estDeps = depsStr.split(",").map(d => d.trim());
+      } else if (cleanLine.startsWith("ASIGNATURA:")) {
+        currentAsig = cleanLine.replace("ASIGNATURA:", "").trim();
+        if (currentAsig && !estAsignaturas.includes(currentAsig)) {
+          estAsignaturas.push(currentAsig);
+          estFaltasByAsig[currentAsig] = [];
+        }
+      } else if (cleanLine.startsWith("FALTAS:")) {
+        const faltasStr = cleanLine.replace("FALTAS:", "").trim();
+        if (currentAsig && faltasStr) {
+          estFaltasByAsig[currentAsig] = faltasStr.split(",").map(f => f.trim());
+        }
+      }
+    });
+
+    if (estNombre && estGrado && estAsignaturas.length > 0) {
+      appState.estudiantes.push({
+        id: Date.now() + Math.random(),
+        grado: estGrado,
+        nombre: estNombre,
+        asignaturas: estAsignaturas,
+        faltasByAsig: estFaltasByAsig,
+        dependencias: estDeps.length > 0 ? estDeps : ["Coordinación"]
+      });
+      importedCount++;
+    }
+  });
+
+  if (importedCount > 0) {
+    localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+    renderConsolidadoList();
+    showToast(`¡Se importaron ${importedCount} estudiantes!`);
+  } else {
+    showToast("No se encontraron registros válidos para importar.");
+  }
 }
 
 function enviarWhatsApp() {
