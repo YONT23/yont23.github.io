@@ -3,218 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteo Dinámico de Grupos</title>
+    <title>Mruleta</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --bg-color: #ffffff;
+            --text-main: #000000;
+            --text-muted: #666666;
+            --accent-blue: #0056b3;
+            --accent-red: #d32f2f;
+            --border-light: #e5e5e5;
+            --bg-panel: #f9f9f9;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-main);
             min-height: 100vh;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
             box-sizing: border-box;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
+            font-weight: 800;
             color: var(--text-main);
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: -1px;
+            text-transform: uppercase;
         }
 
-        p.subtitle {
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            text-align: center;
+        h1 span {
+            color: var(--accent-red);
+        }
+
+        .subtitle {
             font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            font-weight: 300;
         }
 
-        .config-panel {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        .dashboard {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-light);
+            padding: 40px;
             width: 100%;
-            max-width: 900px;
-            margin-bottom: 40px;
+            max-width: 800px;
             display: flex;
+            gap: 40px;
             flex-wrap: wrap;
-            gap: 30px;
-            border-top: 5px solid #8b5cf6;
         }
 
-        .input-group {
+        .col {
             flex: 1;
             min-width: 250px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .input-group label {
+        label {
             font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: var(--text-main);
         }
 
-        textarea {
+        textarea, input[type="number"] {
             width: 100%;
-            height: 200px;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: inherit;
+            background: var(--bg-color);
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 15px;
+            font-family: 'Inter', sans-serif;
             font-size: 1rem;
-            resize: vertical;
-            transition: border-color 0.3s;
             box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        
+        textarea {
+            height: 180px;
+            resize: vertical;
         }
 
         textarea:focus, input[type="number"]:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
         }
 
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1.2rem;
-            box-sizing: border-box;
-        }
-
-        .action-group {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            min-width: 200px;
-        }
-
-        .btn-sortear {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            font-size: 1.2rem;
+        #contador {
+            font-size: 0.85rem;
+            color: var(--accent-blue);
             font-weight: 600;
-            border-radius: 12px;
+            text-align: right;
+            margin-top: -5px;
+        }
+
+        .btn-spin {
+            background: var(--text-main);
+            color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 18px;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: background 0.3s ease, transform 0.1s ease;
+            margin-top: auto;
+        }
+
+        .btn-spin:hover {
+            background: var(--accent-blue);
+        }
+        
+        .btn-spin:active {
+            transform: scale(0.98);
+        }
+
+        .loader-container {
+            height: 60px;
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .roulette-loader {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent-red);
+            border-right: 4px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
             width: 100%;
+            max-width: 1000px;
         }
 
-        .btn-sortear:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 15px 20px -5px rgba(37, 99, 235, 0.4);
+        .card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-light);
+            width: 260px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.4s forwards ease-out;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
-        .btn-sortear:active {
-            transform: translateY(1px);
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .groups-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .group-card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            border-top: 5px solid var(--primary);
-            transition: transform 0.3s ease;
-            animation: popIn 0.4s ease forwards;
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .group-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .group-title {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 10px;
+        .card-header {
+            background: var(--text-main);
+            color: var(--bg-color);
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .group-badge {
-            background-color: #e2e8f0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
+        
+        .card-header.blue-header {
+            background: var(--accent-blue);
         }
 
-        .student-list {
-            list-style: none;
+        .card-header span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.8;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .card-body {
             padding: 0;
+            list-style: none;
             margin: 0;
         }
 
-        .student-item {
-            padding: 10px 12px;
-            background-color: #f8fafc;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            font-size: 1.05rem;
+        .card-body li {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
             color: var(--text-main);
-            border-left: 4px solid transparent;
-            transition: all 0.2s ease;
+        }
+        
+        .card-body li:last-child {
+            border-bottom: none;
         }
 
-        .student-item:hover {
-            background-color: #f1f5f9;
-            border-left-color: var(--primary);
-        }
-
-        .stats {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-align: center;
+        .card-body li::before {
+            content: '■';
+            color: var(--accent-red);
+            font-size: 0.5rem;
+            margin-right: 12px;
         }
     </style>
 </head>
 <body>
+    <h1>Mruleta<span>.</span></h1>
+    <p class="subtitle">Asignación aleatoria de equipos</p>
 
-    <h1>Generador Dinámico de Grupos</h1>
-    <p class="subtitle">Agrega o elimina estudiantes, y elige cuántos grupos quieres formar.</p>
-
-    <div class="config-panel">
-        <div class="input-group" style="flex: 2;">
-            <label for="listaNombres">Lista de Estudiantes (uno por línea):</label>
-            <textarea id="listaNombres">Barrios Nicoll
+    <div class="dashboard">
+        <div class="col">
+            <label>Jugadores (uno por línea)</label>
+            <textarea id="nombres">Barrios Nicoll
 Gomez Jesus
 Hernandez Thomas
 Liñan Samuel
@@ -225,99 +248,103 @@ Perez Edier
 Pestana Francheska
 Vidal Liz
 Sharon</textarea>
-            <div class="stats" id="contador">11 estudiantes en la lista</div>
+            <div id="contador">11 jugadores en sala</div>
         </div>
         
-        <div class="input-group">
-            <label for="numGrupos">Cantidad de Grupos a crear:</label>
-            <input type="number" id="numGrupos" value="3" min="1">
+        <div class="col">
+            <label>Personas por grupo</label>
+            <input type="number" id="personasGrupo" value="4" min="1">
             
-            <div class="action-group" style="margin-top: auto;">
-                <button class="btn-sortear" onclick="generarGrupos()">🎲 Generar Grupos</button>
-            </div>
+            <button class="btn-spin" onclick="girarMruleta()">Girar Mruleta</button>
         </div>
     </div>
 
-    <div class="groups-container" id="contenedorGrupos">
-        <!-- Los grupos se generarán aquí dinámicamente -->
+    <div class="loader-container">
+        <div class="roulette-loader" id="loader"></div>
     </div>
+    
+    <div class="results" id="resultados"></div>
 
     <script>
-        // Actualizar contador al escribir
-        document.getElementById('listaNombres').addEventListener('input', function() {
-            const nombres = this.value.split('\n').filter(n => n.trim() !== '');
-            document.getElementById('contador').textContent = `${nombres.length} estudiantes en la lista`;
+        // Actualizar contador
+        document.getElementById('nombres').addEventListener('input', function() {
+            const count = this.value.split('\n').filter(n => n.trim() !== '').length;
+            document.getElementById('contador').textContent = count + ' jugadores en sala';
         });
 
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        // Algoritmo Fisher-Yates para mezclar
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
         }
 
-        function generarGrupos() {
-            // Obtener datos
-            const textoNombres = document.getElementById('listaNombres').value;
-            const cantidadGrupos = parseInt(document.getElementById('numGrupos').value);
+        function girarMruleta() {
+            const resultados = document.getElementById('resultados');
+            const loader = document.getElementById('loader');
             
-            // Limpiar y filtrar nombres vacíos
-            let nombres = textoNombres.split('\n').map(n => n.trim()).filter(n => n !== '');
-
+            // Limpiar resultados anteriores
+            resultados.innerHTML = '';
+            
+            const inputNombres = document.getElementById('nombres').value;
+            const limit = parseInt(document.getElementById('personasGrupo').value);
+            
+            let jugadores = inputNombres.split('\n').map(n => n.trim()).filter(n => n !== '');
+            
             // Validaciones
-            if (nombres.length === 0) {
-                alert('Por favor, ingresa al menos un nombre.');
+            if (jugadores.length === 0) {
+                alert('La sala está vacía. Agrega al menos un jugador.');
                 return;
             }
-            if (isNaN(cantidadGrupos) || cantidadGrupos < 1) {
-                alert('Por favor, ingresa una cantidad válida de grupos (mínimo 1).');
-                return;
-            }
-            if (cantidadGrupos > nombres.length) {
-                alert('No puedes crear más grupos que la cantidad de estudiantes.');
+            if (isNaN(limit) || limit < 1) {
+                alert('El número de personas por mesa debe ser al menos 1.');
                 return;
             }
 
-            // Mezclar aleatoriamente
-            nombres = shuffleArray(nombres);
-
-            // Crear arreglo de grupos vacíos
-            const grupos = Array.from({ length: cantidadGrupos }, () => []);
-
-            // Distribuir estudiantes (reparte uno por uno a cada grupo secuencialmente)
-            nombres.forEach((nombre, index) => {
-                grupos[index % cantidadGrupos].push(nombre);
-            });
-
-            // Renderizar en el DOM
-            const contenedor = document.getElementById('contenedorGrupos');
-            contenedor.innerHTML = ''; // Limpiar grupos anteriores
-
-            grupos.forEach((grupo, idx) => {
-                const card = document.createElement('div');
-                card.className = 'group-card';
-                // Añadir un pequeño retraso a la animación de cada tarjeta
-                card.style.animationDelay = `${idx * 0.1}s`;
-
-                // Crear la lista de miembros en HTML
-                const listaHTML = grupo.map(miembro => `<li class="student-item">${miembro}</li>`).join('');
-
-                card.innerHTML = `
-                    <h2 class="group-title">Grupo ${idx + 1} <span class="group-badge">${grupo.length} Miembros</span></h2>
-                    <ul class="student-list">
-                        ${listaHTML}
-                    </ul>
-                `;
+            // Mostrar animación
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
                 
-                contenedor.appendChild(card);
-            });
+                // 1. Mezclar jugadores
+                jugadores = shuffle(jugadores);
+                
+                // 2. Dividir por cantidad de personas por grupo
+                let grupos = [];
+                for (let i = 0; i < jugadores.length; i += limit) {
+                    grupos.push(jugadores.slice(i, i + limit));
+                }
+                
+                // 3. Renderizar
+                grupos.forEach((grupo, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.animationDelay = (index * 0.1) + 's';
+                    
+                    const header = document.createElement('div');
+                    // Alternar color del header (negro y azul) para más dinamismo dentro del minimalismo
+                    header.className = index % 2 !== 0 ? 'card-header blue-header' : 'card-header';
+                    header.innerHTML = `Mesa ${index + 1} <span>${grupo.length} Jugadores</span>`;
+                    
+                    const ul = document.createElement('ul');
+                    ul.className = 'card-body';
+                    
+                    grupo.forEach(jugador => {
+                        const li = document.createElement('li');
+                        li.textContent = jugador;
+                        ul.appendChild(li);
+                    });
+                    
+                    card.appendChild(header);
+                    card.appendChild(ul);
+                    resultados.appendChild(card);
+                });
+                
+            }, 800); 
         }
-
-        // Generar los grupos la primera vez que carga la página
-        window.onload = generarGrupos;
     </script>
 </body>
 </html>
