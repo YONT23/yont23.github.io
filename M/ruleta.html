@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteo Aleatorio de Grupos</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .btn-sortear {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 50px;
+        }
+
+        .btn-sortear:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-sortear:active {
+            transform: translateY(1px);
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .group-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .group-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .group-badge {
+            background-color: #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .student-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            min-height: 180px; /* Mantiene el tamaño de la tarjeta unificado */
+        }
+
+        .student-item {
+            padding: 12px 15px;
+            background-color: #f8fafc;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: fadeIn 0.4s forwards;
+        }
+
+        .student-item:hover {
+            background-color: #f1f5f9;
+            border-left-color: var(--primary);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Animación escalonada para los elementos de la lista */
+        .student-item:nth-child(1) { animation-delay: 0.1s; }
+        .student-item:nth-child(2) { animation-delay: 0.2s; }
+        .student-item:nth-child(3) { animation-delay: 0.3s; }
+        .student-item:nth-child(4) { animation-delay: 0.4s; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Sorteo de Grupos</h1>
+    <p class="subtitle">Asignación aleatoria: Dos grupos de 4 y un grupo de 3 integrantes.</p>
+
+    <button class="btn-sortear" onclick="sortearGrupos()">🎲 Generar Grupos Aleatorios</button>
+
+    <div class="groups-container">
+        <!-- Grupo 1 -->
+        <div class="group-card">
+            <h2 class="group-title">Grupo 1 <span class="group-badge">4 Miembros</span></h2>
+            <ul class="student-list" id="grupo1">
+                <li class="student-item" style="color: #cbd5e1; font-style: italic;">Esperando sorteo...</li>
+            </ul>
+        </div>
+
+        <!-- Grupo 2 -->
+        <div class="group-card">
+            <h2 class="group-title">Grupo 2 <span class="group-badge">4 Miembros</span></h2>
+            <ul class="student-list" id="grupo2">
+                <li class="student-item" style="color: #cbd5e1; font-style: italic;">Esperando sorteo...</li>
+            </ul>
+        </div>
+
+        <!-- Grupo 3 -->
+        <div class="group-card">
+            <h2 class="group-title">Grupo 3 <span class="group-badge">3 Miembros</span></h2>
+            <ul class="student-list" id="grupo3">
+                <li class="student-item" style="color: #cbd5e1; font-style: italic;">Esperando sorteo...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Lista original de estudiantes
+        const estudiantesOriginales = [
+            "Barrios Nicoll",
+            "Gomez Jesus",
+            "Hernandez Thomas",
+            "Liñan Samuel",
+            "Londoño Samuel",
+            "Mejía Ilder",
+            "Oviedo Matias",
+            "Perez Edier",
+            "Pestana Francheska",
+            "Vidal Liz",
+            "Sharon"
+        ];
+
+        // Función para desordenar un arreglo (Algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Función principal para sortear y renderizar
+        function sortearGrupos() {
+            // Hacemos una copia para no modificar el arreglo original y la mezclamos
+            const estudiantesMezclados = shuffleArray([...estudiantesOriginales]);
+
+            // Dividimos el arreglo en los 3 grupos requeridos
+            const grupo1 = estudiantesMezclados.slice(0, 4);    // 4 integrantes (índices 0 al 3)
+            const grupo2 = estudiantesMezclados.slice(4, 8);    // 4 integrantes (índices 4 al 7)
+            const grupo3 = estudiantesMezclados.slice(8, 11);   // 3 integrantes (índices 8 al 10)
+
+            // Renderizamos en el HTML
+            renderLista('grupo1', grupo1);
+            renderLista('grupo2', grupo2);
+            renderLista('grupo3', grupo3);
+        }
+
+        // Función auxiliar para insertar los elementos <li> en el DOM
+        function renderLista(elementoId, integrantes) {
+            const lista = document.getElementById(elementoId);
+            lista.innerHTML = ""; // Limpiamos la lista actual
+
+            integrantes.forEach(nombre => {
+                const li = document.createElement('li');
+                li.className = 'student-item';
+                li.textContent = nombre;
+                lista.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
