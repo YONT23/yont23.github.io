@@ -57,16 +57,13 @@ button,input,select,textarea{font-family:inherit;font-size:16px;color:inherit;}
 button{cursor:pointer;border:none;background:none;}
 input,select,textarea{outline:none;}
 :focus-visible{outline:2.5px solid var(--blue-500);outline-offset:2px;border-radius:6px;}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}}
 
-/* ============ LAYOUT SHELL ============ */
 #app{max-width:640px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
 
 .topbar{
   position:sticky;top:0;z-index:40;
   background:linear-gradient(180deg,var(--blue-900),var(--blue-800));
   padding:14px 18px calc(14px + env(safe-area-inset-top)) 18px;
-  padding-top:calc(14px + env(safe-area-inset-top));
   color:#fff;
   box-shadow:var(--shadow-md);
 }
@@ -81,18 +78,15 @@ input,select,textarea{outline:none;}
   flex-shrink:0;
 }
 .brand-text{font-family:var(--font-display);font-weight:700;font-size:16.5px;letter-spacing:.2px;}
-.brand-sub{font-size:11px;color:var(--blue-200);font-weight:500;letter-spacing:.3px;}
+.brand-sub{font-size:11px;color:var(--blue-200);font-weight:500;}
 .btn-week{
   display:flex;align-items:center;gap:6px;
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.18);
   color:#fff;padding:8px 12px;border-radius:var(--radius-pill);
   font-size:12.5px;font-weight:600;white-space:nowrap;
-  transition:background .15s;
 }
-.btn-week:active{background:rgba(255,255,255,.22);}
 
-/* Step rail */
 .rail{display:flex;align-items:center;gap:0;position:relative;}
 .rail-track{
   position:absolute;left:17px;right:17px;top:16px;height:3px;
@@ -115,13 +109,12 @@ input,select,textarea{outline:none;}
   font-family:var(--font-display);font-weight:700;font-size:13px;color:rgba(255,255,255,.6);
   transition:all .25s;
 }
-.rail-step.active .rail-dot{background:#fff;border-color:#fff;color:var(--blue-800);transform:scale(1.08);box-shadow:0 4px 14px rgba(0,0,0,.25);}
+.rail-step.active .rail-dot{background:#fff;border-color:#fff;color:var(--blue-800);transform:scale(1.08);}
 .rail-step.done .rail-dot{background:var(--green);border-color:var(--green);color:#fff;}
-.rail-label{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.2px;}
+.rail-label{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);}
 .rail-step.active .rail-label{color:#fff;}
 .rail-step.done .rail-label{color:var(--blue-200);}
 
-/* ============ MAIN CONTENT ============ */
 main{flex:1;padding:20px 16px 110px 16px;}
 .screen{display:none;animation:screenIn .35s cubic-bezier(.25,.7,.35,1);}
 .screen.active{display:block;}
@@ -158,26 +151,28 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .btn-secondary{background:var(--blue-100);color:var(--blue-700);}
 .btn-ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--border);}
 .btn-danger{background:var(--red-100);color:var(--red);}
+.btn-success{background:var(--green);color:#fff;}
 .btn-block{width:100%;}
 .btn-sm{padding:8px 13px;font-size:12.5px;}
-.btn:disabled{opacity:.45;pointer-events:none;}
 
-/* Contact agenda */
+/* Agenda de Contactos */
 .contact-form{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;}
 .contact-list{display:flex;flex-direction:column;gap:8px;}
 .contact-item{
   display:flex;align-items:center;gap:11px;padding:11px 12px;
   border:1.5px solid var(--border);border-radius:var(--radius-md);background:var(--blue-50);
-  transition:border-color .15s,background .15s;
 }
-.contact-item.checked{border-color:var(--blue-500);background:var(--blue-100);}
-.contact-item input[type=checkbox]{width:19px;height:19px;accent-color:var(--blue-600);flex-shrink:0;}
 .contact-info{flex:1;min-width:0;}
 .contact-name{font-weight:600;font-size:13.5px;color:var(--ink);}
 .contact-meta{font-size:11.5px;color:var(--ink-soft);}
 .contact-del{color:var(--red);font-size:16px;padding:4px 8px;flex-shrink:0;}
 
-/* Chips (asignaturas) */
+.tag-cargo{
+  display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);
+  background:var(--blue-100);color:var(--blue-700);letter-spacing:.2px;text-transform:uppercase;
+}
+
+/* Chips & Categories */
 .chip-input-row{display:flex;gap:8px;}
 .chip-input-row input{flex:1;}
 .chip-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
@@ -185,8 +180,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
   display:flex;align-items:center;gap:7px;padding:8px 8px 8px 14px;
   background:var(--blue-100);color:var(--blue-800);border-radius:var(--radius-pill);
   font-size:13px;font-weight:600;border:1.5px solid transparent;
-  animation:chipPop .25s cubic-bezier(.34,1.56,.64,1);cursor:pointer;
-  transition:border-color .15s,background .15s;
 }
 .chip.active{background:var(--blue-700);color:#fff;}
 .chip .chip-count{
@@ -197,17 +190,12 @@ main{flex:1;padding:20px 16px 110px 16px;}
   width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.08);font-size:12px;flex-shrink:0;
 }
-.chip.active .chip-x{background:rgba(255,255,255,.22);}
-@keyframes chipPop{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
 
-/* Category cards */
 .cat-grid{display:grid;grid-template-columns:1fr;gap:10px;}
 .cat-card{
   display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--radius-md);
   border:2px solid var(--border);background:var(--surface);text-align:left;
-  transition:border-color .15s,transform .12s,box-shadow .15s;
 }
-.cat-card:active{transform:scale(.98);}
 .cat-card .cat-icon{
   width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
   font-size:22px;flex-shrink:0;
@@ -219,28 +207,24 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .cat-card.selected.cat-plataformas{border-color:var(--purple);}
 .cat-card.selected.cat-disciplinarias{border-color:var(--red);}
 .cat-title{font-weight:700;font-size:14.5px;color:var(--ink);}
-.cat-desc{font-size:11.5px;color:var(--ink-soft);margin-top:1px;}
+.cat-desc{font-size:11.5px;color:var(--ink-soft);}
 
 .falta-list{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
 .falta-item{
   display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--radius-sm);
   border:1.5px solid var(--border);background:var(--blue-50);font-size:13.5px;font-weight:500;
-  transition:border-color .15s,background .15s;
 }
 .falta-item.checked{border-color:var(--blue-500);background:var(--blue-100);font-weight:600;}
 .falta-item input{width:19px;height:19px;accent-color:var(--blue-600);flex-shrink:0;margin-top:1px;}
 
-/* Custom Falta Box */
-.custom-falta-box {
-  display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);
-}
+.custom-falta-box {display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
 .custom-falta-box input { flex:1; }
 
 /* Dependencias */
 .dep-grid{display:grid;grid-template-columns:1fr;gap:9px;}
 .dep-item{
   display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:var(--radius-md);
-  border:2px solid var(--border);background:var(--surface);transition:all .15s;
+  border:2px solid var(--border);background:var(--surface);
 }
 .dep-item.checked{background:var(--blue-50);}
 .dep-item input{width:20px;height:20px;flex-shrink:0;}
@@ -268,7 +252,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
   border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow-md);
 }
 .stat-num{font-family:var(--font-display);font-weight:800;font-size:32px;line-height:1;}
-.stat-label{font-size:12px;color:var(--blue-200);font-weight:600;margin-top:3px;}
+.stat-label{font-size:12px;color:var(--blue-200);font-weight:600;}
 
 .toolbar{display:flex;gap:8px;margin-bottom:14px;}
 .search-box{flex:1;position:relative;}
@@ -295,7 +279,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .reg-body-inner{padding:0 14px 14px 14px;border-top:1px dashed var(--border);}
 .reg-asig-block{margin-top:12px;}
 .reg-asig-name{font-weight:700;font-size:12.5px;color:var(--blue-700);margin-bottom:6px;}
-.reg-faltas{display:flex;flex-wrap:wrap;gap:6px;}
 .mini-falta-tag{
   display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
   padding:4px 9px;border-radius:var(--radius-pill);margin:0 4px 4px 0;background:var(--blue-100);color:var(--blue-700);
@@ -305,7 +288,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .export-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;}
 @media(max-width:480px){.export-row{grid-template-columns:1fr;}}
 
-/* Modal & Toast */
+/* Modales */
 .overlay{
   position:fixed;inset:0;background:rgba(15,26,48,.55);z-index:100;
   display:none;align-items:flex-end;justify-content:center;
@@ -327,6 +310,10 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .modal-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:20px;}
 .modal-actions{display:flex;flex-direction:column;gap:10px;}
 
+.recipient-list { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; max-height:220px; overflow-y:auto; }
+.recipient-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid var(--border); border-radius:var(--radius-md); background:var(--blue-50); }
+.recipient-item input { width:18px; height:18px; accent-color:var(--blue-600); }
+
 .toast{
   position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
   background:var(--ink);color:#fff;padding:11px 20px;border-radius:var(--radius-pill);
@@ -337,7 +324,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 
 .empty-state{text-align:center;padding:50px 20px;}
 .empty-state-icon{font-size:44px;margin-bottom:10px;}
-.empty-state-title{font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px;}
+.empty-state-title{font-weight:700;font-size:15px;color:var(--ink);}
 .empty-state-sub{font-size:12.5px;color:var(--ink-soft);}
 </style>
 </head>
@@ -418,7 +405,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
       </div>
 
       <div class="section-title" style="margin-top:20px;">👥 Agenda de contactos (WhatsApp)</div>
-      <div class="section-sub">Agrega destinatarios permanentes para el envío automático del reporte.</div>
+      <div class="section-sub">Agrega destinatarios permanentes para la agenda escolar.</div>
 
       <div class="card">
         <div class="contact-form">
@@ -491,7 +478,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
       </div>
 
       <div class="section-title">⚠️ Selección de novedades</div>
-      <div class="section-sub">Toca la categoría y marca las faltas o añade una personalizada.</div>
+      <div class="section-sub">Toca la categoría y marca las faltas o escribe una personalizada.</div>
 
       <div class="cat-grid">
         <button class="cat-card cat-academicas" data-cat="academicas">
@@ -517,12 +504,11 @@ main{flex:1;padding:20px 16px 110px 16px;}
         </button>
       </div>
 
-      <!-- Contenedor de Faltas -->
+      <!-- Contenedor dinámico de faltas -->
       <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
         <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
         <div class="falta-list" id="faltaList"></div>
         
-        <!-- Entrada para otra falta personalizada -->
         <div class="custom-falta-box">
           <input type="text" id="inputCustomFalta" placeholder="Escribir otra falta no listada...">
           <button class="btn btn-secondary btn-sm" id="btnAddCustomFalta">➕ Añadir</button>
@@ -575,19 +561,18 @@ main{flex:1;padding:20px 16px 110px 16px;}
 
       <div id="consolidadoList"></div>
 
-      <!-- Opciones de exportación e importación -->
+      <!-- Botones de Acción -->
       <div class="export-row">
         <button class="btn btn-secondary" id="btnExportTXT">📄 Descargar TXT</button>
         <button class="btn btn-secondary" id="btnImportTXT">📥 Importar TXT</button>
-        <button class="btn btn-success" id="btnShareWhatsApp">💬 Enviar WhatsApp</button>
+        <button class="btn btn-success" id="btnOpenWaModal">💬 Enviar WhatsApp</button>
       </div>
-      <!-- File input invisible para importar -->
       <input type="file" id="fileImportInput" accept=".txt" style="display:none;">
     </section>
 
   </main>
 
-  <!-- Modal de confirmación tras guardar -->
+  <!-- Modal 1: Confirmación tras guardar -->
   <div class="overlay" id="popConfirm">
     <div class="modal">
       <div class="modal-icon">✅</div>
@@ -596,6 +581,19 @@ main{flex:1;padding:20px 16px 110px 16px;}
       <div class="modal-actions">
         <button class="btn btn-primary" id="btnModalAddMore">➕ Registrar otro estudiante</button>
         <button class="btn btn-secondary" id="btnModalGoList">📋 Ir al consolidado</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Selección de Destinatarios para WhatsApp -->
+  <div class="overlay" id="modalWhatsApp">
+    <div class="modal">
+      <div class="modal-title" style="margin-bottom:8px;">💬 Enviar por WhatsApp</div>
+      <div class="modal-sub" style="margin-bottom:14px;">Selecciona a qué contactos de tu agenda deseas enviar el reporte:</div>
+      <div class="recipient-list" id="waRecipientList"></div>
+      <div class="modal-actions">
+        <button class="btn btn-success" id="btnConfirmSendWa">Enviar mensaje 🚀</button>
+        <button class="btn btn-ghost" id="btnCloseWaModal">Cancelar</button>
       </div>
     </div>
   </div>
@@ -694,7 +692,7 @@ function initGradosFilter() {
 }
 
 /* ==========================================================================
-   NAVEGACIÓN Y BARRA PASOS
+   NAVEGACIÓN Y EVENTOS
    ========================================================================== */
 function bindEvents() {
   document.querySelectorAll(".rail-step").forEach(stepBtn => {
@@ -719,7 +717,7 @@ function bindEvents() {
   // Agenda
   document.getElementById("btnAddContact").addEventListener("click", addContacto);
 
-  // Chips
+  // Chips Asignaturas
   document.getElementById("btnAddChip").addEventListener("click", addAsignaturaChip);
   document.getElementById("inputAsignatura").addEventListener("keypress", (e) => {
     if (e.key === "Enter") { e.preventDefault(); addAsignaturaChip(); }
@@ -747,7 +745,7 @@ function bindEvents() {
   // Guardar Estudiante
   document.getElementById("btnSaveEstudiante").addEventListener("click", saveEstudiante);
 
-  // Modal
+  // Modal 1 acciones
   document.getElementById("btnModalAddMore").addEventListener("click", () => {
     document.getElementById("popConfirm").classList.remove("show");
     resetFormEstudiante();
@@ -759,7 +757,7 @@ function bindEvents() {
     renderScreen(3);
   });
 
-  // Filtros Consolidado
+  // Consolidado
   document.getElementById("searchNombre").addEventListener("input", renderConsolidadoList);
   document.getElementById("filterGrado").addEventListener("change", renderConsolidadoList);
 
@@ -769,7 +767,13 @@ function bindEvents() {
     document.getElementById("fileImportInput").click();
   });
   document.getElementById("fileImportInput").addEventListener("change", importarTXT);
-  document.getElementById("btnShareWhatsApp").addEventListener("click", enviarWhatsApp);
+
+  // WhatsApp Modal Trigger
+  document.getElementById("btnOpenWaModal").addEventListener("click", openWaModal);
+  document.getElementById("btnCloseWaModal").addEventListener("click", () => {
+    document.getElementById("modalWhatsApp").classList.remove("show");
+  });
+  document.getElementById("btnConfirmSendWa").addEventListener("click", ejecutarEnvioWhatsApp);
 }
 
 function validarPaso1() {
@@ -809,13 +813,13 @@ function addContacto() {
 
   if (!name || !phone) { showToast("Ingresa nombre y número válido."); return; }
 
-  appState.contactos.push({ id: Date.now(), name, cargo, phone, selected: true });
+  appState.contactos.push({ id: Date.now(), name, cargo, phone });
   document.getElementById("cntNombre").value = "";
   document.getElementById("cntPhone").value = "";
 
   localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
   renderContactos();
-  showToast("Contacto guardado en agenda.");
+  showToast("Contacto guardado.");
 }
 
 function removeContacto(id) {
@@ -829,15 +833,14 @@ function renderContactos() {
   container.innerHTML = "";
 
   if (appState.contactos.length === 0) {
-    container.innerHTML = '<div class="empty-note">No hay contactos guardados en la agenda.</div>';
+    container.innerHTML = '<div style="font-size:12.5px; color:var(--ink-faint); text-align:center; padding:10px;">La agenda local está vacía.</div>';
     return;
   }
 
   appState.contactos.forEach(c => {
     const div = document.createElement("div");
-    div.className = `contact-item ${c.selected ? 'checked' : ''}`;
+    div.className = "contact-item";
     div.innerHTML = `
-      <input type="checkbox" ${c.selected ? 'checked' : ''} onchange="toggleContactoSelection(${c.id}, this.checked)">
       <div class="contact-info">
         <div class="contact-name">${c.name}</div>
         <div class="contact-meta"><span class="tag-cargo">${c.cargo}</span> ${c.phone}</div>
@@ -846,13 +849,6 @@ function renderContactos() {
     `;
     container.appendChild(div);
   });
-}
-
-function toggleContactoSelection(id, checked) {
-  const c = appState.contactos.find(x => x.id === id);
-  if (c) c.selected = checked;
-  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
-  renderContactos();
 }
 
 /* ==========================================================================
@@ -1142,7 +1138,7 @@ function toggleRegItem(el) {
 }
 
 /* ==========================================================================
-   EXPORTACIÓN, IMPORTACIÓN Y RESETEO SEMANAL
+   EXPORTACIÓN, IMPORTACIÓN Y MODAL WHATSAPP
    ========================================================================== */
 function exportarTXT() {
   if (appState.estudiantes.length === 0) { showToast("No hay registros para exportar."); return; }
@@ -1180,25 +1176,20 @@ function exportarTXT() {
   showToast("TXT Descargado.");
 }
 
-/* IMPORTACIÓN DE ARCHIVOS DE TEXTO PLANO (.TXT) */
 function importarTXT(e) {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = function(evt) {
-    const text = evt.target.result;
-    parseAndImportTXT(text);
-    e.target.value = ""; // Limpiar el input file
+    parseAndImportTXT(evt.target.result);
+    e.target.value = "";
   };
   reader.readAsText(file, "UTF-8");
 }
 
 function parseAndImportTXT(text) {
-  const lines = text.split("\n");
   let importedCount = 0;
-  
-  // Bloques divididos por '---'
   const blocks = text.split(/---/);
 
   blocks.forEach(block => {
@@ -1249,18 +1240,48 @@ function parseAndImportTXT(text) {
   if (importedCount > 0) {
     localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
     renderConsolidadoList();
-    showToast(`¡Se importaron ${importedCount} estudiantes!`);
+    showToast(`¡Se importaron ${importedCount} registros!`);
   } else {
-    showToast("No se encontraron registros válidos para importar.");
+    showToast("No se encontraron registros válidos.");
   }
 }
 
-function enviarWhatsApp() {
-  if (appState.estudiantes.length === 0) { showToast("No hay registros para enviar."); return; }
+/* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP */
+function openWaModal() {
+  if (appState.estudiantes.length === 0) {
+    showToast("No hay registros para enviar.");
+    return;
+  }
+  if (appState.contactos.length === 0) {
+    showToast("Agrega contactos en Configuración.");
+    return;
+  }
 
-  const selectedContacts = appState.contactos.filter(c => c.selected);
-  if (selectedContacts.length === 0) {
-    showToast("Selecciona contactos en Config.");
+  const container = document.getElementById("waRecipientList");
+  container.innerHTML = "";
+
+  appState.contactos.forEach(c => {
+    const item = document.createElement("label");
+    item.className = "recipient-item";
+    item.innerHTML = `
+      <div class="contact-info">
+        <div class="contact-name"><strong>${c.name}</strong></div>
+        <div class="contact-meta"><span class="tag-cargo">${c.cargo}</span> ${c.phone}</div>
+      </div>
+      <input type="checkbox" value="${c.phone}" class="chk-wa-recipient" checked>
+    `;
+    container.appendChild(item);
+  });
+
+  document.getElementById("modalWhatsApp").classList.add("show");
+}
+
+function ejecutarEnvioWhatsApp() {
+  const selectedPhones = [];
+  document.querySelectorAll(".chk-wa-recipient:checked").forEach(chk => selectedPhones.push(chk.value));
+
+  if (selectedPhones.length === 0) {
+    showToast("Selecciona al menos un destinatario.");
     return;
   }
 
@@ -1283,11 +1304,12 @@ function enviarWhatsApp() {
   });
 
   const encoded = encodeURIComponent(msg);
-  selectedContacts.forEach(contact => {
-    window.open(`https://api.whatsapp.com/send?phone=${contact.phone}&text=${encoded}`, '_blank');
+  selectedPhones.forEach(phone => {
+    window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`, '_blank');
   });
 
-  showToast(`Enviando a ${selectedContacts.length} destinatarios.`);
+  document.getElementById("modalWhatsApp").classList.remove("show");
+  showToast(`Enviando a ${selectedPhones.length} destinatarios.`);
 }
 
 function comandoNuevaSemana() {
