@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mruleta</title>
-    <!-- Agregamos la librería Anime.js -->
+    <!-- Librería Anime.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
@@ -28,15 +28,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
             box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* HEADER FIJO */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         h1 {
             font-size: 3.5rem;
             font-weight: 800;
             color: var(--text-main);
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             letter-spacing: -1px;
             text-transform: uppercase;
         }
@@ -48,10 +55,24 @@
         .subtitle {
             font-size: 1.1rem;
             color: var(--text-muted);
-            margin-bottom: 50px;
+            margin: 0;
             font-weight: 300;
         }
 
+        /* PANTALLAS */
+        .screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #results-screen {
+            display: none; /* Oculto por defecto */
+            opacity: 0;
+        }
+
+        /* PANTALLA 1: CONFIGURACIÓN */
         .dashboard {
             background: var(--bg-panel);
             border: 1px solid var(--border-light);
@@ -132,11 +153,33 @@
         .btn-spin:active {
             transform: scale(0.98);
         }
-        
-        .btn-spin:disabled {
-            background: var(--text-muted);
-            cursor: not-allowed;
-            transform: none;
+
+        /* PANTALLA 2: RESULTADOS */
+        .top-actions {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            color: var(--text-main);
+            border-color: var(--text-main);
         }
 
         .results {
@@ -146,7 +189,6 @@
             justify-content: center;
             width: 100%;
             max-width: 1000px;
-            margin-top: 40px;
         }
 
         .card {
@@ -154,7 +196,7 @@
             border: 1px solid var(--border-light);
             width: 260px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            opacity: 0; /* Oculto inicialmente para Anime.js */
+            opacity: 0; /* Oculto inicialmente */
         }
 
         .card-header {
@@ -196,7 +238,7 @@
             display: flex;
             align-items: center;
             color: var(--text-main);
-            opacity: 0; /* Oculto inicialmente para Anime.js */
+            opacity: 0; /* Oculto inicialmente */
         }
         
         .card-body li:last-child {
@@ -212,13 +254,18 @@
     </style>
 </head>
 <body>
-    <h1>Mruleta<span>.</span></h1>
-    <p class="subtitle">Sorteo en vivo de equipos</p>
+    
+    <header>
+        <h1>Mruleta<span>.</span></h1>
+        <p class="subtitle" id="main-subtitle">Asignación aleatoria de equipos</p>
+    </header>
 
-    <div class="dashboard">
-        <div class="col">
-            <label>Jugadores (uno por línea)</label>
-            <textarea id="nombres">Barrios Nicoll
+    <!-- PANTALLA 1: CONFIGURACIÓN -->
+    <div id="setup-screen" class="screen">
+        <div class="dashboard">
+            <div class="col">
+                <label>Jugadores (uno por línea)</label>
+                <textarea id="nombres">Barrios Nicoll
 Gomez Jesus
 Hernandez Thomas
 Liñan Samuel
@@ -229,27 +276,32 @@ Perez Edier
 Pestana Francheska
 Vidal Liz
 Sharon</textarea>
-            <div id="contador">11 jugadores en sala</div>
-        </div>
-        
-        <div class="col">
-            <label>Personas por grupo</label>
-            <input type="number" id="personasGrupo" value="4" min="1">
+                <div id="contador">11 jugadores en sala</div>
+            </div>
             
-            <button class="btn-spin" id="btnGirar" onclick="girarMruleta()">Sorteo en vivo</button>
+            <div class="col">
+                <label>Personas por grupo</label>
+                <input type="number" id="personasGrupo" value="4" min="1">
+                
+                <button class="btn-spin" onclick="prepararSorteo()">Iniciar Sorteo</button>
+            </div>
         </div>
     </div>
     
-    <div class="results" id="resultados"></div>
+    <!-- PANTALLA 2: RESULTADOS -->
+    <div id="results-screen" class="screen">
+        <div class="top-actions">
+            <button class="btn-back" onclick="volver()">← Volver</button>
+        </div>
+        <div class="results" id="resultados"></div>
+    </div>
 
     <script>
-        // Actualizar contador de texto
         document.getElementById('nombres').addEventListener('input', function() {
             const count = this.value.split('\n').filter(n => n.trim() !== '').length;
             document.getElementById('contador').textContent = count + ' jugadores en sala';
         });
 
-        // Función para desordenar arreglos (Fisher-Yates)
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -258,12 +310,10 @@ Sharon</textarea>
             return array;
         }
 
-        function girarMruleta() {
-            const resultados = document.getElementById('resultados');
-            const btn = document.getElementById('btnGirar');
+        // TRANSICIÓN DE PANTALLAS
+        function prepararSorteo() {
             const inputNombres = document.getElementById('nombres').value;
             const limit = parseInt(document.getElementById('personasGrupo').value);
-            
             let jugadores = inputNombres.split('\n').map(n => n.trim()).filter(n => n !== '');
             
             // Validaciones
@@ -276,21 +326,50 @@ Sharon</textarea>
                 return;
             }
 
-            // Desactivar el botón mientras ocurre la animación
-            btn.disabled = true;
-            btn.textContent = "Sorteando...";
-            resultados.innerHTML = '';
-            
-            // 1. Mezclar jugadores
+            // Cambiar subtítulo
+            document.getElementById('main-subtitle').textContent = "Sorteo en vivo...";
+
+            // Animación para ocultar pantalla de configuración
+            anime({
+                targets: '#setup-screen',
+                opacity: [1, 0],
+                translateY: [0, -20],
+                duration: 400,
+                easing: 'easeInQuad',
+                complete: function() {
+                    document.getElementById('setup-screen').style.display = 'none';
+                    document.getElementById('results-screen').style.display = 'flex';
+                    
+                    // Mostrar pantalla de resultados vacía
+                    anime({
+                        targets: '#results-screen',
+                        opacity: [0, 1],
+                        translateY: [20, 0],
+                        duration: 400,
+                        easing: 'easeOutQuad',
+                        complete: function() {
+                            // Una vez completada la transición, ejecutar el sorteo
+                            ejecutarSorteo(jugadores, limit);
+                        }
+                    });
+                }
+            });
+        }
+
+        function ejecutarSorteo(jugadores, limit) {
+            const resultados = document.getElementById('resultados');
+            resultados.innerHTML = ''; // Limpiar div
+
+            // Mezclar jugadores
             jugadores = shuffle(jugadores);
             
-            // 2. Dividir por cantidad de personas por grupo
+            // Dividir
             let grupos = [];
             for (let i = 0; i < jugadores.length; i += limit) {
                 grupos.push(jugadores.slice(i, i + limit));
             }
             
-            // 3. Crear las tarjetas y los elementos de lista ocultos en el DOM
+            // Crear DOM
             grupos.forEach((grupo, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -304,7 +383,7 @@ Sharon</textarea>
                 
                 grupo.forEach(jugador => {
                     const li = document.createElement('li');
-                    li.className = 'jugador-item'; // Clase clave para la animación
+                    li.className = 'jugador-item';
                     li.textContent = jugador;
                     ul.appendChild(li);
                 });
@@ -314,35 +393,54 @@ Sharon</textarea>
                 resultados.appendChild(card);
             });
 
-            // 4. ANIMACIÓN CON ANIME.JS
-            
-            // Paso A: Hacer que las tarjetas (Mesas vacías) aparezcan primero
+            // ANIMACIÓN: Paso 1 (Aparecen las mesas)
             anime({
                 targets: '.card',
                 translateY: [40, 0],
                 opacity: [0, 1],
-                delay: anime.stagger(150),
+                delay: anime.stagger(200),
                 easing: 'easeOutExpo',
                 duration: 800
             });
 
-            // Paso B: Recolectar todos los nombres (<li>) y desordenar los nodos en un array
-            // Esto es el truco para que parezca que caen aleatoriamente en distintas mesas
+            // ANIMACIÓN: Paso 2 (Los nombres caen más lento)
             let elementosJugadores = Array.from(document.querySelectorAll('.jugador-item'));
-            elementosJugadores = shuffle(elementosJugadores);
+            elementosJugadores = shuffle(elementosJugadores); // Mezclar nodos para que parezca aleatorio
 
-            // Paso C: Animar la entrada de cada nombre uno por uno al azar
             anime({
                 targets: elementosJugadores,
-                translateX: [-30, 0], // Vienen desde la izquierda
+                translateX: [-30, 0],
                 opacity: [0, 1],
-                delay: anime.stagger(200, {start: 600}), // Comienzan después de que aparecen las mesas
+                // AUMENTAMOS EL DELAY a 400ms entre cada nombre y el START a 800ms
+                delay: anime.stagger(400, {start: 800}), 
                 easing: 'easeOutElastic(1, .8)',
-                duration: 900,
+                // AUMENTAMOS LA DURACIÓN a 1200ms
+                duration: 1200 
+            });
+        }
+
+        // VOLVER A LA PANTALLA INICIAL
+        function volver() {
+            document.getElementById('main-subtitle').textContent = "Asignación aleatoria de equipos";
+
+            anime({
+                targets: '#results-screen',
+                opacity: [1, 0],
+                translateY: [0, 20],
+                duration: 300,
+                easing: 'easeInQuad',
                 complete: function() {
-                    // Reactivar el botón al terminar
-                    btn.disabled = false;
-                    btn.textContent = "Girar Mruleta";
+                    document.getElementById('results-screen').style.display = 'none';
+                    document.getElementById('resultados').innerHTML = ''; // Limpiar resultados pasados
+                    
+                    document.getElementById('setup-screen').style.display = 'flex';
+                    anime({
+                        targets: '#setup-screen',
+                        opacity: [0, 1],
+                        translateY: [-20, 0],
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
                 }
             });
         }
