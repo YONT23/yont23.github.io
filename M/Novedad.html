@@ -155,7 +155,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .btn-block{width:100%;}
 .btn-sm{padding:8px 13px;font-size:12.5px;}
 
-/* Agenda de Contactos */
+/* Agenda de Contactos Acciones */
 .contact-form{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;}
 .contact-list{display:flex;flex-direction:column;gap:8px;}
 .contact-item{
@@ -165,7 +165,10 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .contact-info{flex:1;min-width:0;}
 .contact-name{font-weight:600;font-size:13.5px;color:var(--ink);}
 .contact-meta{font-size:11.5px;color:var(--ink-soft);}
-.contact-del{color:var(--red);font-size:16px;padding:4px 8px;flex-shrink:0;}
+.contact-actions{display:flex;gap:4px;flex-shrink:0;}
+.contact-btn{font-size:14px;padding:4px 6px;border-radius:6px;transition:background .15s;}
+.contact-btn.edit{color:var(--blue-600);}
+.contact-btn.del{color:var(--red);}
 
 .tag-cargo{
   display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);
@@ -220,7 +223,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .custom-falta-box {display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
 .custom-falta-box input { flex:1; }
 
-/* Reincidencia Switch Box */
+/* Reincidencia Box */
 .reincidencia-box {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 14px; background: var(--red-100); border: 1.5px solid var(--red);
@@ -419,6 +422,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 
       <div class="card">
         <div class="contact-form">
+          <input type="hidden" id="editingContactId" value="-1">
           <div class="field">
             <label for="cntNombre">Nombre del contacto</label>
             <input type="text" id="cntNombre" placeholder="Ej. Prof. Roberto Gómez">
@@ -840,7 +844,7 @@ function renderScreen(step) {
 }
 
 /* ==========================================================================
-   AGENDA DE CONTACTOS
+   AGENDA DE CONTACTOS (CON MÓDULO DE EDICIÓN Y CREACIÓN)
    ========================================================================== */
 function toggleGradoContactField(cargo) {
   const box = document.getElementById("boxCntGrado");
@@ -852,20 +856,60 @@ function addContacto() {
   const cargo = document.getElementById("cntCargo").value;
   const grado = cargo === "Director de Grupo" ? document.getElementById("cntGrado").value : "";
   const phone = document.getElementById("cntPhone").value.trim().replace(/[\s\-\(\)]/g, "");
+  const editId = parseInt(document.getElementById("editingContactId").value, 10);
 
   if (!name || !phone) { showToast("Ingresa nombre y número válido."); return; }
 
-  appState.contactos.push({ id: Date.now(), name, cargo, grado, phone });
+  if (editId >= 0) {
+    // Modo Edición
+    const index = appState.contactos.findIndex(c => c.id === editId);
+    if (index >= 0) {
+      appState.contactos[index] = { id: editId, name, cargo, grado, phone };
+      showToast("Contacto actualizado.");
+    }
+    document.getElementById("editingContactId").value = "-1";
+    document.getElementById("btnAddContact").textContent = "➕ Guardar en agenda";
+    document.getElementById("btnAddContact").className = "btn btn-secondary btn-block";
+  } else {
+    // Modo Creación
+    appState.contactos.push({ id: Date.now(), name, cargo, grado, phone });
+    showToast("Contacto guardado.");
+  }
+
   document.getElementById("cntNombre").value = "";
   document.getElementById("cntPhone").value = "";
 
   localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
   renderContactos();
-  showToast("Contacto guardado.");
+}
+
+function editContacto(id) {
+  const c = appState.contactos.find(x => x.id === id);
+  if (!c) return;
+
+  document.getElementById("cntNombre").value = c.name;
+  document.getElementById("cntCargo").value = c.cargo;
+  toggleGradoContactField(c.cargo);
+  if (c.cargo === "Director de Grupo") {
+    document.getElementById("cntGrado").value = c.grado || "Transición";
+  }
+  document.getElementById("cntPhone").value = c.phone;
+  document.getElementById("editingContactId").value = c.id;
+
+  const btn = document.getElementById("btnAddContact");
+  btn.textContent = "💾 Actualizar contacto";
+  btn.className = "btn btn-success btn-block";
 }
 
 function removeContacto(id) {
   appState.contactos = appState.contactos.filter(c => c.id !== id);
+  if (parseInt(document.getElementById("editingContactId").value, 10) === id) {
+    document.getElementById("editingContactId").value = "-1";
+    document.getElementById("cntNombre").value = "";
+    document.getElementById("cntPhone").value = "";
+    document.getElementById("btnAddContact").textContent = "➕ Guardar en agenda";
+    document.getElementById("btnAddContact").className = "btn btn-secondary btn-block";
+  }
   localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
   renderContactos();
 }
@@ -888,7 +932,10 @@ function renderContactos() {
         <div class="contact-name">${c.name}</div>
         <div class="contact-meta"><span class="tag-cargo">${c.cargo}${metaGrado}</span> ${c.phone}</div>
       </div>
-      <button class="contact-del" onclick="removeContacto(${c.id})">✕</button>
+      <div class="contact-actions">
+        <button class="contact-btn edit" onclick="editContacto(${c.id})" title="Editar">✏️</button>
+        <button class="contact-btn del" onclick="removeContacto(${c.id})" title="Eliminar">✕</button>
+      </div>
     `;
     container.appendChild(div);
   });
@@ -1312,7 +1359,7 @@ function parseAndImportTXT(text) {
   }
 }
 
-/* MODAL DE SELECCIÓN DE CONTACTOS CON FILTRADO POR ROL */
+/* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP */
 function openWaModal() {
   if (appState.estudiantes.length === 0) {
     showToast("No hay registros para enviar.");
@@ -1356,20 +1403,15 @@ function ejecutarEnvioWhatsApp() {
   const c = appState.config;
 
   targetContacts.forEach(contact => {
-    // Filtrar los estudiantes según el rol del contacto
     let filteredStudents = [];
 
     if (contact.cargo === "Coordinación" || contact.cargo === "Rectoría") {
-      // Coordinación y Rectoría reciben TODOS los estudiantes
       filteredStudents = appState.estudiantes;
     } else if (contact.cargo === "Psicología") {
-      // Psicología recibe SOLO estudiantes con Psicología marcada o Reincidentes
       filteredStudents = appState.estudiantes.filter(e => e.dependencias.includes("Psicología") || e.reincidente);
     } else if (contact.cargo === "Director de Grupo") {
-      // Director de Grupo recibe SOLO estudiantes de su grupo asignado
       filteredStudents = appState.estudiantes.filter(e => e.grado === contact.grado);
     } else {
-      // "Otro" recibe todos por defecto
       filteredStudents = appState.estudiantes;
     }
 
