@@ -220,6 +220,15 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .custom-falta-box {display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
 .custom-falta-box input { flex:1; }
 
+/* Reincidencia Switch Box */
+.reincidencia-box {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; background: var(--red-100); border: 1.5px solid var(--red);
+  border-radius: var(--radius-md); margin-top: 14px; margin-bottom: 14px;
+}
+.reincidencia-box label { font-weight: 700; color: var(--red); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.reincidencia-box input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--red); cursor: pointer; }
+
 /* Dependencias */
 .dep-grid{display:grid;grid-template-columns:1fr;gap:9px;}
 .dep-item{
@@ -244,6 +253,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .badge-dep.dep-coordinacion{background:var(--amber-100);color:#96631C;}
 .badge-dep.dep-psicologia{background:var(--purple-100);color:var(--purple);}
 .badge-dep.dep-rectoria{background:var(--red-100);color:var(--red);}
+.badge-reincidente{background:var(--red);color:#fff;font-size:10px;padding:2px 8px;border-radius:var(--radius-pill);font-weight:800;margin-left:4px;}
 
 /* Consolidado */
 .stat-strip{
@@ -405,22 +415,40 @@ main{flex:1;padding:20px 16px 110px 16px;}
       </div>
 
       <div class="section-title" style="margin-top:20px;">👥 Agenda de contactos (WhatsApp)</div>
-      <div class="section-sub">Agrega destinatarios permanentes para la agenda escolar.</div>
+      <div class="section-sub">Agrega destinatarios permanentes asignando su cargo y grado si aplica.</div>
 
       <div class="card">
         <div class="contact-form">
           <div class="field">
             <label for="cntNombre">Nombre del contacto</label>
-            <input type="text" id="cntNombre" placeholder="Ej. Coordinador Juan">
+            <input type="text" id="cntNombre" placeholder="Ej. Prof. Roberto Gómez">
           </div>
           <div class="field-row">
             <div class="field">
               <label for="cntCargo">Cargo</label>
-              <select id="cntCargo">
+              <select id="cntCargo" onchange="toggleGradoContactField(this.value)">
                 <option value="Coordinación">Coordinación</option>
                 <option value="Psicología">Psicología</option>
                 <option value="Rectoría">Rectoría</option>
+                <option value="Director de Grupo">Director de Grupo</option>
                 <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="field" id="boxCntGrado" style="display:none;">
+              <label for="cntGrado">Grado asignado</label>
+              <select id="cntGrado">
+                <option value="Transición">Transición</option>
+                <option value="Primero">Primero</option>
+                <option value="Segundo">Segundo</option>
+                <option value="Tercero">Tercero</option>
+                <option value="Cuarto">Cuarto</option>
+                <option value="Quinto">Quinto</option>
+                <option value="Sexto">Sexto</option>
+                <option value="Séptimo">Séptimo</option>
+                <option value="Octavo">Octavo</option>
+                <option value="Noveno">Noveno</option>
+                <option value="Décimo">Décimo</option>
+                <option value="Once">Once</option>
               </select>
             </div>
             <div class="field">
@@ -475,6 +503,14 @@ main{flex:1;padding:20px 16px 110px 16px;}
           </div>
           <div class="chip-container" id="chipContainer"></div>
         </div>
+      </div>
+
+      <!-- Alerta de Reincidencia Consecutiva -->
+      <div class="reincidencia-box">
+        <label for="chkReincidente">
+          <span>🔴 ¿Estudiante Reincidente? (Alerta Semanal Consecutiva)</span>
+        </label>
+        <input type="checkbox" id="chkReincidente" onchange="toggleReincidencia(this.checked)">
       </div>
 
       <div class="section-title">⚠️ Selección de novedades</div>
@@ -589,10 +625,10 @@ main{flex:1;padding:20px 16px 110px 16px;}
   <div class="overlay" id="modalWhatsApp">
     <div class="modal">
       <div class="modal-title" style="margin-bottom:8px;">💬 Enviar por WhatsApp</div>
-      <div class="modal-sub" style="margin-bottom:14px;">Selecciona a qué contactos de tu agenda deseas enviar el reporte:</div>
+      <div class="modal-sub" style="margin-bottom:14px;">Contactos sugeridos según el reporte de la semana:</div>
       <div class="recipient-list" id="waRecipientList"></div>
       <div class="modal-actions">
-        <button class="btn btn-success" id="btnConfirmSendWa">Enviar mensaje 🚀</button>
+        <button class="btn btn-success" id="btnConfirmSendWa">Enviar mensajes 🚀</button>
         <button class="btn btn-ghost" id="btnCloseWaModal">Cancelar</button>
       </div>
     </div>
@@ -806,14 +842,20 @@ function renderScreen(step) {
 /* ==========================================================================
    AGENDA DE CONTACTOS
    ========================================================================== */
+function toggleGradoContactField(cargo) {
+  const box = document.getElementById("boxCntGrado");
+  box.style.display = cargo === "Director de Grupo" ? "block" : "none";
+}
+
 function addContacto() {
   const name = document.getElementById("cntNombre").value.trim();
   const cargo = document.getElementById("cntCargo").value;
+  const grado = cargo === "Director de Grupo" ? document.getElementById("cntGrado").value : "";
   const phone = document.getElementById("cntPhone").value.trim().replace(/[\s\-\(\)]/g, "");
 
   if (!name || !phone) { showToast("Ingresa nombre y número válido."); return; }
 
-  appState.contactos.push({ id: Date.now(), name, cargo, phone });
+  appState.contactos.push({ id: Date.now(), name, cargo, grado, phone });
   document.getElementById("cntNombre").value = "";
   document.getElementById("cntPhone").value = "";
 
@@ -840,10 +882,11 @@ function renderContactos() {
   appState.contactos.forEach(c => {
     const div = document.createElement("div");
     div.className = "contact-item";
+    const metaGrado = c.grado ? ` (${c.grado})` : "";
     div.innerHTML = `
       <div class="contact-info">
         <div class="contact-name">${c.name}</div>
-        <div class="contact-meta"><span class="tag-cargo">${c.cargo}</span> ${c.phone}</div>
+        <div class="contact-meta"><span class="tag-cargo">${c.cargo}${metaGrado}</span> ${c.phone}</div>
       </div>
       <button class="contact-del" onclick="removeContacto(${c.id})">✕</button>
     `;
@@ -899,8 +942,19 @@ function renderChips() {
 }
 
 /* ==========================================================================
-   CATEGORÍAS Y MANEJO DE FALTAS
+   CATEGORÍAS, FALTAS Y REINCIDENCIA
    ========================================================================== */
+function toggleReincidencia(checked) {
+  if (checked) {
+    document.querySelectorAll(".chk-dep").forEach(chk => {
+      chk.checked = true;
+      const lbl = document.getElementById(chk.getAttribute("data-lbl"));
+      if (lbl) lbl.classList.add("checked");
+    });
+    showToast("Reincidencia activada: Se notificará a todos los estamentos.");
+  }
+}
+
 function selectCategory(cat) {
   if (currentAsignaturas.length === 0) {
     showToast("Añade primero una asignatura.");
@@ -971,6 +1025,7 @@ function addCustomFalta() {
 function saveEstudiante() {
   const nombre = document.getElementById("estNombre").value.trim();
   const grado = document.getElementById("estGrado").value;
+  const isReincidente = document.getElementById("chkReincidente").checked;
 
   if (!nombre) { showToast("Ingresa el nombre del estudiante."); return; }
   if (currentAsignaturas.length === 0) { showToast("Añade al menos una asignatura."); return; }
@@ -987,6 +1042,7 @@ function saveEstudiante() {
     id: editingIndex >= 0 ? appState.estudiantes[editingIndex].id : Date.now(),
     grado,
     nombre,
+    reincidente: isReincidente,
     asignaturas: [...currentAsignaturas],
     faltasByAsig: JSON.parse(JSON.stringify(currentFaltasByAsig)),
     dependencias: deps
@@ -1007,6 +1063,7 @@ function saveEstudiante() {
 
 function resetFormEstudiante() {
   document.getElementById("estNombre").value = "";
+  document.getElementById("chkReincidente").checked = false;
   currentAsignaturas = [];
   currentFaltasByAsig = {};
   activeCat = null;
@@ -1031,6 +1088,7 @@ function editEstudiante(index) {
   editingIndex = index;
   document.getElementById("estNombre").value = est.nombre;
   document.getElementById("estGrado").value = est.grado;
+  document.getElementById("chkReincidente").checked = !!est.reincidente;
 
   currentAsignaturas = [...est.asignaturas];
   currentFaltasByAsig = JSON.parse(JSON.stringify(est.faltasByAsig));
@@ -1090,6 +1148,9 @@ function renderConsolidadoList() {
     item.className = "reg-item";
 
     let badges = "";
+    if (est.reincidente) {
+      badges += `<span class="badge-reincidente">🔴 REINCIDENTE</span>`;
+    }
     est.dependencias.forEach(d => {
       let cls = d === "Coordinación" ? "dep-coordinacion" : (d === "Psicología" ? "dep-psicologia" : "dep-rectoria");
       badges += `<span class="badge-dep ${cls}">${d}</span>`;
@@ -1138,7 +1199,7 @@ function toggleRegItem(el) {
 }
 
 /* ==========================================================================
-   EXPORTACIÓN, IMPORTACIÓN Y MODAL WHATSAPP
+   EXPORTACIÓN, IMPORTACIÓN Y MODAL WHATSAPP CON FILTRADO POR ROL
    ========================================================================== */
 function exportarTXT() {
   if (appState.estudiantes.length === 0) { showToast("No hay registros para exportar."); return; }
@@ -1158,6 +1219,7 @@ function exportarTXT() {
     txt += `---\n`;
     txt += `ESTUDIANTE: ${e.nombre}\n`;
     txt += `GRADO: ${e.grado}\n`;
+    if (e.reincidente) txt += `ALERTA: REINCIDENTE CONSECUTIVO\n`;
     txt += `DEPENDENCIAS: ${e.dependencias.join(", ")}\n`;
     e.asignaturas.forEach(asig => {
       const faltas = e.faltasByAsig[asig] || [];
@@ -1196,6 +1258,7 @@ function parseAndImportTXT(text) {
     const blockLines = block.split("\n");
     let estNombre = "";
     let estGrado = "";
+    let isReincidente = false;
     let estDeps = [];
     let estAsignaturas = [];
     let estFaltasByAsig = {};
@@ -1207,6 +1270,8 @@ function parseAndImportTXT(text) {
         estNombre = cleanLine.replace("ESTUDIANTE:", "").trim();
       } else if (cleanLine.startsWith("GRADO:")) {
         estGrado = cleanLine.replace("GRADO:", "").trim();
+      } else if (cleanLine.startsWith("ALERTA:")) {
+        isReincidente = true;
       } else if (cleanLine.startsWith("DEPENDENCIAS:")) {
         const depsStr = cleanLine.replace("DEPENDENCIAS:", "").trim();
         if (depsStr) estDeps = depsStr.split(",").map(d => d.trim());
@@ -1229,6 +1294,7 @@ function parseAndImportTXT(text) {
         id: Date.now() + Math.random(),
         grado: estGrado,
         nombre: estNombre,
+        reincidente: isReincidente,
         asignaturas: estAsignaturas,
         faltasByAsig: estFaltasByAsig,
         dependencias: estDeps.length > 0 ? estDeps : ["Coordinación"]
@@ -1246,7 +1312,7 @@ function parseAndImportTXT(text) {
   }
 }
 
-/* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP */
+/* MODAL DE SELECCIÓN DE CONTACTOS CON FILTRADO POR ROL */
 function openWaModal() {
   if (appState.estudiantes.length === 0) {
     showToast("No hay registros para enviar.");
@@ -1263,12 +1329,13 @@ function openWaModal() {
   appState.contactos.forEach(c => {
     const item = document.createElement("label");
     item.className = "recipient-item";
+    const metaGrado = c.grado ? ` (${c.grado})` : "";
     item.innerHTML = `
       <div class="contact-info">
         <div class="contact-name"><strong>${c.name}</strong></div>
-        <div class="contact-meta"><span class="tag-cargo">${c.cargo}</span> ${c.phone}</div>
+        <div class="contact-meta"><span class="tag-cargo">${c.cargo}${metaGrado}</span> ${c.phone}</div>
       </div>
-      <input type="checkbox" value="${c.phone}" class="chk-wa-recipient" checked>
+      <input type="checkbox" value="${c.id}" class="chk-wa-recipient" checked>
     `;
     container.appendChild(item);
   });
@@ -1277,39 +1344,61 @@ function openWaModal() {
 }
 
 function ejecutarEnvioWhatsApp() {
-  const selectedPhones = [];
-  document.querySelectorAll(".chk-wa-recipient:checked").forEach(chk => selectedPhones.push(chk.value));
+  const selectedContactIds = [];
+  document.querySelectorAll(".chk-wa-recipient:checked").forEach(chk => selectedContactIds.push(parseInt(chk.value, 10)));
 
-  if (selectedPhones.length === 0) {
+  if (selectedContactIds.length === 0) {
     showToast("Selecciona al menos un destinatario.");
     return;
   }
 
+  const targetContacts = appState.contactos.filter(c => selectedContactIds.includes(c.id));
   const c = appState.config;
-  let msg = `🏛️ *REPORTE DE NOVEDADES SEMANALES*\n`;
-  msg += `*Institución:* ${c.institucion || 'N/A'}\n`;
-  msg += `*Docente:* ${c.docente || 'N/A'}\n`;
-  msg += `*Rango:* ${c.fechaDesde || 'N/A'} al ${c.fechaHasta || 'N/A'}\n`;
-  msg += `-----------------------------------------\n\n`;
 
-  appState.estudiantes.forEach((e, idx) => {
-    msg += `*${idx+1}. ${e.nombre}* (${e.grado})\n📢 _Notificado a:_ ${e.dependencias.join(" + ")}\n`;
-    e.asignaturas.forEach(asig => {
-      const faltas = e.faltasByAsig[asig] || [];
-      if (faltas.length > 0) {
-        msg += `• _${asig}_: ${faltas.join(", ")}\n`;
-      }
-    });
-    msg += `\n`;
-  });
+  targetContacts.forEach(contact => {
+    // Filtrar los estudiantes según el rol del contacto
+    let filteredStudents = [];
 
-  const encoded = encodeURIComponent(msg);
-  selectedPhones.forEach(phone => {
-    window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`, '_blank');
+    if (contact.cargo === "Coordinación" || contact.cargo === "Rectoría") {
+      // Coordinación y Rectoría reciben TODOS los estudiantes
+      filteredStudents = appState.estudiantes;
+    } else if (contact.cargo === "Psicología") {
+      // Psicología recibe SOLO estudiantes con Psicología marcada o Reincidentes
+      filteredStudents = appState.estudiantes.filter(e => e.dependencias.includes("Psicología") || e.reincidente);
+    } else if (contact.cargo === "Director de Grupo") {
+      // Director de Grupo recibe SOLO estudiantes de su grupo asignado
+      filteredStudents = appState.estudiantes.filter(e => e.grado === contact.grado);
+    } else {
+      // "Otro" recibe todos por defecto
+      filteredStudents = appState.estudiantes;
+    }
+
+    if (filteredStudents.length > 0) {
+      let msg = `🏛️ *REPORTE DE NOVEDADES SEMANALES*\n`;
+      msg += `*Institución:* ${c.institucion || 'N/A'}\n`;
+      msg += `*Docente:* ${c.docente || 'N/A'}\n`;
+      msg += `*Rango:* ${c.fechaDesde || 'N/A'} al ${c.fechaHasta || 'N/A'}\n`;
+      msg += `-----------------------------------------\n\n`;
+
+      filteredStudents.forEach((e, idx) => {
+        const tagAlert = e.reincidente ? ` 🚨 *[REINCIDENTE CONSECUTIVO]*` : ``;
+        msg += `*${idx+1}. ${e.nombre}* (${e.grado})${tagAlert}\n📢 _Notificado a:_ ${e.dependencias.join(" + ")}\n`;
+        e.asignaturas.forEach(asig => {
+          const faltas = e.faltasByAsig[asig] || [];
+          if (faltas.length > 0) {
+            msg += `• _${asig}_: ${faltas.join(", ")}\n`;
+          }
+        });
+        msg += `\n`;
+      });
+
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://api.whatsapp.com/send?phone=${contact.phone}&text=${encoded}`, '_blank');
+    }
   });
 
   document.getElementById("modalWhatsApp").classList.remove("show");
-  showToast(`Enviando a ${selectedPhones.length} destinatarios.`);
+  showToast(`Despachando mensajes personalizados.`);
 }
 
 function comandoNuevaSemana() {
