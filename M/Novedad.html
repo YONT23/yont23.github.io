@@ -166,7 +166,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .contact-name{font-weight:600;font-size:13.5px;color:var(--ink);}
 .contact-meta{font-size:11.5px;color:var(--ink-soft);}
 .contact-actions{display:flex;gap:4px;flex-shrink:0;}
-.contact-btn{font-size:14px;padding:4px 6px;border-radius:6px;transition:background .15s;}
+.contact-btn{font-size:14px;padding:4px 6px;border-radius:6px;}
 .contact-btn.edit{color:var(--blue-600);}
 .contact-btn.del{color:var(--red);}
 
@@ -334,11 +334,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
   box-shadow:var(--shadow-lg);white-space:nowrap;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-.empty-state{text-align:center;padding:50px 20px;}
-.empty-state-icon{font-size:44px;margin-bottom:10px;}
-.empty-state-title{font-weight:700;font-size:15px;color:var(--ink);}
-.empty-state-sub{font-size:12.5px;color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -418,7 +413,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
       </div>
 
       <div class="section-title" style="margin-top:20px;">👥 Agenda de contactos (WhatsApp)</div>
-      <div class="section-sub">Agrega destinatarios permanentes asignando su cargo y grado si aplica.</div>
+      <div class="section-sub">Agrega destinatarios permanentes o impórtalos del teléfono.</div>
 
       <div class="card">
         <div class="contact-form">
@@ -460,7 +455,10 @@ main{flex:1;padding:20px 16px 110px 16px;}
               <input type="tel" id="cntPhone" placeholder="3184800091">
             </div>
           </div>
-          <button class="btn btn-secondary btn-block" id="btnAddContact">➕ Guardar en agenda</button>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary" id="btnAddContact" style="flex:1;">➕ Guardar</button>
+            <button class="btn btn-ghost" id="btnImportPhoneContact" title="Importar desde los contactos del celular">📲 Importar del Teléfono</button>
+          </div>
         </div>
 
         <div class="contact-list" id="contactList"></div>
@@ -544,7 +542,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
         </button>
       </div>
 
-      <!-- Contenedor dinámico de faltas -->
       <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
         <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
         <div class="falta-list" id="faltaList"></div>
@@ -601,7 +598,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
 
       <div id="consolidadoList"></div>
 
-      <!-- Botones de Acción -->
       <div class="export-row">
         <button class="btn btn-secondary" id="btnExportTXT">📄 Descargar TXT</button>
         <button class="btn btn-secondary" id="btnImportTXT">📥 Importar TXT</button>
@@ -756,6 +752,7 @@ function bindEvents() {
 
   // Agenda
   document.getElementById("btnAddContact").addEventListener("click", addContacto);
+  document.getElementById("btnImportPhoneContact").addEventListener("click", importNativeContact);
 
   // Chips Asignaturas
   document.getElementById("btnAddChip").addEventListener("click", addAsignaturaChip);
@@ -844,11 +841,35 @@ function renderScreen(step) {
 }
 
 /* ==========================================================================
-   AGENDA DE CONTACTOS (CON MÓDULO DE EDICIÓN Y CREACIÓN)
+   AGENDA DE CONTACTOS & IMPORTADOR NATIVO DEL TELÉFONO
    ========================================================================== */
 function toggleGradoContactField(cargo) {
   const box = document.getElementById("boxCntGrado");
   box.style.display = cargo === "Director de Grupo" ? "block" : "none";
+}
+
+/* Importar desde la libreta de contactos del teléfono mediante Contact Picker API */
+async function importNativeContact() {
+  if ('contacts' in navigator && 'ContactsManager' in window) {
+    try {
+      const props = ['name', 'tel'];
+      const contacts = await navigator.contacts.select(props, { multiple: false });
+      if (contacts && contacts.length > 0) {
+        const c = contacts[0];
+        const name = c.name && c.name.length > 0 ? c.name[0] : "";
+        const phone = c.tel && c.tel.length > 0 ? c.tel[0].replace(/[\s\-\(\)]/g, "") : "";
+        
+        if (name) document.getElementById("cntNombre").value = name;
+        if (phone) document.getElementById("cntPhone").value = phone;
+        showToast("Contacto cargado. Asigna cargo y presiona Guardar.");
+      }
+    } catch (ex) {
+      console.log(ex);
+      showToast("Operación cancelada.");
+    }
+  } else {
+    showToast("Ingresa nombre y teléfono manualmente.");
+  }
 }
 
 function addContacto() {
@@ -861,17 +882,14 @@ function addContacto() {
   if (!name || !phone) { showToast("Ingresa nombre y número válido."); return; }
 
   if (editId >= 0) {
-    // Modo Edición
     const index = appState.contactos.findIndex(c => c.id === editId);
     if (index >= 0) {
       appState.contactos[index] = { id: editId, name, cargo, grado, phone };
       showToast("Contacto actualizado.");
     }
     document.getElementById("editingContactId").value = "-1";
-    document.getElementById("btnAddContact").textContent = "➕ Guardar en agenda";
-    document.getElementById("btnAddContact").className = "btn btn-secondary btn-block";
+    document.getElementById("btnAddContact").textContent = "➕ Guardar";
   } else {
-    // Modo Creación
     appState.contactos.push({ id: Date.now(), name, cargo, grado, phone });
     showToast("Contacto guardado.");
   }
@@ -897,8 +915,7 @@ function editContacto(id) {
   document.getElementById("editingContactId").value = c.id;
 
   const btn = document.getElementById("btnAddContact");
-  btn.textContent = "💾 Actualizar contacto";
-  btn.className = "btn btn-success btn-block";
+  btn.textContent = "💾 Actualizar";
 }
 
 function removeContacto(id) {
@@ -907,8 +924,7 @@ function removeContacto(id) {
     document.getElementById("editingContactId").value = "-1";
     document.getElementById("cntNombre").value = "";
     document.getElementById("cntPhone").value = "";
-    document.getElementById("btnAddContact").textContent = "➕ Guardar en agenda";
-    document.getElementById("btnAddContact").className = "btn btn-secondary btn-block";
+    document.getElementById("btnAddContact").textContent = "➕ Guardar";
   }
   localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
   renderContactos();
