@@ -155,6 +155,14 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .btn-block{width:100%;}
 .btn-sm{padding:8px 13px;font-size:12.5px;}
 
+/* Alerta de Coincidencia Inteligente de Nombres */
+.duplicate-alert-box {
+  display:none; background:var(--amber-100); border:1.5px solid var(--amber);
+  border-radius:var(--radius-md); padding:12px; margin-top:10px; font-size:12.5px;
+}
+.duplicate-alert-box .title { font-weight:700; color:var(--amber); margin-bottom:4px; }
+.duplicate-alert-box .actions { display:flex; gap:8px; margin-top:8px; }
+
 /* Agenda de Contactos Acciones */
 .contact-form{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;}
 .contact-list{display:flex;flex-direction:column;gap:8px;}
@@ -223,7 +231,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .custom-falta-box {display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
 .custom-falta-box input { flex:1; }
 
-/* Reincidencia Box */
 .reincidencia-box {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 14px; background: var(--red-100); border: 1.5px solid var(--red);
@@ -301,7 +308,6 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .export-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;}
 @media(max-width:480px){.export-row{grid-template-columns:1fr;}}
 
-/* Modales */
 .overlay{
   position:fixed;inset:0;background:rgba(15,26,48,.55);z-index:100;
   display:none;align-items:flex-end;justify-content:center;
@@ -334,6 +340,11 @@ main{flex:1;padding:20px 16px 110px 16px;}
   box-shadow:var(--shadow-lg);white-space:nowrap;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.empty-state{text-align:center;padding:50px 20px;}
+.empty-state-icon{font-size:44px;margin-bottom:10px;}
+.empty-state-title{font-weight:700;font-size:15px;color:var(--ink);}
+.empty-state-sub{font-size:12.5px;color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -476,7 +487,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
         <div class="field-row">
           <div class="field">
             <label for="estGrado">Grado / Curso</label>
-            <select id="estGrado">
+            <select id="estGrado" onchange="checkNombreSimilarEnTiempoReal()">
               <option value="Transición">Transición</option>
               <option value="Primero">Primero</option>
               <option value="Segundo">Segundo</option>
@@ -493,7 +504,17 @@ main{flex:1;padding:20px 16px 110px 16px;}
           </div>
           <div class="field">
             <label for="estNombre">Nombre completo</label>
-            <input type="text" id="estNombre" placeholder="Ej. Juan Pérez">
+            <input type="text" id="estNombre" placeholder="Ej. Carlos Vergara" oninput="checkNombreSimilarEnTiempoReal()">
+          </div>
+        </div>
+
+        <!-- Alerta de Duplicado o Similitud Inteligente -->
+        <div class="duplicate-alert-box" id="duplicateAlertBox">
+          <div class="title">⚠️ Posible estudiante ya registrado</div>
+          <div id="duplicateAlertMsg"></div>
+          <div class="actions">
+            <button class="btn btn-secondary btn-sm" id="btnUnirEstudiante">🔗 Unir a este estudiante</button>
+            <button class="btn btn-ghost btn-sm" onclick="descartarAlertaDuplicado()">Nuevo alumno</button>
           </div>
         </div>
 
@@ -675,6 +696,7 @@ let currentFaltasByAsig = {};
 let activeCat = null;
 let activeChip = null;
 let editingIndex = -1;
+let detectedSimilarIndex = -1;
 
 /* ==========================================================================
    INICIALIZACIÓN
@@ -782,7 +804,10 @@ function bindEvents() {
   // Guardar Estudiante
   document.getElementById("btnSaveEstudiante").addEventListener("click", saveEstudiante);
 
-  // Modal 1 acciones
+  // Botón Unir en alerta de duplicado
+  document.getElementById("btnUnirEstudiante").addEventListener("click", unirAEstudianteExistente);
+
+  // Modal 1
   document.getElementById("btnModalAddMore").addEventListener("click", () => {
     document.getElementById("popConfirm").classList.remove("show");
     resetFormEstudiante();
@@ -805,7 +830,7 @@ function bindEvents() {
   });
   document.getElementById("fileImportInput").addEventListener("change", importarTXT);
 
-  // WhatsApp Modal Trigger
+  // WhatsApp
   document.getElementById("btnOpenWaModal").addEventListener("click", openWaModal);
   document.getElementById("btnCloseWaModal").addEventListener("click", () => {
     document.getElementById("modalWhatsApp").classList.remove("show");
@@ -841,14 +866,81 @@ function renderScreen(step) {
 }
 
 /* ==========================================================================
-   AGENDA DE CONTACTOS & IMPORTADOR NATIVO DEL TELÉFONO
+   ALGORITMO INTELIGENTE DE COINCIDENCIA DE NOMBRES Y DUPLICADOS
+   ========================================================================== */
+function checkNombreSimilarEnTiempoReal() {
+  // Si se está editando un registro explícito, no dispara alerta de coincidencia
+  if (editingIndex >= 0) return;
+
+  const inputNombre = document.getElementById("estNombre").value.trim().toLowerCase();
+  const gradoSel = document.getElementById("estGrado").value;
+  const alertBox = document.getElementById("duplicateAlertBox");
+
+  if (inputNombre.length < 3) {
+    alertBox.style.display = "none";
+    detectedSimilarIndex = -1;
+    return;
+  }
+
+  // Filtrar solo los estudiantes del mismo salón / grado
+  const indexCoincidente = appState.estudiantes.findIndex(e => {
+    if (e.grado !== gradoSel) return false;
+
+    const nameExistente = e.nombre.toLowerCase();
+
+    // 1. Coincidencia Exacta
+    if (nameExistente === inputNombre) return true;
+
+    // 2. Coincidencia de Subcadena ("Carlos" dentro de "Carlos Vergara")
+    if (nameExistente.includes(inputNombre) || inputNombre.includes(nameExistente)) return true;
+
+    // 3. Abreviatura o Iniciales ("Carlos V" vs "Carlos Vergara")
+    const partsNuevo = inputNombre.split(" ");
+    const partsExistente = nameExistente.split(" ");
+
+    if (partsNuevo[0] === partsExistente[0] && partsNuevo.length > 1 && partsExistente.length > 1) {
+      const segNuevo = partsNuevo[1];
+      const segExistente = partsExistente[1];
+      if (segNuevo.charAt(0) === segExistente.charAt(0)) return true;
+    }
+
+    return false;
+  });
+
+  if (indexCoincidente >= 0) {
+    detectedSimilarIndex = indexCoincidente;
+    const estEncontrado = appState.estudiantes[indexCoincidente];
+    document.getElementById("duplicateAlertMsg").innerHTML = 
+      `En ${gradoSel} ya existe un estudiante registrado como: <strong>${estEncontrado.nombre}</strong>. ¿Deseas unir las faltas a su registro?`;
+    alertBox.style.display = "block";
+  } else {
+    alertBox.style.display = "none";
+    detectedSimilarIndex = -1;
+  }
+}
+
+function descartarAlertaDuplicado() {
+  document.getElementById("duplicateAlertBox").style.display = "none";
+  detectedSimilarIndex = -1;
+}
+
+function unirAEstudianteExistente() {
+  if (detectedSimilarIndex < 0) return;
+
+  const targetEst = appState.estudiantes[detectedSimilarIndex];
+  editEstudiante(detectedSimilarIndex);
+  descartarAlertaDuplicado();
+  showToast(`Uniendo faltas a la ficha de ${targetEst.nombre}.`);
+}
+
+/* ==========================================================================
+   AGENDA DE CONTACTOS
    ========================================================================== */
 function toggleGradoContactField(cargo) {
   const box = document.getElementById("boxCntGrado");
   box.style.display = cargo === "Director de Grupo" ? "block" : "none";
 }
 
-/* Importar desde la libreta de contactos del teléfono mediante Contact Picker API */
 async function importNativeContact() {
   if ('contacts' in navigator && 'ContactsManager' in window) {
     try {
@@ -861,14 +953,13 @@ async function importNativeContact() {
         
         if (name) document.getElementById("cntNombre").value = name;
         if (phone) document.getElementById("cntPhone").value = phone;
-        showToast("Contacto cargado. Asigna cargo y presiona Guardar.");
+        showToast("Contacto cargado. Completa los datos y guarda.");
       }
     } catch (ex) {
-      console.log(ex);
       showToast("Operación cancelada.");
     }
   } else {
-    showToast("Ingresa nombre y teléfono manualmente.");
+    showToast("Función no soportada en este navegador/dispositivo.");
   }
 }
 
@@ -1127,6 +1218,7 @@ function saveEstudiante() {
 function resetFormEstudiante() {
   document.getElementById("estNombre").value = "";
   document.getElementById("chkReincidente").checked = false;
+  descartarAlertaDuplicado();
   currentAsignaturas = [];
   currentFaltasByAsig = {};
   activeCat = null;
