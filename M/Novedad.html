@@ -155,7 +155,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .btn-block{width:100%;}
 .btn-sm{padding:8px 13px;font-size:12.5px;}
 
-/* Sub-pestañas Modo Entrada de Registro */
+/* Modos de Entrada */
 .mode-tabs{display:flex;gap:8px;margin-bottom:14px;}
 .mode-tab{
   flex:1;padding:10px;text-align:center;border-radius:var(--radius-pill);
@@ -301,6 +301,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .reg-info{flex:1;min-width:0;}
 .reg-name{font-weight:700;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .reg-grado{font-size:11.5px;color:var(--ink-soft);}
+.reg-date{font-size:10.5px;color:var(--ink-faint);margin-top:2px;}
 .reg-chevron{font-size:13px;color:var(--ink-faint);transition:transform .2s;flex-shrink:0;}
 .reg-item.open .reg-chevron{transform:rotate(180deg);}
 .reg-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
@@ -317,6 +318,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .export-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;}
 @media(max-width:480px){.export-row{grid-template-columns:1fr;}}
 
+/* Modales */
 .overlay{
   position:fixed;inset:0;background:rgba(15,26,48,.55);z-index:100;
   display:none;align-items:flex-end;justify-content:center;
@@ -335,7 +337,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
   display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px auto;
 }
 .modal-title{font-family:var(--font-display);font-weight:700;font-size:18px;text-align:center;color:var(--blue-900);margin-bottom:4px;}
-.modal-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:20px;}
+.modal-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:16px;}
 .modal-actions{display:flex;flex-direction:column;gap:10px;}
 
 .recipient-list { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; max-height:220px; overflow-y:auto; }
@@ -675,11 +677,23 @@ main{flex:1;padding:20px 16px 110px 16px;}
     </div>
   </div>
 
-  <!-- Modal 2: Selección de Destinatarios para WhatsApp -->
+  <!-- Modal 2: Selección de Destinatarios para WhatsApp con Filtro de Fecha -->
   <div class="overlay" id="modalWhatsApp">
     <div class="modal">
       <div class="modal-title" style="margin-bottom:8px;">💬 Enviar por WhatsApp</div>
-      <div class="modal-sub" style="margin-bottom:14px;">Contactos sugeridos según el reporte de la semana:</div>
+      
+      <!-- Selector del Filtro de Fecha para Envíos -->
+      <div class="field" style="margin-bottom:14px; text-align:left;">
+        <label for="waDateRangeFilter">Filtro de fecha para el reporte:</label>
+        <select id="waDateRangeFilter" onchange="updateWaDateFilterStats()">
+          <option value="today" selected>📅 Solo el reporte de hoy (04/08/2026)</option>
+          <option value="week">📆 Rango semanal configurado</option>
+          <option value="all">📑 Todos los registros guardados</option>
+        </select>
+        <div id="waDateFilterMsg" style="font-size:11.5px; color:var(--blue-700); font-weight:600; margin-top:4px;"></div>
+      </div>
+
+      <div class="modal-sub" style="margin-bottom:10px; text-align:left; font-weight:600;">Contactos destinatarios:</div>
       <div class="recipient-list" id="waRecipientList"></div>
       <div class="modal-actions">
         <button class="btn btn-success" id="btnConfirmSendWa">Enviar mensajes 🚀</button>
@@ -985,6 +999,7 @@ function parseAndIntegrateBatchText(text) {
   let newCount = 0;
   let updatedCount = 0;
   const blocks = text.split(/---/);
+  const todayStr = getTodayFormattedDate();
 
   blocks.forEach(block => {
     const lines = block.split("\n");
@@ -1022,23 +1037,21 @@ function parseAndIntegrateBatchText(text) {
     });
 
     if (estNombre && estGrado && estAsignaturas.length > 0) {
-      // Buscar si el estudiante ya existe en el mismo grado
       const existingEstIndex = appState.estudiantes.findIndex(e => 
         e.grado.toLowerCase() === estGrado.toLowerCase() && 
         esMismoEstudianteFlex(e.nombre, estNombre)
       );
 
       if (existingEstIndex >= 0) {
-        // ACTUALIZAR Y ACUMULAR EN ESTUDIANTE EXISTENTE
+        // ACTUALIZAR Y ACUMULAR
         const existing = appState.estudiantes[existingEstIndex];
         if (isReincidente) existing.reincidente = true;
+        existing.fechaRegistro = todayStr; // Actualizar estampa al día de la nueva carga
 
-        // Fusión de dependencias sin duplicar
         estDeps.forEach(dep => {
           if (!existing.dependencias.includes(dep)) existing.dependencias.push(dep);
         });
 
-        // Fusión de asignaturas y faltas acumuladas
         estAsignaturas.forEach(asig => {
           if (!existing.asignaturas.includes(asig)) {
             existing.asignaturas.push(asig);
@@ -1054,9 +1067,10 @@ function parseAndIntegrateBatchText(text) {
 
         updatedCount++;
       } else {
-        // CREAR NUEVO ESTUDIANTE
+        // NUEVO REGISTRO
         appState.estudiantes.push({
           id: Date.now() + Math.random(),
+          fechaRegistro: todayStr,
           grado: estGrado,
           nombre: estNombre,
           reincidente: isReincidente,
@@ -1084,6 +1098,14 @@ function esMismoEstudianteFlex(name1, name2) {
     if (p1[1].charAt(0) === p2[1].charAt(0)) return true;
   }
   return false;
+}
+
+function getTodayFormattedDate() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`; // Formato YYYY-MM-DD
 }
 
 /* ==========================================================================
@@ -1327,7 +1349,7 @@ function addCustomFalta() {
 }
 
 /* ==========================================================================
-   GUARDAR Y EDITAR ESTUDIANTE
+   GUARDAR Y EDITAR ESTUDIANTE (CON ESTAMPA DE FECHA)
    ========================================================================== */
 function saveEstudiante() {
   const nombre = document.getElementById("estNombre").value.trim();
@@ -1345,8 +1367,11 @@ function saveEstudiante() {
   document.querySelectorAll(".chk-dep:checked").forEach(c => deps.push(c.value));
   if (deps.length === 0) { showToast("Selecciona al menos una dependencia."); return; }
 
+  const todayStr = getTodayFormattedDate();
+
   const data = {
     id: editingIndex >= 0 ? appState.estudiantes[editingIndex].id : Date.now(),
+    fechaRegistro: editingIndex >= 0 ? (appState.estudiantes[editingIndex].fechaRegistro || todayStr) : todayStr,
     grado,
     nombre,
     reincidente: isReincidente,
@@ -1484,6 +1509,7 @@ function renderConsolidadoList() {
         <div class="reg-info">
           <div class="reg-name">${est.nombre}</div>
           <div class="reg-grado">${est.grado}</div>
+          <div class="reg-date">📅 Registrado: ${est.fechaRegistro || 'Semanal'}</div>
           <div class="reg-badges">${badges}</div>
         </div>
         <div class="reg-chevron">▼</div>
@@ -1507,8 +1533,32 @@ function toggleRegItem(el) {
 }
 
 /* ==========================================================================
-   EXPORTACIÓN, IMPORTACIÓN Y MODAL WHATSAPP CON FILTRADO POR ROL
+   EXPORTACIÓN, IMPORTACIÓN Y MODAL WHATSAPP CON FILTRADO POR FECHA
    ========================================================================== */
+function getEstudiantesFiltradosPorRangoFecha(modoRango) {
+  if (modoRango === 'today') {
+    const todayStr = getTodayFormattedDate();
+    return appState.estudiantes.filter(e => e.fechaRegistro === todayStr);
+  } else if (modoRango === 'week') {
+    const fDesde = appState.config.fechaDesde;
+    const fHasta = appState.config.fechaHasta;
+    if (!fDesde || !fHasta) return appState.estudiantes;
+
+    return appState.estudiantes.filter(e => {
+      if (!e.fechaRegistro) return true;
+      return e.fechaRegistro >= fDesde && e.fechaRegistro <= fHasta;
+    });
+  } else {
+    return appState.estudiantes; // 'all'
+  }
+}
+
+function updateWaDateFilterStats() {
+  const modo = document.getElementById("waDateRangeFilter").value;
+  const listaF = getEstudiantesFiltradosPorRangoFecha(modo);
+  document.getElementById("waDateFilterMsg").textContent = `Se incluirán ${listaF.length} de ${appState.estudiantes.length} estudiantes registrados.`;
+}
+
 function exportarTXT() {
   if (appState.estudiantes.length === 0) { showToast("No hay registros para exportar."); return; }
   const c = appState.config;
@@ -1565,7 +1615,7 @@ function parseAndImportTXT(text) {
   showToast(`¡Importados: ${result.news} nuevos, ${result.updated} actualizados!`);
 }
 
-/* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP */
+/* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP CON FILTRADO POR FECHA */
 function openWaModal() {
   if (appState.estudiantes.length === 0) {
     showToast("No hay registros para enviar.");
@@ -1593,6 +1643,7 @@ function openWaModal() {
     container.appendChild(item);
   });
 
+  updateWaDateFilterStats();
   document.getElementById("modalWhatsApp").classList.add("show");
 }
 
@@ -1605,6 +1656,15 @@ function ejecutarEnvioWhatsApp() {
     return;
   }
 
+  // Obtener el universo de estudiantes según la fecha seleccionada en la modal
+  const modoFecha = document.getElementById("waDateRangeFilter").value;
+  const estudiantesTargetFecha = getEstudiantesFiltradosPorRangoFecha(modoFecha);
+
+  if (estudiantesTargetFecha.length === 0) {
+    showToast("No existen estudiantes en el rango de fecha seleccionado.");
+    return;
+  }
+
   const targetContacts = appState.contactos.filter(c => selectedContactIds.includes(c.id));
   const c = appState.config;
 
@@ -1612,20 +1672,20 @@ function ejecutarEnvioWhatsApp() {
     let filteredStudents = [];
 
     if (contact.cargo === "Coordinación" || contact.cargo === "Rectoría") {
-      filteredStudents = appState.estudiantes;
+      filteredStudents = estudiantesTargetFecha;
     } else if (contact.cargo === "Psicología") {
-      filteredStudents = appState.estudiantes.filter(e => e.dependencias.includes("Psicología") || e.reincidente);
+      filteredStudents = estudiantesTargetFecha.filter(e => e.dependencias.includes("Psicología") || e.reincidente);
     } else if (contact.cargo === "Director de Grupo") {
-      filteredStudents = appState.estudiantes.filter(e => e.grado === contact.grado);
+      filteredStudents = estudiantesTargetFecha.filter(e => e.grado === contact.grado);
     } else {
-      filteredStudents = appState.estudiantes;
+      filteredStudents = estudiantesTargetFecha;
     }
 
     if (filteredStudents.length > 0) {
       let msg = `🏛️ *REPORTE DE NOVEDADES SEMANALES*\n`;
       msg += `*Institución:* ${c.institucion || 'N/A'}\n`;
       msg += `*Docente:* ${c.docente || 'N/A'}\n`;
-      msg += `*Rango:* ${c.fechaDesde || 'N/A'} al ${c.fechaHasta || 'N/A'}\n`;
+      msg += `*Fecha Reporte:* ${modoFecha === 'today' ? 'Hoy (' + getTodayFormattedDate() + ')' : formatF(c.fechaDesde) + ' al ' + formatF(c.fechaHasta)}\n`;
       msg += `-----------------------------------------\n\n`;
 
       filteredStudents.forEach((e, idx) => {
@@ -1646,7 +1706,7 @@ function ejecutarEnvioWhatsApp() {
   });
 
   document.getElementById("modalWhatsApp").classList.remove("show");
-  showToast(`Despachando mensajes personalizados.`);
+  showToast(`Despachando reporte personalizado.`);
 }
 
 function comandoNuevaSemana() {
