@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Pagos - Copias</title>
+    <title>MPagos - Copias</title>
     <style>
         :root {
             --primary: #4F46E5;
@@ -29,11 +29,35 @@
             margin: 0 auto;
         }
 
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            font-size: 1.8rem;
+        /* Cabecera con el título y el botón de nuevas cuentas */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 15px;
         }
+
+        h1 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .btn-secundario {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-secundario:hover { background-color: #B91C1C; }
 
         .card {
             background-color: var(--card-bg);
@@ -86,7 +110,7 @@
         /* Responsive Table */
         .table-container {
             width: 100%;
-            overflow-x: auto; /* Permite deslizar la tabla en celulares */
+            overflow-x: auto;
             background-color: var(--card-bg);
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -95,7 +119,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px; /* Asegura que no se aplaste en celulares */
+            min-width: 700px;
         }
 
         th, td {
@@ -115,13 +139,8 @@
         .deuda { color: var(--danger); font-weight: bold; }
         
         /* Estilos para el estado Saldado */
-        .row-saldado {
-            background-color: #F9FAFB;
-        }
-        .row-saldado td {
-            color: var(--text-muted);
-            text-decoration: line-through;
-        }
+        .row-saldado { background-color: #F9FAFB; }
+        .row-saldado td { color: var(--text-muted); text-decoration: line-through; }
         
         /* Botón de acción en la tabla */
         .btn-accion {
@@ -143,12 +162,24 @@
 
         .btn-accion:active { transform: scale(0.95); }
 
+        /* Mensaje cuando no hay registros */
+        .sin-datos {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>MPagos.</h1>
+        <!-- Nueva Cabecera con MPagos y Botón de Reset -->
+        <div class="header-container">
+            <h1>💸 MPagos</h1>
+            <button class="btn-secundario" onclick="iniciarNuevasCuentas()">🔄 Iniciar Nuevas Cuentas</button>
+        </div>
         
         <!-- Formulario -->
         <div class="card">
@@ -175,7 +206,7 @@
             </form>
         </div>
 
-        <!-- Contenedor adaptativo para la tabla -->
+        <!-- Contenedor de la tabla -->
         <div class="table-container">
             <table>
                 <thead>
@@ -196,24 +227,25 @@
     </div>
 
     <script>
-        // 1. Cargar datos guardados o crear lista vacía
         let registros = JSON.parse(localStorage.getItem('pagosCopias')) || [];
         const form = document.getElementById('paymentForm');
         const tableBody = document.getElementById('tableBody');
 
-        // 2. Función para mostrar los datos en la tabla
         function renderizarTabla() {
             tableBody.innerHTML = '';
+
+            if (registros.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="sin-datos">No hay pagos registrados. ¡Empieza a agregar estudiantes!</td></tr>`;
+                return;
+            }
 
             registros.forEach((registro, index) => {
                 const row = document.createElement('tr');
                 
-                // Si ya se saldó, le aplicamos la clase para que se vea gris y tachado
                 if (registro.saldado) {
                     row.className = 'row-saldado';
                 }
 
-                // Definimos cómo se verá el botón dependiendo del estado
                 const botonHTML = registro.saldado 
                     ? `<button class="btn-accion saldado" onclick="cambiarEstado(${index})" title="Deshacer">✅ Ya regresado</button>`
                     : `<button class="btn-accion" onclick="cambiarEstado(${index})">Devolver / Saldar</button>`;
@@ -234,7 +266,6 @@
             });
         }
 
-        // 3. Registrar un nuevo pago
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -246,7 +277,6 @@
             let change = amountPaid > amountRequired ? amountPaid - amountRequired : 0;
             let debt = amountRequired > amountPaid ? amountRequired - amountPaid : 0;
 
-            // Creamos el objeto con los datos
             const nuevoRegistro = {
                 pagador: payer,
                 beneficiarios: beneficiaries,
@@ -254,11 +284,10 @@
                 entregado: amountPaid,
                 vuelto: change,
                 deuda: debt,
-                saldado: false // Por defecto entra como pendiente
+                saldado: false
             };
 
-            // Lo agregamos a la lista y guardamos
-            registros.unshift(nuevoRegistro); // unshift lo pone de primero en la lista
+            registros.unshift(nuevoRegistro);
             guardarDatos();
             renderizarTabla();
 
@@ -266,19 +295,33 @@
             document.getElementById('payer').focus();
         });
 
-        // 4. Función para marcar como "Ya regresado" o deshacerlo
         window.cambiarEstado = function(index) {
-            registros[index].saldado = !registros[index].saldado; // Cambia entre true y false
+            registros[index].saldado = !registros[index].saldado;
             guardarDatos();
             renderizarTabla();
         };
 
-        // 5. Guardar en la memoria del navegador
+        // NUEVA FUNCIÓN: Iniciar nuevas cuentas (Borrar todo)
+        window.iniciarNuevasCuentas = function() {
+            if (registros.length === 0) {
+                alert("Ya estás en una lista en blanco.");
+                return;
+            }
+            
+            // Pregunta de seguridad antes de borrar
+            const confirmacion = confirm("⚠️ ¿Estás seguro de que quieres borrar todos los registros actuales? Usa esta opción solo cuando vayas a recolectar dinero para un NUEVO lote de copias.");
+            
+            if (confirmacion) {
+                registros = []; // Vaciamos la lista
+                guardarDatos(); // Guardamos la lista vacía en la memoria
+                renderizarTabla(); // Actualizamos la tabla en pantalla
+            }
+        };
+
         function guardarDatos() {
             localStorage.setItem('pagosCopias', JSON.stringify(registros));
         }
 
-        // Mostrar los datos la primera vez que se abre la página
         renderizarTabla();
     </script>
 
