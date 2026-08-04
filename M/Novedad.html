@@ -155,7 +155,16 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .btn-block{width:100%;}
 .btn-sm{padding:8px 13px;font-size:12.5px;}
 
-/* Alerta de Coincidencia Inteligente de Nombres */
+/* Sub-pestañas Modo Entrada de Registro */
+.mode-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.mode-tab{
+  flex:1;padding:10px;text-align:center;border-radius:var(--radius-pill);
+  font-size:13px;font-weight:600;background:var(--surface);border:1.5px solid var(--border);
+  color:var(--ink-soft);cursor:pointer;transition:all .15s;
+}
+.mode-tab.active{background:var(--blue-700);color:#fff;border-color:var(--blue-700);}
+
+/* Alerta Duplicados */
 .duplicate-alert-box {
   display:none; background:var(--amber-100); border:1.5px solid var(--amber);
   border-radius:var(--radius-md); padding:12px; margin-top:10px; font-size:12.5px;
@@ -163,7 +172,7 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .duplicate-alert-box .title { font-weight:700; color:var(--amber); margin-bottom:4px; }
 .duplicate-alert-box .actions { display:flex; gap:8px; margin-top:8px; }
 
-/* Agenda de Contactos Acciones */
+/* Contact Agenda */
 .contact-form{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;}
 .contact-list{display:flex;flex-direction:column;gap:8px;}
 .contact-item{
@@ -481,120 +490,144 @@ main{flex:1;padding:20px 16px 110px 16px;}
     <!-- ======================= PANTALLA 2 — REGISTRO DE ESTUDIANTES ======================= -->
     <section class="screen" id="screen2">
       <div class="section-title">📝 Registro de novedades</div>
-      <div class="section-sub">Ingresa la información del estudiante y sus faltas cometidas.</div>
+      <div class="section-sub">Selecciona el modo de registro (Uno a Uno o Carga Directa en Lote).</div>
 
-      <div class="card">
-        <div class="field-row">
+      <!-- Sub-pestañas de Modo de Entrada -->
+      <div class="mode-tabs">
+        <button class="mode-tab active" id="tabModeSingle" onclick="switchRegMode('single')">👤 Uno a Uno</button>
+        <button class="mode-tab" id="tabModeBatch" onclick="switchRegMode('batch')">⚡ Pegar Texto en Lote</button>
+      </div>
+
+      <!-- MODO 1: REGISTRO INDIVIDUAL UNO A UNO -->
+      <div id="modeSingleBox">
+        <div class="card">
+          <div class="field-row">
+            <div class="field">
+              <label for="estGrado">Grado / Curso</label>
+              <select id="estGrado" onchange="checkNombreSimilarEnTiempoReal()">
+                <option value="Transición">Transición</option>
+                <option value="Primero">Primero</option>
+                <option value="Segundo">Segundo</option>
+                <option value="Tercero">Tercero</option>
+                <option value="Cuarto">Cuarto</option>
+                <option value="Quinto">Quinto</option>
+                <option value="Sexto">Sexto</option>
+                <option value="Séptimo">Séptimo</option>
+                <option value="Octavo">Octavo</option>
+                <option value="Noveno">Noveno</option>
+                <option value="Décimo">Décimo</option>
+                <option value="Once">Once</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="estNombre">Nombre completo</label>
+              <input type="text" id="estNombre" placeholder="Ej. Carlos Vergara" oninput="checkNombreSimilarEnTiempoReal()">
+            </div>
+          </div>
+
+          <!-- Alerta de Duplicado o Similitud Inteligente -->
+          <div class="duplicate-alert-box" id="duplicateAlertBox">
+            <div class="title">⚠️ Posible estudiante ya registrado</div>
+            <div id="duplicateAlertMsg"></div>
+            <div class="actions">
+              <button class="btn btn-secondary btn-sm" id="btnUnirEstudiante">🔗 Unir a este estudiante</button>
+              <button class="btn btn-ghost btn-sm" onclick="descartarAlertaDuplicado()">Nuevo alumno</button>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label>Asignaturas evaluadas</label>
+            <div class="chip-input-row">
+              <input type="text" id="inputAsignatura" placeholder="Ej. Tecnología, Inglés...">
+              <button class="btn btn-secondary btn-sm" id="btnAddChip">Añadir</button>
+            </div>
+            <div class="chip-container" id="chipContainer"></div>
+          </div>
+        </div>
+
+        <!-- Alerta de Reincidencia Consecutiva -->
+        <div class="reincidencia-box">
+          <label for="chkReincidente">
+            <span>🔴 ¿Estudiante Reincidente? (Alerta Semanal Consecutiva)</span>
+          </label>
+          <input type="checkbox" id="chkReincidente" onchange="toggleReincidencia(this.checked)">
+        </div>
+
+        <div class="section-title">⚠️ Selección de novedades</div>
+        <div class="section-sub">Toca la categoría y marca las faltas o escribe una personalizada.</div>
+
+        <div class="cat-grid">
+          <button class="cat-card cat-academicas" data-cat="academicas">
+            <div class="cat-icon">📚</div>
+            <div>
+              <div class="cat-title">Académicas</div>
+              <div class="cat-desc">Incumplimiento de tareas y aula</div>
+            </div>
+          </button>
+          <button class="cat-card cat-plataformas" data-cat="plataformas">
+            <div class="cat-icon">💻</div>
+            <div>
+              <div class="cat-title">Plataformas virtuales</div>
+              <div class="cat-desc">Incumplimiento en entornos digitales</div>
+            </div>
+          </button>
+          <button class="cat-card cat-disciplinarias" data-cat="disciplinarias">
+            <div class="cat-icon">⚠️</div>
+            <div>
+              <div class="cat-title">Disciplinarias</div>
+              <div class="cat-desc">Conducta y convivencia escolar</div>
+            </div>
+          </button>
+        </div>
+
+        <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
+          <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
+          <div class="falta-list" id="faltaList"></div>
+          
+          <div class="custom-falta-box">
+            <input type="text" id="inputCustomFalta" placeholder="Escribir otra falta no listada...">
+            <button class="btn btn-secondary btn-sm" id="btnAddCustomFalta">➕ Añadir</button>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px;">📢 Dependencias a notificar</div>
+        <div class="section-sub">Selecciona los estamentos que deben recibir este reporte.</div>
+
+        <div class="dep-grid">
+          <label class="dep-item dep-coordinacion" id="lblDepCoor">
+            <input type="checkbox" value="Coordinación" class="chk-dep" data-lbl="lblDepCoor">
+            <span class="dep-dot"></span>
+            <span class="dep-name">🟡 Coordinación</span>
+          </label>
+          <label class="dep-item dep-psicologia" id="lblDepPsi">
+            <input type="checkbox" value="Psicología" class="chk-dep" data-lbl="lblDepPsi">
+            <span class="dep-dot"></span>
+            <span class="dep-name">🟠 Psicología</span>
+          </label>
+          <label class="dep-item dep-rectoria" id="lblDepRec">
+            <input type="checkbox" value="Rectoría" class="chk-dep" data-lbl="lblDepRec">
+            <span class="dep-dot"></span>
+            <span class="dep-name">🔴 Rectoría</span>
+          </label>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="btnSaveEstudiante" style="margin-top:20px;">💾 Guardar estudiante</button>
+      </div>
+
+      <!-- MODO 2: PEGAR TEXTO EN LOTE -->
+      <div id="modeBatchBox" style="display:none;">
+        <div class="card">
           <div class="field">
-            <label for="estGrado">Grado / Curso</label>
-            <select id="estGrado" onchange="checkNombreSimilarEnTiempoReal()">
-              <option value="Transición">Transición</option>
-              <option value="Primero">Primero</option>
-              <option value="Segundo">Segundo</option>
-              <option value="Tercero">Tercero</option>
-              <option value="Cuarto">Cuarto</option>
-              <option value="Quinto">Quinto</option>
-              <option value="Sexto">Sexto</option>
-              <option value="Séptimo">Séptimo</option>
-              <option value="Octavo">Octavo</option>
-              <option value="Noveno">Noveno</option>
-              <option value="Décimo">Décimo</option>
-              <option value="Once">Once</option>
-            </select>
+            <label for="batchText">Pegar reporte en texto estructurado</label>
+            <textarea id="batchText" rows="12" placeholder="ESTUDIANTE: Florez Anaury&#10;GRADO: Séptimo&#10;DEPENDENCIAS: Coordinación&#10;ASIGNATURA: Inglés&#10;FALTAS: No realiza actividades de la plataforma...&#10;---"></textarea>
+            <div style="font-size:11.5px; color:var(--ink-soft); margin-top:6px;">
+              💡 <strong>Integración inteligente:</strong> Si un estudiante ya está registrado en el mismo grado, sus nuevas faltas se sumarán automáticamente a su ficha sin borrar las anteriores.
+            </div>
           </div>
-          <div class="field">
-            <label for="estNombre">Nombre completo</label>
-            <input type="text" id="estNombre" placeholder="Ej. Carlos Vergara" oninput="checkNombreSimilarEnTiempoReal()">
-          </div>
-        </div>
-
-        <!-- Alerta de Duplicado o Similitud Inteligente -->
-        <div class="duplicate-alert-box" id="duplicateAlertBox">
-          <div class="title">⚠️ Posible estudiante ya registrado</div>
-          <div id="duplicateAlertMsg"></div>
-          <div class="actions">
-            <button class="btn btn-secondary btn-sm" id="btnUnirEstudiante">🔗 Unir a este estudiante</button>
-            <button class="btn btn-ghost btn-sm" onclick="descartarAlertaDuplicado()">Nuevo alumno</button>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:10px;">
-          <label>Asignaturas evaluadas</label>
-          <div class="chip-input-row">
-            <input type="text" id="inputAsignatura" placeholder="Ej. Tecnología, Inglés...">
-            <button class="btn btn-secondary btn-sm" id="btnAddChip">Añadir</button>
-          </div>
-          <div class="chip-container" id="chipContainer"></div>
+          <button class="btn btn-success btn-block" id="btnProcessBatch">⚡ Procesar y Cargar Lote</button>
         </div>
       </div>
 
-      <!-- Alerta de Reincidencia Consecutiva -->
-      <div class="reincidencia-box">
-        <label for="chkReincidente">
-          <span>🔴 ¿Estudiante Reincidente? (Alerta Semanal Consecutiva)</span>
-        </label>
-        <input type="checkbox" id="chkReincidente" onchange="toggleReincidencia(this.checked)">
-      </div>
-
-      <div class="section-title">⚠️ Selección de novedades</div>
-      <div class="section-sub">Toca la categoría y marca las faltas o escribe una personalizada.</div>
-
-      <div class="cat-grid">
-        <button class="cat-card cat-academicas" data-cat="academicas">
-          <div class="cat-icon">📚</div>
-          <div>
-            <div class="cat-title">Académicas</div>
-            <div class="cat-desc">Incumplimiento de tareas y aula</div>
-          </div>
-        </button>
-        <button class="cat-card cat-plataformas" data-cat="plataformas">
-          <div class="cat-icon">💻</div>
-          <div>
-            <div class="cat-title">Plataformas virtuales</div>
-            <div class="cat-desc">Incumplimiento en entornos digitales</div>
-          </div>
-        </button>
-        <button class="cat-card cat-disciplinarias" data-cat="disciplinarias">
-          <div class="cat-icon">⚠️</div>
-          <div>
-            <div class="cat-title">Disciplinarias</div>
-            <div class="cat-desc">Conducta y convivencia escolar</div>
-          </div>
-        </button>
-      </div>
-
-      <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
-        <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
-        <div class="falta-list" id="faltaList"></div>
-        
-        <div class="custom-falta-box">
-          <input type="text" id="inputCustomFalta" placeholder="Escribir otra falta no listada...">
-          <button class="btn btn-secondary btn-sm" id="btnAddCustomFalta">➕ Añadir</button>
-        </div>
-      </div>
-
-      <div class="section-title" style="margin-top:20px;">📢 Dependencias a notificar</div>
-      <div class="section-sub">Selecciona los estamentos que deben recibir este reporte.</div>
-
-      <div class="dep-grid">
-        <label class="dep-item dep-coordinacion" id="lblDepCoor">
-          <input type="checkbox" value="Coordinación" class="chk-dep" data-lbl="lblDepCoor">
-          <span class="dep-dot"></span>
-          <span class="dep-name">🟡 Coordinación</span>
-        </label>
-        <label class="dep-item dep-psicologia" id="lblDepPsi">
-          <input type="checkbox" value="Psicología" class="chk-dep" data-lbl="lblDepPsi">
-          <span class="dep-dot"></span>
-          <span class="dep-name">🟠 Psicología</span>
-        </label>
-        <label class="dep-item dep-rectoria" id="lblDepRec">
-          <input type="checkbox" value="Rectoría" class="chk-dep" data-lbl="lblDepRec">
-          <span class="dep-dot"></span>
-          <span class="dep-name">🔴 Rectoría</span>
-        </label>
-      </div>
-
-      <button class="btn btn-primary btn-block" id="btnSaveEstudiante" style="margin-top:20px;">💾 Guardar estudiante</button>
     </section>
 
     <!-- ======================= PANTALLA 3 — CONSOLIDADO ======================= -->
@@ -803,11 +836,12 @@ function bindEvents() {
 
   // Guardar Estudiante
   document.getElementById("btnSaveEstudiante").addEventListener("click", saveEstudiante);
+  document.getElementById("btnProcessBatch").addEventListener("click", processBatchText);
 
-  // Botón Unir en alerta de duplicado
+  // Botón Unir
   document.getElementById("btnUnirEstudiante").addEventListener("click", unirAEstudianteExistente);
 
-  // Modal 1
+  // Modales
   document.getElementById("btnModalAddMore").addEventListener("click", () => {
     document.getElementById("popConfirm").classList.remove("show");
     resetFormEstudiante();
@@ -838,6 +872,13 @@ function bindEvents() {
   document.getElementById("btnConfirmSendWa").addEventListener("click", ejecutarEnvioWhatsApp);
 }
 
+function switchRegMode(mode) {
+  document.getElementById("tabModeSingle").classList.toggle("active", mode === 'single');
+  document.getElementById("tabModeBatch").classList.toggle("active", mode === 'batch');
+  document.getElementById("modeSingleBox").style.display = mode === 'single' ? "block" : "none";
+  document.getElementById("modeBatchBox").style.display = mode === 'batch' ? "block" : "none";
+}
+
 function validarPaso1() {
   const inst = document.getElementById("cfgInstitucion").value.trim();
   const doc = document.getElementById("cfgDocente").value.trim();
@@ -866,10 +907,9 @@ function renderScreen(step) {
 }
 
 /* ==========================================================================
-   ALGORITMO INTELIGENTE DE COINCIDENCIA DE NOMBRES Y DUPLICADOS
+   ALGORITMO INTELIGENTE DE DETECCIÓN Y UNIÓN DE DUPLICADOS EN TIEMPO REAL
    ========================================================================== */
 function checkNombreSimilarEnTiempoReal() {
-  // Si se está editando un registro explícito, no dispara alerta de coincidencia
   if (editingIndex >= 0) return;
 
   const inputNombre = document.getElementById("estNombre").value.trim().toLowerCase();
@@ -882,26 +922,18 @@ function checkNombreSimilarEnTiempoReal() {
     return;
   }
 
-  // Filtrar solo los estudiantes del mismo salón / grado
   const indexCoincidente = appState.estudiantes.findIndex(e => {
     if (e.grado !== gradoSel) return false;
 
     const nameExistente = e.nombre.toLowerCase();
-
-    // 1. Coincidencia Exacta
     if (nameExistente === inputNombre) return true;
-
-    // 2. Coincidencia de Subcadena ("Carlos" dentro de "Carlos Vergara")
     if (nameExistente.includes(inputNombre) || inputNombre.includes(nameExistente)) return true;
 
-    // 3. Abreviatura o Iniciales ("Carlos V" vs "Carlos Vergara")
     const partsNuevo = inputNombre.split(" ");
     const partsExistente = nameExistente.split(" ");
 
     if (partsNuevo[0] === partsExistente[0] && partsNuevo.length > 1 && partsExistente.length > 1) {
-      const segNuevo = partsNuevo[1];
-      const segExistente = partsExistente[1];
-      if (segNuevo.charAt(0) === segExistente.charAt(0)) return true;
+      if (partsNuevo[1].charAt(0) === partsExistente[1].charAt(0)) return true;
     }
 
     return false;
@@ -911,7 +943,7 @@ function checkNombreSimilarEnTiempoReal() {
     detectedSimilarIndex = indexCoincidente;
     const estEncontrado = appState.estudiantes[indexCoincidente];
     document.getElementById("duplicateAlertMsg").innerHTML = 
-      `En ${gradoSel} ya existe un estudiante registrado como: <strong>${estEncontrado.nombre}</strong>. ¿Deseas unir las faltas a su registro?`;
+      `En ${gradoSel} ya existe registrado: <strong>${estEncontrado.nombre}</strong>. ¿Unir faltas a su ficha?`;
     alertBox.style.display = "block";
   } else {
     alertBox.style.display = "none";
@@ -926,11 +958,132 @@ function descartarAlertaDuplicado() {
 
 function unirAEstudianteExistente() {
   if (detectedSimilarIndex < 0) return;
-
   const targetEst = appState.estudiantes[detectedSimilarIndex];
   editEstudiante(detectedSimilarIndex);
   descartarAlertaDuplicado();
   showToast(`Uniendo faltas a la ficha de ${targetEst.nombre}.`);
+}
+
+/* ==========================================================================
+   CARGA / PROCESAMIENTO DE TEXTO EN LOTE CON DETECCIÓN Y ACUMULACIÓN
+   ========================================================================== */
+function processBatchText() {
+  const text = document.getElementById("batchText").value.trim();
+  if (!text) { showToast("Pega primero el texto con el reporte."); return; }
+
+  const result = parseAndIntegrateBatchText(text);
+  document.getElementById("batchText").value = "";
+  
+  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+  renderConsolidadoList();
+  
+  showToast(`⚡ Carga completada: ${result.news} nuevos, ${result.updated} actualizados.`);
+  renderScreen(3);
+}
+
+function parseAndIntegrateBatchText(text) {
+  let newCount = 0;
+  let updatedCount = 0;
+  const blocks = text.split(/---/);
+
+  blocks.forEach(block => {
+    const lines = block.split("\n");
+    let estNombre = "";
+    let estGrado = "";
+    let isReincidente = false;
+    let estDeps = [];
+    let estAsignaturas = [];
+    let estFaltasByAsig = {};
+    let currentAsig = "";
+
+    lines.forEach(line => {
+      const cleanLine = line.trim();
+      if (cleanLine.startsWith("ESTUDIANTE:")) {
+        estNombre = cleanLine.replace("ESTUDIANTE:", "").trim();
+      } else if (cleanLine.startsWith("GRADO:")) {
+        estGrado = cleanLine.replace("GRADO:", "").trim();
+      } else if (cleanLine.startsWith("ALERTA:")) {
+        isReincidente = true;
+      } else if (cleanLine.startsWith("DEPENDENCIAS:")) {
+        const depsStr = cleanLine.replace("DEPENDENCIAS:", "").trim();
+        if (depsStr) estDeps = depsStr.split(",").map(d => d.trim());
+      } else if (cleanLine.startsWith("ASIGNATURA:")) {
+        currentAsig = cleanLine.replace("ASIGNATURA:", "").trim();
+        if (currentAsig && !estAsignaturas.includes(currentAsig)) {
+          estAsignaturas.push(currentAsig);
+          estFaltasByAsig[currentAsig] = [];
+        }
+      } else if (cleanLine.startsWith("FALTAS:")) {
+        const faltasStr = cleanLine.replace("FALTAS:", "").trim();
+        if (currentAsig && faltasStr) {
+          estFaltasByAsig[currentAsig] = faltasStr.split(",").map(f => f.trim());
+        }
+      }
+    });
+
+    if (estNombre && estGrado && estAsignaturas.length > 0) {
+      // Buscar si el estudiante ya existe en el mismo grado
+      const existingEstIndex = appState.estudiantes.findIndex(e => 
+        e.grado.toLowerCase() === estGrado.toLowerCase() && 
+        esMismoEstudianteFlex(e.nombre, estNombre)
+      );
+
+      if (existingEstIndex >= 0) {
+        // ACTUALIZAR Y ACUMULAR EN ESTUDIANTE EXISTENTE
+        const existing = appState.estudiantes[existingEstIndex];
+        if (isReincidente) existing.reincidente = true;
+
+        // Fusión de dependencias sin duplicar
+        estDeps.forEach(dep => {
+          if (!existing.dependencias.includes(dep)) existing.dependencias.push(dep);
+        });
+
+        // Fusión de asignaturas y faltas acumuladas
+        estAsignaturas.forEach(asig => {
+          if (!existing.asignaturas.includes(asig)) {
+            existing.asignaturas.push(asig);
+            existing.faltasByAsig[asig] = [];
+          }
+          const faltasNuevas = estFaltasByAsig[asig] || [];
+          faltasNuevas.forEach(falta => {
+            if (!existing.faltasByAsig[asig].includes(falta)) {
+              existing.faltasByAsig[asig].push(falta);
+            }
+          });
+        });
+
+        updatedCount++;
+      } else {
+        // CREAR NUEVO ESTUDIANTE
+        appState.estudiantes.push({
+          id: Date.now() + Math.random(),
+          grado: estGrado,
+          nombre: estNombre,
+          reincidente: isReincidente,
+          asignaturas: estAsignaturas,
+          faltasByAsig: estFaltasByAsig,
+          dependencias: estDeps.length > 0 ? estDeps : ["Coordinación"]
+        });
+        newCount++;
+      }
+    }
+  });
+
+  return { news: newCount, updated: updatedCount };
+}
+
+function esMismoEstudianteFlex(name1, name2) {
+  const n1 = name1.toLowerCase().trim();
+  const n2 = name2.toLowerCase().trim();
+  if (n1 === n2) return true;
+  if (n1.includes(n2) || n2.includes(n1)) return true;
+
+  const p1 = n1.split(" ");
+  const p2 = n2.split(" ");
+  if (p1[0] === p2[0] && p1.length > 1 && p2.length > 1) {
+    if (p1[1].charAt(0) === p2[1].charAt(0)) return true;
+  }
+  return false;
 }
 
 /* ==========================================================================
@@ -959,7 +1112,7 @@ async function importNativeContact() {
       showToast("Operación cancelada.");
     }
   } else {
-    showToast("Función no soportada en este navegador/dispositivo.");
+    showToast("Función no soportada en este navegador.");
   }
 }
 
@@ -1406,65 +1559,10 @@ function importarTXT(e) {
 }
 
 function parseAndImportTXT(text) {
-  let importedCount = 0;
-  const blocks = text.split(/---/);
-
-  blocks.forEach(block => {
-    const blockLines = block.split("\n");
-    let estNombre = "";
-    let estGrado = "";
-    let isReincidente = false;
-    let estDeps = [];
-    let estAsignaturas = [];
-    let estFaltasByAsig = {};
-    let currentAsig = "";
-
-    blockLines.forEach(line => {
-      const cleanLine = line.trim();
-      if (cleanLine.startsWith("ESTUDIANTE:")) {
-        estNombre = cleanLine.replace("ESTUDIANTE:", "").trim();
-      } else if (cleanLine.startsWith("GRADO:")) {
-        estGrado = cleanLine.replace("GRADO:", "").trim();
-      } else if (cleanLine.startsWith("ALERTA:")) {
-        isReincidente = true;
-      } else if (cleanLine.startsWith("DEPENDENCIAS:")) {
-        const depsStr = cleanLine.replace("DEPENDENCIAS:", "").trim();
-        if (depsStr) estDeps = depsStr.split(",").map(d => d.trim());
-      } else if (cleanLine.startsWith("ASIGNATURA:")) {
-        currentAsig = cleanLine.replace("ASIGNATURA:", "").trim();
-        if (currentAsig && !estAsignaturas.includes(currentAsig)) {
-          estAsignaturas.push(currentAsig);
-          estFaltasByAsig[currentAsig] = [];
-        }
-      } else if (cleanLine.startsWith("FALTAS:")) {
-        const faltasStr = cleanLine.replace("FALTAS:", "").trim();
-        if (currentAsig && faltasStr) {
-          estFaltasByAsig[currentAsig] = faltasStr.split(",").map(f => f.trim());
-        }
-      }
-    });
-
-    if (estNombre && estGrado && estAsignaturas.length > 0) {
-      appState.estudiantes.push({
-        id: Date.now() + Math.random(),
-        grado: estGrado,
-        nombre: estNombre,
-        reincidente: isReincidente,
-        asignaturas: estAsignaturas,
-        faltasByAsig: estFaltasByAsig,
-        dependencias: estDeps.length > 0 ? estDeps : ["Coordinación"]
-      });
-      importedCount++;
-    }
-  });
-
-  if (importedCount > 0) {
-    localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
-    renderConsolidadoList();
-    showToast(`¡Se importaron ${importedCount} registros!`);
-  } else {
-    showToast("No se encontraron registros válidos.");
-  }
+  const result = parseAndIntegrateBatchText(text);
+  localStorage.setItem("MNovedades_V41_Store", JSON.stringify(appState));
+  renderConsolidadoList();
+  showToast(`¡Importados: ${result.news} nuevos, ${result.updated} actualizados!`);
 }
 
 /* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP */
