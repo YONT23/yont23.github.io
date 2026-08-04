@@ -25,11 +25,10 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1050px;
             margin: 0 auto;
         }
 
-        /* Cabecera con el título y el botón de nuevas cuentas */
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -39,198 +38,156 @@
             gap: 15px;
         }
 
-        h1 {
-            margin: 0;
-            color: var(--primary);
-            font-size: 2rem;
-        }
+        h1 { margin: 0; color: var(--primary); font-size: 2rem; }
 
         .btn-secundario {
-            background-color: var(--danger);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: background 0.3s;
+            background-color: var(--danger); color: white; border: none;
+            padding: 10px 16px; border-radius: 6px; cursor: pointer;
+            font-size: 14px; font-weight: bold; transition: background 0.3s;
         }
-
         .btn-secundario:hover { background-color: #B91C1C; }
 
         .card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background-color: var(--card-bg); padding: 20px;
+            border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 25px;
         }
 
-        /* Responsive Form */
         .form-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px; margin-bottom: 15px;
         }
 
         label {
-            font-weight: 600;
-            font-size: 13px;
-            display: block;
-            margin-bottom: 5px;
-            color: #4B5563;
+            font-weight: 600; font-size: 13px; display: block;
+            margin-bottom: 5px; color: #4B5563;
         }
 
         input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 15px;
+            width: 100%; padding: 10px; border: 1px solid var(--border);
+            border-radius: 6px; box-sizing: border-box; font-size: 15px;
         }
+
+        /* Destacar el campo de personas para que se note si cambia automáticamente */
+        #numPeople { background-color: #EEF2FF; font-weight: bold; color: var(--primary); }
 
         .btn-principal {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
+            background-color: var(--primary); color: white; border: none;
+            padding: 14px 20px; border-radius: 6px; cursor: pointer;
+            width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s;
         }
-
         .btn-principal:hover { background-color: #4338CA; }
 
-        /* Responsive Table */
         .table-container {
-            width: 100%;
-            overflow-x: auto;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            width: 100%; overflow-x: auto; background-color: var(--card-bg);
+            border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 700px;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-            white-space: nowrap;
-        }
+        table { width: 100%; border-collapse: collapse; min-width: 750px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+        th { background-color: var(--primary); color: white; white-space: nowrap; }
 
         .vuelto { color: var(--success); font-weight: bold; }
         .deuda { color: var(--danger); font-weight: bold; }
         
-        /* Estilos para el estado Saldado */
         .row-saldado { background-color: #F9FAFB; }
         .row-saldado td { color: var(--text-muted); text-decoration: line-through; }
         
-        /* Botón de acción en la tabla */
         .btn-accion {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            transition: 0.2s;
+            background-color: var(--success); color: white; border: none;
+            padding: 8px 12px; border-radius: 4px; cursor: pointer;
+            font-size: 12px; font-weight: bold; transition: 0.2s;
         }
-
-        .btn-accion.saldado {
-            background-color: var(--text-muted);
-            cursor: default;
-        }
-
+        .btn-accion.saldado { background-color: var(--text-muted); cursor: default; }
         .btn-accion:active { transform: scale(0.95); }
 
-        /* Mensaje cuando no hay registros */
-        .sin-datos {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
+        .sin-datos { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; }
+        
+        .detalle-calculo { font-size: 11px; color: #6B7280; display: block; margin-top: 3px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Nueva Cabecera con MPagos y Botón de Reset -->
         <div class="header-container">
             <h1>MPagos</h1>
             <button class="btn-secundario" onclick="iniciarNuevasCuentas()">🔄 Iniciar Nuevas Cuentas</button>
         </div>
         
-        <!-- Formulario -->
         <div class="card">
             <form id="paymentForm">
                 <div class="form-group">
                     <div>
-                        <label for="payer">¿Quién entrega el dinero?</label>
-                        <input type="text" id="payer" placeholder="Ej: Juan Pérez" required>
+                        <label for="payer">¿Quién entrega el billete?</label>
+                        <input type="text" id="payer" placeholder="Ej: Juan" required>
                     </div>
                     <div>
-                        <label for="beneficiaries">¿Para quién(es) paga?</label>
-                        <input type="text" id="beneficiaries" placeholder="Ej: Juan, Ana y Luis">
+                        <label for="extraNames">¿Por quién(es) más paga?</label>
+                        <input type="text" id="extraNames" placeholder="Ej: José, María (Opcional)">
                     </div>
                     <div>
-                        <label for="amountRequired">Total pedido ($)</label>
-                        <input type="number" id="amountRequired" placeholder="Ej: 6000" min="0" required>
+                        <label for="numPeople">Total de personas</label>
+                        <input type="number" id="numPeople" value="1" min="1" required title="Se calcula solo, pero puedes editarlo">
                     </div>
                     <div>
-                        <label for="amountPaid">Monto entregado ($)</label>
-                        <input type="number" id="amountPaid" placeholder="Ej: 10000" min="0" required>
+                        <label for="unitCost">Costo por persona ($)</label>
+                        <input type="number" id="unitCost" placeholder="Ej: 300" min="0" required>
+                    </div>
+                    <div>
+                        <label for="amountPaid">Monto que entregó ($)</label>
+                        <input type="number" id="amountPaid" placeholder="Ej: 2000" min="0" required>
                     </div>
                 </div>
                 <button type="submit" class="btn-principal">Registrar Pago</button>
             </form>
         </div>
 
-        <!-- Contenedor de la tabla -->
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Estudiante / Grupo</th>
-                        <th>Costo</th>
+                        <th>Pagador / Incluye a</th>
+                        <th>Total a Cobrar</th>
                         <th>Entregó</th>
                         <th>Vuelto</th>
                         <th>Deuda</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                    <!-- Los registros se cargan desde Javascript -->
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
         </div>
     </div>
 
     <script>
         let registros = JSON.parse(localStorage.getItem('pagosCopias')) || [];
+        // Cargar el último precio usado para ahorrar tiempo
+        let ultimoCosto = localStorage.getItem('ultimoCostoPersona') || ''; 
+        
         const form = document.getElementById('paymentForm');
         const tableBody = document.getElementById('tableBody');
+        const extraNamesInput = document.getElementById('extraNames');
+        const numPeopleInput = document.getElementById('numPeople');
+        const unitCostInput = document.getElementById('unitCost');
 
+        // Poner el último costo recordado en el formulario
+        if(ultimoCosto) { unitCostInput.value = ultimoCosto; }
+
+        // --- MAGIA: Contar personas automáticamente ---
+        extraNamesInput.addEventListener('input', function() {
+            const texto = this.value.trim();
+            if (texto === '') {
+                numPeopleInput.value = 1; // Solo paga el que entrega
+            } else {
+                // Separa los nombres por comas (,) o por la letra "y" 
+                const nombresExtra = texto.split(/,|\by\b/i).filter(nombre => nombre.trim().length > 0);
+                // 1 (el que paga) + la cantidad de nombres extra
+                numPeopleInput.value = 1 + nombresExtra.length;
+            }
+        });
+
+        // --- RENDERIZAR LA TABLA ---
         function renderizarTabla() {
             tableBody.innerHTML = '';
 
@@ -241,46 +198,57 @@
 
             registros.forEach((registro, index) => {
                 const row = document.createElement('tr');
-                
-                if (registro.saldado) {
-                    row.className = 'row-saldado';
-                }
+                if (registro.saldado) row.className = 'row-saldado';
 
                 const botonHTML = registro.saldado 
-                    ? `<button class="btn-accion saldado" onclick="cambiarEstado(${index})" title="Deshacer">✅ Ya regresado</button>`
+                    ? `<button class="btn-accion saldado" onclick="cambiarEstado(${index})">✅ Ya regresado</button>`
                     : `<button class="btn-accion" onclick="cambiarEstado(${index})">Devolver / Saldar</button>`;
+
+                // Texto que dice "Solo él/ella" o lista los nombres extra
+                let aQuienIncluye = registro.nombresExtra ? `+ ${registro.nombresExtra}` : "Solo él/ella";
 
                 row.innerHTML = `
                     <td>
                         <strong>${registro.pagador}</strong><br>
-                        <small style="color: #6B7280">${registro.beneficiarios}</small>
+                        <small style="color: #6B7280">${aQuienIncluye}</small>
                     </td>
-                    <td>$${registro.costo.toLocaleString()}</td>
+                    <td>
+                        <strong>$${registro.totalCobrar.toLocaleString()}</strong>
+                        <span class="detalle-calculo">${registro.cantidadPersonas} x $${registro.costoUnidad}</span>
+                    </td>
                     <td>$${registro.entregado.toLocaleString()}</td>
                     <td class="${registro.saldado ? '' : 'vuelto'}">$${registro.vuelto.toLocaleString()}</td>
                     <td class="${registro.saldado ? '' : 'deuda'}">$${registro.deuda.toLocaleString()}</td>
                     <td>${botonHTML}</td>
                 `;
-
                 tableBody.appendChild(row);
             });
         }
 
+        // --- GUARDAR NUEVO PAGO ---
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const payer = document.getElementById('payer').value;
-            let beneficiaries = document.getElementById('beneficiaries').value || payer;
-            const amountRequired = parseFloat(document.getElementById('amountRequired').value);
+            const extraNames = extraNamesInput.value;
+            const numPeople = parseInt(numPeopleInput.value);
+            const unitCost = parseFloat(unitCostInput.value);
             const amountPaid = parseFloat(document.getElementById('amountPaid').value);
 
-            let change = amountPaid > amountRequired ? amountPaid - amountRequired : 0;
-            let debt = amountRequired > amountPaid ? amountRequired - amountPaid : 0;
+            // Guardamos el costo para que la próxima vez aparezca automático
+            localStorage.setItem('ultimoCostoPersona', unitCost);
+
+            // CÁLCULO MATEMÁTICO
+            const totalRequired = numPeople * unitCost; // Ej: 3 x 300 = 900
+            let change = amountPaid > totalRequired ? amountPaid - totalRequired : 0;
+            let debt = totalRequired > amountPaid ? totalRequired - amountPaid : 0;
 
             const nuevoRegistro = {
                 pagador: payer,
-                beneficiarios: beneficiaries,
-                costo: amountRequired,
+                nombresExtra: extraNames,
+                cantidadPersonas: numPeople,
+                costoUnidad: unitCost,
+                totalCobrar: totalRequired,
                 entregado: amountPaid,
                 vuelto: change,
                 deuda: debt,
@@ -291,30 +259,27 @@
             guardarDatos();
             renderizarTabla();
 
+            // Limpiar formulario pero mantener el costo por unidad
             form.reset();
+            unitCostInput.value = unitCost; 
+            numPeopleInput.value = 1;
             document.getElementById('payer').focus();
         });
 
+        // --- MARCAR COMO PAGADO ---
         window.cambiarEstado = function(index) {
             registros[index].saldado = !registros[index].saldado;
             guardarDatos();
             renderizarTabla();
         };
 
-        // NUEVA FUNCIÓN: Iniciar nuevas cuentas (Borrar todo)
+        // --- BORRAR TODO ---
         window.iniciarNuevasCuentas = function() {
-            if (registros.length === 0) {
-                alert("Ya estás en una lista en blanco.");
-                return;
-            }
-            
-            // Pregunta de seguridad antes de borrar
-            const confirmacion = confirm("⚠️ ¿Estás seguro de que quieres borrar todos los registros actuales? Usa esta opción solo cuando vayas a recolectar dinero para un NUEVO lote de copias.");
-            
-            if (confirmacion) {
-                registros = []; // Vaciamos la lista
-                guardarDatos(); // Guardamos la lista vacía en la memoria
-                renderizarTabla(); // Actualizamos la tabla en pantalla
+            if (registros.length === 0) return alert("Ya estás en una lista en blanco.");
+            if (confirm("⚠️ ¿Quieres borrar todos los registros para iniciar una nueva recolección de dinero?")) {
+                registros = [];
+                guardarDatos();
+                renderizarTabla();
             }
         };
 
