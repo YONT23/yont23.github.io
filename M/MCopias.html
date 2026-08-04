@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Pagos - Copias</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #4338CA;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .vuelto { color: #059669; font-weight: bold; } /* Verde */
+        .deuda { color: #DC2626; font-weight: bold; }  /* Rojo */
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>💸 Control de Pagos</h1>
+        
+        <!-- Formulario de ingreso -->
+        <div class="card">
+            <form id="paymentForm">
+                <div class="form-group">
+                    <div>
+                        <label for="payer">¿Quién entrega el dinero?</label>
+                        <input type="text" id="payer" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                    <div>
+                        <label for="beneficiaries">¿Para quién(es) paga?</label>
+                        <input type="text" id="beneficiaries" placeholder="Ej: Juan, Ana y Luis">
+                    </div>
+                    <div>
+                        <label for="amountRequired">Total pedido por el docente ($)</label>
+                        <input type="number" id="amountRequired" placeholder="Ej: 6000" min="0" required>
+                    </div>
+                    <div>
+                        <label for="amountPaid">Monto entregado ($)</label>
+                        <input type="number" id="amountPaid" placeholder="Ej: 10000" min="0" required>
+                    </div>
+                </div>
+                <button type="submit">Registrar Pago</button>
+            </form>
+        </div>
+
+        <!-- Tabla de resultados -->
+        <table id="paymentsTable">
+            <thead>
+                <tr>
+                    <th>Entregó</th>
+                    <th>Pagó por</th>
+                    <th>Costo Requerido</th>
+                    <th>Monto Entregado</th>
+                    <th>Vuelto a dar</th>
+                    <th>Deuda Pendiente</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Los registros aparecerán aquí automáticamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Seleccionamos el formulario y el cuerpo de la tabla
+        const form = document.getElementById('paymentForm');
+        const tableBody = document.getElementById('tableBody');
+
+        // Escuchamos cuando el usuario hace clic en "Registrar Pago"
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita que la página se recargue
+
+            // 1. Obtener los valores escritos por el usuario
+            const payer = document.getElementById('payer').value;
+            let beneficiaries = document.getElementById('beneficiaries').value;
+            const amountRequired = parseFloat(document.getElementById('amountRequired').value);
+            const amountPaid = parseFloat(document.getElementById('amountPaid').value);
+
+            // Si no escribió para quién paga, asumimos que es para él mismo
+            if (beneficiaries.trim() === '') {
+                beneficiaries = payer;
+            }
+
+            // 2. Lógica Matemática: Calcular Vuelto y Deuda
+            let change = 0;
+            let debt = 0;
+
+            if (amountPaid > amountRequired) {
+                change = amountPaid - amountRequired; // Sobró dinero, hay vuelto
+            } else if (amountRequired > amountPaid) {
+                debt = amountRequired - amountPaid;   // Faltó dinero, hay deuda
+            }
+
+            // 3. Crear una nueva fila en la tabla con los resultados
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${payer}</td>
+                <td>${beneficiaries}</td>
+                <td>$${amountRequired.toLocaleString()}</td>
+                <td>$${amountPaid.toLocaleString()}</td>
+                <td class="vuelto">$${change.toLocaleString()}</td>
+                <td class="deuda">$${debt.toLocaleString()}</td>
+            `;
+
+            // 4. Agregar la fila a la tabla y limpiar el formulario
+            tableBody.appendChild(row);
+            form.reset();
+            document.getElementById('payer').focus(); // Regresar el cursor al inicio
+        });
+    </script>
+
+</body>
+</html>
