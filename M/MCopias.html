@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPagos - Copias</title>
+    <title>MPagos - Copias y Exámenes</title>
     <style>
         :root {
             --primary: #4F46E5;
@@ -29,6 +29,16 @@
             margin: 0 auto;
         }
 
+        /* --- CONTROL DE PANTALLAS --- */
+        .pantalla { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .pantalla.activa { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- CABECERA Y BOTONES --- */
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -37,16 +47,41 @@
             margin-bottom: 20px;
             gap: 15px;
         }
+        
+        .header-botones { display: flex; gap: 10px; flex-wrap: wrap; }
 
         h1 { margin: 0; color: var(--primary); font-size: 2rem; }
 
         .btn-secundario {
             background-color: var(--danger); color: white; border: none;
             padding: 10px 16px; border-radius: 6px; cursor: pointer;
-            font-size: 14px; font-weight: bold; transition: background 0.3s;
+            font-size: 14px; font-weight: bold; transition: 0.3s;
         }
         .btn-secundario:hover { background-color: #B91C1C; }
 
+        /* EL BOTÓN VAN GOGH (Noche Estrellada / Girasoles) */
+        .btn-vangogh {
+            background: linear-gradient(135deg, #0a192f 0%, #173f5f 40%, #e0a91e 90%, #f6d365 100%);
+            color: white; border: none;
+            padding: 10px 16px; border-radius: 6px; cursor: pointer;
+            font-size: 14px; font-weight: bold; 
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(32, 63, 95, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .btn-vangogh:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(224, 169, 30, 0.6);
+        }
+
+        .btn-principal {
+            background-color: var(--primary); color: white; border: none;
+            padding: 14px 20px; border-radius: 6px; cursor: pointer;
+            width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s;
+        }
+        .btn-principal:hover { background-color: #4338CA; }
+
+        /* --- TARJETAS Y FORMULARIOS --- */
         .card {
             background-color: var(--card-bg); padding: 20px;
             border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -68,32 +103,20 @@
             width: 100%; padding: 10px; border: 1px solid var(--border);
             border-radius: 6px; box-sizing: border-box; font-size: 15px;
         }
-
-        /* Destacar el campo de personas para que se note si cambia automáticamente */
         #numPeople { background-color: #EEF2FF; font-weight: bold; color: var(--primary); }
 
-        .btn-principal {
-            background-color: var(--primary); color: white; border: none;
-            padding: 14px 20px; border-radius: 6px; cursor: pointer;
-            width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s;
-        }
-        .btn-principal:hover { background-color: #4338CA; }
-
+        /* --- TABLA --- */
         .table-container {
             width: 100%; overflow-x: auto; background-color: var(--card-bg);
             border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-
         table { width: 100%; border-collapse: collapse; min-width: 750px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
         th { background-color: var(--primary); color: white; white-space: nowrap; }
-
         .vuelto { color: var(--success); font-weight: bold; }
         .deuda { color: var(--danger); font-weight: bold; }
-        
         .row-saldado { background-color: #F9FAFB; }
         .row-saldado td { color: var(--text-muted); text-decoration: line-through; }
-        
         .btn-accion {
             background-color: var(--success); color: white; border: none;
             padding: 8px 12px; border-radius: 4px; cursor: pointer;
@@ -101,68 +124,245 @@
         }
         .btn-accion.saldado { background-color: var(--text-muted); cursor: default; }
         .btn-accion:active { transform: scale(0.95); }
-
         .sin-datos { text-align: center; padding: 30px; color: var(--text-muted); font-style: italic; }
-        
         .detalle-calculo { font-size: 11px; color: #6B7280; display: block; margin-top: 3px; }
+
+        /* --- ESTILOS DEL RELOJ DE EXAMEN --- */
+        .reloj-gigante {
+            font-size: 8rem;
+            font-weight: bold;
+            color: var(--text-main);
+            text-align: center;
+            margin: 30px 0;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.5s ease;
+        }
+        .reloj-alerta {
+            color: var(--danger);
+            animation: palpitar 1s infinite alternate;
+        }
+        @keyframes palpitar {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+        .controles-reloj {
+            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .btn-tiempo {
+            background-color: var(--border); color: var(--text-main);
+            border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;
+        }
+        .btn-tiempo:hover { background-color: #D1D5DB; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="header-container">
-            <h1>MPagos</h1>
-            <button class="btn-secundario" onclick="iniciarNuevasCuentas()">🔄 Iniciar Nuevas Cuentas</button>
-        </div>
         
-        <div class="card">
-            <form id="paymentForm">
-                <div class="form-group">
-                    <div>
-                        <label for="payer">¿Quién entrega el billete?</label>
-                        <input type="text" id="payer" placeholder="Ej: Juan" required>
-                    </div>
-                    <div>
-                        <label for="extraNames">¿Por quién(es) más paga?</label>
-                        <input type="text" id="extraNames" placeholder="Ej: José, María (Opcional)">
-                    </div>
-                    <div>
-                        <label for="numPeople">Total de personas</label>
-                        <input type="number" id="numPeople" value="1" min="1" required title="Se calcula solo, pero puedes editarlo">
-                    </div>
-                    <div>
-                        <label for="unitCost">Costo por persona ($)</label>
-                        <input type="number" id="unitCost" placeholder="Ej: 300" min="0" required>
-                    </div>
-                    <div>
-                        <label for="amountPaid">Monto que entregó ($)</label>
-                        <input type="number" id="amountPaid" placeholder="Ej: 2000" min="0" required>
-                    </div>
+        <!-- ============================================== -->
+        <!-- PANTALLA 1: GESTIÓN DE PAGOS                   -->
+        <!-- ============================================== -->
+        <div id="pantalla-pagos" class="pantalla activa">
+            <div class="header-container">
+                <h1>💸 MPagos</h1>
+                <div class="header-botones">
+                    <button class="btn-vangogh" onclick="cambiarPantalla('pantalla-examen')">🎨 Reloj de Examen</button>
+                    <button class="btn-secundario" onclick="iniciarNuevasCuentas()">🔄 Iniciar Cuentas</button>
                 </div>
-                <button type="submit" class="btn-principal">Registrar Pago</button>
-            </form>
+            </div>
+            
+            <div class="card">
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <div>
+                            <label for="payer">¿Quién entrega el billete?</label>
+                            <input type="text" id="payer" placeholder="Ej: Juan" required>
+                        </div>
+                        <div>
+                            <label for="extraNames">¿Por quién(es) más paga?</label>
+                            <input type="text" id="extraNames" placeholder="Ej: José, María (Opcional)">
+                        </div>
+                        <div>
+                            <label for="numPeople">Total de personas</label>
+                            <input type="number" id="numPeople" value="1" min="1" required title="Se calcula solo">
+                        </div>
+                        <div>
+                            <label for="unitCost">Costo por persona ($)</label>
+                            <input type="number" id="unitCost" placeholder="Ej: 300" min="0" required>
+                        </div>
+                        <div>
+                            <label for="amountPaid">Monto que entregó ($)</label>
+                            <input type="number" id="amountPaid" placeholder="Ej: 2000" min="0" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-principal">Registrar Pago</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pagador / Incluye a</th>
+                            <th>Total a Cobrar</th>
+                            <th>Entregó</th>
+                            <th>Vuelto</th>
+                            <th>Deuda</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pagador / Incluye a</th>
-                        <th>Total a Cobrar</th>
-                        <th>Entregó</th>
-                        <th>Vuelto</th>
-                        <th>Deuda</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+
+        <!-- ============================================== -->
+        <!-- PANTALLA 2: RELOJ DE EXAMEN                    -->
+        <!-- ============================================== -->
+        <div id="pantalla-examen" class="pantalla">
+            <div class="header-container">
+                <h1 style="color: #e0a91e;">⏳ Modo Examen</h1>
+                <button class="btn-secundario" style="background-color: #6B7280;" onclick="cambiarPantalla('pantalla-pagos')">🔙 Volver a MPagos</button>
+            </div>
+
+            <div class="card">
+                <div style="text-align: center;">
+                    <label style="font-size: 16px; margin-bottom: 10px;">Selecciona o escribe los minutos del examen:</label>
+                    <div class="controles-reloj">
+                        <button class="btn-tiempo" onclick="setTiempoInput(10)">10 min</button>
+                        <button class="btn-tiempo" onclick="setTiempoInput(15)">15 min</button>
+                        <button class="btn-tiempo" onclick="setTiempoInput(20)">20 min</button>
+                        <button class="btn-tiempo" onclick="setTiempoInput(60)">1 Hora</button>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+                        <input type="number" id="minutosExamen" value="15" min="1" style="width: 100px; text-align: center; font-size: 18px; padding: 8px;">
+                        <span style="font-weight: bold; color: var(--text-muted)">Minutos</span>
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                        <button class="btn-principal" style="width: 200px; background-color: var(--success);" onclick="iniciarReloj()">▶ Iniciar Reloj</button>
+                        <button class="btn-secundario" style="width: 150px;" onclick="detenerReloj()">⏸ Detener</button>
+                    </div>
+                </div>
+
+                <div id="relojDisplay" class="reloj-gigante">15:00</div>
+            </div>
         </div>
+
     </div>
 
     <script>
+        // ==========================================
+        // LÓGICA DE LAS PANTALLAS
+        // ==========================================
+        function cambiarPantalla(idPantalla) {
+            // Oculta todas las pantallas
+            document.querySelectorAll('.pantalla').forEach(pantalla => {
+                pantalla.classList.remove('activa');
+            });
+            // Muestra solo la pantalla solicitada
+            document.getElementById(idPantalla).classList.add('activa');
+        }
+
+
+        // ==========================================
+        // LÓGICA DEL RELOJ DE EXAMEN
+        // ==========================================
+        let intervaloReloj;
+        let tiempoRestante = 0;
+        const relojDisplay = document.getElementById('relojDisplay');
+        const inputMinutos = document.getElementById('minutosExamen');
+
+        function setTiempoInput(minutos) {
+            inputMinutos.value = minutos;
+            mostrarTiempoEnPantalla(minutos * 60);
+            relojDisplay.classList.remove('reloj-alerta');
+        }
+
+        function iniciarReloj() {
+            clearInterval(intervaloReloj); // Evita que se dupliquen relojes
+            relojDisplay.classList.remove('reloj-alerta');
+            
+            // Si el tiempo es 0 o acaba de terminar, toma el valor del input, si no, reanuda.
+            if (tiempoRestante <= 0) {
+                let minutos = parseInt(inputMinutos.value) || 0;
+                tiempoRestante = minutos * 60;
+            }
+
+            if(tiempoRestante <= 0) return; // Validación por si ingresan 0
+
+            mostrarTiempoEnPantalla(tiempoRestante);
+
+            intervaloReloj = setInterval(() => {
+                tiempoRestante--;
+                mostrarTiempoEnPantalla(tiempoRestante);
+
+                // CAMBIAR A ROJO CUANDO FALTEN 5 MINUTOS (300 segundos)
+                if (tiempoRestante <= 300 && tiempoRestante > 0) {
+                    relojDisplay.classList.add('reloj-alerta');
+                }
+
+                // CUANDO LLEGA A CERO
+                if (tiempoRestante <= 0) {
+                    clearInterval(intervaloReloj);
+                    relojDisplay.innerHTML = "00:00";
+                    relojDisplay.classList.remove('reloj-alerta');
+                    relojDisplay.style.color = "var(--danger)";
+                    reproducirAlarma();
+                    setTimeout(() => alert("¡EL TIEMPO DEL EXAMEN HA TERMINADO!"), 500);
+                }
+            }, 1000); // 1000 milisegundos = 1 segundo
+        }
+
+        function detenerReloj() {
+            clearInterval(intervaloReloj);
+            relojDisplay.classList.remove('reloj-alerta');
+        }
+
+        function mostrarTiempoEnPantalla(segundosTotales) {
+            let minutos = Math.floor(segundosTotales / 60);
+            let segundos = segundosTotales % 60;
+            
+            // Agregar un '0' a la izquierda si el número es menor a 10 (ej: 09:05)
+            minutos = minutos < 10 ? '0' + minutos : minutos;
+            segundos = segundos < 10 ? '0' + segundos : segundos;
+            
+            relojDisplay.innerHTML = `${minutos}:${segundos}`;
+        }
+
+        // GENERADOR DE SONIDO (API DE AUDIO DEL NAVEGADOR - No necesita archivos extra)
+        function reproducirAlarma() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Repetir el timbre 5 veces
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const oscillator = audioCtx.createOscillator();
+                        const gainNode = audioCtx.createGain();
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioCtx.destination);
+                        
+                        oscillator.type = 'square'; // Sonido electrónico tipo alarma
+                        oscillator.frequency.value = 600; // Tono
+                        
+                        oscillator.start();
+                        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
+                        oscillator.stop(audioCtx.currentTime + 0.5);
+                    }, i * 600); // Espacio entre pitidos
+                }
+            } catch (e) {
+                console.log("El navegador no soporta el audio automático.");
+            }
+        }
+
+
+        // ==========================================
+        // LÓGICA DE MPAGOS (SE MANTIENE INTACTA)
+        // ==========================================
         let registros = JSON.parse(localStorage.getItem('pagosCopias')) || [];
-        // Cargar el último precio usado para ahorrar tiempo
         let ultimoCosto = localStorage.getItem('ultimoCostoPersona') || ''; 
         
         const form = document.getElementById('paymentForm');
@@ -171,28 +371,22 @@
         const numPeopleInput = document.getElementById('numPeople');
         const unitCostInput = document.getElementById('unitCost');
 
-        // Poner el último costo recordado en el formulario
         if(ultimoCosto) { unitCostInput.value = ultimoCosto; }
 
-        // --- MAGIA: Contar personas automáticamente ---
         extraNamesInput.addEventListener('input', function() {
             const texto = this.value.trim();
             if (texto === '') {
-                numPeopleInput.value = 1; // Solo paga el que entrega
+                numPeopleInput.value = 1;
             } else {
-                // Separa los nombres por comas (,) o por la letra "y" 
                 const nombresExtra = texto.split(/,|\by\b/i).filter(nombre => nombre.trim().length > 0);
-                // 1 (el que paga) + la cantidad de nombres extra
                 numPeopleInput.value = 1 + nombresExtra.length;
             }
         });
 
-        // --- RENDERIZAR LA TABLA ---
         function renderizarTabla() {
             tableBody.innerHTML = '';
-
             if (registros.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="sin-datos">No hay pagos registrados. ¡Empieza a agregar estudiantes!</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="sin-datos">No hay pagos registrados.</td></tr>`;
                 return;
             }
 
@@ -204,7 +398,6 @@
                     ? `<button class="btn-accion saldado" onclick="cambiarEstado(${index})">✅ Ya regresado</button>`
                     : `<button class="btn-accion" onclick="cambiarEstado(${index})">Devolver / Saldar</button>`;
 
-                // Texto que dice "Solo él/ella" o lista los nombres extra
                 let aQuienIncluye = registro.nombresExtra ? `+ ${registro.nombresExtra}` : "Solo él/ella";
 
                 row.innerHTML = `
@@ -225,68 +418,45 @@
             });
         }
 
-        // --- GUARDAR NUEVO PAGO ---
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-
             const payer = document.getElementById('payer').value;
             const extraNames = extraNamesInput.value;
             const numPeople = parseInt(numPeopleInput.value);
             const unitCost = parseFloat(unitCostInput.value);
             const amountPaid = parseFloat(document.getElementById('amountPaid').value);
 
-            // Guardamos el costo para que la próxima vez aparezca automático
             localStorage.setItem('ultimoCostoPersona', unitCost);
 
-            // CÁLCULO MATEMÁTICO
-            const totalRequired = numPeople * unitCost; // Ej: 3 x 300 = 900
+            const totalRequired = numPeople * unitCost;
             let change = amountPaid > totalRequired ? amountPaid - totalRequired : 0;
             let debt = totalRequired > amountPaid ? totalRequired - amountPaid : 0;
 
             const nuevoRegistro = {
-                pagador: payer,
-                nombresExtra: extraNames,
-                cantidadPersonas: numPeople,
-                costoUnidad: unitCost,
-                totalCobrar: totalRequired,
-                entregado: amountPaid,
-                vuelto: change,
-                deuda: debt,
-                saldado: false
+                pagador: payer, nombresExtra: extraNames, cantidadPersonas: numPeople,
+                costoUnidad: unitCost, totalCobrar: totalRequired,
+                entregado: amountPaid, vuelto: change, deuda: debt, saldado: false
             };
 
             registros.unshift(nuevoRegistro);
-            guardarDatos();
-            renderizarTabla();
-
-            // Limpiar formulario pero mantener el costo por unidad
-            form.reset();
-            unitCostInput.value = unitCost; 
-            numPeopleInput.value = 1;
-            document.getElementById('payer').focus();
+            guardarDatos(); renderizarTabla();
+            form.reset(); unitCostInput.value = unitCost; numPeopleInput.value = 1; document.getElementById('payer').focus();
         });
 
-        // --- MARCAR COMO PAGADO ---
         window.cambiarEstado = function(index) {
             registros[index].saldado = !registros[index].saldado;
-            guardarDatos();
-            renderizarTabla();
+            guardarDatos(); renderizarTabla();
         };
 
-        // --- BORRAR TODO ---
         window.iniciarNuevasCuentas = function() {
             if (registros.length === 0) return alert("Ya estás en una lista en blanco.");
             if (confirm("⚠️ ¿Quieres borrar todos los registros para iniciar una nueva recolección de dinero?")) {
-                registros = [];
-                guardarDatos();
-                renderizarTabla();
+                registros = []; guardarDatos(); renderizarTabla();
             }
         };
 
-        function guardarDatos() {
-            localStorage.setItem('pagosCopias', JSON.stringify(registros));
-        }
-
+        function guardarDatos() { localStorage.setItem('pagosCopias', JSON.stringify(registros)); }
+        
         renderizarTabla();
     </script>
 
