@@ -58,7 +58,7 @@ button{cursor:pointer;border:none;background:none;}
 input,select,textarea{outline:none;}
 :focus-visible{outline:2.5px solid var(--blue-500);outline-offset:2px;border-radius:6px;}
 
-#app{max-width:640px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
+#app{width:100%;max-width:720px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
 
 .topbar{
   position:sticky;top:0;z-index:40;
@@ -115,35 +115,35 @@ input,select,textarea{outline:none;}
 .rail-step.active .rail-label{color:#fff;}
 .rail-step.done .rail-label{color:var(--blue-200);}
 
-main{flex:1;padding:20px 16px 110px 16px;}
+main{flex:1;padding:16px 14px 110px 14px;}
 .screen{display:none;animation:screenIn .35s cubic-bezier(.25,.7,.35,1);}
 .screen.active{display:block;}
 @keyframes screenIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
 .section-title{
-  font-family:var(--font-display);font-weight:700;font-size:19px;color:var(--blue-900);
+  font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--blue-900);
   margin-bottom:3px;display:flex;align-items:center;gap:8px;
 }
-.section-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;}
+.section-sub{font-size:12px;color:var(--ink-soft);margin-bottom:14px;}
 
 .card{
   background:var(--surface);border-radius:var(--radius-lg);
-  padding:18px;box-shadow:var(--shadow-sm);border:1px solid var(--border-soft);
+  padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--border-soft);
   margin-bottom:14px;
 }
-.field{margin-bottom:13px;}
+.field{margin-bottom:12px;}
 .field:last-child{margin-bottom:0;}
-.field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;}
 .field input[type=text],.field input[type=number],.field input[type=date],.field input[type=tel],.field select,.field textarea{
-  width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  width:100%;padding:11px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
   background:var(--blue-50);transition:border-color .15s,background .15s;
 }
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue-500);background:#fff;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field-row{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  padding:12px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;
+  padding:11px 16px;border-radius:var(--radius-pill);font-weight:600;font-size:13.5px;
   transition:transform .12s,box-shadow .12s,background .15s;white-space:nowrap;
 }
 .btn:active{transform:scale(.97);}
@@ -153,16 +153,21 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .btn-danger{background:var(--red-100);color:var(--red);}
 .btn-success{background:var(--green);color:#fff;}
 .btn-block{width:100%;}
-.btn-sm{padding:8px 13px;font-size:12.5px;}
+.btn-sm{padding:7px 12px;font-size:12px;}
 
-/* Modos de Entrada */
-.mode-tabs{display:flex;gap:8px;margin-bottom:14px;}
+/* 3 Modos de Entrada */
+.mode-tabs{display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;margin-bottom:14px;}
 .mode-tab{
-  flex:1;padding:10px;text-align:center;border-radius:var(--radius-pill);
-  font-size:13px;font-weight:600;background:var(--surface);border:1.5px solid var(--border);
+  padding:8px 4px;text-align:center;border-radius:var(--radius-pill);
+  font-size:11.5px;font-weight:600;background:var(--surface);border:1.5px solid var(--border);
   color:var(--ink-soft);cursor:pointer;transition:all .15s;
 }
 .mode-tab.active{background:var(--blue-700);color:#fff;border-color:var(--blue-700);}
+
+/* Buscador Rápido de Lista de Clase */
+.classlist-box { display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; margin-top:10px; padding:6px; background:var(--blue-50); border-radius:var(--radius-sm); border:1px solid var(--border); }
+.classlist-item { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--surface); border-radius:var(--radius-pill); border:1px solid var(--border); font-size:12.5px; font-weight:600; cursor:pointer; }
+.classlist-item:hover { border-color:var(--blue-500); background:var(--blue-100); }
 
 /* Alerta Duplicados */
 .duplicate-alert-box {
@@ -170,55 +175,55 @@ main{flex:1;padding:20px 16px 110px 16px;}
   border-radius:var(--radius-md); padding:12px; margin-top:10px; font-size:12.5px;
 }
 .duplicate-alert-box .title { font-weight:700; color:var(--amber); margin-bottom:4px; }
-.duplicate-alert-box .actions { display:flex; gap:8px; margin-top:8px; }
+.duplicate-alert-box .actions { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
 
-/* Contact Agenda */
+/* Agenda de Contactos */
 .contact-form{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;}
 .contact-list{display:flex;flex-direction:column;gap:8px;}
 .contact-item{
-  display:flex;align-items:center;gap:11px;padding:11px 12px;
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
   border:1.5px solid var(--border);border-radius:var(--radius-md);background:var(--blue-50);
 }
 .contact-info{flex:1;min-width:0;}
-.contact-name{font-weight:600;font-size:13.5px;color:var(--ink);}
-.contact-meta{font-size:11.5px;color:var(--ink-soft);}
+.contact-name{font-weight:600;font-size:13px;color:var(--ink);}
+.contact-meta{font-size:11px;color:var(--ink-soft);}
 .contact-actions{display:flex;gap:4px;flex-shrink:0;}
-.contact-btn{font-size:14px;padding:4px 6px;border-radius:6px;}
+.contact-btn{font-size:13px;padding:4px 6px;border-radius:6px;}
 .contact-btn.edit{color:var(--blue-600);}
 .contact-btn.del{color:var(--red);}
 
 .tag-cargo{
-  display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);
+  display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);
   background:var(--blue-100);color:var(--blue-700);letter-spacing:.2px;text-transform:uppercase;
 }
 
 /* Chips & Categories */
 .chip-input-row{display:flex;gap:8px;}
 .chip-input-row input{flex:1;}
-.chip-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.chip-container{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
 .chip{
-  display:flex;align-items:center;gap:7px;padding:8px 8px 8px 14px;
+  display:flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;
   background:var(--blue-100);color:var(--blue-800);border-radius:var(--radius-pill);
-  font-size:13px;font-weight:600;border:1.5px solid transparent;
+  font-size:12.5px;font-weight:600;border:1.5px solid transparent;
 }
 .chip.active{background:var(--blue-700);color:#fff;}
 .chip .chip-count{
-  background:rgba(255,255,255,.35);font-size:10.5px;font-weight:700;
-  padding:1px 6px;border-radius:var(--radius-pill);min-width:16px;text-align:center;
+  background:rgba(255,255,255,.35);font-size:10px;font-weight:700;
+  padding:1px 5px;border-radius:var(--radius-pill);min-width:16px;text-align:center;
 }
 .chip-x{
-  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.08);font-size:12px;flex-shrink:0;
+  width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.08);font-size:11px;flex-shrink:0;
 }
 
-.cat-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;}
 .cat-card{
-  display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--radius-md);
-  border:2px solid var(--border);background:var(--surface);text-align:left;
+  display:flex;flex-direction:column;align-items:center;padding:12px 8px;border-radius:var(--radius-md);
+  border:2px solid var(--border);background:var(--surface);text-align:center;gap:4px;
 }
 .cat-card .cat-icon{
-  width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-  font-size:22px;flex-shrink:0;
+  width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
 }
 .cat-card.cat-academicas .cat-icon{background:var(--blue-100);}
 .cat-card.cat-plataformas .cat-icon{background:var(--purple-100);}
@@ -226,97 +231,96 @@ main{flex:1;padding:20px 16px 110px 16px;}
 .cat-card.selected.cat-academicas{border-color:var(--blue-500);}
 .cat-card.selected.cat-plataformas{border-color:var(--purple);}
 .cat-card.selected.cat-disciplinarias{border-color:var(--red);}
-.cat-title{font-weight:700;font-size:14.5px;color:var(--ink);}
-.cat-desc{font-size:11.5px;color:var(--ink-soft);}
+.cat-title{font-weight:700;font-size:13px;color:var(--ink);}
+.cat-desc{font-size:10.5px;color:var(--ink-soft);}
 
-.falta-list{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.falta-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
 .falta-item{
-  display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--radius-sm);
-  border:1.5px solid var(--border);background:var(--blue-50);font-size:13.5px;font-weight:500;
+  display:flex;align-items:flex-start;gap:8px;padding:9px 11px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);background:var(--blue-50);font-size:12.5px;font-weight:500;
 }
 .falta-item.checked{border-color:var(--blue-500);background:var(--blue-100);font-weight:600;}
-.falta-item input{width:19px;height:19px;accent-color:var(--blue-600);flex-shrink:0;margin-top:1px;}
+.falta-item input{width:17px;height:17px;accent-color:var(--blue-600);flex-shrink:0;margin-top:1px;}
 
-.custom-falta-box {display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
+.custom-falta-box {display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
 .custom-falta-box input { flex:1; }
 
 .reincidencia-box {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 14px; background: var(--red-100); border: 1.5px solid var(--red);
-  border-radius: var(--radius-md); margin-top: 14px; margin-bottom: 14px;
+  padding: 10px 12px; background: var(--red-100); border: 1.5px solid var(--red);
+  border-radius: var(--radius-md); margin-top: 12px; margin-bottom: 12px;
 }
-.reincidencia-box label { font-weight: 700; color: var(--red); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-.reincidencia-box input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--red); cursor: pointer; }
+.reincidencia-box label { font-weight: 700; color: var(--red); font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.reincidencia-box input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--red); cursor: pointer; }
 
 /* Dependencias */
-.dep-grid{display:grid;grid-template-columns:1fr;gap:9px;}
+.dep-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:8px;}
 .dep-item{
-  display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:var(--radius-md);
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:var(--radius-md);
   border:2px solid var(--border);background:var(--surface);
 }
 .dep-item.checked{background:var(--blue-50);}
-.dep-item input{width:20px;height:20px;flex-shrink:0;}
-.dep-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dep-item input{width:18px;height:18px;flex-shrink:0;}
+.dep-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .dep-coordinacion .dep-dot{background:var(--amber);}
 .dep-psicologia .dep-dot{background:var(--purple);}
 .dep-rectoria .dep-dot{background:var(--red);}
 .dep-item.dep-coordinacion.checked{border-color:var(--amber);}
 .dep-item.dep-psicologia.checked{border-color:var(--purple);}
 .dep-item.dep-rectoria.checked{border-color:var(--red);}
-.dep-name{font-weight:600;font-size:14px;flex:1;}
+.dep-name{font-weight:600;font-size:13px;flex:1;}
 
 .badge-dep{
-  display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
-  padding:3px 9px;border-radius:var(--radius-pill);
+  display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:var(--radius-pill);
 }
 .badge-dep.dep-coordinacion{background:var(--amber-100);color:#96631C;}
 .badge-dep.dep-psicologia{background:var(--purple-100);color:var(--purple);}
 .badge-dep.dep-rectoria{background:var(--red-100);color:var(--red);}
-.badge-reincidente{background:var(--red);color:#fff;font-size:10px;padding:2px 8px;border-radius:var(--radius-pill);font-weight:800;margin-left:4px;}
+.badge-reincidente{background:var(--red);color:#fff;font-size:9.5px;padding:2px 7px;border-radius:var(--radius-pill);font-weight:800;}
 
 /* Consolidado */
 .stat-strip{
   display:flex;align-items:center;justify-content:space-between;
   background:linear-gradient(135deg,var(--blue-700),var(--blue-600));color:#fff;
-  border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow-md);
+  border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow-md);
 }
-.stat-num{font-family:var(--font-display);font-weight:800;font-size:32px;line-height:1;}
-.stat-label{font-size:12px;color:var(--blue-200);font-weight:600;}
+.stat-num{font-family:var(--font-display);font-weight:800;font-size:28px;line-height:1;}
+.stat-label{font-size:11.5px;color:var(--blue-200);font-weight:600;}
 
-.toolbar{display:flex;gap:8px;margin-bottom:14px;}
-.search-box{flex:1;position:relative;}
-.search-box input{width:100%;padding:11px 13px 11px 36px;border:1.5px solid var(--border);border-radius:var(--radius-pill);background:var(--surface);font-size:13.5px;}
-.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--ink-faint);}
-.filter-select{padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-pill);background:var(--surface);font-size:13px;font-weight:600;color:var(--blue-700);}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.search-box{flex:1;min-width:180px;position:relative;}
+.search-box input{width:100%;padding:10px 12px 10px 34px;border:1.5px solid var(--border);border-radius:var(--radius-pill);background:var(--surface);font-size:13px;}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--ink-faint);}
+.filter-select{padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-pill);background:var(--surface);font-size:12.5px;font-weight:600;color:var(--blue-700);}
 
 .reg-item{
   background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-md);
-  margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow-sm);
+  margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow-sm);
 }
-.reg-head{display:flex;align-items:center;gap:12px;padding:13px 14px;}
+.reg-head{display:flex;align-items:center;gap:10px;padding:11px 12px;}
 .reg-avatar{
-  width:38px;height:38px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);
-  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:14px;flex-shrink:0;
+  width:34px;height:34px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;flex-shrink:0;
 }
 .reg-info{flex:1;min-width:0;}
-.reg-name{font-weight:700;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.reg-grado{font-size:11.5px;color:var(--ink-soft);}
-.reg-date{font-size:10.5px;color:var(--ink-faint);margin-top:2px;}
-.reg-chevron{font-size:13px;color:var(--ink-faint);transition:transform .2s;flex-shrink:0;}
+.reg-name{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.reg-grado{font-size:11px;color:var(--ink-soft);}
+.reg-date{font-size:10px;color:var(--ink-faint);margin-top:1px;}
+.reg-chevron{font-size:12px;color:var(--ink-faint);transition:transform .2s;flex-shrink:0;}
 .reg-item.open .reg-chevron{transform:rotate(180deg);}
 .reg-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
 .reg-item.open .reg-body{max-height:900px;}
-.reg-body-inner{padding:0 14px 14px 14px;border-top:1px dashed var(--border);}
-.reg-asig-block{margin-top:12px;}
-.reg-asig-name{font-weight:700;font-size:12.5px;color:var(--blue-700);margin-bottom:6px;}
+.reg-body-inner{padding:0 12px 12px 12px;border-top:1px dashed var(--border);}
+.reg-asig-block{margin-top:10px;}
+.reg-asig-name{font-weight:700;font-size:12px;color:var(--blue-700);margin-bottom:4px;}
 .mini-falta-tag{
-  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
-  padding:4px 9px;border-radius:var(--radius-pill);margin:0 4px 4px 0;background:var(--blue-100);color:var(--blue-700);
+  display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;
+  padding:3px 8px;border-radius:var(--radius-pill);margin:0 3px 3px 0;background:var(--blue-100);color:var(--blue-700);
 }
-.reg-actions{display:flex;gap:8px;margin-top:14px;}
+.reg-actions{display:flex;gap:6px;margin-top:12px;}
 
-.export-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;}
-@media(max-width:480px){.export-row{grid-template-columns:1fr;}}
+.export-row{display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;margin:14px 0;}
 
 /* Modales */
 .overlay{
@@ -325,37 +329,37 @@ main{flex:1;padding:20px 16px 110px 16px;}
 }
 .overlay.show{display:flex;}
 .modal{
-  background:#fff;border-radius:24px 24px 0 0;padding:26px 22px calc(22px + env(safe-area-inset-bottom)) 22px;
+  background:#fff;border-radius:22px 22px 0 0;padding:22px 18px calc(18px + env(safe-area-inset-bottom)) 18px;
   width:100%;max-width:640px;max-height:85dvh;overflow-y:auto;
 }
-@media (min-width:660px){
+@media (min-width:640px){
   .overlay{align-items:center;}
-  .modal{border-radius:24px;margin:20px;}
+  .modal{border-radius:22px;margin:16px;}
 }
 .modal-icon{
-  width:56px;height:56px;border-radius:16px;background:var(--green-100);color:var(--green);
-  display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px auto;
+  width:48px;height:48px;border-radius:14px;background:var(--green-100);color:var(--green);
+  display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 12px auto;
 }
-.modal-title{font-family:var(--font-display);font-weight:700;font-size:18px;text-align:center;color:var(--blue-900);margin-bottom:4px;}
-.modal-sub{font-size:13px;color:var(--ink-soft);text-align:center;margin-bottom:16px;}
-.modal-actions{display:flex;flex-direction:column;gap:10px;}
+.modal-title{font-family:var(--font-display);font-weight:700;font-size:17px;text-align:center;color:var(--blue-900);margin-bottom:4px;}
+.modal-sub{font-size:12px;color:var(--ink-soft);text-align:center;margin-bottom:14px;}
+.modal-actions{display:flex;flex-direction:column;gap:8px;}
 
-.recipient-list { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; max-height:220px; overflow-y:auto; }
-.recipient-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid var(--border); border-radius:var(--radius-md); background:var(--blue-50); }
-.recipient-item input { width:18px; height:18px; accent-color:var(--blue-600); }
+.recipient-list { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; max-height:200px; overflow-y:auto; }
+.recipient-item { display:flex; align-items:center; gap:8px; padding:9px 11px; border:1.5px solid var(--border); border-radius:var(--radius-md); background:var(--blue-50); }
+.recipient-item input { width:17px; height:17px; accent-color:var(--blue-600); }
 
 .toast{
-  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--ink);color:#fff;padding:11px 20px;border-radius:var(--radius-pill);
-  font-size:13px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:all .25s;
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--radius-pill);
+  font-size:12.5px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:all .25s;
   box-shadow:var(--shadow-lg);white-space:nowrap;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-.empty-state{text-align:center;padding:50px 20px;}
-.empty-state-icon{font-size:44px;margin-bottom:10px;}
-.empty-state-title{font-weight:700;font-size:15px;color:var(--ink);}
-.empty-state-sub{font-size:12.5px;color:var(--ink-soft);}
+.empty-state{text-align:center;padding:40px 16px;}
+.empty-state-icon{font-size:38px;margin-bottom:8px;}
+.empty-state-title{font-weight:700;font-size:14px;color:var(--ink);}
+.empty-state-sub{font-size:12px;color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -492,15 +496,32 @@ main{flex:1;padding:20px 16px 110px 16px;}
     <!-- ======================= PANTALLA 2 — REGISTRO DE ESTUDIANTES ======================= -->
     <section class="screen" id="screen2">
       <div class="section-title">📝 Registro de novedades</div>
-      <div class="section-sub">Selecciona el modo de registro (Uno a Uno o Carga Directa en Lote).</div>
+      <div class="section-sub">Selecciona el modo de entrada deseado.</div>
 
-      <!-- Sub-pestañas de Modo de Entrada -->
+      <!-- Sub-pestañas para los 3 Métodos de Entrada -->
       <div class="mode-tabs">
         <button class="mode-tab active" id="tabModeSingle" onclick="switchRegMode('single')">👤 Uno a Uno</button>
-        <button class="mode-tab" id="tabModeBatch" onclick="switchRegMode('batch')">⚡ Pegar Texto en Lote</button>
+        <button class="mode-tab" id="tabModeClassList" onclick="switchRegMode('classlist')">📋 Lista Clase</button>
+        <button class="mode-tab" id="tabModeBatch" onclick="switchRegMode('batch')">⚡ Lote Texto</button>
       </div>
 
-      <!-- MODO 1: REGISTRO INDIVIDUAL UNO A UNO -->
+      <!-- MODO 2 (NUEVO): CARGAR LISTA DE CLASE Y TONTAR ALUMNO PARA REPORTAR -->
+      <div id="modeClassListBox" style="display:none;">
+        <div class="card">
+          <div class="field">
+            <label for="classListText">Pega la lista de alumnos del curso (un nombre por línea)</label>
+            <textarea id="classListText" rows="6" placeholder="Florez Anaury&#10;Frias Angel&#10;Iguaran Aranza&#10;Martinez Neftalia..."></textarea>
+          </div>
+          <button class="btn btn-primary btn-block btn-sm" onclick="generarListaClaseInteractiva()">📋 Cargar Lista de Clase</button>
+
+          <div id="classListResults" style="display:none; margin-top:12px;">
+            <label style="font-weight:700; font-size:12px; color:var(--blue-900);">Toca un estudiante para evaluar en el formulario:</label>
+            <div class="classlist-box" id="containerClassListItems"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODO 1: REGISTRO INDIVIDUAL UNO A UNO Y FORMULARIO COMÚN -->
       <div id="modeSingleBox">
         <div class="card">
           <div class="field-row">
@@ -563,27 +584,24 @@ main{flex:1;padding:20px 16px 110px 16px;}
             <div class="cat-icon">📚</div>
             <div>
               <div class="cat-title">Académicas</div>
-              <div class="cat-desc">Incumplimiento de tareas y aula</div>
             </div>
           </button>
           <button class="cat-card cat-plataformas" data-cat="plataformas">
             <div class="cat-icon">💻</div>
             <div>
-              <div class="cat-title">Plataformas virtuales</div>
-              <div class="cat-desc">Incumplimiento en entornos digitales</div>
+              <div class="cat-title">Plataformas</div>
             </div>
           </button>
           <button class="cat-card cat-disciplinarias" data-cat="disciplinarias">
             <div class="cat-icon">⚠️</div>
             <div>
               <div class="cat-title">Disciplinarias</div>
-              <div class="cat-desc">Conducta y convivencia escolar</div>
             </div>
           </button>
         </div>
 
         <div class="card" id="faltaPanel" style="display:none; margin-top:12px;">
-          <div id="faltaTitle" style="font-weight:700; font-size:14px; margin-bottom:8px; color:var(--blue-900);"></div>
+          <div id="faltaTitle" style="font-weight:700; font-size:13.5px; margin-bottom:8px; color:var(--blue-900);"></div>
           <div class="falta-list" id="faltaList"></div>
           
           <div class="custom-falta-box">
@@ -616,14 +634,14 @@ main{flex:1;padding:20px 16px 110px 16px;}
         <button class="btn btn-primary btn-block" id="btnSaveEstudiante" style="margin-top:20px;">💾 Guardar estudiante</button>
       </div>
 
-      <!-- MODO 2: PEGAR TEXTO EN LOTE -->
+      <!-- MODO 3: PEGAR TEXTO EN LOTE -->
       <div id="modeBatchBox" style="display:none;">
         <div class="card">
           <div class="field">
             <label for="batchText">Pegar reporte en texto estructurado</label>
-            <textarea id="batchText" rows="12" placeholder="ESTUDIANTE: Florez Anaury&#10;GRADO: Séptimo&#10;DEPENDENCIAS: Coordinación&#10;ASIGNATURA: Inglés&#10;FALTAS: No realiza actividades de la plataforma...&#10;---"></textarea>
-            <div style="font-size:11.5px; color:var(--ink-soft); margin-top:6px;">
-              💡 <strong>Integración inteligente:</strong> Si un estudiante ya está registrado en el mismo grado, sus nuevas faltas se sumarán automáticamente a su ficha sin borrar las anteriores.
+            <textarea id="batchText" rows="10" placeholder="ESTUDIANTE: Florez Anaury&#10;GRADO: Séptimo&#10;DEPENDENCIAS: Coordinación&#10;ASIGNATURA: Inglés&#10;FALTAS: No realiza actividades...&#10;---"></textarea>
+            <div style="font-size:11px; color:var(--ink-soft); margin-top:6px;">
+              💡 <strong>Acumulación automática:</strong> Si el estudiante ya tiene faltas registradas esta semana, las nuevas faltas se sumarán a su historial.
             </div>
           </div>
           <button class="btn btn-success btn-block" id="btnProcessBatch">⚡ Procesar y Cargar Lote</button>
@@ -677,23 +695,22 @@ main{flex:1;padding:20px 16px 110px 16px;}
     </div>
   </div>
 
-  <!-- Modal 2: Selección de Destinatarios para WhatsApp con Filtro de Fecha -->
+  <!-- Modal 2: Selección de Destinatarios para WhatsApp -->
   <div class="overlay" id="modalWhatsApp">
     <div class="modal">
-      <div class="modal-title" style="margin-bottom:8px;">💬 Enviar por WhatsApp</div>
+      <div class="modal-title" style="margin-bottom:6px;">💬 Enviar por WhatsApp</div>
       
-      <!-- Selector del Filtro de Fecha para Envíos -->
-      <div class="field" style="margin-bottom:14px; text-align:left;">
+      <div class="field" style="margin-bottom:12px; text-align:left;">
         <label for="waDateRangeFilter">Filtro de fecha para el reporte:</label>
         <select id="waDateRangeFilter" onchange="updateWaDateFilterStats()">
-          <option value="today" selected>📅 Solo el reporte de hoy (04/08/2026)</option>
+          <option value="today" selected>📅 Solo el reporte de hoy</option>
           <option value="week">📆 Rango semanal configurado</option>
           <option value="all">📑 Todos los registros guardados</option>
         </select>
-        <div id="waDateFilterMsg" style="font-size:11.5px; color:var(--blue-700); font-weight:600; margin-top:4px;"></div>
+        <div id="waDateFilterMsg" style="font-size:11px; color:var(--blue-700); font-weight:600; margin-top:3px;"></div>
       </div>
 
-      <div class="modal-sub" style="margin-bottom:10px; text-align:left; font-weight:600;">Contactos destinatarios:</div>
+      <div class="modal-sub" style="margin-bottom:8px; text-align:left; font-weight:600;">Contactos destinatarios:</div>
       <div class="recipient-list" id="waRecipientList"></div>
       <div class="modal-actions">
         <button class="btn btn-success" id="btnConfirmSendWa">Enviar mensajes 🚀</button>
@@ -888,8 +905,11 @@ function bindEvents() {
 
 function switchRegMode(mode) {
   document.getElementById("tabModeSingle").classList.toggle("active", mode === 'single');
+  document.getElementById("tabModeClassList").classList.toggle("active", mode === 'classlist');
   document.getElementById("tabModeBatch").classList.toggle("active", mode === 'batch');
-  document.getElementById("modeSingleBox").style.display = mode === 'single' ? "block" : "none";
+
+  document.getElementById("modeSingleBox").style.display = (mode === 'single' || mode === 'classlist') ? "block" : "none";
+  document.getElementById("modeClassListBox").style.display = mode === 'classlist' ? "block" : "none";
   document.getElementById("modeBatchBox").style.display = mode === 'batch' ? "block" : "none";
 }
 
@@ -921,7 +941,34 @@ function renderScreen(step) {
 }
 
 /* ==========================================================================
-   ALGORITMO INTELIGENTE DE DETECCIÓN Y UNIÓN DE DUPLICADOS EN TIEMPO REAL
+   MODO 2 (NUEVO): GENERAR LISTA DE CLASE INTERACTIVA
+   ========================================================================== */
+function generarListaClaseInteractiva() {
+  const text = document.getElementById("classListText").value.trim();
+  if (!text) { showToast("Pega primero la lista de alumnos."); return; }
+
+  const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+  const container = document.getElementById("containerClassListItems");
+  container.innerHTML = "";
+
+  lines.forEach(nombre => {
+    const div = document.createElement("div");
+    div.className = "classlist-item";
+    div.innerHTML = `<span>👤 ${nombre}</span> <span>➔ Evaluado</span>`;
+    div.onclick = () => {
+      document.getElementById("estNombre").value = nombre;
+      checkNombreSimilarEnTiempoReal();
+      showToast(`Evaluando a: ${nombre}`);
+    };
+    container.appendChild(div);
+  });
+
+  document.getElementById("classListResults").style.display = "block";
+  showToast(`${lines.length} alumnos cargados en lista táctil.`);
+}
+
+/* ==========================================================================
+   DETECCIÓN Y UNIÓN DE DUPLICADOS EN TIEMPO REAL
    ========================================================================== */
 function checkNombreSimilarEnTiempoReal() {
   if (editingIndex >= 0) return;
@@ -938,19 +985,7 @@ function checkNombreSimilarEnTiempoReal() {
 
   const indexCoincidente = appState.estudiantes.findIndex(e => {
     if (e.grado !== gradoSel) return false;
-
-    const nameExistente = e.nombre.toLowerCase();
-    if (nameExistente === inputNombre) return true;
-    if (nameExistente.includes(inputNombre) || inputNombre.includes(nameExistente)) return true;
-
-    const partsNuevo = inputNombre.split(" ");
-    const partsExistente = nameExistente.split(" ");
-
-    if (partsNuevo[0] === partsExistente[0] && partsNuevo.length > 1 && partsExistente.length > 1) {
-      if (partsNuevo[1].charAt(0) === partsExistente[1].charAt(0)) return true;
-    }
-
-    return false;
+    return esMismoEstudianteFlex(e.nombre, inputNombre);
   });
 
   if (indexCoincidente >= 0) {
@@ -979,7 +1014,7 @@ function unirAEstudianteExistente() {
 }
 
 /* ==========================================================================
-   CARGA / PROCESAMIENTO DE TEXTO EN LOTE CON DETECCIÓN Y ACUMULACIÓN
+   CARGA / PROCESAMIENTO DE TEXTO EN LOTE
    ========================================================================== */
 function processBatchText() {
   const text = document.getElementById("batchText").value.trim();
@@ -1043,10 +1078,9 @@ function parseAndIntegrateBatchText(text) {
       );
 
       if (existingEstIndex >= 0) {
-        // ACTUALIZAR Y ACUMULAR
         const existing = appState.estudiantes[existingEstIndex];
         if (isReincidente) existing.reincidente = true;
-        existing.fechaRegistro = todayStr; // Actualizar estampa al día de la nueva carga
+        existing.fechaRegistro = todayStr;
 
         estDeps.forEach(dep => {
           if (!existing.dependencias.includes(dep)) existing.dependencias.push(dep);
@@ -1067,7 +1101,6 @@ function parseAndIntegrateBatchText(text) {
 
         updatedCount++;
       } else {
-        // NUEVO REGISTRO
         appState.estudiantes.push({
           id: Date.now() + Math.random(),
           fechaRegistro: todayStr,
@@ -1105,7 +1138,7 @@ function getTodayFormattedDate() {
   const yyyy = now.getFullYear();
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const dd = String(now.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`; // Formato YYYY-MM-DD
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 /* ==========================================================================
@@ -1349,7 +1382,7 @@ function addCustomFalta() {
 }
 
 /* ==========================================================================
-   GUARDAR Y EDITAR ESTUDIANTE (CON ESTAMPA DE FECHA)
+   GUARDAR Y EDITAR ESTUDIANTE
    ========================================================================== */
 function saveEstudiante() {
   const nombre = document.getElementById("estNombre").value.trim();
@@ -1549,7 +1582,7 @@ function getEstudiantesFiltradosPorRangoFecha(modoRango) {
       return e.fechaRegistro >= fDesde && e.fechaRegistro <= fHasta;
     });
   } else {
-    return appState.estudiantes; // 'all'
+    return appState.estudiantes;
   }
 }
 
@@ -1615,7 +1648,6 @@ function parseAndImportTXT(text) {
   showToast(`¡Importados: ${result.news} nuevos, ${result.updated} actualizados!`);
 }
 
-/* MODAL DE SELECCIÓN DE CONTACTOS WHATSAPP CON FILTRADO POR FECHA */
 function openWaModal() {
   if (appState.estudiantes.length === 0) {
     showToast("No hay registros para enviar.");
@@ -1656,12 +1688,11 @@ function ejecutarEnvioWhatsApp() {
     return;
   }
 
-  // Obtener el universo de estudiantes según la fecha seleccionada en la modal
   const modoFecha = document.getElementById("waDateRangeFilter").value;
   const estudiantesTargetFecha = getEstudiantesFiltradosPorRangoFecha(modoFecha);
 
   if (estudiantesTargetFecha.length === 0) {
-    showToast("No existen estudiantes en el rango de fecha seleccionado.");
+    showToast("No existen estudiantes en la fecha seleccionada.");
     return;
   }
 
@@ -1723,12 +1754,8 @@ function comandoNuevaSemana() {
   }
 }
 
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 3000);
-}
+function formatF(f) { return f || "[N/A]"; }
+function showToast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 3000); }
 </script>
 </body>
 </html>
