@@ -12,6 +12,8 @@
     <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
     <!-- SheetJS (Para leer .xlsx y .csv) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Tesseract.js (Para leer texto de imágenes OCR) -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         :root {
@@ -123,27 +125,36 @@
             color: var(--primary);
             text-align: center;
         }
+        
+        #progress {
+            font-size: 0.85rem;
+            color: #6B7280;
+            text-align: center;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Conversor a Markdown</h1>
-    <p class="subtitle">Soporte actual en navegador: <b>.docx</b> (Word) y <b>.xlsx</b> (Excel)</p>
+    <p class="subtitle">Soporta: <b>.docx</b> (Word), <b>.xlsx</b> (Excel) e <b>Imágenes</b> (PNG, JPG para extraer texto)</p>
 
     <div class="upload-area">
+        <!-- Actualizamos el accept para permitir imágenes -->
         <label for="fileInput" class="custom-file-upload">
             Seleccionar Archivo
         </label>
-        <input type="file" id="fileInput" accept=".docx,.xlsx" />
+        <input type="file" id="fileInput" accept=".docx,.xlsx,.png,.jpg,.jpeg" />
         <p id="fileName" style="margin-top: 15px; color: #6B7280;">Ningún archivo seleccionado</p>
     </div>
 
     <div id="status"></div>
+    <div id="progress"></div> <!-- Para mostrar el porcentaje al escanear imágenes -->
 
     <div class="output-area">
-        <label for="markdownOutput"><b>Resultado Markdown:</b></label>
-        <textarea id="markdownOutput" placeholder="El código Markdown aparecerá aquí..."></textarea>
+        <label for="markdownOutput"><b>Resultado Markdown / Texto:</b></label>
+        <textarea id="markdownOutput" placeholder="El código aparecerá aquí..."></textarea>
         <button class="btn-copy" onclick="copyToClipboard()">Copiar al Portapapeles</button>
     </div>
 </div>
@@ -153,6 +164,7 @@
     const fileNameDisplay = document.getElementById('fileName');
     const markdownOutput = document.getElementById('markdownOutput');
     const statusDisplay = document.getElementById('status');
+    const progressDisplay = document.getElementById('progress');
 
     // Inicializar Turndown (Conversor HTML a Markdown)
     const turndownService = new TurndownService({ headingStyle: 'atx' });
@@ -163,6 +175,7 @@
 
         fileNameDisplay.textContent = `Archivo cargado: ${file.name}`;
         statusDisplay.textContent = "Procesando...";
+        progressDisplay.textContent = "";
         markdownOutput.value = "";
 
         const extension = file.name.split('.').pop().toLowerCase();
@@ -171,8 +184,10 @@
             processWord(file);
         } else if (extension === 'xlsx') {
             processExcel(file);
+        } else if (['png', 'jpg', 'jpeg'].includes(extension)) {
+            processImage(file);
         } else {
-            statusDisplay.textContent = "❌ Formato no soportado en esta demo. Usa .docx o .xlsx";
+            statusDisplay.textContent = "❌ Formato no soportado en esta demo.";
         }
     });
 
@@ -181,12 +196,9 @@
         const reader = new FileReader();
         reader.onload = function(event) {
             const arrayBuffer = event.target.result;
-            
-            // Mammoth convierte el DOCX a HTML
             mammoth.convertToHtml({arrayBuffer: arrayBuffer})
                 .then(function(result){
                     const html = result.value; 
-                    // Turndown convierte el HTML a Markdown
                     const markdown = turndownService.turndown(html);
                     markdownOutput.value = markdown;
                     statusDisplay.textContent = "✅ Conversión exitosa (Word a MD)";
@@ -204,14 +216,9 @@
         const reader = new FileReader();
         reader.onload = function(event) {
             const data = new Uint8Array(event.target.result);
-            // SheetJS lee el archivo
             const workbook = XLSX.read(data, {type: 'array'});
-            
-            // Tomamos la primera hoja
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
-            
-            // Convertimos la hoja a JSON (array de arrays)
             const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
             
             if(jsonData.length === 0) {
@@ -219,20 +226,13 @@
                 return;
             }
 
-            // Convertir Array 2D a tabla Markdown
             let mdTable = "";
-            
-            // Fila de encabezados
             const headers = jsonData[0];
             mdTable += "| " + headers.join(" | ") + " |\n";
-            
-            // Fila separadora
             const separator = headers.map(() => "---");
             mdTable += "| " + separator.join(" | ") + " |\n";
             
-            // Filas de datos
             for(let i = 1; i < jsonData.length; i++) {
-                // Rellenamos los campos vacíos si una fila tiene menos columnas
                 const row = jsonData[i];
                 while(row.length < headers.length) row.push("");
                 mdTable += "| " + row.join(" | ") + " |\n";
@@ -244,11 +244,39 @@
         reader.readAsArrayBuffer(file);
     }
 
+    // --- PROCESAR IMAGEN (OCR con Tesseract.js) ---
+    function processImage(file) {
+        statusDisplay.textContent = "Escaneando imagen (esto puede tardar unos segundos)...";
+        
+        // Configuramos Tesseract para español ('spa')
+        Tesseract.recognize(
+            file,
+            'spa', // Puedes cambiar a 'eng' para inglés, o 'spa+eng' para ambos
+            { 
+                // Esta función nos permite ver el progreso del escaneo
+                logger: m => {
+                    if (m.status === 'recognizing text') {
+                        const percent = Math.round(m.progress * 100);
+                        progressDisplay.textContent = `Progreso: ${percent}%`;
+                    }
+                }
+            }
+        ).then(({ data: { text } }) => {
+            markdownOutput.value = text;
+            statusDisplay.textContent = "✅ Texto extraído de la imagen con éxito";
+            progressDisplay.textContent = "";
+        }).catch(err => {
+            statusDisplay.textContent = "❌ Error procesando la imagen.";
+            progressDisplay.textContent = "";
+            console.error(err);
+        });
+    }
+
     // Función para copiar al portapapeles
     function copyToClipboard() {
         markdownOutput.select();
         document.execCommand("copy");
-        alert("¡Markdown copiado al portapapeles!");
+        alert("¡Copiado al portapapeles!");
     }
 </script>
 
