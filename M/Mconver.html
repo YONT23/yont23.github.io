@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Universal a Markdown</title>
+    
+    <!-- Librerías para procesar los archivos en el cliente -->
+    <!-- Mammoth (Para leer .docx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- Turndown (Para convertir HTML a Markdown) -->
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+    <!-- SheetJS (Para leer .xlsx y .csv) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #6B7280;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #D1D5DB;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .output-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-family: "Courier New", Courier, monospace;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .btn-copy {
+            background-color: #10B981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            align-self: flex-end;
+        }
+
+        .btn-copy:hover {
+            background-color: #059669;
+        }
+
+        #status {
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Conversor a Markdown</h1>
+    <p class="subtitle">Soporte actual en navegador: <b>.docx</b> (Word) y <b>.xlsx</b> (Excel)</p>
+
+    <div class="upload-area">
+        <label for="fileInput" class="custom-file-upload">
+            Seleccionar Archivo
+        </label>
+        <input type="file" id="fileInput" accept=".docx,.xlsx" />
+        <p id="fileName" style="margin-top: 15px; color: #6B7280;">Ningún archivo seleccionado</p>
+    </div>
+
+    <div id="status"></div>
+
+    <div class="output-area">
+        <label for="markdownOutput"><b>Resultado Markdown:</b></label>
+        <textarea id="markdownOutput" placeholder="El código Markdown aparecerá aquí..."></textarea>
+        <button class="btn-copy" onclick="copyToClipboard()">Copiar al Portapapeles</button>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
+    const markdownOutput = document.getElementById('markdownOutput');
+    const statusDisplay = document.getElementById('status');
+
+    // Inicializar Turndown (Conversor HTML a Markdown)
+    const turndownService = new TurndownService({ headingStyle: 'atx' });
+
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        fileNameDisplay.textContent = `Archivo cargado: ${file.name}`;
+        statusDisplay.textContent = "Procesando...";
+        markdownOutput.value = "";
+
+        const extension = file.name.split('.').pop().toLowerCase();
+
+        if (extension === 'docx') {
+            processWord(file);
+        } else if (extension === 'xlsx') {
+            processExcel(file);
+        } else {
+            statusDisplay.textContent = "❌ Formato no soportado en esta demo. Usa .docx o .xlsx";
+        }
+    });
+
+    // --- PROCESAR WORD (.docx) ---
+    function processWord(file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const arrayBuffer = event.target.result;
+            
+            // Mammoth convierte el DOCX a HTML
+            mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+                .then(function(result){
+                    const html = result.value; 
+                    // Turndown convierte el HTML a Markdown
+                    const markdown = turndownService.turndown(html);
+                    markdownOutput.value = markdown;
+                    statusDisplay.textContent = "✅ Conversión exitosa (Word a MD)";
+                })
+                .catch(function(err){
+                    statusDisplay.textContent = "❌ Error procesando el documento Word.";
+                    console.error(err);
+                });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // --- PROCESAR EXCEL (.xlsx) ---
+    function processExcel(file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const data = new Uint8Array(event.target.result);
+            // SheetJS lee el archivo
+            const workbook = XLSX.read(data, {type: 'array'});
+            
+            // Tomamos la primera hoja
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convertimos la hoja a JSON (array de arrays)
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+            
+            if(jsonData.length === 0) {
+                statusDisplay.textContent = "La hoja de Excel está vacía.";
+                return;
+            }
+
+            // Convertir Array 2D a tabla Markdown
+            let mdTable = "";
+            
+            // Fila de encabezados
+            const headers = jsonData[0];
+            mdTable += "| " + headers.join(" | ") + " |\n";
+            
+            // Fila separadora
+            const separator = headers.map(() => "---");
+            mdTable += "| " + separator.join(" | ") + " |\n";
+            
+            // Filas de datos
+            for(let i = 1; i < jsonData.length; i++) {
+                // Rellenamos los campos vacíos si una fila tiene menos columnas
+                const row = jsonData[i];
+                while(row.length < headers.length) row.push("");
+                mdTable += "| " + row.join(" | ") + " |\n";
+            }
+
+            markdownOutput.value = mdTable;
+            statusDisplay.textContent = "✅ Conversión exitosa (Excel a MD)";
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // Función para copiar al portapapeles
+    function copyToClipboard() {
+        markdownOutput.select();
+        document.execCommand("copy");
+        alert("¡Markdown copiado al portapapeles!");
+    }
+</script>
+
+</body>
+</html>
