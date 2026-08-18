@@ -304,6 +304,25 @@
     <div class="feedback" id="fb5"></div>
   </div>
 
+<!-- PUNTO 6 -->
+  <div class="activity-card" id="act6">
+    <h2>Punto 6: Let's Draw! <span class="skill-tag">Creatividad - Vocabulario</span></h2>
+    <p class="instruction">Dibuja tu posesión favorita (un juguete, tu mascota o tu comida favorita) en este recuadro usando tu mouse o dedo:</p>
+    
+    <!-- El lienzo de dibujo -->
+    <div style="text-align: center;">
+      <canvas id="drawingCanvas" width="500" height="300" style="border: 2px dashed #ccc; background: #fff; cursor: crosshair; touch-action: none; max-width: 100%; border-radius: 8px;"></canvas>
+    </div>
+
+    <div style="margin-top: 15px;">
+      <button class="audio-btn" onclick="clearCanvas()" style="background: #e74c3c;">🗑️ Borrar Dibujo</button>
+      <button class="check-btn" onclick="checkPunto6()">Enviar Dibujo</button>
+    </div>
+    
+    <div class="feedback" id="fb6"></div>
+  </div>
+
+
 </div>
 
 <script>
@@ -403,6 +422,75 @@
       fb.className = 'feedback incorrect';
       fb.innerHTML = 'Tu texto es muy corto o le faltan las palabras clave (likes, loves, doesn\'t like). Inténtalo de nuevo.';
     }
+  }
+
+// PUNTO 6: Lógica del Canvas (Lienzo de dibujo)
+  const canvas = document.getElementById('drawingCanvas');
+  const ctx = canvas.getContext('2d');
+  let isDrawing = false;
+
+  // Iniciar el trazo
+  function startPosition(e) {
+    isDrawing = true;
+    draw(e);
+  }
+
+  // Terminar el trazo
+  function endPosition() {
+    isDrawing = false;
+    ctx.beginPath(); // Resetea la ruta para que la siguiente línea no se conecte con la anterior
+  }
+
+  // Función para dibujar
+  function draw(e) {
+    if (!isDrawing) return;
+
+    // Configuración del lápiz
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#2c3e50';
+
+    // Obtener la posición correcta considerando el tamaño del canvas en la pantalla
+    const rect = canvas.getBoundingClientRect();
+    
+    // Soporte para mouse y pantallas táctiles (celulares/tablets)
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+
+  // Eventos para el Mouse
+  canvas.addEventListener('mousedown', startPosition);
+  canvas.addEventListener('mouseup', endPosition);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseout', endPosition);
+
+  // Eventos para Pantallas Táctiles
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startPosition(e); }, { passive: false });
+  canvas.addEventListener('touchend', endPosition);
+  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+
+  // Función para limpiar el lienzo
+  function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const fb = document.getElementById('fb6');
+    fb.className = 'feedback';
+    fb.style.display = 'none';
+  }
+
+  // Función para validar (En este caso, solo premia la creatividad)
+  function checkPunto6() {
+    const fb = document.getElementById('fb6');
+    fb.className = 'feedback correct';
+    fb.innerHTML = '¡Qué gran dibujo! Has completado la sección creativa.';
+    fb.style.display = 'block';
   }
 </script>
 
