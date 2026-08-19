@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talleres de Tecnología e Informática — Acceso por Grado</title>
+<style>
+  :root{
+    --azul-profundo:#0d3b66;
+    --azul-medio:#1d6fa5;
+    --azul-claro:#eaf3fb;
+    --blanco:#ffffff;
+    --gris-texto:#2a3540;
+    --verde-ok:#1e7a4c;
+    --rojo-no:#a33636;
+    --borde:#c9dcee;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Times New Roman", Times, serif;
+    background:linear-gradient(180deg,var(--azul-claro) 0%, var(--blanco) 320px);
+    color:var(--gris-texto);
+    min-height:100vh;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:24px 18px 60px;}
+  header.top{text-align:center; padding:18px 10px 30px;}
+  header.top .eyebrow{letter-spacing:2px; font-size:13px; color:var(--azul-medio); text-transform:uppercase;}
+  header.top h1{font-size:clamp(24px,5vw,34px); color:var(--azul-profundo); margin:6px 0 4px;}
+  header.top p{font-size:16px; color:#4a5a68; margin:0;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:18px;
+    margin-top:10px;
+  }
+
+  .card{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:16px;
+    padding:22px 20px;
+    box-shadow:0 6px 18px rgba(13,59,102,.06);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    animation:fadeIn .45s ease;
+  }
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .card .icon{font-size:34px;}
+  .card .grade-tag{
+    display:inline-block;
+    background:var(--azul-claro);
+    color:var(--azul-profundo);
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:13px;
+    letter-spacing:1px;
+    width:fit-content;
+  }
+  .card h2{margin:2px 0 0; font-size:20px; color:var(--azul-profundo);}
+  .card p.desc{font-size:14.5px; color:#4a5a68; margin:0; flex:1;}
+
+  .status{
+    font-size:13px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .status.open{color:var(--verde-ok);}
+  .status.locked{color:var(--rojo-no);}
+  .status .led{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .status.open .led{background:var(--verde-ok);}
+  .status.locked .led{background:var(--rojo-no);}
+
+  .btn{
+    font-family:inherit;
+    border:none;
+    padding:11px 20px;
+    border-radius:10px;
+    font-size:15px;
+    cursor:pointer;
+    background:var(--azul-profundo);
+    color:var(--blanco);
+    transition:transform .15s ease, background .2s ease;
+    width:100%;
+  }
+  .btn:hover{background:var(--azul-medio);}
+  .btn:active{transform:scale(.97);}
+  .btn:disabled{background:#c3cfd9; cursor:not-allowed;}
+  .btn.secondary{background:var(--blanco); color:var(--azul-profundo); border:1px solid var(--azul-medio);}
+  .btn.secondary:hover{background:var(--azul-claro);}
+  .btn.small{padding:7px 12px; font-size:13px; width:auto;}
+
+  /* Modal */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(13,59,102,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    z-index:50;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--blanco);
+    border-radius:16px;
+    padding:26px 24px;
+    max-width:380px;
+    width:100%;
+    box-shadow:0 10px 30px rgba(13,59,102,.25);
+    animation:fadeIn .3s ease;
+  }
+  .modal h3{color:var(--azul-profundo); margin:0 0 10px; font-size:20px;}
+  .modal p{font-size:14.5px; color:#4a5a68; margin:0 0 14px;}
+  .modal input[type=password], .modal input[type=text]{
+    font-family:inherit;
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid var(--azul-medio);
+    font-size:15px;
+    margin-bottom:10px;
+  }
+  .modal .error{
+    color:var(--rojo-no);
+    font-size:13.5px;
+    margin:-4px 0 10px;
+    display:none;
+  }
+  .modal .error.show{display:block;}
+  .modal .btn-row{display:flex; gap:10px;}
+
+  /* Admin panel */
+  .admin-toggle{
+    text-align:center;
+    margin-top:36px;
+  }
+  .admin-toggle a{
+    color:#7a8a98;
+    font-size:13px;
+    text-decoration:underline;
+    cursor:pointer;
+  }
+  .admin-panel{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:16px;
+    padding:22px 20px;
+    margin-top:16px;
+    display:none;
+  }
+  .admin-panel.show{display:block;}
+  .admin-panel h3{color:var(--azul-profundo); margin-top:0;}
+  .admin-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    border:1px solid var(--borde);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:10px;
+  }
+  .admin-row .agrade{
+    min-width:70px;
+    font-weight:bold;
+    color:var(--azul-profundo);
+  }
+  .admin-row .atitle{flex:1; min-width:140px; font-size:14px;}
+  .admin-row input[type=text]{
+    font-family:inherit;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1px solid var(--azul-medio);
+    font-size:14px;
+    width:140px;
+  }
+  .switch{
+    position:relative;
+    width:46px; height:24px;
+    background:#c3cfd9;
+    border-radius:20px;
+    cursor:pointer;
+    transition:background .2s ease;
+    flex-shrink:0;
+  }
+  .switch.on{background:var(--verde-ok);}
+  .switch .knob{
+    position:absolute;
+    top:2px; left:2px;
+    width:20px; height:20px;
+    background:var(--blanco);
+    border-radius:50%;
+    transition:left .2s ease;
+  }
+  .switch.on .knob{left:24px;}
+
+  footer.note{text-align:center; font-size:13px; color:#7a8a98; margin-top:34px;}
+
+  @media (max-width:480px){
+    .card{padding:18px 16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Institución Educativa Siglo XXI · Tecnología e Informática</div>
+    <h1>🎓 Talleres Evaluativos</h1>
+    <p>Selecciona tu grado para ingresar a tu misión</p>
+  </header>
+
+  <div class="grid" id="cardsGrid"></div>
+
+  <div class="admin-toggle">
+    <a onclick="openAdminLogin()">🔒 Modo Docente</a>
+  </div>
+
+  <div class="admin-panel" id="adminPanel">
+    <h3>Panel del Docente</h3>
+    <p style="font-size:14px; color:#4a5a68; margin-top:-6px;">Activa o desactiva el acceso a cada taller y cambia su contraseña.</p>
+    <div id="adminRows"></div>
+    <div class="btn-row" style="margin-top:10px;">
+      <button class="btn secondary small" onclick="closeAdminPanel()">Cerrar panel</button>
+    </div>
+  </div>
+
+  <footer class="note">Docente: Yonatha Mendoza Molina — Institución Educativa Siglo XXI</footer>
+</div>
+
+<!-- Password modal -->
+<div class="overlay" id="pwOverlay">
+  <div class="modal">
+    <h3 id="pwTitle">Acceso al taller</h3>
+    <p id="pwSubtitle">Ingresa la contraseña que te dio tu docente.</p>
+    <input type="password" id="pwInput" placeholder="Contraseña">
+    <div class="error" id="pwError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="closePwModal()">Cancelar</button>
+      <button class="btn" onclick="checkPassword()">Ingresar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin login modal -->
+<div class="overlay" id="adminOverlay">
+  <div class="modal">
+    <h3>Modo Docente</h3>
+    <p>Ingresa la contraseña de docente para gestionar los accesos.</p>
+    <input type="password" id="adminPwInput" placeholder="Contraseña de docente">
+    <div class="error" id="adminPwError">Contraseña incorrecta.</div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="closeAdminLogin()">Cancelar</button>
+      <button class="btn" onclick="checkAdminPassword()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURACIÓN — La docente puede editar aquí directamente
+   ========================================================= */
+
+// Contraseña maestra del docente (cámbiala por una tuya)
+const TEACHER_PASSWORD = "DOCENTE2026";
+
+// Configuración por defecto de cada taller (se usa solo la primera vez)
+const DEFAULT_CONFIG = {
+  g6:  { grade:"6°",  icon:"🤖", title:"Pensar como una Máquina", desc:"Lógica computacional y programación básica.", file:"taller_logica_computacional.html", password:"SEXTO2026", locked:false },
+  g7:  { grade:"7°",  icon:"🤖", title:"Cerebro Robótico",        desc:"Robótica, sensores y pensamiento algorítmico.", file:"taller_robotica_grado7.html", password:"SEPTIMO2026", locked:false },
+  g8:  { grade:"8°",  icon:"⚡", title:"Frankenstein Despierta",  desc:"Computación física y programación en C++.", file:"taller_computacion_fisica_grado8.html", password:"OCTAVO2026", locked:false },
+  g9:  { grade:"9°",  icon:"💻", title:"Vida Inteligente",        desc:"Lógica interactiva con JavaScript.", file:"taller_logica_interactiva_grado9.html", password:"NOVENO2026", locked:false },
+  g10: { grade:"10°", icon:"🧠", title:"Cerebros Aumentados",     desc:"Introducción a la Inteligencia Artificial.", file:"taller_ia_grado10.html", password:"DECIMO2026", locked:false },
+  g11: { grade:"11°", icon:"🛡️", title:"Escudos Arriba",          desc:"Ciberseguridad y legalidad digital.", file:"taller_ciberseguridad_grado11.html", password:"ONCE2026", locked:false }
+};
+
+const STORAGE_KEY = "tallerAccessConfig_v1";
+
+/* ---------------- STATE ---------------- */
+function loadConfig(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+}
+function saveConfig(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); }catch(e){}
+}
+let config = loadConfig();
+let pendingKey = null;
+
+/* ---------------- RENDER CARDS ---------------- */
+function renderCards(){
+  const grid = document.getElementById('cardsGrid');
+  grid.innerHTML = "";
+  Object.keys(config).forEach(key=>{
+    const c = config[key];
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="icon">${c.icon}</div>
+      <div class="grade-tag">GRADO ${c.grade}</div>
+      <h2>${c.title}</h2>
+      <p class="desc">${c.desc}</p>
+      <div class="status ${c.locked ? 'locked':'open'}">
+        <span class="led"></span>${c.locked ? 'Bloqueado por el docente' : 'Disponible'}
+      </div>
+      <button class="btn" ${c.locked ? 'disabled':''} onclick="startAccess('${key}')">
+        ${c.locked ? 'No disponible' : 'Ingresar al taller'}
+      </button>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ---------------- PASSWORD MODAL (student access) ---------------- */
+function startAccess(key){
+  if(config[key].locked) return;
+  pendingKey = key;
+  document.getElementById('pwTitle').textContent = `Acceso — Grado ${config[key].grade}`;
+  document.getElementById('pwSubtitle').textContent = `Ingresa la contraseña de tu grado para entrar a "${config[key].title}".`;
+  document.getElementById('pwInput').value = "";
+  document.getElementById('pwError').classList.remove('show');
+  document.getElementById('pwOverlay').classList.add('show');
+  document.getElementById('pwInput').focus();
+}
+function closePwModal(){
+  document.getElementById('pwOverlay').classList.remove('show');
+  pendingKey = null;
+}
+function checkPassword(){
+  if(!pendingKey) return;
+  const entered = document.getElementById('pwInput').value.trim();
+  const correct = config[pendingKey].password;
+  if(entered === correct){
+    window.location.href = config[pendingKey].file;
+  } else {
+    document.getElementById('pwError').classList.add('show');
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', e=>{
+  if(e.key === 'Enter') checkPassword();
+});
+
+/* ---------------- ADMIN LOGIN ---------------- */
+function openAdminLogin(){
+  document.getElementById('adminPwInput').value = "";
+  document.getElementById('adminPwError').classList.remove('show');
+  document.getElementById('adminOverlay').classList.add('show');
+  document.getElementById('adminPwInput').focus();
+}
+function closeAdminLogin(){
+  document.getElementById('adminOverlay').classList.remove('show');
+}
+function checkAdminPassword(){
+  const entered = document.getElementById('adminPwInput').value.trim();
+  if(entered === TEACHER_PASSWORD){
+    closeAdminLogin();
+    openAdminPanel();
+  } else {
+    document.getElementById('adminPwError').classList.add('show');
+  }
+}
+document.getElementById('adminPwInput').addEventListener('keydown', e=>{
+  if(e.key === 'Enter') checkAdminPassword();
+});
+
+/* ---------------- ADMIN PANEL ---------------- */
+function openAdminPanel(){
+  renderAdminRows();
+  document.getElementById('adminPanel').classList.add('show');
+  document.getElementById('adminPanel').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function closeAdminPanel(){
+  document.getElementById('adminPanel').classList.remove('show');
+}
+function renderAdminRows(){
+  const wrap = document.getElementById('adminRows');
+  wrap.innerHTML = "";
+  Object.keys(config).forEach(key=>{
+    const c = config[key];
+    const row = document.createElement('div');
+    row.className = 'admin-row';
+    row.innerHTML = `
+      <div class="agrade">Grado ${c.grade}</div>
+      <div class="atitle">${c.title}</div>
+      <input type="text" value="${c.password}" data-key="${key}" onchange="updatePassword('${key}', this.value)">
+      <div class="switch ${c.locked ? '' : 'on'}" onclick="toggleLock('${key}')">
+        <div class="knob"></div>
+      </div>
+    `;
+    wrap.appendChild(row);
+  });
+}
+function toggleLock(key){
+  config[key].locked = !config[key].locked;
+  saveConfig();
+  renderAdminRows();
+  renderCards();
+}
+function updatePassword(key, val){
+  const clean = val.trim();
+  if(clean.length === 0) return;
+  config[key].password = clean;
+  saveConfig();
+}
+
+/* ---------------- INIT ---------------- */
+renderCards();
+</script>
+</body>
+</html>
