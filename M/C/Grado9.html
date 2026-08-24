@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulación Pedagógica — Unit 3: The Story Behind the News | Grado 9°</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --ink:#171717;--ink2:#262626;
+  --crimson:#7A1124;--crimson-lt:#9E1B32;--crimson-pale:#FBE9EC;
+  --navy:#0B2545;--navy-lt:#13315C;--navy-pale:#E7ECF5;
+  --mustard:#8A6D00;--mustard-lt:#B8860B;--mustard-pale:#FFF6DC;
+  --teal:#00474F;--teal-lt:#00695C;--teal-pale:#E0F2F1;
+  --green:#1B5E20;--green-lt:#2E7D32;--green-pale:#E8F5E9;
+  --red:#B71C1C;--red-pale:#FFEBEE;
+  --gray1:#F7F7F5;--gray2:#E5E5E0;--gray3:#6B6B66;
+  --paper:#FBFAF6;--white:#FFFFFF;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(23,23,23,.10);--shadow-sm:0 2px 8px rgba(23,23,23,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#EFEEE7;color:var(--ink);line-height:1.65;font-size:15px}
+
+/* HEADER — newspaper masthead style */
+.site-header{background:linear-gradient(135deg,#171717 0%,#7A1124 60%,#0B2545 100%);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.35);border-bottom:3px double rgba(255,255,255,.4)}
+.header-inner{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.header-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.header-title{flex:1}
+.header-title h1{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:700;line-height:1.2}
+.header-title p{font-size:11.5px;opacity:.75;margin-top:2px}
+.header-meta{display:flex;gap:8px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,.12);border-radius:20px;padding:3px 10px;font-size:11px;white-space:nowrap}
+
+/* NAV */
+.class-nav{background:#fff;border-bottom:2px solid var(--gray2);position:sticky;top:69px;z-index:90;box-shadow:var(--shadow-sm)}
+.class-nav-inner{max-width:1120px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.class-nav-inner::-webkit-scrollbar{display:none}
+.nav-tab{padding:13px 22px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--gray3);border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px;user-select:none}
+.nav-tab:hover{color:var(--crimson-lt);background:var(--crimson-pale)}
+.nav-tab.active{color:var(--crimson-lt);border-bottom-color:var(--crimson-lt);background:var(--crimson-pale)}
+
+/* LAYOUT */
+.main{max-width:1120px;margin:0 auto;padding:32px 20px 60px}
+.class-panel{display:none;animation:fadeIn .35s ease}
+.class-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* HERO */
+.class-hero{border-radius:var(--radius);padding:36px 40px;margin-bottom:32px;position:relative;overflow:hidden}
+.class-hero::before{content:attr(data-num);position:absolute;right:24px;top:8px;font-family:'Fraunces',serif;font-size:120px;font-weight:700;opacity:.07;line-height:1;color:#fff}
+.class-hero h2{font-family:'Fraunces',serif;font-size:2rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px}
+.class-hero .subtitle{color:rgba(255,255,255,.8);font-size:14px;margin-bottom:16px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+.hero-chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 12px;font-size:12px;color:#fff;font-weight:500}
+.h-c1{background:linear-gradient(135deg,#7A1124,#0B2545)}
+.h-c2{background:linear-gradient(135deg,#0B2545,#00474F)}
+.h-c3{background:linear-gradient(135deg,#1B5E20,#00474F)}
+.h-c4{background:linear-gradient(135deg,#8A6D00,#7A1124)}
+
+/* SECTION CARDS */
+.section-card{background:#fff;border-radius:var(--radius);margin-bottom:22px;box-shadow:var(--shadow-sm);overflow:hidden}
+.section-card-header{display:flex;align-items:center;gap:12px;padding:15px 22px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .2s}
+.section-card-header:hover{background:var(--gray1)}
+.section-card-header .sec-emoji{font-size:20px;flex-shrink:0}
+.section-card-header h3{font-size:13.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex:1}
+.chevron{font-size:12px;color:var(--gray3);transition:transform .25s}
+.section-card-header.open{border-bottom-color:var(--gray2)}
+.section-card-header.open .chevron{transform:rotate(180deg)}
+.section-card-body{padding:22px;display:none}
+.section-card-body.open{display:block}
+
+.sec-risk    .section-card-header{background:var(--mustard-pale)} .sec-risk h3{color:var(--mustard)}
+.sec-obj     .section-card-header{background:var(--navy-pale)}    .sec-obj h3{color:var(--navy)}
+.sec-vocab   .section-card-header{background:var(--teal-pale)}    .sec-vocab h3{color:var(--teal)}
+.sec-grammar .section-card-header{background:var(--crimson-pale)} .sec-grammar h3{color:var(--crimson-lt)}
+.sec-visual  .section-card-header{background:var(--mustard-pale)} .sec-visual h3{color:var(--mustard-lt)}
+.sec-explain .section-card-header{background:var(--navy-pale)}    .sec-explain h3{color:var(--navy-lt)}
+.sec-sim     .section-card-header{background:var(--green-pale)}   .sec-sim h3{color:var(--green)}
+.sec-speak   .section-card-header{background:var(--teal-pale)}    .sec-speak h3{color:var(--teal-lt)}
+.sec-listen  .section-card-header{background:var(--navy-pale)}    .sec-listen h3{color:var(--navy-lt)}
+.sec-read    .section-card-header{background:var(--crimson-pale)} .sec-read h3{color:var(--crimson-lt)}
+.sec-write   .section-card-header{background:var(--green-pale)}   .sec-write h3{color:var(--green-lt)}
+.sec-nee     .section-card-header{background:var(--mustard-pale)} .sec-nee h3{color:var(--mustard)}
+.sec-check   .section-card-header{background:var(--green-pale)}   .sec-check h3{color:var(--green)}
+.sec-err     .section-card-header{background:var(--red-pale)}     .sec-err h3{color:var(--red)}
+.sec-exit    .section-card-header{background:var(--mustard-pale)} .sec-exit h3{color:var(--mustard-lt)}
+.sec-notes   .section-card-header{background:var(--navy-pale)}    .sec-notes h3{color:var(--navy)}
+.sec-hw      .section-card-header{background:var(--crimson-pale)} .sec-hw h3{color:var(--crimson)}
+.sec-train   .section-card-header{background:var(--mustard-pale)} .sec-train h3{color:var(--mustard-lt)}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+.tbl th{padding:10px 14px;text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.tbl td{padding:9px 14px;border-bottom:1px solid var(--gray2);vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--gray1)}
+.tbl.crimson th{background:var(--crimson-lt);color:#fff}
+.tbl.navy th{background:var(--navy-lt);color:#fff}
+.tbl.green th{background:var(--green);color:#fff}
+.tbl.mustard th{background:var(--mustard-lt);color:#fff}
+.tbl.teal th{background:var(--teal-lt);color:#fff}
+.word-en{font-weight:700;color:var(--teal-lt)}
+.word-pron{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray3)}
+.ans{color:var(--green-lt);font-weight:600}
+.correct-cell{color:var(--green-lt);font-weight:700}
+.wrong-cell{color:var(--red);font-weight:700;text-decoration:line-through}
+
+/* VISUAL BOX */
+.visual-box{background:var(--mustard-pale);border:2px solid #E0C45C;border-radius:var(--radius);padding:20px 24px;margin:14px 0}
+.visual-box pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;color:var(--ink);white-space:pre-wrap}
+.visual-box.navy{background:var(--navy-pale);border-color:#9FB1D1}
+.visual-box.crimson{background:var(--crimson-pale);border-color:#E8A6B2}
+.visual-box.green{background:var(--green-pale);border-color:#A5D6A7}
+.visual-box.teal{background:var(--teal-pale);border-color:#80CBC4}
+
+/* DIALOGUE */
+.dialogue{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.dlg{display:flex;gap:12px;align-items:flex-start}
+.dlg.s{flex-direction:row-reverse}
+.dlg-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.dlg.t .dlg-av{background:var(--navy-pale)}
+.dlg.s .dlg-av{background:var(--teal-pale)}
+.dlg.n .dlg-av{background:var(--mustard-pale)}
+.dlg-content{max-width:80%}
+.dlg-name{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.dlg.t .dlg-name{color:var(--navy-lt)}
+.dlg.s .dlg-name{color:var(--teal-lt);text-align:right}
+.dlg.n .dlg-name{color:var(--mustard-lt)}
+.dlg-text{padding:10px 14px;border-radius:12px;font-size:13.5px;line-height:1.6}
+.dlg.t .dlg-text{background:var(--navy-pale);border-bottom-left-radius:4px}
+.dlg.s .dlg-text{background:var(--teal-pale);border-bottom-right-radius:4px;text-align:right}
+.dlg.n .dlg-text{background:var(--mustard-pale);border-bottom-left-radius:4px;border-left:3px solid var(--mustard-lt)}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:14px;margin:8px 0}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step-num{width:28px;height:28px;background:var(--navy);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-body strong{color:var(--navy-lt)}
+
+/* FORMULA */
+.formula{display:inline-flex;align-items:center;gap:6px;background:var(--ink2);color:#fff;border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;margin:6px 4px}
+.formula .plus{color:#E0C45C}
+
+/* BULLET */
+.blist{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.blist li{display:flex;gap:10px;font-size:13.5px;align-items:flex-start}
+.blist li::before{content:'▶';color:var(--crimson-lt);font-size:9px;margin-top:4px;flex-shrink:0}
+
+/* ERROR PAIR */
+.err-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.err-w{background:var(--red-pale);border-left:4px solid var(--red);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px}
+.err-w .lbl{font-size:10px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.err-c{background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px}
+.err-c .lbl{font-size:10px;font-weight:800;color:var(--green-lt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+
+/* OBJ BOX */
+.obj-box{background:var(--navy-pale);border-left:5px solid var(--navy);border-radius:var(--radius);padding:16px 20px;font-size:14px;line-height:1.7;margin:6px 0}
+
+/* READ BOX — newspaper clipping style */
+.read-box{background:var(--paper);border:1px solid var(--gray2);border-radius:var(--radius);padding:20px 24px;font-size:13.5px;line-height:1.85;margin:12px 0;white-space:pre-line;font-family:'Fraunces',serif;box-shadow:inset 0 0 0 1px rgba(0,0,0,.02)}
+
+/* LEVEL GRID */
+.lvl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.lvl-card{border-radius:var(--radius-sm);padding:16px}
+.lvl-badge{font-size:22px;margin-bottom:8px}
+.lvl-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.lvl-task{font-size:13px;line-height:1.65}
+.lv1{background:#E7ECF5;border:1.5px solid #9FB1D1}.lv1 .lvl-label{color:var(--navy-lt)}
+.lv2{background:#FFF6DC;border:1.5px solid #E0C45C}.lv2 .lvl-label{color:var(--mustard-lt)}
+.lv3{background:#FBE9EC;border:1.5px solid #E8A6B2}.lv3 .lvl-label{color:var(--crimson-lt)}
+
+/* EXIT */
+.exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.exit-card{background:var(--mustard-pale);border:1.5px solid #E0C45C;border-radius:var(--radius-sm);padding:14px 16px;font-size:13px}
+.exit-q{font-weight:700;margin-bottom:6px;color:var(--mustard-lt)}
+.exit-a{color:var(--green-lt);font-size:12.5px}
+
+/* NOTES */
+.notes-list{display:flex;flex-direction:column;gap:10px}
+.note-item{display:flex;gap:12px;align-items:flex-start;background:var(--navy-pale);border-radius:var(--radius-sm);padding:12px 16px;font-size:13.5px}
+.note-item::before{content:'💡';font-size:16px;flex-shrink:0}
+
+/* HW */
+.hw-box{background:var(--crimson-pale);border:2px dashed var(--crimson-lt);border-radius:var(--radius);padding:20px 24px;margin:8px 0;font-size:13.5px}
+.hw-box h4{color:var(--crimson-lt);margin-bottom:12px;font-size:14px}
+
+/* NEE */
+.nee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.nee-card{border-radius:var(--radius-sm);padding:16px;font-size:13px;line-height:1.6}
+.nee-card h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.nee1{background:#E7ECF5;border:1.5px solid #9FB1D1}.nee1 h4{color:var(--navy-lt)}
+.nee2{background:#E0F2F1;border:1.5px solid #80CBC4}.nee2 h4{color:var(--teal-lt)}
+.nee3{background:#FBE9EC;border:1.5px solid #E8A6B2}.nee3 h4{color:var(--crimson-lt)}
+
+/* HEADLINE BADGE */
+.headline-badge{display:inline-block;background:var(--ink);color:#fff;font-family:'Fraunces',serif;font-weight:700;padding:4px 12px;border-radius:4px;font-size:13px;margin:4px 0}
+
+@media(max-width:720px){
+  .lvl-grid,.nee-grid{grid-template-columns:1fr}
+  .err-pair,.exit-grid{grid-template-columns:1fr}
+  .class-hero{padding:24px 20px}
+  .class-hero h2{font-size:1.5rem}
+  .section-card-body{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-badge">I.E. Siglo XXI</div>
+    <div class="header-title">
+      <h1>Simulación Pedagógica — Unit 3: The Story Behind the News</h1>
+      <p>Docente: Yonatha Mendoza Molina · Grado 9° · Inglés B1 · 2026</p>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill">📰 4 Clases</span>
+      <span class="meta-pill">⏱ 2h académicas c/u</span>
+      <span class="meta-pill">👥 20 est.</span>
+      <span class="meta-pill">♿ 3 NEE</span>
+      <span class="meta-pill">🎯 B1</span>
+    </div>
+  </div>
+</header>
+
+<nav class="class-nav">
+  <div class="class-nav-inner">
+    <div class="nav-tab active" onclick="showClass(1,this)"><span>📰</span> Clase 1 — The Newsroom</div>
+    <div class="nav-tab" onclick="showClass(2,this)"><span>🎙️</span> Clase 2 — He Said, She Said</div>
+    <div class="nav-tab" onclick="showClass(3,this)"><span>🕵️</span> Clase 3 — The Backstory</div>
+    <div class="nav-tab" onclick="showClass(4,this)"><span>🔍</span> Clase 4 — Analyzing the Press</div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════════ CLASS 1 — PASSIVE VOICE ══════════════════════════ -->
+<div class="class-panel active" id="class-1">
+  <div class="class-hero h-c1" data-num="1">
+    <h2>📰 "The Newsroom: Focus on the Action"</h2>
+    <p class="subtitle">Passive Voice — Present & Past Simple</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1</span><span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Julio 2026</span>
+      <span class="hero-chip">📌 Previo: Past Simple, Present Simple, Past Participles</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management — Situaciones Anticipadas</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl mustard">
+        <thead><tr><th>Situación anticipada</th><th>Plan de acción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Uso incorrecto del verbo To Be:</strong><br>Olvidar incluirlo o usar el tiempo incorrecto.</td><td><strong>El Truco del Camaleón:</strong> El verbo To Be es un camaleón que toma el tiempo de la oración original (is/are para presente, was/were para pasado).</td></tr>
+          <tr><td><strong>Confusión con Participios:</strong><br>Usar el pasado simple en lugar del participio (ej. "was wrote").</td><td><strong>The 3rd Column Rule:</strong> La pasiva SIEMPRE usa la 3ª columna de los verbos irregulares. Hacer una lista rápida de repaso (write-wrote-WRITTEN).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">By the end of this class, students will be able to <strong>transform sentences from active to passive voice</strong> in present and past simple, recognize the use of passive voice in news headlines, and use the passive structure to emphasize the action over the agent in journalistic contexts.</div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary — Newsroom Terms & Irregular Past Participles</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl navy">
+        <thead><tr><th>Base / Past / Participle</th><th>Significado</th><th>Pronunciation</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">write — wrote — written</td><td>escribir</td><td class="word-pron">/ˈrɪtn/ → RIT-en</td></tr>
+          <tr><td class="word-en">build — built — built</td><td>construir</td><td class="word-pron">/bɪlt/ → BILT</td></tr>
+          <tr><td class="word-en">invent — invented — invented</td><td>inventar</td><td class="word-pron">/ɪnˈventɪd/</td></tr>
+          <tr><td class="word-en">steal — stole — stolen</td><td>robar</td><td class="word-pron">/ˈstoʊlən/ → STOH-len</td></tr>
+          <tr><td class="word-en">arrest — arrested — arrested</td><td>arrestar</td><td class="word-pron">/əˈrestɪd/</td></tr>
+          <tr><td class="word-en">discover — discovered — discovered</td><td>descubrir</td><td class="word-pron">/dɪˈskʌvərd/</td></tr>
+          <tr><td class="word-en">award — awarded — awarded</td><td>premiar</td><td class="word-pron">/əˈwɔːrdɪd/</td></tr>
+          <tr><td class="word-en">headline</td><td>titular</td><td class="word-pron">/ˈhedlaɪn/ → HED-line</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus — The Chameleon & The 3rd Column</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--navy-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;margin-bottom:8px">📐 Structure</div>
+        <div class="formula">Object + BE (am/is/are/was/were) + Past Participle (+ by + Agent)</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="background:var(--green-pale);border-radius:var(--radius-sm);padding:14px">
+          <div style="font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;margin-bottom:8px">ACTIVE</div>
+          <div style="font-size:13px">Da Vinci <strong>painted</strong> the Mona Lisa.</div>
+        </div>
+        <div style="background:var(--crimson-pale);border-radius:var(--radius-sm);padding:14px">
+          <div style="font-size:11px;font-weight:800;color:var(--crimson-lt);text-transform:uppercase;margin-bottom:8px">PASSIVE</div>
+          <div style="font-size:13px">The Mona Lisa <strong>was painted</strong> by Da Vinci.</div>
+        </div>
+      </div>
+      <div style="background:var(--mustard-pale);border:1.5px solid #E0C45C;border-radius:var(--radius-sm);padding:12px 16px;font-size:13.5px;margin-bottom:14px">
+        🦎 <strong>El Truco del Camaleón:</strong> El verbo TO BE cambia de color según el tiempo de la oración original.<br>
+        Presente → <strong>is/are</strong> &nbsp;|&nbsp; Pasado → <strong>was/were</strong><br>
+        <em>The lightbulb <strong>was</strong> invented by Edison.</em> &nbsp;|&nbsp; <em>News <strong>is</strong> reported every hour.</em>
+      </div>
+      <table class="tbl crimson">
+        <thead><tr><th>✅ Correcto</th><th>❌ Incorrecto</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">The thief was arrested by the police.</td><td class="wrong-cell">The thief was arrest by the police.</td></tr>
+          <tr><td class="correct-cell">The letter was written by Anna.</td><td class="wrong-cell">The letter was wrote by Anna. (3rd column!)</td></tr>
+          <tr><td class="correct-cell">The Eiffel Tower was built in 1889.</td><td class="wrong-cell">The Eiffel Tower built in 1889. (falta TO BE)</td></tr>
+          <tr><td class="correct-cell">Apples are grown in this region.</td><td class="wrong-cell">Apples was grown in this region. (camaleón equivocado)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — The Action Spotlight</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box">
+        <pre>     ACTIVE VS PASSIVE — WHO GETS THE SPOTLIGHT?
+
+  ┌─────────────────────────────────────────────────────┐
+  │  ACTIVE VOICE — el SUJETO hace la acción            │
+  │  [Agent] + [Verb] + [Object]                         │
+  │  A cat saved a baby.                                  │
+  │   ↑ spotlight on the cat                              │
+  │                                                       │
+  │  PASSIVE VOICE — el OBJETO recibe la acción         │
+  │  [Object] + BE + [Past Participle] + (by Agent)     │
+  │  A baby was saved by a cat.                           │
+  │       ↑ spotlight on the baby (more dramatic!)       │
+  └─────────────────────────────────────────────────────┘
+
+  THE CHAMELEON (TO BE):
+  Present → IS / ARE     (News IS reported daily.)
+  Past    → WAS / WERE   (The thief WAS arrested.)
+
+  3RD COLUMN RULE:
+  write  → wrote  → WRITTEN   ✅ pasiva usa esta
+  steal  → stole  → STOLEN    ✅ pasiva usa esta
+  build  → built  → BUILT     ✅ pasiva usa esta
+
+  NEWS FORMULA:
+  [Subject/Victim] + WAS/WERE + [Past Participle] + by [Agent]
+  Five thieves WERE ARRESTED by the police.
+  The trophy WAS WON by our team.</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation — Paso a Paso</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — What Matters More?:</strong> Muestra dos frases: "A cat saved a baby." vs "A baby was saved by a cat." Pregunta: '¿Cuál titular vendería más periódicos? ¿Por qué?' Activa la noción de enfoque en la acción/objeto sobre el agente.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Idea clave — La transformación de voz:</strong> 'Usamos la voz pasiva cuando el objeto es más importante que quien realiza la acción.' Modela con: 'Da Vinci painted the Mona Lisa' (Active) → 'The Mona Lisa was painted by Da Vinci' (Passive).</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>El Truco del Camaleón:</strong> Dibuja un camaleón en el tablero. 'El verbo TO BE cambia de color según el tiempo: presente = is/are, pasado = was/were.' Practica con ejemplos: 'The lightbulb was invented by Edison.'</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The 3rd Column Rule:</strong> 'La voz pasiva SIEMPRE usa la 3ª columna de los verbos irregulares.' Repasa rápido: write-wrote-WRITTEN, steal-stole-STOLEN, build-built-BUILT.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>The Reporter's Desk:</strong> En grupos reciben "cables de noticias" en voz activa (ej. 'The police arrested 5 thieves'). Deben transformarlos en titulares pasivos de impacto y pegarlos en el "News Wall" del tablero.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation — Clase Real</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[Muestra en el TV] "A cat saved a baby." vs "A baby was saved by a cat." ¿Cuál titular vendería más periódicos? ¿Por qué?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Camila</div><div class="dlg-text">¡El segundo! Porque suena más dramático — el bebé es lo importante, no el gato.</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXACTLY, Camila! That's the power of passive voice — it puts the spotlight on the OBJECT, not the agent. Watch: 'Da Vinci painted the Mona Lisa' becomes 'The Mona Lisa was painted by Da Vinci.' ¿Qué cambió?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">El objeto pasó al inicio... y agregaron 'was'... y 'painted' no cambió?</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Great observation, Andrés! 'Painted' es regular, así que se ve igual. Pero — ¡cuidado con irregulares! [escribe] 'The letter was wrote by Anna' — ¿está bien?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Valentina</div><div class="dlg-text">¡No! Es WRITTEN, no wrote! Write-wrote-WRITTEN, la tercera columna!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT, Valentina! The 3rd Column Rule — siempre. Ahora — The Reporter's Desk! En grupos, transformen estos cables en titulares pasivos impactantes. Grupo 1: 'The police arrested 5 thieves.'</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Grupo 1</div><div class="dlg-text">Five thieves were arrested by the police!</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXCELLENT headline! Now pin it to the News Wall! Let's hear Group 2 — your cable was: 'Scientists discovered a new planet.'</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Grupo 2</div><div class="dlg-text">A new planet was discovered by scientists!</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Corrección en vivo</div><div class="dlg-text">Estudiante: "The trophy is won by our team." [hablando de algo que ya pasó] → Docente: "When did this happen? Yesterday? Then the chameleon needs to change color — was, not is! → The trophy WAS won by our team."</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training — Consolidación por Niveles</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Identifica</div><div class="lvl-task">Subraya el verbo TO BE y el participio:<br><br>"The window <u>was broken</u> by the storm."<br>"News <u>is reported</u> every hour."<br>"The cake <u>was eaten</u> quickly."<br><br><em style="color:var(--green-lt)">✅ Identificación visual del patrón</em></div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Transforma</div><div class="lvl-task">Active → Passive:<br><br>"Edison invented the lightbulb." →<br><em style="color:var(--mustard-lt)">The lightbulb was invented by Edison.</em><br><br>"They built this school in 1990." →<br><em style="color:var(--mustard-lt)">This school was built in 1990.</em></div></div>
+        <div class="lvl-card lv3"><div class="lvl-badge">🥇</div><div class="lvl-label">Nivel 3 — Corrige</div><div class="lvl-task">"The book was wrote by Gabriel García Márquez."<br><br>"The trophy is win by our team." (pasado)<br><br>"Apples was grown in this region."<br><br><em style="color:var(--crimson-lt)">✅ was written | was won | are grown</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — "Breaking News" Anchor</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:13.5px">Cada estudiante pasa al frente con un micrófono y reporta un evento escolar usando voz pasiva, como un presentador de noticias en vivo.</p>
+      <table class="tbl green">
+        <thead><tr><th>Evento</th><th>Reporte en voz pasiva</th></tr></thead>
+        <tbody>
+          <tr><td>Our team won the trophy</td><td class="ans">"Breaking news! The football trophy was won by our team!"</td></tr>
+          <tr><td>The teacher cancelled the exam</td><td class="ans">"Breaking news! The exam was cancelled by the teacher!"</td></tr>
+          <tr><td>Students organized a fundraiser</td><td class="ans">"Breaking news! A fundraiser was organized by ninth grade students!"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice — The Evening News Brief</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">"Good evening, and welcome to Channel 9 News.
+
+Our top story tonight: a famous painting was stolen from the National Museum early this morning. The painting, worth millions of dollars, was discovered missing by a security guard during his morning round.
+
+In other news, a new bridge was officially opened by the mayor yesterday. The bridge was built over two years by local engineers, and it is expected to reduce traffic significantly.
+
+Also tonight: three students were awarded scholarships by the Ministry of Education for their outstanding academic performance. The scholarships were presented at a special ceremony this afternoon.
+
+And finally, a stray dog was rescued from a flooded street by firefighters. The dog is now being cared for at a local shelter.
+
+That's all for tonight. Stay informed, stay safe."</div>
+      <table class="tbl navy">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What was stolen from the museum?</td><td class="ans">A famous painting was stolen.</td></tr>
+          <tr><td>Who discovered the painting missing?</td><td class="ans">It was discovered by a security guard.</td></tr>
+          <tr><td>Who opened the new bridge?</td><td class="ans">It was opened by the mayor.</td></tr>
+          <tr><td>Who was awarded scholarships?</td><td class="ans">Three students were awarded scholarships by the Ministry of Education.</td></tr>
+          <tr><td>What happened to the stray dog?</td><td class="ans">It was rescued from a flooded street by firefighters.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice — Famous Inventions Quiz</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="headline-badge">INVENTIONS THAT CHANGED THE WORLD</div>
+      <div class="read-box">Did you know? Many everyday objects were created by accident or by people you might not expect!
+
+The telephone was invented by Alexander Graham Bell in 1876. He was actually trying to improve the telegraph when he accidentally created a device that could transmit voice!
+
+Chocolate chip cookies were invented by Ruth Wakefield in 1938. She ran out of baker's chocolate, so she used chopped chocolate bars instead — and a classic was born!
+
+The microwave oven was invented by Percy Spencer in 1945. He was working with radar technology when he noticed a candy bar melted in his pocket — that observation led to one of the most useful kitchen appliances ever made!
+
+Velcro was invented by George de Mestral in 1941. The idea came to him after burrs from plants were found stuck to his dog's fur during a walk.
+
+Penicillin was discovered by Alexander Fleming in 1928 — completely by accident, when mold was found growing in one of his uncleaned petri dishes.
+
+What's your favorite accidental invention?</div>
+      <table class="tbl crimson">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>Who was the telephone invented by?</td><td class="ans">It was invented by Alexander Graham Bell in 1876.</td></tr>
+          <tr><td>What happened when Ruth Wakefield ran out of chocolate?</td><td class="ans">Chocolate chip cookies were invented (she used chopped chocolate bars).</td></tr>
+          <tr><td>How was the microwave oven discovered?</td><td class="ans">Percy Spencer noticed a candy bar was melted in his pocket while working with radar.</td></tr>
+          <tr><td>What gave George de Mestral the idea for Velcro?</td><td class="ans">Burrs from plants were found stuck to his dog's fur.</td></tr>
+          <tr><td>Find all passive voice sentences in the text.</td><td class="ans">"was invented," "were invented," "was invented," "was discovered" — multiple instances.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice — The Object's History</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:13.5px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo — la historia del papel:</strong><br><br>
+        "Paper was invented in China by Cai Lun around 105 AD. It was made from tree bark, hemp, and old fishing nets. Before paper, information was written on materials like papyrus and clay tablets. Today, paper is used all over the world. Millions of books are printed every year, and paper is recycled to protect the environment."
+      </div>
+      <ul class="blist">
+        <li>Elige un objeto cotidiano (celular, papel, bicicleta) y escribe un párrafo de 10–12 oraciones sobre su historia.</li>
+        <li>Mínimo <strong>6 oraciones en Voz Pasiva</strong> (Presente y Pasado).</li>
+        <li>Menciona dónde fue creado y por quién.</li>
+        <li><strong>Nivel PRO:</strong> Trae el objeto y presenta su historia en 1 minuto en la siguiente clase.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies — Estrategias para 3 NEE</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>NEE 1 — Dificultad lectora</h4>Tabla de referencia con verbos irregulares en las 3 columnas + ícono del camaleón. En el Reporter's Desk, completa la estructura ya armada: "___ was/were ___ by ___."</div>
+        <div class="nee-card nee2"><h4>NEE 2 — Dificultad atencional</h4>En el News Wall, tiene el rol de "pegar los titulares" — actividad física que canaliza energía. Trabaja con solo 2 cables de noticias en lugar de los 4-5.</div>
+        <div class="nee-card nee3"><h4>NEE 3 — Timidez / Dificultad oral</h4>Para el Breaking News Anchor, puede leer su reporte de una tarjeta en lugar de hablar de memoria. Práctica previa en voz baja con el docente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿Cuál es la fórmula de la voz pasiva?</td><td class="ans">Object + BE (am/is/are/was/were) + Past Participle.</td></tr>
+          <tr><td>¿Qué columna de verbos irregulares usa la pasiva?</td><td class="ans">La 3ª columna (Past Participle): write-wrote-WRITTEN.</td></tr>
+          <tr><td>Transforma: "Da Vinci painted the Mona Lisa."</td><td class="ans">The Mona Lisa was painted by Da Vinci.</td></tr>
+          <tr><td>¿Cuándo usamos la voz pasiva en periodismo?</td><td class="ans">Cuando el objeto/víctima es más importante que quien realiza la acción.</td></tr>
+          <tr><td>Corrige: "The letter was wrote by Anna."</td><td class="ans">The letter was written by Anna. (3rd column rule)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>The thief was arrest by the police.</div><div class="err-c"><div class="lbl">✅ Correcto</div>The thief was arrested by the police. (falta -ed)</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>The Eiffel Tower built in 1889.</div><div class="err-c"><div class="lbl">✅ Correcto</div>The Eiffel Tower was built in 1889. (falta el camaleón TO BE)</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>Apples was grown in this region.</div><div class="err-c"><div class="lbl">✅ Correcto</div>Apples ARE grown in this region. (plural → are)</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — Thumb Up Check</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">Transforma: "Someone stole my phone."</div><div class="exit-a">✅ "My phone was stolen."</div></div>
+        <div class="exit-card"><div class="exit-q">Transforma: "They build houses here."</div><div class="exit-a">✅ "Houses are built here."</div></div>
+        <div class="exit-card"><div class="exit-q">¿Por qué decimos WAS y no IS?</div><div class="exit-a">✅ "Porque la oración original está en pasado — el camaleón cambia de color."</div></div>
+        <div class="exit-card"><div class="exit-q">Da un titular pasivo propio</div><div class="exit-a">✅ "The championship was won by Colombia!"</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">El "What Matters More?" challenge funciona muy bien para B1 porque conecta gramática con análisis crítico del lenguaje periodístico — los estudiantes entienden el PORQUÉ, no solo el CÓMO.</div>
+        <div class="note-item">El News Wall crea un producto visual tangible que puede quedar expuesto en el salón durante la unidad — refuerzo pasivo constante.</div>
+        <div class="note-item">El Truco del Camaleón es muy memorable — repítelo en clases futuras cuando aparezca la voz pasiva nuevamente.</div>
+        <div class="note-item">Trae periódicos reales (impresos o digitales en el TV) para mostrar titulares auténticos en voz pasiva — la BBC y CNN usan esta estructura constantemente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏠</span><h3>Tarea TRANSFORM — "The History Behind the Object"</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación</h4>
+        <ul class="blist">
+          <li><strong>Parte 1 — Investigación:</strong> Elige un objeto cotidiano (celular, papel, bicicleta).</li>
+          <li><strong>Parte 2 — Escritura:</strong> Escribe un párrafo de 10–12 oraciones sobre su historia. Mínimo 6 oraciones en Voz Pasiva (Presente y Pasado). Menciona dónde fue creado y por quién.</li>
+          <li><strong>🎙️ Nivel PRO:</strong> Trae el objeto y presenta su historia en 1 minuto en la siguiente clase.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-1 -->
+
+
+<!-- ══════════════════════════ CLASS 2 — REPORTED SPEECH ══════════════════════════ -->
+<div class="class-panel" id="class-2">
+  <div class="class-hero h-c2" data-num="2">
+    <h2>🎙️ "He Said, She Said: Reporting the Facts"</h2>
+    <p class="subtitle">Reported Speech — Statements & Backshift</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1</span><span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Agosto 2026</span>
+      <span class="hero-chip">📌 Previo: Present Simple, Past Simple, Pronouns</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl mustard">
+        <thead><tr><th>Situación anticipada</th><th>Plan de acción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Olvido del "Backshift":</strong><br>Mantener el presente al reportar (ej. "She said she is happy").</td><td><strong>La Regla de un Paso Atrás:</strong> Dibujar una línea de tiempo. Si se dice hoy (Presente), se reporta mañana (Pasado). Siempre saltamos un paso al pasado.</td></tr>
+          <tr><td><strong>Confusión con pronombres:</strong><br>No cambiar "I" por "He/She".</td><td><strong>The Mirror Test:</strong> Practicar reportando lo que el compañero de al lado dice para forzar el cambio de persona.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">By the end of this class, students will be able to correctly <strong>change verb tenses from present to past</strong> when reporting information, and report what another person said precisely using <strong>verbal backshift</strong> and correct pronoun changes.</div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary — Reporting Verbs & Pronoun Shifts</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl teal">
+        <thead><tr><th>Direct → Reported</th><th>Cambio</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">I → he/she</td><td>pronombre</td><td>"I play soccer" → He said (that) he played soccer.</td></tr>
+          <tr><td class="word-en">my → his/her</td><td>posesivo</td><td>"my team" → her team</td></tr>
+          <tr><td class="word-en">today → that day</td><td>tiempo</td><td>"today" → that day</td></tr>
+          <tr><td class="word-en">tomorrow → the next day</td><td>tiempo</td><td>"tomorrow" → the next day</td></tr>
+          <tr><td class="word-en">said / told</td><td>reporting verb</td><td>She said (that)... / He told me (that)...</td></tr>
+          <tr><td class="word-en">backshift</td><td>retroceso verbal</td><td>play → played, am → was</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus — The Backshift Staircase</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--teal-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;margin-bottom:8px">📐 Direct vs Reported</div>
+        <div style="font-size:13px">Direct: "I <strong>play</strong> soccer." → Reported: She said that she <strong>played</strong> soccer.</div>
+      </div>
+      <div style="background:var(--mustard-pale);border:1.5px solid #E0C45C;border-radius:var(--radius-sm);padding:12px 16px;font-size:13.5px;margin-bottom:14px">
+        🪜 <strong>La Regla de un Paso Atrás:</strong> Cuando reportamos, el tiempo verbal retrocede UN escalón en el tiempo.<br>
+        Present Simple → Past Simple &nbsp;|&nbsp; am/is → was &nbsp;|&nbsp; will → would
+      </div>
+      <table class="tbl navy">
+        <thead><tr><th>Direct Speech (Today)</th><th>Reported Speech (Backshift)</th></tr></thead>
+        <tbody>
+          <tr><td>"I am happy."</td><td class="ans">She said (that) she was happy.</td></tr>
+          <tr><td>"I play soccer."</td><td class="ans">He said (that) he played soccer.</td></tr>
+          <tr><td>"I love my team."</td><td class="ans">He said (that) he loved his team.</td></tr>
+          <tr><td>"I will travel tomorrow."</td><td class="ans">She said (that) she would travel the next day.</td></tr>
+        </tbody>
+      </table>
+      <table class="tbl crimson" style="margin-top:16px">
+        <thead><tr><th>✅ Correcto</th><th>❌ Incorrecto</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">She said that she was tired.</td><td class="wrong-cell">She said that she is tired. (sin backshift)</td></tr>
+          <tr><td class="correct-cell">He said (that) he loved his team.</td><td class="wrong-cell">He said (that) I love my team. (pronombre sin cambiar)</td></tr>
+          <tr><td class="correct-cell">She told me she had a meeting.</td><td class="wrong-cell">She told me she has a meeting.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — The One Step Back Timeline</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box teal">
+        <pre>      REPORTED SPEECH — ONE STEP BACK IN TIME
+
+  DIRECT SPEECH (today, present)    REPORTED (tomorrow, past)
+  ─────────────────────────────────────────────────────────
+  am / is          ─────────────►   was
+  are              ─────────────►   were
+  play / plays     ─────────────►   played
+  will             ─────────────►   would
+  can              ─────────────►   could
+
+  ┌─────────────────────────────────────────────────────┐
+  │  TODAY (when it was said)    TOMORROW (when reported)│
+  │  ──────●──────────────────────────●─────────────►   │
+  │     "I play soccer"          She said she played    │
+  │      PRESENT                      PAST                │
+  └─────────────────────────────────────────────────────┘
+
+  PRONOUN MIRROR:
+  I        →  he / she
+  my       →  his / her
+  me       →  him / her
+  we       →  they
+
+  TIME WORD MIRROR:
+  today    →  that day
+  tomorrow →  the next day
+  yesterday →  the day before
+
+  FULL FORMULA:
+  [Subject] + said/told + (that) + [pronoun] + [backshift verb]
+  Messi said (that) he loved his team.</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation — Paso a Paso</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — Chinese Whispers (Teléfono Roto):</strong> El docente susurra una frase secreta al primer estudiante. El último la dice en voz alta. Analizan por qué cambió el mensaje y cómo lo diríamos formalmente ("He said that...").</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Idea clave — El retroceso verbal:</strong> 'Al reportar, el tiempo verbal retrocede un paso.' Modela: Direct "I play soccer." → Reported: "She said that she played soccer."</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>La Regla de un Paso Atrás:</strong> Dibuja una línea de tiempo. 'Si se dice HOY (presente), se reporta MAÑANA (pasado). Siempre saltamos un escalón hacia atrás.'</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The Mirror Test:</strong> 'No solo el verbo cambia — ¡también los pronombres!' Practica reportando lo que el compañero de al lado dice, forzando el cambio de "I" a "he/she".</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>The Celebrity Interview:</strong> En parejas, uno es famoso y otro periodista. El periodista hace 3 preguntas, el famoso responde en presente. Luego el periodista reporta a otro grupo: "He said that he was very tired after the match."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[Susurra al oído del primer estudiante: "The new student likes pizza and lives near the school."] Pásenlo en silencio...</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Último estudiante (Luis)</div><div class="dlg-text">¡"The new student likes pasta and lives far from school"! [risas generales]</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">¡Jaja, perfecto ejemplo de cómo cambia un mensaje! Ahora, formalmente — ¿cómo reportamos lo que YO dije al principio? "The new student likes pizza." ¿Cómo lo reportamos?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Sofía</div><div class="dlg-text">The teacher said that... the new student likes pizza?</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Almost! Remember the One Step Back rule — LIKES is present. ¿Qué pasa cuando reportamos?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Sofía</div><div class="dlg-text">¡Ah! The teacher said that the new student LIKED pizza!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT! One step back — likes becomes liked. Now — The Mirror Test. Carlos, tell me one thing about yourself in present tense.</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Carlos</div><div class="dlg-text">I love video games.</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Now Valentina, report what Carlos said — but careful with the pronoun!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Valentina</div><div class="dlg-text">Carlos said that he loved video games!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXCELLENT, Valentina! "I" became "he" — perfect mirror! Now — The Celebrity Interview. In pairs — one is Messi, one is a journalist!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">"Messi" (Andrés)</div><div class="dlg-text">[en entrevista] "I am very tired after the match. I love my team."</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Journalist (Luisa, reportando a otro grupo)</div><div class="dlg-text">Messi said that he was very tired after the match. He said that he loved his team!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Corrección — Error típico</div><div class="dlg-text">Estudiante: "He said that he is tired." → Docente: "Good try! But remember — we're reporting, so we go ONE STEP BACK. IS becomes... ?" → Estudiante: "Was! He said that he WAS tired."</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training — Consolidación por Niveles</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Une</div><div class="lvl-task">Frase directa con su reporte:<br><br>"I am happy." ↔ He said he was happy.<br>"I play soccer." ↔ She said she played soccer.<br>"I will call you." ↔ He said he would call me.<br><br><em style="color:var(--green-lt)">✅ Asociación correcta del backshift</em></div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Transforma</div><div class="lvl-task">"I love this song." (María) →<br><em style="color:var(--mustard-lt)">María said that she loved that song.</em><br><br>"We are tired." (the boys) →<br><em style="color:var(--mustard-lt)">The boys said that they were tired.</em></div></div>
+        <div class="lvl-card lv3"><div class="lvl-badge">🥇</div><div class="lvl-label">Nivel 3 — Corrige</div><div class="lvl-task">"She said that she is happy." (sin backshift)<br><br>"He said that I love my team." (pronombre sin cambiar)<br><br><em style="color:var(--crimson-lt)">✅ she was happy | he loved his team</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — The Celebrity Interview</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:13.5px">En parejas, uno es un famoso y otro el periodista. El periodista hace 3 preguntas, el famoso responde en presente. Luego el periodista se une a otro grupo y reporta lo dicho.</p>
+      <table class="tbl green">
+        <thead><tr><th>Pregunta del periodista</th><th>Respuesta directa (famoso)</th><th>Reporte (a otro grupo)</th></tr></thead>
+        <tbody>
+          <tr><td>"How do you feel after the match?"</td><td>"I am very tired, but happy."</td><td class="ans">"He said that he was very tired, but happy."</td></tr>
+          <tr><td>"What is your favorite food?"</td><td>"I love pizza."</td><td class="ans">"She said that she loved pizza."</td></tr>
+          <tr><td>"What are your plans for next year?"</td><td>"I will release a new album."</td><td class="ans">"He said that he would release a new album."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice — The Paparazzi Mission</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="font-size:13px;margin-bottom:10px">El docente lee rápidamente las siguientes frases (como en una rueda de prensa real). Los estudiantes deben anotar y luego reportar lo que escucharon.</p>
+      <div class="read-box">"I am extremely proud of my team this season." — Coach Martínez
+
+"We will announce the new project next month." — CEO Laura Gómez
+
+"I don't agree with the referee's decision." — Player Carlos Ruiz
+
+"I am working on a new song right now." — Singer Mariana Vega
+
+"We are very excited about the new school year." — Principal Sandoval</div>
+      <table class="tbl navy">
+        <thead><tr><th>Reporte esperado</th><th>Verificación</th></tr></thead>
+        <tbody>
+          <tr><td>Coach Martínez said that he was extremely proud of his team.</td><td class="ans">✅ am → was, his team (posesivo cambiado)</td></tr>
+          <tr><td>Laura Gómez said that they would announce the new project the next month.</td><td class="ans">✅ will → would, next month → the next month</td></tr>
+          <tr><td>Carlos Ruiz said that he didn't agree with the referee's decision.</td><td class="ans">✅ don't → didn't (backshift negativo)</td></tr>
+          <tr><td>Mariana Vega said that she was working on a new song.</td><td class="ans">✅ am working → was working</td></tr>
+          <tr><td>Principal Sandoval said that they were very excited about the new school year.</td><td class="ans">✅ are → were</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice — Celebrity Quotes Magazine</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="headline-badge">WHAT THE STARS SAID THIS WEEK</div>
+      <div class="read-box">In an exclusive interview, Shakira said that she loved performing in Colombia more than anywhere else in the world. She said that her hometown, Barranquilla, would always be in her heart.
+
+Meanwhile, footballer James Rodríguez told reporters that he was happy with his new team. He said that he hoped to score many goals this season. When asked about retirement, he said that he wasn't thinking about it yet.
+
+Actress Sofía Vergara said in a recent interview that she was grateful for her career in Hollywood. She mentioned that she still spoke Spanish at home every day.
+
+Finally, singer Karol G announced that she would release a new album soon. She said that her fans meant everything to her, and that she was working hard on new music.
+
+These celebrities continue to make headlines — what do you think they'll say next?</div>
+      <table class="tbl crimson">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What did Shakira say about Barranquilla?</td><td class="ans">She said that it would always be in her heart.</td></tr>
+          <tr><td>What did James Rodríguez say about retirement?</td><td class="ans">He said that he wasn't thinking about it yet.</td></tr>
+          <tr><td>What did Sofía Vergara say about Spanish?</td><td class="ans">She mentioned that she still spoke Spanish at home every day.</td></tr>
+          <tr><td>What did Karol G announce?</td><td class="ans">She announced that she would release a new album soon.</td></tr>
+          <tr><td>Find 3 backshift examples in the text.</td><td class="ans">"loved," "would always be," "was happy," "hoped," "wasn't," "was grateful," "spoke," "would release," "meant," "was working."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice — The Interviewer's Report</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:13.5px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo:</strong><br><br>
+        "Today I spoke with my mother about her goals for this year. She said that she wanted to start exercising more. She told me that she planned to save money for a family trip. She also said that she hoped to read more books this year. When I asked about work, she said that she was looking for new opportunities. Finally, she mentioned that her biggest goal was to spend more quality time with the family."
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1 — Entrevista:</strong> Entrevista a un adulto en casa sobre sus metas para este año (en español si es necesario, pero toma notas).</li>
+        <li><strong>Parte 2 — Escritura:</strong> Escribe un artículo periodístico corto (12–15 oraciones) reportando la entrevista.</li>
+        <li>Mínimo <strong>8 oraciones en Reported Speech</strong>. Uso correcto del backshift verbal.</li>
+        <li><strong>Nivel PRO:</strong> Graba un video tipo noticiero: "Today I spoke with my mother, and she said she wanted to..."</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>NEE 1 — Dificultad lectora</h4>Tabla de referencia con la escalera del backshift (am→was, play→played, will→would) para consultar. En el Celebrity Interview, completa estructura: "He/She said that ___."</div>
+        <div class="nee-card nee2"><h4>NEE 2 — Dificultad atencional</h4>En el Mirror Test, trabaja con solo 2 cambios de pronombre clave (I→he, my→his). Rol de "anotador" en la Paparazzi Mission — escribe mientras otro reporta oralmente.</div>
+        <div class="nee-card nee3"><h4>NEE 3 — Timidez / Dificultad oral</h4>En la Celebrity Interview, escribe las respuestas del famoso primero, luego las lee. El reporte a otro grupo puede entregarse por escrito al docente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿Qué es el "backshift"?</td><td class="ans">El retroceso de un paso en el tiempo verbal al reportar lo que alguien dijo.</td></tr>
+          <tr><td>Reporta: "I am tired." (María)</td><td class="ans">María said that she was tired.</td></tr>
+          <tr><td>¿Qué pasa con "will" al reportar?</td><td class="ans">Will se convierte en "would".</td></tr>
+          <tr><td>Corrige: "He said that I love my team."</td><td class="ans">He said that he loved his team. (pronombre y verbo cambiados)</td></tr>
+          <tr><td>¿Cómo cambia "tomorrow" en reported speech?</td><td class="ans">Se convierte en "the next day".</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>She said that she is tired.</div><div class="err-c"><div class="lbl">✅ Correcto</div>She said that she WAS tired. (backshift obligatorio)</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>He said that I love my team.</div><div class="err-c"><div class="lbl">✅ Correcto</div>He said that HE loved HIS team. (pronombre cambiado)</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>She told me she has a meeting.</div><div class="err-c"><div class="lbl">✅ Correcto</div>She told me she HAD a meeting. (has → had)</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — Say It Back</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">Docente dice: "I am hungry."</div><div class="exit-a">✅ "The teacher said that she/he was hungry."</div></div>
+        <div class="exit-card"><div class="exit-q">Compañero dice: "I like math."</div><div class="exit-a">✅ "He/She said that he/she liked math."</div></div>
+        <div class="exit-card"><div class="exit-q">¿Qué le pasa a "I" al reportar?</div><div class="exit-a">✅ "Se convierte en he/she según el género de quien habló."</div></div>
+        <div class="exit-card"><div class="exit-q">¿Qué le pasa a "am" al reportar?</div><div class="exit-a">✅ "Se convierte en was."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">Chinese Whispers es un opener clásico muy efectivo — el caos del mensaje distorsionado genera una motivación natural para aprender a "reportar correctamente".</div>
+        <div class="note-item">The Mirror Test funciona mejor si lo practicas con situaciones reales del salón — usa nombres y datos reales de los estudiantes para mayor significancia.</div>
+        <div class="note-item">El Celebrity Interview es ideal para B1 — combina producción oral espontánea con la estructura formal del reported speech.</div>
+        <div class="note-item">La Paparazzi Mission entrena la memoria auditiva Y la gramática simultáneamente — una habilidad de alto nivel para B1.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🏠</span><h3>Tarea TRANSFORM — "The Interviewer's Report"</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación</h4>
+        <ul class="blist">
+          <li><strong>Parte 1 — Entrevista:</strong> Entrevista a un adulto en casa sobre sus metas para este año.</li>
+          <li><strong>Parte 2 — Escritura:</strong> Escribe un artículo periodístico corto (12–15 oraciones) reportando la entrevista. Mínimo 8 oraciones en Reported Speech con backshift correcto.</li>
+          <li><strong>🎙️ Nivel PRO:</strong> Graba un video tipo noticiero presentando tu reporte.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-2 -->
+
+
+<!-- ══════════════════════════ CLASS 3 — PAST PERFECT ══════════════════════════ -->
+<div class="class-panel" id="class-3">
+  <div class="class-hero h-c3" data-num="3">
+    <h2>🕵️ "The Backstory: What Had Happened?"</h2>
+    <p class="subtitle">Past Perfect — had + Past Participle</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1</span><span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Septiembre 2026</span>
+      <span class="hero-chip">📌 Previo: Past Simple, Past Participles</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl mustard">
+        <thead><tr><th>Situación anticipada</th><th>Plan de acción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Uso innecesario:</strong><br>Usar Past Perfect para todas las acciones pasadas.</td><td><strong>La Regla de la Antigüedad:</strong> Solo usamos Past Perfect para la acción que es "más vieja" cuando hay DOS eventos en el pasado.</td></tr>
+          <tr><td><strong>Confusión con Present Perfect:</strong><br>Usar "has" en lugar de "had".</td><td><strong>The Past of the Past:</strong> En el pasado todo es HAD. No importa el sujeto (I/You/She/They), siempre es HAD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">By the end of this class, students will be able to use <strong>had + past participle</strong> to narrate past events in non-chronological order, clearly showing which action occurred before another in a narrative sequence.</div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary — Sequencing Connectors & Mystery Verbs</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl navy">
+        <thead><tr><th>Connector</th><th>Significado</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">before</td><td>antes (de)</td><td>The thief had escaped before the police arrived.</td></tr>
+          <tr><td class="word-en">after</td><td>después (de)</td><td>After she had finished, she went home.</td></tr>
+          <tr><td class="word-en">by the time</td><td>para cuando</td><td>By the time I arrived, the movie had started.</td></tr>
+          <tr><td class="word-en">already</td><td>ya</td><td>I had already bought the bread.</td></tr>
+          <tr><td class="word-en">when</td><td>cuando</td><td>When I arrived home, I had already eaten.</td></tr>
+          <tr><td class="word-en">escape — escaped — escaped</td><td>escapar</td><td>The thief had escaped.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus — The Past of the Past</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--navy-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;margin-bottom:8px">📐 Structure</div>
+        <div class="formula">Subject + HAD + Past Participle</div>
+        <div style="font-size:13px;margin-top:10px">"When I arrived (Past), the movie <strong>had started</strong> (Past Perfect)."</div>
+      </div>
+      <div style="background:var(--mustard-pale);border:1.5px solid #E0C45C;border-radius:var(--radius-sm);padding:12px 16px;font-size:13.5px;margin-bottom:14px">
+        🕰️ <strong>La Regla de la Antigüedad:</strong> Cuando hay 2 eventos en el pasado, la acción "más vieja" lleva HAD. La más reciente queda en Past Simple.<br>
+        <em>Before the police arrived (más reciente), the thief had escaped (más vieja).</em>
+      </div>
+      <div style="background:var(--green-pale);border-radius:var(--radius-sm);padding:12px 16px;font-size:13.5px;margin-bottom:14px">
+        👴 <strong>The Past of the Past:</strong> No importa el sujeto — siempre es HAD (no has, no have). I had, you had, she had, they had — todos iguales.
+      </div>
+      <table class="tbl crimson">
+        <thead><tr><th>✅ Correcto</th><th>❌ Incorrecto</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">She had gone out before he called.</td><td class="wrong-cell">She had went out before he called. (participio, no pasado simple)</td></tr>
+          <tr><td class="correct-cell">When the class ended, I had finished my work.</td><td class="wrong-cell">When the class ended, I has finished my work.</td></tr>
+          <tr><td class="correct-cell">Before the police arrived, the thief had escaped.</td><td class="wrong-cell">Before the police had arrived, the thief escaped. (orden de antigüedad invertido)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — The Two-Step Timeline</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box navy">
+        <pre>      PAST PERFECT — THE PAST OF THE PAST
+
+  ┌─────────────────────────────────────────────────────┐
+  │  EVENT 1 (older)         EVENT 2 (more recent)       │
+  │  had + participle  ───►  Past Simple                 │
+  │                                                       │
+  │  ●──────────────────────●────────────────────► NOW  │
+  │  The thief HAD ESCAPED   the police ARRIVED          │
+  │  (happened FIRST)        (happened SECOND)           │
+  └─────────────────────────────────────────────────────┘
+
+  STRUCTURE:  Subject + HAD + Past Participle
+
+  EXAMPLES:
+  Before the police arrived, the thief had escaped.
+  When I arrived home, I had already bought the bread.
+  By the time the movie started, we had found our seats.
+
+  THE PAST OF THE PAST — ALWAYS "HAD":
+  I had       you had      he/she/it had
+  we had      they had     (NEVER changes by subject!)
+
+  TIMELINE TRICK:
+  "Llovió" + "Salí" (lluvia primero) →
+  "It HAD RAINED when I went out."
+        ↑ older event = HAD + participle</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation — Paso a Paso</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — The Mystery Scenario:</strong> Muestra una imagen de una fiesta terminada (basura, platos vacíos). Pregunta: "What happened before the photo?" Los alumnos adivinan acciones previas: "They had eaten pizza."</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Idea clave — El Pasado del Pasado:</strong> 'Usamos Past Perfect para una acción que terminó ANTES de otra acción en el pasado.' Modela: "When I arrived (Past), the movie had started (Past Perfect)."</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>La Regla de la Antigüedad:</strong> 'Solo usamos Past Perfect para la acción más vieja cuando hay dos eventos en el pasado.' Compara: "Before the police arrived, the thief had escaped" — ¿cuál pasó primero?</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The Past of the Past:</strong> 'En el pasado todo es HAD — no importa el sujeto.' Repasa rápido con varios pronombres: I had, you had, she had, they had.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>The Story Mix-Up:</strong> En grupos reciben tarjetas con 2 eventos (ej. "Compré el pan" / "Llegué a casa"). Deben unirlos usando When y Past Perfect: "When I arrived home, I had already bought the bread."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[Muestra foto de fiesta terminada: basura, platos vacíos, globos desinflados] What happened BEFORE this photo? Tell me — what had they done?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Carlos</div><div class="dlg-text">They eat pizza? They party a lot?</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Good guess! But remember — we're talking about something that happened BEFORE this moment, in the deeper past. We use HAD + participle. "They HAD EATEN pizza." Try again with that structure!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Valentina</div><div class="dlg-text">They had danced a lot! And... they had opened many presents!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT, Valentina! "Had danced," "had opened" — both correct Past Perfect! Now — important rule. We only use this when there are TWO events. Watch: "Before the police arrived, the thief had escaped." ¿Cuál pasó primero?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">¡El ladrón escapó primero! Por eso es "had escaped" — es el evento más viejo.</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXACTLY, Andrés! La Regla de la Antigüedad — el evento MÁS VIEJO lleva HAD. Now — The Story Mix-Up! Groups, you have 2 cards: 'I bought bread' and 'I arrived home.' Connect them with WHEN!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Grupo 3</div><div class="dlg-text">When I arrived home, I had already bought the bread!</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT sequencing! "Already" adds extra emphasis — great choice!</div></div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Corrección — Error típico</div><div class="dlg-text">Estudiante: "She had went out before he called." → Docente: "Good attempt with HAD! But remember — we always need the 3rd column. Went is past simple. The participle of GO is...?" → Estudiante: "Gone! She had GONE out!"</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training — Consolidación por Niveles</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Elige</div><div class="lvl-task">She had (went / gone) out before he called.<br><br>They had already (ate / eaten) when we arrived.<br><br>I had (saw / seen) that movie before.<br><br><em style="color:var(--green-lt)">✅ gone | eaten | seen</em></div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Completa</div><div class="lvl-task">When the class ended, I _____ (finish) my work.<br><br>By the time we arrived, the train _____ (leave).<br><br>She _____ (never/visit) Bogotá before that trip.<br><br><em style="color:var(--mustard-lt)">✅ had finished | had left | had never visited</em></div></div>
+        <div class="lvl-card lv3"><div class="lvl-badge">🥇</div><div class="lvl-label">Nivel 3 — Corrige</div><div class="lvl-task">"Before the police had arrived, the thief escaped." (orden invertido)<br><br>"When the class ended, I has finished my work."<br><br><em style="color:var(--crimson-lt)">✅ Before the police arrived, the thief had escaped. | I had finished</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — The Story Mix-Up</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:13.5px">En grupos, reciben tarjetas con 2 eventos. Deben unirlos usando WHEN y Past Perfect, explicando cuál ocurrió primero.</p>
+      <table class="tbl green">
+        <thead><tr><th>Evento 1 (más viejo)</th><th>Evento 2 (más reciente)</th><th>Oración combinada</th></tr></thead>
+        <tbody>
+          <tr><td>I bought the bread</td><td>I arrived home</td><td class="ans">"When I arrived home, I had already bought the bread."</td></tr>
+          <tr><td>The movie started</td><td>We got to the cinema</td><td class="ans">"When we got to the cinema, the movie had already started."</td></tr>
+          <tr><td>She finished her homework</td><td>Her mom called her for dinner</td><td class="ans">"When her mom called her for dinner, she had already finished her homework."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice — The Detective's Case</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">"Detective Ramírez arrived at the scene at 9 PM. By the time she got there, a lot had already happened.
+
+Someone had broken the window. The thief had stolen a valuable painting. The security alarm had gone off, but the neighbors had already called the police before that. 
+
+When the detective checked the security cameras, she discovered something strange: the cameras had stopped recording exactly ten minutes before the robbery happened. Someone had disconnected them on purpose.
+
+The detective also found that the door had not been forced — someone had used a key. This meant the thief had probably known the house very well.
+
+By midnight, Detective Ramírez had found three important clues, but the mystery was far from solved."</div>
+      <table class="tbl navy">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What had the thief done?</td><td class="ans">He had broken the window and stolen a valuable painting.</td></tr>
+          <tr><td>What had the neighbors done before the alarm?</td><td class="ans">They had already called the police.</td></tr>
+          <tr><td>What had happened to the security cameras?</td><td class="ans">They had stopped recording ten minutes before the robbery — someone had disconnected them.</td></tr>
+          <tr><td>What did the detective discover about the door?</td><td class="ans">The door had not been forced — someone had used a key.</td></tr>
+          <tr><td>How many clues had the detective found by midnight?</td><td class="ans">She had found three important clues.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice — The Day Everything Changed</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="headline-badge">A TURNING POINT IN HISTORY</div>
+      <div class="read-box">By 1969, humanity had achieved something incredible: astronauts had landed on the Moon.
+
+Before this happened, scientists had worked for over a decade on the Apollo program. NASA had spent billions of dollars developing the technology needed for space travel. Engineers had tested rockets many times before they felt confident enough to send humans into space.
+
+By the time Neil Armstrong stepped onto the lunar surface, the team had already overcome countless technical problems. They had designed special suits to protect astronauts. They had calculated exact trajectories to ensure a safe journey. They had also trained the astronauts for years.
+
+When Armstrong said his famous words, "That's one small step for man, one giant leap for mankind," he had already spent years preparing for that exact moment.
+
+By the time the mission ended successfully, the world had changed forever. People everywhere had watched the event live on television — something that had never happened before in human history.</div>
+      <table class="tbl crimson">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What had scientists done before the Moon landing?</td><td class="ans">They had worked for over a decade on the Apollo program.</td></tr>
+          <tr><td>What had engineers done before sending humans to space?</td><td class="ans">They had tested rockets many times.</td></tr>
+          <tr><td>What had the team done before Armstrong stepped on the Moon?</td><td class="ans">They had designed suits, calculated trajectories, and trained the astronauts.</td></tr>
+          <tr><td>What had never happened before in human history?</td><td class="ans">People watching an event live on television in that way.</td></tr>
+          <tr><td>Find 5 examples of Past Perfect in the text.</td><td class="ans">"had achieved," "had landed," "had worked," "had spent," "had tested," "had designed," "had calculated," "had trained," "had spent," "had changed," "had watched," "had never happened."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice — The Last Minute Tale</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:13.5px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo:</strong><br><br>
+        "Last week, I arrived late to my best friend's birthday party. By the time I got there, everyone had already eaten the cake. They had also opened all the presents and had taken hundreds of photos! Worse, they had played all my favorite games before I arrived. I felt terrible, but my friend said it didn't matter — she was just happy I had come at all!"
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1 — Diseño:</strong> Elige un evento histórico famoso (el descubrimiento de América, la llegada a la Luna).</li>
+        <li><strong>Parte 2 — Escritura:</strong> Escribe 8–10 oraciones describiendo el evento y lo que había pasado justo antes.</li>
+        <li>Incluye <strong>contraste entre Past Simple y Past Perfect</strong>. Uso de conectores: Before, After, By the time.</li>
+        <li><strong>Nivel PRO:</strong> Graba un audio narrando tu historia como si fueras un historiador en un podcast.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>NEE 1 — Dificultad lectora</h4>Línea de tiempo visual con 2 espacios claramente marcados: "PRIMERO (had + participle)" y "DESPUÉS (past simple)". En The Story Mix-Up, solo completa la estructura ya dada.</div>
+        <div class="nee-card nee2"><h4>NEE 2 — Dificultad atencional</h4>En el Mystery Scenario, solo produce 2 oraciones (no más). Rol de "detective" en el Detective's Case — señala las pistas mientras el grupo las reporta verbalmente.</div>
+        <div class="nee-card nee3"><h4>NEE 3 — Timidez / Dificultad oral</h4>Escribe su Story Mix-Up antes de presentarla oralmente. El Last Minute Tale puede entregarse completamente por escrito sin presentación oral obligatoria.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿Cuándo usamos Past Perfect?</td><td class="ans">Para la acción que es "más vieja" cuando hay dos eventos en el pasado.</td></tr>
+          <tr><td>¿Cuál es la fórmula del Past Perfect?</td><td class="ans">Subject + HAD + Past Participle.</td></tr>
+          <tr><td>¿Cambia "had" según el sujeto?</td><td class="ans">No — siempre es HAD, sin importar el sujeto.</td></tr>
+          <tr><td>Si digo "Llovió" y "Salí" (llovió primero), ¿cómo lo digo?</td><td class="ans">"It had rained when I went out."</td></tr>
+          <tr><td>Corrige: "She had went out before he called."</td><td class="ans">She had GONE out before he called. (3rd column)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>She had went out before he called.</div><div class="err-c"><div class="lbl">✅ Correcto</div>She had GONE out before he called. (3rd column)</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>When the class ended, I has finished my work.</div><div class="err-c"><div class="lbl">✅ Correcto</div>When the class ended, I HAD finished my work.</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>Before the police had arrived, the thief escaped.</div><div class="err-c"><div class="lbl">✅ Correcto</div>Before the police arrived, the thief HAD escaped. (evento más viejo lleva had)</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — Timeline Check</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">"Llovió" + "Salí" (llovió primero)</div><div class="exit-a">✅ "It had rained when I went out."</div></div>
+        <div class="exit-card"><div class="exit-q">"Comí" + "Llegaste" (comí primero)</div><div class="exit-a">✅ "I had eaten when you arrived."</div></div>
+        <div class="exit-card"><div class="exit-q">¿Por qué usamos HAD y no HAS?</div><div class="exit-a">✅ "Porque en pasado todo es HAD, sin importar el sujeto."</div></div>
+        <div class="exit-card"><div class="exit-q">Da un ejemplo propio con BEFORE</div><div class="exit-a">✅ "Before I went to bed, I had finished my homework."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">El Mystery Scenario (foto de fiesta terminada) es muy efectivo porque activa inferencia lógica natural — los estudiantes quieren explicar lo que pasó antes.</div>
+        <div class="note-item">La Regla de la Antigüedad es la metáfora clave de la clase — refuérzala constantemente con el gesto de "más viejo vs más nuevo".</div>
+        <div class="note-item">El Detective's Case conecta con el género de misterio, muy popular entre adolescentes — aumenta la motivación de lectura significativamente.</div>
+        <div class="note-item">Evita el sobre-uso del Past Perfect — muchos estudiantes, una vez que lo aprenden, tienden a usarlo para TODO el pasado. Refuerza que solo se usa cuando hay DOS eventos relacionados.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🏠</span><h3>Tarea TRANSFORM — "The Historical Timeline"</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación</h4>
+        <ul class="blist">
+          <li><strong>Parte 1 — Diseño:</strong> Elige un evento histórico famoso (el descubrimiento de América, la llegada a la Luna).</li>
+          <li><strong>Parte 2 — Escritura:</strong> Escribe 8–10 oraciones describiendo el evento y lo que había pasado justo antes. Contraste entre Past Simple y Past Perfect. Conectores: Before, After, By the time.</li>
+          <li><strong>🎙️ Nivel PRO:</strong> Graba un audio narrando tu historia como si fueras un historiador en un podcast.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-3 -->
+
+
+<!-- ══════════════════════════ CLASS 4 — MEDIA VOCABULARY ══════════════════════════ -->
+<div class="class-panel" id="class-4">
+  <div class="class-hero h-c4" data-num="4">
+    <h2>🔍 "Breaking News: Analyzing the Press"</h2>
+    <p class="subtitle">Vocabulary — Media & News</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1</span><span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Octubre 2026</span>
+      <span class="hero-chip">📌 Previo: Basic reading skills, Tech vocabulary</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl mustard">
+        <thead><tr><th>Situación anticipada</th><th>Plan de acción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Falta de vocabulario crítico:</strong><br>Quedarse en lo superficial al analizar un texto.</td><td><strong>The Analysis Kit:</strong> Proveer una lista de adjetivos de opinión y sustantivos clave (sensationalist, reliable, objective) para guiar el debate.</td></tr>
+          <tr><td><strong>Dificultad para identificar "Bias":</strong><br>No entender que una noticia puede ser subjetiva.</td><td><strong>Spot the Difference:</strong> Mostrar dos noticias sobre el mismo tema con enfoques opuestos para que vean cómo cambia el mensaje.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">By the end of this class, students will be able to use terms like <strong>headline, source, bias, fake news, journalist</strong> accurately, analyze a news article to identify its main idea, and critically analyze news and media using precise technical vocabulary.</div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary — The Media Ecosystem</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl crimson">
+        <thead><tr><th>Term</th><th>Significado</th><th>Pronunciation</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">headline</td><td>titular</td><td class="word-pron">/ˈhedlaɪn/</td><td>The headline grabbed everyone's attention.</td></tr>
+          <tr><td class="word-en">source</td><td>fuente</td><td class="word-pron">/sɔːrs/ → SORS</td><td>A reliable source confirmed the story.</td></tr>
+          <tr><td class="word-en">journalist</td><td>periodista</td><td class="word-pron">/ˈdʒɜːrnəlɪst/</td><td>The journalist interviewed the mayor.</td></tr>
+          <tr><td class="word-en">bias</td><td>sesgo</td><td class="word-pron">/ˈbaɪəs/ → BAI-as</td><td>This article shows clear political bias.</td></tr>
+          <tr><td class="word-en">reliable</td><td>confiable</td><td class="word-pron">/rɪˈlaɪəbl/</td><td>Always check if your source is reliable.</td></tr>
+          <tr><td class="word-en">fake news</td><td>noticias falsas</td><td class="word-pron">/feɪk njuːz/</td><td>Fake news spreads quickly on social media.</td></tr>
+          <tr><td class="word-en">sensationalist</td><td>amarillista</td><td class="word-pron">/senˈseɪʃənəlɪst/</td><td>The headline was very sensationalist.</td></tr>
+          <tr><td class="word-en">objective</td><td>objetivo/a</td><td class="word-pron">/əbˈdʒektɪv/</td><td>A good journalist tries to stay objective.</td></tr>
+          <tr><td class="word-en">clickbait</td><td>cebo de clics</td><td class="word-pron">/ˈklɪkbeɪt/</td><td>That title is pure clickbait!</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus — Analyzing News Critically</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--crimson-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;color:var(--crimson-lt);text-transform:uppercase;margin-bottom:8px">📐 Useful expressions for analysis</div>
+        <div style="font-size:13px;line-height:2.2">
+          "The source is not clear, it might be fake news."<br>
+          "This headline is sensationalist — it exaggerates the facts."<br>
+          "I think this article shows bias because..."<br>
+          "This source seems reliable because it cites official data."
+        </div>
+      </div>
+      <div style="background:var(--mustard-pale);border:1.5px solid #E0C45C;border-radius:var(--radius-sm);padding:12px 16px;font-size:13.5px;margin-bottom:14px">
+        🚩 <strong>Idea clave:</strong> No todo lo que leemos es verdad o neutral. Un buen lector crítico siempre verifica la fuente (source), busca sesgo (bias) y distingue entre titulares objetivos y sensacionalistas.
+      </div>
+      <table class="tbl navy">
+        <thead><tr><th>Good Media (✅)</th><th>Bad Media (❌)</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">reliable, objective, verified, cited source</td><td class="wrong-cell">sensationalist, biased, unverified, fake news</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — The Media Literacy Map</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box crimson">
+        <pre>      THE MEDIA ECOSYSTEM — HOW TO READ CRITICALLY
+
+  ┌─────────────────────────────────────────────────────┐
+  │   📰 HEADLINE        →  título / titular            │
+  │   🔍 SOURCE          →  fuente de la información    │
+  │   ✍️  JOURNALIST      →  quien escribe la noticia    │
+  │   ⚖️  BIAS            →  inclinación / sesgo         │
+  │   ✅ RELIABLE         →  confiable / verificable     │
+  │   ❌ FAKE NEWS        →  noticia falsa               │
+  │   📢 SENSATIONALIST   →  exagerado para impactar     │
+  │   🎯 OBJECTIVE        →  neutral / sin opinión       │
+  │   🪝 CLICKBAIT        →  título-anzuelo              │
+  └─────────────────────────────────────────────────────┘
+
+  THE FACT-CHECKER'S 3 QUESTIONS:
+  1. Who is the SOURCE? Is it reliable?
+  2. Does the headline show BIAS or is it OBJECTIVE?
+  3. Can I verify this information somewhere else?
+
+  RED FLAG 🚩 vs GREEN FLAG ✅
+  🚩 No source mentioned         ✅ Cites official data
+  🚩 Extreme emotional language  ✅ Calm, factual tone
+  🚩 Only one source             ✅ Multiple sources
+  🚩 No author named             ✅ Named journalist</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation — Paso a Paso</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — Real or Fake?:</strong> El docente muestra 3 titulares de noticias locas. 2 son reales y 1 es mentira. Los estudiantes deben adivinar cuál es la Fake News y justificar su elección.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Idea clave — El ecosistema mediático:</strong> 'No todo lo que leemos es verdad o neutral.' Presenta los términos clave: headline, source, journalist, bias, reliable, fake news.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Analizar las partes de una noticia:</strong> Muestra una noticia impresa en el tablero y señala cada elemento: headline en la parte superior, source citada, journalist firmando el artículo.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The Media Auditor:</strong> En grupos reciben diferentes artículos cortos. Usan stickers rojos para marcar posibles Fake News o Bias y verdes para datos Reliable. Presentan sus hallazgos: "The source is not clear, it might be fake news."</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>The Clickbait Creator:</strong> Tienen una noticia aburrida (ej. "Se perdió un lápiz"). Deben convertirla en un titular sensacionalista (clickbait) y luego en uno objetivo y confiable.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[Muestra 3 titulares] "Scientists Discover Talking Dolphins." "New Bridge Opens Downtown." "Local Boy Finds Dinosaur in Backyard." Two are real, one is fake. Which one? Justify!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">The dinosaur one! That's impossible — dinosaurs are extinct!</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Good thinking, Andrés! But sometimes fake news is more subtle. ¿Qué necesitamos para verificar? Today we learn: source, bias, reliable. Let's start with SOURCE — ¿qué significa?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Camila</div><div class="dlg-text">¿La fuente? ¿De dónde viene la información?</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Exactly! Now — The Media Auditor. In groups, you'll receive real articles. Use red stickers for possible fake news or bias, green for reliable information. Present your findings!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Grupo 2</div><div class="dlg-text">We think this article has bias. It only shows one opinion and doesn't cite any source. The source is not clear, it might be fake news.</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXCELLENT analysis! You used 'bias,' 'source,' and 'fake news' all correctly! Now — The Clickbait Creator. Boring news: 'A student lost a pencil.' Make it sensationalist!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Luisa</div><div class="dlg-text">"SHOCKING! Student's Pencil Vanishes — Was It Stolen By a Ghost?!"</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">HILARIOUS, Luisa! That's pure clickbait! Now make it objective and reliable instead.</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Luisa</div><div class="dlg-text">"Student Loses Pencil During Class — Item Not Yet Found."</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT contrast! Now you understand the difference between sensationalist and objective journalism!</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training — Consolidación por Niveles</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Clasifica</div><div class="lvl-task">Pon las palabras en "Good Media" o "Bad Media":<br>reliable · biased · objective · sensationalist · verified · fake<br><br><strong>Good:</strong> reliable, objective, verified<br><strong>Bad:</strong> biased, sensationalist, fake</div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Relaciona</div><div class="lvl-task">Relaciona el término con su definición:<br><br>headline ↔ the title of a news story<br>source ↔ where information comes from<br>bias ↔ a one-sided opinion<br><br><em style="color:var(--mustard-lt)">Asociación correcta de vocabulario</em></div></div>
+        <div class="lvl-card lv3"><div class="lvl-badge">🥇</div><div class="lvl-label">Nivel 3 — Completa</div><div class="lvl-task">A good _____ (periodista) always checks the _____ (fuente).<br><br><em style="color:var(--crimson-lt)">✅ journalist | source</em><br><br>This article shows _____ (sesgo) — it only presents one side.<br><br><em style="color:var(--crimson-lt)">✅ bias</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — The Media Auditor</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:13.5px">En grupos, reciben artículos cortos y deben presentar sus hallazgos usando el vocabulario de análisis crítico.</p>
+      <table class="tbl green">
+        <thead><tr><th>Observación</th><th>Presentación del hallazgo</th></tr></thead>
+        <tbody>
+          <tr><td>Article cites no source</td><td class="ans">"The source is not clear, it might be fake news."</td></tr>
+          <tr><td>Article only shows one opinion</td><td class="ans">"This article shows bias — it doesn't present both sides."</td></tr>
+          <tr><td>Article cites official government data</td><td class="ans">"This source seems reliable because it cites official data."</td></tr>
+          <tr><td>Headline uses extreme words like 'SHOCKING'</td><td class="ans">"This headline is sensationalist — it exaggerates the facts."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice — Media Literacy 101 Podcast</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">"Welcome to Media Literacy 101 — the podcast that helps you become a smarter news consumer!
+
+Today's topic: How to spot fake news. First rule: always check the SOURCE. If an article doesn't mention where the information comes from, that's a red flag.
+
+Second: watch out for BIAS. Bias means the article only shows one side of the story, usually to support a particular opinion. A reliable, objective article presents multiple perspectives.
+
+Third: be careful with SENSATIONALIST headlines. If a headline uses words like 'SHOCKING' or 'YOU WON'T BELIEVE,' it's probably clickbait — designed to get clicks, not to inform you.
+
+Fourth: verify with multiple sources. If only one website is reporting something big, be suspicious. Reliable news is usually reported by several trustworthy journalists and outlets.
+
+Remember: being a critical reader doesn't mean trusting nothing — it means checking everything. Stay informed, stay critical!"</div>
+      <table class="tbl navy">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What is the first rule to spot fake news?</td><td class="ans">Always check the source.</td></tr>
+          <tr><td>What does "bias" mean according to the podcast?</td><td class="ans">The article only shows one side of the story.</td></tr>
+          <tr><td>What words signal a sensationalist headline?</td><td class="ans">Words like "SHOCKING" or "YOU WON'T BELIEVE."</td></tr>
+          <tr><td>Why should you verify with multiple sources?</td><td class="ans">Because reliable news is usually reported by several trustworthy journalists.</td></tr>
+          <tr><td>What does being a "critical reader" mean?</td><td class="ans">Not trusting nothing, but checking everything.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice — Spot the Difference: Two Headlines</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="headline-badge">ARTICLE A — Sensationalist Source</div>
+      <div class="read-box">"DISASTER STRIKES! City Officials FAIL Citizens Again as New Tax Destroys Local Businesses Overnight!"
+
+Local business owners are FURIOUS after the city council shamefully approved a new tax that will CRUSH small businesses. Sources say this could be the END for many family-owned shops. Citizens are outraged and demanding answers from corrupt officials who clearly don't care about regular people.</div>
+      <div class="headline-badge" style="margin-top:16px">ARTICLE B — Objective Source</div>
+      <div class="read-box">"City Council Approves New Business Tax, Effective Next Month"
+
+The city council voted 6-3 yesterday to approve a new 2% tax on local businesses, which will take effect next month. According to city officials, the tax revenue will fund infrastructure improvements. Some business owners have expressed concerns about the financial impact, while city representatives say the tax is necessary for long-term development. A public forum will be held next week for community feedback.</div>
+      <table class="tbl crimson">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>Which article shows clear bias? Why?</td><td class="ans">Article A — uses emotional language like "FURIOUS," "CRUSH," "corrupt officials."</td></tr>
+          <tr><td>Which article cites specific facts?</td><td class="ans">Article B — mentions the 6-3 vote, the 2% tax, and the timeline.</td></tr>
+          <tr><td>Which article is sensationalist?</td><td class="ans">Article A — uses ALL CAPS and dramatic words like "DISASTER" and "FAIL."</td></tr>
+          <tr><td>Which article presents multiple perspectives?</td><td class="ans">Article B — mentions both business owner concerns AND city representatives' views.</td></tr>
+          <tr><td>Which would you trust more as a source? Why?</td><td class="ans">Article B — it's more objective, specific, and balanced.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice — How to Spot Fake News Guide</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:13.5px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo:</strong><br><br>
+        "Tip 1: Always check the source. If you can't verify where the information comes from, be careful. Tip 2: Watch for emotional language. Sensationalist headlines often use words like 'SHOCKING' to grab your attention. Tip 3: Look for bias. A reliable article presents more than one perspective. Tip 4: Verify with other sources. If only one place is reporting something big, be suspicious."
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1 — Diseño:</strong> Crea una infografía o póster titulado "How to spot Fake News."</li>
+        <li><strong>Parte 2 — Escritura:</strong> Escribe 10 consejos para que los jóvenes analicen los medios.</li>
+        <li>Incluye <strong>todo el vocabulario visto en clase</strong> (headline, bias, source, etc.). Explicaciones claras de por qué es importante ser un lector crítico.</li>
+        <li><strong>Nivel PRO:</strong> Busca una noticia en redes sociales hoy y analízala en un audio de 1 minuto aplicando tu guía.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>NEE 1 — Dificultad lectora</h4>Glosario visual con ícono + palabra para cada término (🚩 bias, ✅ reliable, 🪝 clickbait). En el Media Auditor, solo identifica 1 elemento por artículo (no múltiples).</div>
+        <div class="nee-card nee2"><h4>NEE 2 — Dificultad atencional</h4>Rol de "encargado de stickers" en el Media Auditor — pega los stickers mientras el grupo decide verbalmente. Solo clasifica 4 palabras en Nivel 1.</div>
+        <div class="nee-card nee3"><h4>NEE 3 — Timidez / Dificultad oral</h4>Escribe sus hallazgos del Media Auditor en una tarjeta que el docente lee. El Clickbait Creator puede hacerse completamente por escrito sin presentación oral.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿Qué es "bias" en una noticia?</td><td class="ans">Sesgo — cuando el artículo solo muestra un lado de la historia.</td></tr>
+          <tr><td>¿Qué señal indica un titular sensacionalista?</td><td class="ans">Uso de mayúsculas, palabras extremas como "SHOCKING" o exageración.</td></tr>
+          <tr><td>¿Qué deberías verificar siempre en una noticia?</td><td class="ans">La fuente (source) — de dónde viene la información.</td></tr>
+          <tr><td>¿Qué es "clickbait"?</td><td class="ans">Un titular diseñado para generar clics, no para informar con precisión.</td></tr>
+          <tr><td>Da un ejemplo de palabra que describe una buena fuente.</td><td class="ans">Reliable / objective / verified.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>This article have bias. (concordancia)</div><div class="err-c"><div class="lbl">✅ Correcto</div>This article HAS bias / shows bias.</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>The journalist is bias. (sustantivo usado como adjetivo)</div><div class="err-c"><div class="lbl">✅ Correcto</div>The journalist is BIASED. (forma adjetiva)</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>This is a fake new. (singular incorrecto)</div><div class="err-c"><div class="lbl">✅ Correcto</div>This is FAKE NEWS. (siempre como frase fija)</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — One Rule</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="font-size:13.5px;margin-bottom:14px">Dime una regla para no creer en Fake News:</p>
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">Regla básica</div><div class="exit-a">✅ "Check the source!"</div></div>
+        <div class="exit-card"><div class="exit-q">Regla intermedia</div><div class="exit-a">✅ "Look for bias and check if it's objective."</div></div>
+        <div class="exit-card"><div class="exit-q">Regla avanzada</div><div class="exit-a">✅ "Verify the information with multiple reliable sources before sharing it."</div></div>
+        <div class="exit-card"><div class="exit-q">Aplicación personal</div><div class="exit-a">✅ "I always check if the headline is sensationalist before I believe it."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">Real or Fake? funciona mejor con titulares verdaderamente extraños pero reales — busca "noticias raras pero ciertas" para sorprender a los estudiantes.</div>
+        <div class="note-item">El Media Auditor con stickers físicos genera alto engagement — la naturaleza táctil de "marcar" decisiones críticas hace el aprendizaje más memorable.</div>
+        <div class="note-item">Spot the Difference (Article A vs B) es la actividad más poderosa de la clase — ver el contraste directo enseña bias mejor que cualquier definición.</div>
+        <div class="note-item">Esta clase tiene una dimensión de ciudadanía digital muy importante — conecta con la realidad de que los estudiantes consumen noticias principalmente en redes sociales.</div>
+        <div class="note-item">Cierra la unidad recordando las 4 clases: voz pasiva en titulares, reported speech en entrevistas, past perfect en narrativas, y vocabulario crítico — todo conectado al mundo del periodismo.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🏠</span><h3>Tarea TRANSFORM — "The Fact-Checker's Guide"</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación</h4>
+        <ul class="blist">
+          <li><strong>Parte 1 — Diseño:</strong> Crea una infografía o póster titulado "How to spot Fake News."</li>
+          <li><strong>Parte 2 — Escritura:</strong> Escribe 10 consejos para que los jóvenes analicen los medios. Todo el vocabulario visto en clase. Explicaciones claras de por qué es importante ser un lector crítico.</li>
+          <li><strong>🎙️ Nivel PRO:</strong> Busca una noticia en redes sociales hoy y analízala en un audio de 1 minuto aplicando tu guía.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-4 -->
+
+</main>
+
+<script>
+function showClass(num,tab){
+  document.querySelectorAll('.class-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('class-'+num).classList.add('active');
+  tab.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggle(h){
+  const b=h.nextElementSibling;
+  const open=h.classList.contains('open');
+  h.classList.toggle('open',!open);
+  b.classList.toggle('open',!open);
+}
+document.querySelectorAll('.section-card-header.open').forEach(h=>{
+  h.nextElementSibling.classList.add('open');
+});
+</script>
+</body>
+</html>
