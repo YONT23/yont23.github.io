@@ -388,6 +388,15 @@ const PARTS = [
   ]}
 ];
 
+// Barajar las opciones aleatoriamente cada vez que se carga la página
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+PARTS.forEach(p => p.questions.forEach(q => shuffleArray(q.opts)));
+
 const TOTAL_Q = 25;
 
 const SER_ITEMS = [
@@ -404,13 +413,14 @@ const HACER_KEYWORDS = ['than','more','always','usually','often','sometimes','be
 // STATE
 // =====================================================
 let curStep = 'cover';
-let S = (()=>{ try{ return JSON.parse(localStorage.getItem('ym_icfes_v1')) || {answers:{},ser:{},hacerText:'',participants:[]}; } catch { return {answers:{},ser:{},hacerText:'',participants:[]}; } })();
+// Cambié a v2 para que no haga conflicto con los guardados previos sin aleatorizar
+let S = (()=>{ try{ return JSON.parse(localStorage.getItem('ym_icfes_v2')) || {answers:{},ser:{},hacerText:'',participants:[]}; } catch { return {answers:{},ser:{},hacerText:'',participants:[]}; } })();
 
-function save(){ localStorage.setItem('ym_icfes_v1', JSON.stringify(S)); }
+function save(){ localStorage.setItem('ym_icfes_v2', JSON.stringify(S)); }
 
 function resetAll(){
   if(!confirm('¿Reiniciar todo el simulacro? Se perderán todas las respuestas.')) return;
-  localStorage.removeItem('ym_icfes_v1');
+  localStorage.removeItem('ym_icfes_v2');
   S = {answers:{},ser:{},hacerText:'',participants:[]};
   save(); goStep('cover');
   toast('🔄','Simulacro reiniciado');
@@ -510,10 +520,16 @@ function renderExam(){
   const partsHtml = PARTS.map(part=>{
     const qHtml = part.questions.map(q=>{
       const ans = S.answers[q.num];
-      const optsHtml = q.opts.map((o,oi)=>{
+      const optsHtml = q.opts.map((o)=>{
         let cls='q-opt', disabled='';
-        if(ans){ disabled='disabled style="opacity:.72"'; if(oi===ans.idx) cls += ans.ok?' correct':' wrong'; }
-        return `<button class="${cls}" ${disabled} onclick="answerQ(${q.num},${oi},${o.ok},'${escQ(ans&&ans.ok?q.fbOk:q.fbBad)}')">${o.t}</button>`;
+        if(ans){ 
+          disabled='disabled style="opacity:.72"'; 
+          // Compara por texto (t) en lugar de índice para soportar las opciones aleatorias
+          if(o.t === ans.t) cls += ans.ok ? ' correct' : ' wrong'; 
+        }
+        // Se corrige el bug del feedback para pasar la alerta correcta al hacer clic
+        const fbToPass = o.ok ? q.fbOk : q.fbBad;
+        return `<button class="${cls}" data-val="${escQ(o.t)}" ${disabled} onclick="answerQ(${q.num}, '${escQ(o.t)}', ${o.ok}, '${escQ(fbToPass)}')">${o.t}</button>`;
       }).join('');
       const fb = ans ? `<div class="q-fb show ${ans.ok?'ok':'bad'}">${ans.ok?'✅':'❌'} ${ans.ok?q.fbOk:q.fbBad}</div>` : '';
       return `<div class="q-block">
@@ -543,9 +559,18 @@ function renderExam(){
   </div>`;
 }
 
-function answerQ(num, oi, ok, fb){
-  // Guardar respuesta
-  S.answers[num] = {idx:oi, ok:ok};
+// Nueva función añadida que faltaba en tu código
+function finishExam(){
+  if(answeredCount() < TOTAL_Q){
+    toast('⚠️', `Aún te faltan ${TOTAL_Q - answeredCount()} preguntas por responder.`);
+    return;
+  }
+  goStep('ser');
+}
+
+function answerQ(num, tText, ok, fb){
+  // Guardar respuesta con el texto de la opción seleccionada, no el índice numérico
+  S.answers[num] = {t: tText, ok: ok};
   save();
   
   // Actualizar SOLO la pregunta específica sin redibujar todo
@@ -554,10 +579,10 @@ function answerQ(num, oi, ok, fb){
     const chip = block.querySelector('.q-numchip');
     if(chip && parseInt(chip.textContent) === num){
       const opts = block.querySelectorAll('.q-opt');
-      opts.forEach((btn, idx) => {
+      opts.forEach((btn) => {
         btn.disabled = true;
         btn.style.opacity = '0.72';
-        if(idx === oi){
+        if(btn.getAttribute('data-val') === tText){
           btn.classList.add(ok ? 'correct' : 'wrong');
         }
       });
@@ -569,7 +594,7 @@ function answerQ(num, oi, ok, fb){
         block.appendChild(fbDiv);
       }
       fbDiv.className = 'q-fb show ' + (ok ? 'ok' : 'bad');
-      fbDiv.innerHTML = (ok ? '✅ ' : '❌ ') + (ok ? fb : fb);
+      fbDiv.innerHTML = (ok ? '✅ ' : '❌ ') + fb;
     }
   });
   
@@ -582,20 +607,6 @@ function answerQ(num, oi, ok, fb){
   
   // Actualizar contador del footer
   document.querySelector('.finish-txt strong').textContent = `${answered} de ${TOTAL_Q}`;
-}
-
-function goStep(step){
-  curStep = step;
-  renderStepper();
-  const ct = document.getElementById('content');
-  if(step==='cover') ct.innerHTML = renderCover();
-  else if(step==='exam') ct.innerHTML = renderExam();
-  else if(step==='ser') ct.innerHTML = renderSer();
-  else if(step==='hacer') ct.innerHTML = renderHacer();
-  else if(step==='participants') ct.innerHTML = renderParticipants();
-  else if(step==='results') ct.innerHTML = renderResults();
-  // Solo hacer scroll al top cuando cambias de paso, no al responder
-  if(step !== 'exam') window.scrollTo(0,0);
 }
 
 // =====================================================
