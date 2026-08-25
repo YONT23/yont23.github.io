@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Evaluativo: Living in a Digital World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .option-label {
+            transition: all 0.2s ease;
+        }
+        .option-label:hover {
+            background-color: #e5e7eb;
+        }
+        input[type="radio"]:checked + span {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800 p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-6 sm:p-10 text-center">
+            <h1 class="text-3xl font-bold mb-2">Institución Educativa Siglo XXI</h1>
+            <p class="text-blue-100 text-lg">Unit 3: Living in a Digital World - Evaluación por Competencias</p>
+        </div>
+
+        <!-- Pantalla de Inicio -->
+        <div id="start-screen" class="p-8 sm:p-12 text-center fade-in">
+            <h2 class="text-2xl font-semibold mb-4">¡Bienvenido al Taller Evaluativo!</h2>
+            <p class="mb-6 text-gray-600">
+                Este taller consta de 20 preguntas basadas en nuestras clases "The Busy Influencer" y "Defining My Tech World".<br><br>
+                <strong>Sistema de Calificación:</strong><br>
+                🧠 Saber: 35% | 🛠️ Saber Hacer: 35% | ❤️ Ser: 30%
+            </p>
+            <div class="max-w-md mx-auto">
+                <label for="student-name" class="block text-left text-sm font-medium text-gray-700 mb-2">Ingresa tu nombre completo para comenzar:</label>
+                <input type="text" id="student-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow mb-6" placeholder="Ej. Carlos Mendoza">
+                <button onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors text-lg">
+                    Comenzar Taller
+                </button>
+            </div>
+            <p id="name-error" class="text-red-500 mt-3 hidden">Por favor, ingresa tu nombre para poder continuar.</p>
+        </div>
+
+        <!-- Contenedor del Quiz -->
+        <div id="quiz-screen" class="hidden p-6 sm:p-10 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <span id="question-counter" class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Pregunta 1 de 20</span>
+                <span id="competency-badge" class="px-3 py-1 rounded-full text-sm font-bold text-white bg-blue-500">SABER (35%)</span>
+            </div>
+            
+            <div class="mb-8">
+                <h3 id="question-text" class="text-xl sm:text-2xl font-semibold text-gray-800 leading-snug mb-6"></h3>
+                <div id="options-container" class="space-y-3">
+                    <!-- Opciones generadas por JS -->
+                </div>
+            </div>
+
+            <div class="flex justify-between border-t border-gray-200 pt-6">
+                <button id="prev-btn" onclick="prevQuestion()" class="hidden px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">Anterior</button>
+                <div class="flex-grow"></div>
+                <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium shadow-sm transition-colors">Siguiente</button>
+                <button id="submit-btn" onclick="submitQuiz()" class="hidden px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium shadow-sm transition-colors">Finalizar y Calificar</button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Resultados -->
+        <div id="results-screen" class="hidden p-6 sm:p-10 fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">¡Taller Finalizado!</h2>
+                <p id="result-student-name" class="text-xl text-gray-600 mb-6"></p>
+                
+                <div class="bg-gray-50 rounded-xl p-6 inline-block border border-gray-200 shadow-sm w-full max-w-2xl">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">Tu Calificación Final</h3>
+                    <div class="text-5xl font-black text-blue-600 mb-6" id="final-score">0%</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <div class="text-sm text-gray-500 font-bold mb-1">SABER (35%)</div>
+                            <div class="text-xl font-bold text-gray-800" id="score-saber">0/35%</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <div class="text-sm text-gray-500 font-bold mb-1">SABER HACER (35%)</div>
+                            <div class="text-xl font-bold text-gray-800" id="score-hacer">0/35%</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <div class="text-sm text-gray-500 font-bold mb-1">SER (30%)</div>
+                            <div class="text-xl font-bold text-gray-800" id="score-ser">0/30%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-10">
+                <button onclick="downloadReport()" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors text-lg">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Descargar Notas (TXT)
+                </button>
+            </div>
+
+            <div class="border-t border-gray-200 pt-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Revisión de Respuestas y Explicaciones</h3>
+                <div id="review-container" class="space-y-6">
+                    <!-- Revisiones inyectadas por JS -->
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="location.reload()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition-colors">Volver al Inicio</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de preguntas
+        const questions = [
+            // --- COMPETENCIA: SABER (7 Preguntas - 35%) ---
+            {
+                category: "SABER",
+                text: "1. ¿Cuál es la estructura gramatical correcta del 'Present Continuous' cuando se usa para expresar un futuro (arreglo fijo)?",
+                options: [
+                    "Subject + will + base verb + time expression",
+                    "Subject + am/is/are + V-ING + time expression",
+                    "Subject + be going to + base verb",
+                    "Subject + V-ING + time expression"
+                ],
+                correct: 1,
+                explanation: "Como indica la fórmula del arreglo: Subject + am/is/are + V-ING + TIME EXPRESSION (Ej: I am meeting the doctor at 4 PM)."
+            },
+            {
+                category: "SABER",
+                text: "2. Según 'La prueba del celular', ¿cuál es la diferencia principal entre usar 'Present Continuous' y 'Be Going To' para el futuro?",
+                options: [
+                    "'Be going to' es para cosas en tu agenda, 'Present Continuous' para intenciones.",
+                    "Ambos se usan exactamente igual sin ninguna diferencia.",
+                    "'Present Continuous' es para arreglos fijos (en tu agenda), 'Be going to' es para intenciones (solo en tu cabeza).",
+                    "'Present Continuous' se usa solo para predicciones del clima."
+                ],
+                correct: 2,
+                explanation: "El 'Visual Timeline' enseña que 'Going to' es una intención en tu cerebro, mientras que 'Present Continuous' es un compromiso agendado en papel o celular."
+            },
+            {
+                category: "SABER",
+                text: "3. En el vocabulario clave de la Clase 1, ¿qué significa la palabra 'arrangement'?",
+                options: [
+                    "Intención de hacer algo",
+                    "Predicción sobre el futuro",
+                    "Arreglo o cita confirmada",
+                    "Un dispositivo tecnológico"
+                ],
+                correct: 2,
+                explanation: "En la tabla de vocabulario, 'arrangement' significa arreglo / cita confirmada (The arrangement is set for Tuesday)."
+            },
+            {
+                category: "SABER",
+                text: "4. En el tema de Relative Clauses, ¿qué pronombre relativo usamos exclusivamente para referirnos a PERSONAS?",
+                options: [
+                    "Which",
+                    "Who",
+                    "That",
+                    "Where"
+                ],
+                correct: 1,
+                explanation: "La regla gramatical indica: WHO → para PERSONAS (Ej: A YouTuber is a person WHO makes videos)."
+            },
+            {
+                category: "SABER",
+                text: "5. ¿Cuál es el pronombre relativo considerado un 'comodín' (wildcard) que puede usarse tanto para personas como para cosas?",
+                options: [
+                    "Which",
+                    "Who",
+                    "That",
+                    "Whose"
+                ],
+                correct: 2,
+                explanation: "THAT funciona como comodín (personas y cosas) en inglés informal. Ej: It's a device THAT we use every day."
+            },
+            {
+                category: "SABER",
+                text: "6. Según el vocabulario de tecnología (Clase 2), ¿cuál es la definición de 'developer'?",
+                options: [
+                    "A person who promotes products online.",
+                    "A program that runs on your phone.",
+                    "A system that decides what content you see.",
+                    "A person who builds apps and software."
+                ],
+                correct: 3,
+                explanation: "La tabla define 'developer' (desarrollador) como: A developer is a person who builds apps and software."
+            },
+            {
+                category: "SABER",
+                text: "7. ¿Qué significa la regla general 'The Person/Object Split' enseñada en clase?",
+                options: [
+                    "Separar a los estudiantes en grupos.",
+                    "Usar WHO para el dibujo de la persona (👤) y WHICH para el objeto o caja (📦).",
+                    "No usar nunca el pronombre THAT.",
+                    "Dividir el tiempo entre tecnología y vida personal."
+                ],
+                correct: 1,
+                explanation: "El plan de acción indica dibujar una persona para WHO y una caja para WHICH para evitar confundir ambos pronombres."
+            },
+
+            // --- COMPETENCIA: SABER HACER (7 Preguntas - 35%) ---
+            {
+                category: "SABER HACER",
+                text: "8. Completa correctamente la frase para un arreglo confirmado: 'I _______ (visit) my dentist tomorrow at 10 AM.'",
+                options: [
+                    "will visit",
+                    "visit",
+                    "am visiting",
+                    "am going to visiting"
+                ],
+                correct: 2,
+                explanation: "Al tener hora y fecha fija (tomorrow at 10 AM), es un arreglo confirmado, por lo que usamos Present Continuous: 'I am visiting'."
+            },
+            {
+                category: "SABER HACER",
+                text: "9. De las siguientes opciones, escoge la oración gramaticalmente CORRECTA según lo aprendido en la Unidad 3:",
+                options: [
+                    "She is going to performing on Friday.",
+                    "Do you do anything on Monday?",
+                    "I will meet my dentist tomorrow at 10.",
+                    "They are having a party this Saturday."
+                ],
+                correct: 3,
+                explanation: "La opción 'They are having a party this Saturday' aplica perfectamente la fórmula de Present Continuous para arreglos futuros."
+            },
+            {
+                category: "SABER HACER",
+                text: "10. Usa el 'Relative Clause Bridge' para unir estas ideas sin repetir: 'A hacker is a person. The person enters computers illegally.'",
+                options: [
+                    "A hacker is a person which enters computers illegally.",
+                    "A hacker is a person who enters computers illegally.",
+                    "A hacker is a person, the person enters computers illegally.",
+                    "A hacker is a person that he enters computers illegally."
+                ],
+                correct: 1,
+                explanation: "Para personas usamos 'WHO' como puente: 'A hacker is a person WHO enters computers illegally.' Evita la repetición de 'the person'."
+            },
+            {
+                category: "SABER HACER",
+                text: "11. De acuerdo al texto 'The Influencer's Weekly Vlog', ¿qué hará Sofía el lunes por la mañana?",
+                options: [
+                    "She is taking a day off.",
+                    "She is meeting her editor.",
+                    "She is recording a new video at 10 AM.",
+                    "She is flying to Medellín."
+                ],
+                correct: 2,
+                explanation: "En la lectura Sofía dice: 'On Monday, I'm recording a new video for my channel at 10 AM'."
+            },
+            {
+                category: "SABER HACER",
+                text: "12. Identifica y corrige el error en esta frase: 'A smartphone is a device who connects to the internet.'",
+                options: [
+                    "El error es 'connects', debe ser 'connect'.",
+                    "El error es 'who', debe cambiarse por 'which' o 'that' porque es un objeto.",
+                    "El error es 'is', debe ser 'are'.",
+                    "La frase está completamente correcta."
+                ],
+                correct: 1,
+                explanation: "Un 'smartphone' es un objeto (device), por lo tanto no puede llevar 'who'. Debe usar 'which' o 'that'."
+            },
+            {
+                category: "SABER HACER",
+                text: "13. En la lectura 'Help! I'm Double Booked!', ¿cuál es la decisión final (arrangement) que toma Mateo para resolver su problema el sábado?",
+                options: [
+                    "He is not going to the party, he is going to the salsa competition.",
+                    "He is staying home to study.",
+                    "He is going to the birthday party first, then calling Daniel.",
+                    "His mom is driving him to both events."
+                ],
+                correct: 2,
+                explanation: "El texto afirma que la decisión final de Mateo es ir a la fiesta de cumpleaños primero y luego llamar a Daniel."
+            },
+            {
+                category: "SABER HACER",
+                text: "14. Completa la definición estructurada (Tech Taboo): 'Instagram is a platform ______ allows you to share photos.'",
+                options: [
+                    "who",
+                    "which / that",
+                    "where",
+                    "when"
+                ],
+                correct: 1,
+                explanation: "Platform es una cosa/sistema, así que el puente correcto es 'which' o 'that' (Instagram = a platform that allows you...)."
+            },
+
+            // --- COMPETENCIA: SER (6 Preguntas - 30%) ---
+            {
+                category: "SER",
+                text: "15. En el 'Double Booked Dilemma', Luisa decide: 'I'm not going to the concert because I'm celebrating with my mom. Family is more important!' ¿Qué actitud demuestra Luisa con esta respuesta?",
+                options: [
+                    "Irresponsabilidad con sus amigos.",
+                    "Falta de interés en la música.",
+                    "Toma de decisiones responsables y priorización de sus vínculos afectivos.",
+                    "Incapacidad para organizarse en una agenda."
+                ],
+                correct: 2,
+                explanation: "Luisa reflexiona éticamente sobre el valor de la familia frente a un evento de ocio, demostrando prioridades claras e inteligencia emocional."
+            },
+            {
+                category: "SER",
+                text: "16. En la simulación de clase, Valentina se equivoca al usar 'which' para una persona, pero de inmediato se detiene y dice 'no! WHO makes dances...'. El profesor llama a esto 'metacognición'. ¿Por qué es valiosa esta actitud para tu aprendizaje?",
+                options: [
+                    "Porque demuestra que los errores son malos y deben evitarse.",
+                    "Porque muestra capacidad de autocorrección y consciencia de su propio proceso de aprendizaje.",
+                    "Porque hace que la clase termine más rápido.",
+                    "Porque el profesor no tiene que trabajar."
+                ],
+                correct: 1,
+                explanation: "La metacognición es pensar sobre cómo pensamos. Darse cuenta del propio error (autocorrección) es una de las actitudes más altas en el aprendizaje autónomo (el Ser)."
+            },
+            {
+                category: "SER",
+                text: "17. Según las estrategias inclusivas (NEE), si un compañero de tu clase tiene dificultades de atención en la dinámica 'The Appointment Dash', ¿cuál es tu rol ético como compañero de grupo?",
+                options: [
+                    "Dejarlo solo porque retrasa la actividad.",
+                    "Hacer todo el trabajo por él para que no se esfuerce.",
+                    "Integrarlo asignándole un rol específico (como organizador) y respetar su ritmo.",
+                    "Quejarme con el profesor por su falta de atención."
+                ],
+                correct: 2,
+                explanation: "La inclusión implica adaptar el entorno y apoyar a los compañeros con Necesidades Educativas Especiales asignándoles roles donde puedan brillar, fortaleciendo la empatía grupal."
+            },
+            {
+                category: "SER",
+                text: "18. En la actividad donde debes llenar tu agenda consiguiendo citas con compañeros, ¿qué valor fundamental se promueve al usar expresiones como 'Sorry, I'm going to the dentist' para declinar una invitación?",
+                options: [
+                    "El respeto por el tiempo propio y la responsabilidad de cumplir compromisos previos.",
+                    "La excusa fácil para no compartir con otros.",
+                    "El rechazo social hacia los compañeros.",
+                    "La superioridad de tener una agenda llena."
+                ],
+                correct: 0,
+                explanation: "Llevar una agenda y respetarla promueve el valor de la responsabilidad, la honestidad y el respeto por el tiempo (tanto el tuyo como el de los demás)."
+            },
+            {
+                category: "SER",
+                text: "19. La 'Tarea Transform' te pide crear un 'Digital Planner' (Agenda digital) real para tu próxima semana. Más allá del inglés, ¿qué habilidad para tu proyecto de vida estás fortaleciendo?",
+                options: [
+                    "Habilidades de diseño gráfico solamente.",
+                    "Organización del tiempo, planificación personal y autogestión.",
+                    "El uso excesivo de redes sociales.",
+                    "Ninguna, es solo una tarea escolar."
+                ],
+                correct: 1,
+                explanation: "Crear una agenda fomenta hábitos de autogestión, planificación y organización del tiempo, vitales para el éxito académico y profesional."
+            },
+            {
+                category: "SER",
+                text: "20. El lema de la Institución Educativa Siglo XXI es 'La reflexión implica un esfuerzo por conocer'. Cuando usas el inglés para entender los 'algoritmos' y las 'plataformas', estás:",
+                options: [
+                    "Usando el idioma pasivamente solo para aprobar la materia.",
+                    "Perdiendo el tiempo porque la tecnología cambia muy rápido.",
+                    "Siendo un ciudadano digital crítico que comprende y reflexiona sobre el mundo tecnológico que lo rodea.",
+                    "Fomentando el uso de hackers."
+                ],
+                correct: 2,
+                explanation: "Aprender inglés mediante temas tecnológicos (Living in a Digital World) te prepara para ser un pensador crítico y un ciudadano ético en entornos digitales."
+            }
+        ];
+
+        // Variables de estado
+        let currentQuestion = 0;
+        let studentAnswers = new Array(questions.length).fill(null);
+        let studentName = "";
+        
+        // Colores por competencia
+        const catColors = {
+            "SABER": "bg-blue-500",
+            "SABER HACER": "bg-purple-500",
+            "SER": "bg-green-500"
+        };
+
+        function startQuiz() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            if (nameInput === "") {
+                document.getElementById('name-error').classList.remove('hidden');
+                return;
+            }
+            studentName = nameInput;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-counter').innerText = `Pregunta ${currentQuestion + 1} de ${questions.length}`;
+            
+            const badge = document.getElementById('competency-badge');
+            badge.innerText = q.category;
+            badge.className = `px-3 py-1 rounded-full text-sm font-bold text-white ${catColors[q.category]}`;
+            
+            document.getElementById('question-text').innerText = q.text;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const checked = studentAnswers[currentQuestion] === index ? 'checked' : '';
+                optionsContainer.innerHTML += `
+                    <label class="option-label flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer bg-gray-50">
+                        <input type="radio" name="option" value="${index}" class="w-5 h-5 text-blue-600 focus:ring-blue-500 border-gray-300" ${checked} onchange="selectOption(${index})">
+                        <span class="ml-3 text-gray-700">${opt}</span>
+                    </label>
+                `;
+            });
+
+            // Control de botones
+            document.getElementById('prev-btn').classList.toggle('hidden', currentQuestion === 0);
+            
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('submit-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('submit-btn').classList.add('hidden');
+            }
+        }
+
+        function selectOption(index) {
+            studentAnswers[currentQuestion] = index;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            // Verificar si hay sin responder
+            const unanswered = studentAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                alert(`Aún te faltan ${unanswered} pregunta(s) por responder. Por favor, revisa tus respuestas.`);
+                return;
+            }
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            document.getElementById('result-student-name').innerHTML = `Estudiante: <strong>${studentName}</strong>`;
+            
+            calculateAndRenderResults();
+        }
+
+        let finalSaberScore = 0;
+        let finalHacerScore = 0;
+        let finalSerScore = 0;
+        let finalTotalScore = 0;
+
+        function calculateAndRenderResults() {
+            let correctSaber = 0;
+            let correctHacer = 0;
+            let correctSer = 0;
+            
+            let totalSaber = 7;
+            let totalHacer = 7;
+            let totalSer = 6;
+
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const isCorrect = studentAnswers[index] === q.correct;
+                
+                if (isCorrect) {
+                    if (q.category === "SABER") correctSaber++;
+                    if (q.category === "SABER HACER") correctHacer++;
+                    if (q.category === "SER") correctSer++;
+                }
+
+                // Generar UI de revisión
+                const icon = isCorrect ? '✅' : '❌';
+                const color = isCorrect ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50';
+                
+                let html = `
+                <div class="border ${color} p-5 rounded-xl">
+                    <div class="font-bold text-gray-800 mb-2">
+                        <span class="text-xs font-bold text-white ${catColors[q.category]} px-2 py-1 rounded mr-2">${q.category}</span>
+                        ${q.text}
+                    </div>
+                    <div class="text-sm mb-1 text-gray-600">
+                        <strong>Tu respuesta:</strong> ${q.options[studentAnswers[index]] || "Sin responder"} ${icon}
+                    </div>
+                `;
+                
+                if (!isCorrect) {
+                    html += `
+                    <div class="text-sm mb-2 text-gray-600">
+                        <strong>Respuesta correcta:</strong> ${q.options[q.correct]}
+                    </div>`;
+                }
+
+                html += `
+                    <div class="text-sm mt-3 p-3 bg-white bg-opacity-60 rounded border border-gray-200">
+                        <strong>💡 Explicación:</strong> ${q.explanation}
+                    </div>
+                </div>`;
+                
+                reviewContainer.innerHTML += html;
+            });
+
+            // Calcular porcentajes ponderados
+            // Saber: 35% del total
+            finalSaberScore = (correctSaber / totalSaber) * 35;
+            // Saber Hacer: 35% del total
+            finalHacerScore = (correctHacer / totalHacer) * 35;
+            // Ser: 30% del total
+            finalSerScore = (correctSer / totalSer) * 30;
+            
+            finalTotalScore = finalSaberScore + finalHacerScore + finalSerScore;
+
+            // Renderizar puntajes en UI
+            document.getElementById('final-score').innerText = `${finalTotalScore.toFixed(1)} / 100`;
+            document.getElementById('score-saber').innerText = `${finalSaberScore.toFixed(1)} / 35`;
+            document.getElementById('score-hacer').innerText = `${finalHacerScore.toFixed(1)} / 35`;
+            document.getElementById('score-ser').innerText = `${finalSerScore.toFixed(1)} / 30`;
+        }
+
+        function downloadReport() {
+            let text = `====================================================\n`;
+            text += `     RESULTADOS DEL TALLER: LIVING IN A DIGITAL WORLD\n`;
+            text += `             INSTITUCION EDUCATIVA SIGLO XXI\n`;
+            text += `====================================================\n\n`;
+            text += `Estudiante: ${studentName}\n`;
+            text += `Fecha de generación: ${new Date().toLocaleString()}\n\n`;
+            text += `--- CALIFICACION FINAL ---\n`;
+            text += `Puntaje Total: ${finalTotalScore.toFixed(1)} / 100\n\n`;
+            text += `Desglose por Competencias:\n`;
+            text += `> Saber (35%): ${finalSaberScore.toFixed(1)}\n`;
+            text += `> Saber Hacer (35%): ${finalHacerScore.toFixed(1)}\n`;
+            text += `> Ser (30%): ${finalSerScore.toFixed(1)}\n\n`;
+            text += `====================================================\n`;
+            text += `               DETALLE DE RESPUESTAS\n`;
+            text += `====================================================\n\n`;
+
+            questions.forEach((q, i) => {
+                const isCorrect = studentAnswers[i] === q.correct;
+                text += `${q.text} [${q.category}]\n`;
+                text += `Tu respuesta: ${q.options[studentAnswers[i]] || 'No respondida'}\n`;
+                text += `Resultado: ${isCorrect ? 'Correcto' : 'Incorrecto (Respuesta esperada: ' + q.options[q.correct] + ')'}\n`;
+                text += `Explicación: ${q.explanation}\n\n`;
+                text += `----------------------------------------------------\n\n`;
+            });
+
+            // Crear Blob y descargar
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Resultados_Taller_${studentName.replace(/\s+/g, '_')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
