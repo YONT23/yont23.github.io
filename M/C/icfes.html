@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro Saber 11 · Inglés · Docente Yonatha Mendoza Molina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --wine:#7a1f2b; --wine-dk:#5c1620; --wine-lt:#fbe9ea;
+  --gold:#c9a227; --gold-lt:#faf3dc;
+  --cream:#faf6ef; --paper:#fffdf9;
+  --ink:#241a14; --ink-soft:#4a3d33;
+  --gray-200:#e7ded0; --gray-300:#d8cdba; --gray-400:#a8998a;
+  --green:#2e7d4f; --green-lt:#e3f4e9;
+  --red:#b23a3a; --red-lt:#fbe6e6;
+  --blue:#2f5f8f; --blue-lt:#e5eef7;
+  --r:14px; --r-s:9px; --r-xs:5px;
+  --sh-sm:0 1px 3px rgba(36,26,20,.08); --sh-md:0 6px 22px rgba(36,26,20,.10); --sh-lg:0 16px 44px rgba(36,26,20,.16);
+  --f-d:'Spectral',Georgia,serif; --f-b:'Manrope',sans-serif; --f-m:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--f-b);background:var(--cream);color:var(--ink);min-height:100vh}
+
+/* ===== TOP HEADER ===== */
+.topbar{background:var(--wine);padding:18px 28px;box-shadow:var(--sh-md);position:sticky;top:0;z-index:80}
+.tb-inner{max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.tb-brand{display:flex;align-items:center;gap:12px}
+.tb-seal{width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.tb-title{font-family:var(--f-d);font-size:1.15rem;color:var(--white);color:#fff;font-weight:700;line-height:1.2}
+.tb-sub{font-size:.68rem;color:var(--gold-lt);letter-spacing:.05em;text-transform:uppercase;font-weight:600;margin-top:2px}
+.tb-acts{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-s);font-family:var(--f-b);font-size:.78rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.btn-gold{background:var(--gold);color:var(--wine-dk)}
+.btn-gold:hover{background:#ddb84a;transform:translateY(-1px)}
+.btn-ghost-lt{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-ghost-lt:hover{background:rgba(255,255,255,.2)}
+.btn-primary{background:var(--wine);color:#fff}
+.btn-primary:hover{background:var(--wine-dk);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--wine);border:1.5px solid var(--gray-300)}
+.btn-outline:hover{background:var(--wine-lt)}
+.btn-ghost{background:var(--gray-200);color:var(--ink-soft);border:1px solid var(--gray-300)}
+.btn-ghost:hover{background:var(--gray-300)}
+
+/* ===== STEPPER ===== */
+.stepper{background:var(--paper);border-bottom:1px solid var(--gray-200);padding:0 28px;position:sticky;top:78px;z-index:70;overflow-x:auto}
+.stepper-inner{max-width:920px;margin:0 auto;display:flex;gap:0}
+.step{display:flex;align-items:center;gap:8px;padding:12px 16px;font-size:.72rem;font-weight:600;color:var(--gray-400);white-space:nowrap;border-bottom:3px solid transparent;flex-shrink:0}
+.step.active{color:var(--wine);border-bottom-color:var(--wine)}
+.step.done{color:var(--green)}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--gray-200);color:var(--gray-400);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0}
+.step.active .step-num{background:var(--wine);color:#fff}
+.step.done .step-num{background:var(--green);color:#fff}
+
+/* ===== MAIN ===== */
+.wrap{max-width:920px;margin:0 auto;padding:32px 28px 80px}
+.page{animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== COVER ===== */
+.cover-card{background:var(--paper);border:1.5px solid var(--gray-200);border-radius:var(--r);padding:44px 40px;text-align:center;box-shadow:var(--sh-md);margin-bottom:22px}
+.cover-seal{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e8c95a);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 18px;box-shadow:0 6px 18px rgba(201,162,39,.35)}
+.cover-eyebrow{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--wine);font-weight:700;margin-bottom:10px}
+.cover-title{font-family:var(--f-d);font-size:2.1rem;font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:10px}
+.cover-sub{color:var(--ink-soft);font-size:.95rem;max-width:520px;margin:0 auto 22px;line-height:1.6}
+.cover-meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:26px}
+.cm-item{text-align:center}
+.cm-val{font-family:var(--f-d);font-size:1.5rem;font-weight:800;color:var(--wine)}
+.cm-lbl{font-size:.68rem;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em}
+
+.parts-preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:26px;text-align:left}
+.pp-item{background:var(--cream);border:1px solid var(--gray-200);border-radius:var(--r-s);padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.pp-num{width:26px;height:26px;border-radius:50%;background:var(--wine);color:#fff;font-family:var(--f-m);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pp-txt{font-size:.78rem;color:var(--ink-soft)}
+.pp-txt strong{display:block;color:var(--ink);font-size:.83rem}
+
+.rubric-note{background:var(--gold-lt);border:1.5px solid var(--gold);border-radius:var(--r-s);padding:16px 20px;text-align:left;font-size:.83rem;color:#5c4a10;line-height:1.6;margin-bottom:8px}
+.rubric-note strong{color:var(--wine-dk)}
+
+/* ===== EXAM PROGRESS ===== */
+.exam-progress{background:var(--paper);border:1px solid var(--gray-200);border-radius:var(--r-s);padding:14px 20px;margin-bottom:22px;display:flex;align-items:center;gap:16px;position:sticky;top:130px;z-index:60;box-shadow:var(--sh-sm)}
+.ep-bar{flex:1;height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden}
+.ep-fill{height:100%;background:linear-gradient(90deg,var(--wine),var(--gold));border-radius:4px;transition:width .3s}
+.ep-txt{font-family:var(--f-m);font-size:.78rem;color:var(--wine);font-weight:600;white-space:nowrap}
+
+/* ===== PART BLOCK ===== */
+.part-block{background:var(--paper);border:1.5px solid var(--gray-200);border-radius:var(--r);padding:26px 28px;margin-bottom:22px;box-shadow:var(--sh-sm)}
+.part-hd{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--gray-200)}
+.part-badge{background:var(--wine);color:#fff;font-family:var(--f-m);font-size:.75rem;font-weight:700;padding:5px 12px;border-radius:20px;flex-shrink:0}
+.part-title{font-family:var(--f-d);font-size:1.2rem;font-weight:700;color:var(--ink)}
+.part-instr{font-size:.8rem;color:var(--gray-400);margin-top:1px}
+
+/* Poster */
+.poster{background:linear-gradient(135deg,var(--wine),var(--wine-dk));color:#fff;border-radius:var(--r-s);padding:24px 26px;margin-bottom:18px;position:relative;overflow:hidden}
+.poster::before{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06)}
+.poster-title{font-family:var(--f-d);font-size:1.5rem;font-weight:800;margin-bottom:10px}
+.poster-line{font-size:.86rem;line-height:1.9;color:rgba(255,255,255,.9)}
+.poster-line b{color:var(--gold-lt)}
+
+/* Ads */
+.ads-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.ad-card{background:var(--cream);border:1.5px solid var(--gray-200);border-radius:var(--r-s);padding:14px 16px}
+.ad-letter{display:inline-flex;width:22px;height:22px;border-radius:5px;background:var(--blue);color:#fff;align-items:center;justify-content:center;font-family:var(--f-m);font-size:.72rem;font-weight:700;margin-bottom:8px}
+.ad-title{font-weight:700;font-size:.78rem;color:var(--ink);text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.ad-txt{font-size:.78rem;color:var(--ink-soft);line-height:1.5}
+
+/* Dialogue */
+.dialogue{background:var(--cream);border-radius:var(--r-s);padding:18px 20px;margin-bottom:18px;display:flex;flex-direction:column;gap:10px}
+.dlg-row{display:flex;gap:10px;align-items:flex-start}
+.dlg-name{font-family:var(--f-m);font-weight:700;color:var(--wine);font-size:.8rem;flex-shrink:0;width:20px}
+.dlg-txt{font-size:.85rem;color:var(--ink-soft);line-height:1.5}
+.dlg-blank{background:var(--gold-lt);border:1.5px dashed var(--gold);color:#8a6d0f;padding:1px 9px;border-radius:20px;font-family:var(--f-m);font-weight:700;font-size:.78rem}
+
+/* Cloze paragraph */
+.cloze-box{background:var(--cream);border-radius:var(--r-s);padding:18px 20px;margin-bottom:18px;font-size:.87rem;color:var(--ink-soft);line-height:2}
+
+/* Reading text */
+.reading-box{background:var(--cream);border-left:4px solid var(--wine);border-radius:0 var(--r-s) var(--r-s) 0;padding:18px 20px;margin-bottom:18px;font-size:.86rem;color:var(--ink-soft);line-height:1.75}
+.reading-box p+p{margin-top:10px}
+
+/* Question */
+.q-block{margin-bottom:18px}
+.q-block:last-child{margin-bottom:0}
+.q-text{font-size:.88rem;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;gap:8px}
+.q-numchip{background:var(--wine);color:#fff;font-family:var(--f-m);font-size:.7rem;font-weight:700;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.q-opts{display:flex;flex-direction:column;gap:7px;margin-left:30px}
+.q-opt{border:1.5px solid var(--gray-300);border-radius:var(--r-s);padding:9px 14px;font-size:.82rem;color:var(--ink-soft);cursor:pointer;transition:all .2s;background:var(--paper);text-align:left;font-family:var(--f-b)}
+.q-opt:hover{border-color:var(--blue);background:var(--blue-lt);color:var(--ink)}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);color:#1c5c37;font-weight:700}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);color:#8f2c2c}
+.q-opt:disabled{cursor:default}
+.q-fb{margin-left:30px;margin-top:6px;font-size:.76rem;padding:8px 12px;border-radius:var(--r-xs);display:none}
+.q-fb.show{display:block}
+.q-fb.ok{background:var(--green-lt);color:#1c5c37;border:1px solid #a8dcbb}
+.q-fb.bad{background:var(--red-lt);color:#8f2c2c;border:1px solid #f0b8b8}
+
+/* Finish bar */
+.finish-bar{position:sticky;bottom:0;background:var(--paper);border-top:2px solid var(--gray-200);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;margin:0 -28px;box-shadow:0 -6px 18px rgba(36,26,20,.08)}
+.finish-txt{font-size:.8rem;color:var(--ink-soft)}
+.finish-txt strong{color:var(--wine)}
+
+/* ===== SER CHECKLIST ===== */
+.ser-list{display:flex;flex-direction:column;gap:10px}
+.ser-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--gray-300);border-radius:var(--r-s);cursor:pointer;transition:all .2s;background:var(--cream)}
+.ser-item:hover{border-color:var(--wine)}
+.ser-item.checked{border-color:var(--wine);background:var(--wine-lt)}
+.ser-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--gray-400);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:transparent;transition:all .2s}
+.ser-item.checked .ser-box{background:var(--wine);border-color:var(--wine);color:#fff}
+.ser-txt{font-size:.85rem;color:var(--ink)}
+
+/* ===== SABER HACER ===== */
+.sh-prompt{background:var(--wine-lt);border:1.5px solid #e7bcc0;border-radius:var(--r-s);padding:16px 18px;margin-bottom:14px;font-size:.86rem;color:var(--wine-dk);line-height:1.65}
+.sh-prompt strong{color:var(--wine)}
+.sh-kw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sh-kw-chip{background:var(--blue-lt);border:1px solid #c3d7ec;color:var(--blue);padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:600;font-family:var(--f-m)}
+.sh-kw-chip.found{background:var(--green-lt);border-color:#a8dcbb;color:#1c5c37}
+.sh-ta{width:100%;background:var(--paper);border:1.5px solid var(--gray-300);border-radius:var(--r-s);padding:16px;color:var(--ink);font-family:var(--f-b);font-size:.88rem;line-height:1.65;resize:vertical;min-height:160px;outline:none}
+.sh-ta:focus{border-color:var(--wine)}
+.sh-score{margin-top:14px;background:var(--cream);border-radius:var(--r-s);padding:14px 16px;font-size:.82rem;color:var(--ink-soft);display:none}
+.sh-score.show{display:block}
+.sh-score b{color:var(--wine)}
+
+/* ===== PARTICIPANTS ===== */
+.part-form{display:flex;gap:10px;margin-bottom:16px}
+.part-input{flex:1;padding:12px 16px;border:1.5px solid var(--gray-300);border-radius:var(--r-s);font-family:var(--f-b);font-size:.88rem;outline:none}
+.part-input:focus{border-color:var(--wine)}
+.part-chips{display:flex;flex-wrap:wrap;gap:8px;min-height:40px}
+.part-chip{background:var(--wine);color:#fff;padding:8px 14px;border-radius:20px;font-size:.83rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.part-chip button{background:rgba(255,255,255,.2);border:none;color:#fff;width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center}
+.part-empty{color:var(--gray-400);font-size:.83rem;padding:10px 0}
+
+/* ===== RESULTS ===== */
+.result-hero{background:linear-gradient(135deg,var(--wine),var(--wine-dk));border-radius:var(--r);padding:38px 40px;text-align:center;color:#fff;margin-bottom:22px;position:relative;overflow:hidden}
+.result-hero::before{content:'🎓';position:absolute;font-size:7rem;opacity:.08;right:20px;top:50%;transform:translateY(-50%)}
+.result-names{font-size:.78rem;color:var(--gold-lt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.result-names strong{display:block;font-size:1.05rem;color:#fff;text-transform:none;letter-spacing:0;margin-top:4px;font-family:var(--f-d)}
+.result-nota{font-family:var(--f-d);font-size:4rem;font-weight:800;line-height:1;margin:16px 0 6px}
+.result-nota-max{font-size:1rem;opacity:.7}
+.result-date{font-size:.75rem;opacity:.6;margin-top:8px}
+
+.rub-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.rub-block{background:var(--paper);border-radius:var(--r-s);padding:16px;border:1.5px solid var(--gray-200);text-align:center}
+.rub-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-400);font-weight:700}
+.rub-lbl b{display:block;font-size:.92rem;color:var(--ink);text-transform:none;letter-spacing:0;margin-top:1px}
+.rub-val{font-family:var(--f-m);font-size:1.8rem;font-weight:700;color:var(--wine);margin-top:4px}
+.rub-pct{font-size:.68rem;color:var(--gray-400)}
+
+.parts-table{width:100%;border-collapse:collapse;font-size:.83rem;margin-bottom:22px;background:var(--paper);border-radius:var(--r-s);overflow:hidden;box-shadow:var(--sh-sm)}
+.parts-table th{background:var(--wine);color:#fff;padding:10px 14px;text-align:left;font-weight:700;font-size:.75rem}
+.parts-table td{padding:9px 14px;border-bottom:1px solid var(--gray-200)}
+.parts-table tr:last-child td{border-bottom:none}
+.parts-table tr:nth-child(even) td{background:var(--cream)}
+.pt-bar-wrap{display:flex;align-items:center;gap:8px}
+.pt-bar{flex:1;height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden;min-width:60px}
+.pt-bar-fill{height:100%;background:var(--green);border-radius:3px}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:#fff;padding:12px 18px;border-radius:var(--r-s);font-size:.82rem;font-weight:500;box-shadow:var(--sh-lg);z-index:300;display:none}
+.toast.show{display:flex;align-items:center;gap:8px}
+
+/* ===== PRINT ===== */
+@media print{
+  .topbar,.stepper,.exam-progress,.finish-bar,.btn,.q-opts,.sh-kw,.toast,.cover-card,.tb-acts{display:none!important}
+  body{background:#fff}
+  .wrap{padding:0;max-width:100%}
+}
+
+@media(max-width:768px){
+  .ads-grid{grid-template-columns:1fr}
+  .rub-row{grid-template-columns:1fr}
+  .part-block{padding:18px 16px}
+  .wrap{padding:20px 14px 60px}
+  .q-opts{margin-left:0}
+  .q-fb{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-inner">
+    <div class="tb-brand">
+      <div class="tb-seal">🎓</div>
+      <div><div class="tb-title">Simulacro Saber 11 · Inglés</div><div class="tb-sub">Docente Yonatha Mendoza Molina</div></div>
+    </div>
+    <div class="tb-acts">
+      <button class="btn btn-ghost-lt" onclick="resetAll()">🔄 Reiniciar</button>
+    </div>
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+
+<div class="wrap">
+  <div class="page" id="content"></div>
+</div>
+
+<div class="toast" id="toast"><span id="t-icon">✅</span><span id="t-msg">¡Guardado!</span></div>
+
+<script>
+// =====================================================
+// EXAM DATA — 25 preguntas · 7 partes (formato ICFES Saber 11 Inglés)
+// =====================================================
+const STEPS = ['cover','exam','ser','hacer','participants','results'];
+const STEP_LABELS = {cover:'Portada', exam:'Prueba (25 preg.)', ser:'Ser', hacer:'Saber Hacer', participants:'Participantes', results:'Resultados'};
+
+const PARTS = [
+{ id:1, badge:'PART 1', title:'Poster Comprehension', instr:'Lee el afiche y responde las preguntas 1 a 3.',
+  context: `<div class="poster">
+    <div class="poster-title">🏀 CITY SPORTS CENTER 🏊</div>
+    <div class="poster-line"><b>Open:</b> Monday to Saturday · 9:00 AM – 8:00 PM</div>
+    <div class="poster-line"><b>Activities:</b> Basketball · Swimming · Yoga</div>
+    <div class="poster-line"><b>NEW!</b> Free trial class every Saturday at 10:00 AM</div>
+    <div class="poster-line"><b>Membership:</b> $50,000 COP / month</div>
+    <div class="poster-line"><b>Call us:</b> 300-555-1212 · Calle 45 #12-30, Medellín</div>
+  </div>`,
+  questions:[
+    {num:1, q:'What time does the center close?', opts:[
+      {t:'8:00 AM',ok:false},{t:'9:00 AM',ok:false},{t:'8:00 PM',ok:true},{t:'10:00 PM',ok:false}],
+      fbOk:'¡Correcto! El horario del afiche dice 9:00 AM – 8:00 PM, así que cierra a las 8:00 PM.', fbBad:'Revisa el horario del afiche: "9:00 AM – 8:00 PM".'},
+    {num:2, q:'What is free at the center?', opts:[
+      {t:'The membership',ok:false},{t:'Basketball equipment',ok:false},{t:'A trial class on Saturdays',ok:true},{t:'Parking',ok:false}],
+      fbOk:'¡Correcto! El afiche dice "Free trial class every Saturday at 10:00 AM".', fbBad:'Busca la palabra "Free" (gratis) en el afiche — está junto a la clase de prueba.'},
+    {num:3, q:'Which day is the center closed?', opts:[
+      {t:'Monday',ok:false},{t:'Wednesday',ok:false},{t:'Saturday',ok:false},{t:'Sunday',ok:true}],
+      fbOk:'¡Correcto! El afiche dice "Monday to Saturday", por lo tanto el domingo está cerrado.', fbBad:'El afiche dice "Open: Monday to Saturday". ¿Qué día no está incluido?'}
+  ]},
+
+{ id:2, badge:'PART 2', title:'Matching Classified Ads', instr:'Lee los 4 anuncios y relaciónalos con las situaciones (preguntas 4 a 6).',
+  context: `<div class="ads-grid">
+    <div class="ad-card"><span class="ad-letter">A</span><div class="ad-title">Lost Dog</div><div class="ad-txt">Small brown dog, answers to "Max". Last seen near the park. Reward if found. Call 311-222-3344.</div></div>
+    <div class="ad-card"><span class="ad-letter">B</span><div class="ad-title">For Sale</div><div class="ad-txt">Used bicycle, good condition, $150,000 COP. Perfect for students. Contact Laura at 300-111-2222.</div></div>
+    <div class="ad-card"><span class="ad-letter">C</span><div class="ad-title">English Tutor Needed</div><div class="ad-txt">Looking for a native or fluent English speaker to help a 10-year-old with homework, twice a week. Email tutor@email.com.</div></div>
+    <div class="ad-card"><span class="ad-letter">D</span><div class="ad-title">Apartment For Rent</div><div class="ad-txt">2 bedrooms, near the university, $700,000 COP/month, available from June. Call 320-444-5555.</div></div>
+  </div>`,
+  questions:[
+    {num:4, q:'"I need help improving my child\'s English."', opts:[
+      {t:'Ad A — Lost Dog',ok:false},{t:'Ad B — Bicycle',ok:false},{t:'Ad C — English Tutor',ok:true},{t:'Ad D — Apartment',ok:false}],
+      fbOk:'¡Correcto! El anuncio C busca un tutor de inglés para un niño.', fbBad:'Busca el anuncio que menciona "help a 10-year-old with homework" (inglés).'},
+    {num:5, q:'"I am looking for cheap transportation to get to campus."', opts:[
+      {t:'Ad A — Lost Dog',ok:false},{t:'Ad B — Bicycle',ok:true},{t:'Ad C — English Tutor',ok:false},{t:'Ad D — Apartment',ok:false}],
+      fbOk:'¡Correcto! La bicicleta (Ad B) es transporte económico, ideal para estudiantes.', fbBad:'Piensa en qué anuncio ofrece un medio de transporte barato para estudiantes.'},
+    {num:6, q:'"I want to find a place to live close to my classes."', opts:[
+      {t:'Ad A — Lost Dog',ok:false},{t:'Ad B — Bicycle',ok:false},{t:'Ad C — English Tutor',ok:false},{t:'Ad D — Apartment',ok:true}],
+      fbOk:'¡Correcto! El anuncio D ofrece un apartamento cerca de la universidad.', fbBad:'Busca el anuncio que menciona "near the university" (vivienda).'}
+  ]},
+
+{ id:3, badge:'PART 3', title:'Complete the Conversation', instr:'Elige la mejor opción para completar cada espacio del diálogo (preguntas 7 a 10).',
+  context: `<div class="dialogue">
+    <div class="dlg-row"><span class="dlg-name">A:</span><span class="dlg-txt">Hi! Are you new here?</span></div>
+    <div class="dlg-row"><span class="dlg-name">B:</span><span class="dlg-txt"><span class="dlg-blank">(7)</span></span></div>
+    <div class="dlg-row"><span class="dlg-name">A:</span><span class="dlg-txt">Welcome to Medellín! Do you like the city so far?</span></div>
+    <div class="dlg-row"><span class="dlg-name">B:</span><span class="dlg-txt"><span class="dlg-blank">(8)</span></span></div>
+    <div class="dlg-row"><span class="dlg-name">A:</span><span class="dlg-txt">That's great! Do you need any help finding your way around?</span></div>
+    <div class="dlg-row"><span class="dlg-name">B:</span><span class="dlg-txt"><span class="dlg-blank">(9)</span></span></div>
+    <div class="dlg-row"><span class="dlg-name">A:</span><span class="dlg-txt">No problem! Let me know if you need anything else.</span></div>
+    <div class="dlg-row"><span class="dlg-name">B:</span><span class="dlg-txt"><span class="dlg-blank">(10)</span></span></div>
+  </div>`,
+  questions:[
+    {num:7, q:'Blank (7):', opts:[
+      {t:'Yes, I just moved here last week.',ok:true},{t:'No, I have lived here for ten years.',ok:false},{t:'I don\'t understand the question.',ok:false},{t:'I am going to the store.',ok:false}],
+      fbOk:'¡Correcto! Responde lógicamente a "Are you new here?".', fbBad:'La respuesta debe confirmar que la persona es nueva en la ciudad.'},
+    {num:8, q:'Blank (8):', opts:[
+      {t:'Yes, I love it! Everyone is very friendly.',ok:true},{t:'No, I hate my job.',ok:false},{t:'I don\'t have a city.',ok:false},{t:'The weather is cold today.',ok:false}],
+      fbOk:'¡Correcto! Responde directamente a "Do you like the city so far?".', fbBad:'La respuesta debe hablar sobre si le gusta la ciudad.'},
+    {num:9, q:'Blank (9):', opts:[
+      {t:'Yes, please! I get lost easily.',ok:true},{t:'No, I know everything already.',ok:false},{t:'I am not here.',ok:false},{t:'Thanks, but I don\'t like maps.',ok:false}],
+      fbOk:'¡Correcto! Acepta la ayuda ofrecida de forma coherente.', fbBad:'La persona A ofrece ayuda — busca una respuesta que la acepte.'},
+    {num:10, q:'Blank (10):', opts:[
+      {t:'Thank you so much! I really appreciate it.',ok:true},{t:'Goodbye forever.',ok:false},{t:'I don\'t need friends.',ok:false},{t:'That\'s not my problem.',ok:false}],
+      fbOk:'¡Correcto! Es una respuesta amable que cierra la conversación.', fbBad:'Busca una respuesta cordial que agradezca la disposición de A.'}
+  ]},
+
+{ id:4, badge:'PART 4', title:'Cloze Test — Fill in the Blanks', instr:'Elige la palabra correcta para completar el texto (preguntas 11 a 14).',
+  context: `<div class="cloze-box">Every morning, Maria wakes up <span class="dlg-blank">(11)</span> 6:00 AM. She <span class="dlg-blank">(12)</span> a healthy breakfast before going to school. She usually walks to school because it is <span class="dlg-blank">(13)</span> than taking the bus. After school, she does her homework and then she <span class="dlg-blank">(14)</span> time with her family.</div>`,
+  questions:[
+    {num:11, q:'Blank (11):', opts:[
+      {t:'at',ok:true},{t:'in',ok:false},{t:'on',ok:false},{t:'for',ok:false}],
+      fbOk:'¡Correcto! Se usa "at" con horas exactas: "at 6:00 AM".', fbBad:'Recuerda: con horas específicas se usa la preposición "at".'},
+    {num:12, q:'Blank (12):', opts:[
+      {t:'eat',ok:false},{t:'eats',ok:true},{t:'eating',ok:false},{t:'ate',ok:false}],
+      fbOk:'¡Correcto! Con "She" (tercera persona singular) el verbo lleva -s: "eats".', fbBad:'El sujeto es "She" — en presente simple, la tercera persona lleva -s.'},
+    {num:13, q:'Blank (13):', opts:[
+      {t:'fast',ok:false},{t:'faster',ok:true},{t:'fastest',ok:false},{t:'more fast',ok:false}],
+      fbOk:'¡Correcto! "Fast" es un adjetivo corto: comparativo = fast+ER = faster.', fbBad:'Es una comparación entre DOS opciones (caminar vs bus) — usa el comparativo -er.'},
+    {num:14, q:'Blank (14):', opts:[
+      {t:'spend',ok:false},{t:'spends',ok:true},{t:'spending',ok:false},{t:'spent',ok:false}],
+      fbOk:'¡Correcto! Tercera persona singular en presente simple: "spends".', fbBad:'El sujeto sigue siendo "she" — recuerda la -s del presente simple.'}
+  ]},
+
+{ id:5, badge:'PART 5', title:'Short Reading Comprehension', instr:'Lee el texto y responde las preguntas 15 a 18.',
+  context: `<div class="reading-box"><p>Recycling is an important habit that helps protect the environment. In many cities, people separate their garbage into different bins: one for paper, one for plastic, and one for organic waste. This simple action reduces pollution and saves natural resources. Schools are teaching children the importance of recycling from a young age so that future generations can take better care of the planet.</p></div>`,
+  questions:[
+    {num:15, q:'What is the main idea of the text?', opts:[
+      {t:'Recycling helps protect the environment.',ok:true},{t:'Schools don\'t teach recycling.',ok:false},{t:'Plastic is dangerous for everyone.',ok:false},{t:'Children don\'t like recycling.',ok:false}],
+      fbOk:'¡Correcto! Toda la lectura gira en torno a cómo el reciclaje protege el ambiente.', fbBad:'Piensa en la idea que se repite en todo el texto, no en un solo detalle.'},
+    {num:16, q:'According to the text, how do people separate garbage?', opts:[
+      {t:'Into different bins for paper, plastic and organic waste.',ok:true},{t:'Into big and small bags.',ok:false},{t:'By color only.',ok:false},{t:'They don\'t separate it.',ok:false}],
+      fbOk:'¡Correcto! El texto menciona bins separados para paper, plastic y organic waste.', fbBad:'Busca en el texto la palabra "bins" y lo que la acompaña.'},
+    {num:17, q:'Why are schools teaching children about recycling?', opts:[
+      {t:'So future generations take better care of the planet.',ok:true},{t:'Because it is required by law.',ok:false},{t:'To win a competition.',ok:false},{t:'Because it\'s free.',ok:false}],
+      fbOk:'¡Correcto! El texto dice: "so that future generations can take better care of the planet".', fbBad:'Busca la última oración del texto — ahí está la razón.'},
+    {num:18, q:'The word "habit" in the text is closest in meaning to:', opts:[
+      {t:'routine / custom',ok:true},{t:'accident',ok:false},{t:'problem',ok:false},{t:'rule',ok:false}],
+      fbOk:'¡Correcto! "Habit" = costumbre o rutina que se repite.', fbBad:'"Habit" describe algo que se hace regularmente — piensa en "costumbre".'}
+  ]},
+
+{ id:6, badge:'PART 6', title:'Medium Reading Comprehension', instr:'Lee el texto y responde las preguntas 19 a 22.',
+  context: `<div class="reading-box"><p>In recent years, online learning has become increasingly popular around the world. Many schools and universities now offer virtual classes that allow students to study from home. This type of education has several advantages: students can learn at their own pace, save time on transportation, and access materials from anywhere with an internet connection.</p>
+  <p>However, online learning also has some disadvantages. Some students find it difficult to stay motivated without a teacher physically present, and not everyone has access to a reliable internet connection or a computer. For this reason, many experts believe that a combination of online and in-person classes, known as "blended learning," might be the best solution for the future of education. This method allows students to enjoy the flexibility of technology while still having face-to-face interaction with their teachers and classmates.</p></div>`,
+  questions:[
+    {num:19, q:'What is one advantage of online learning mentioned in the text?', opts:[
+      {t:'Students can learn at their own pace.',ok:true},{t:'It is always free.',ok:false},{t:'It requires no internet.',ok:false},{t:'Teachers are not needed.',ok:false}],
+      fbOk:'¡Correcto! El texto menciona "students can learn at their own pace" como ventaja.', fbBad:'Revisa la lista de ventajas en el primer párrafo.'},
+    {num:20, q:'What is a disadvantage of online learning according to the text?', opts:[
+      {t:'Some students struggle to stay motivated.',ok:true},{t:'It\'s too expensive.',ok:false},{t:'It doesn\'t use technology.',ok:false},{t:'Students can never ask questions.',ok:false}],
+      fbOk:'¡Correcto! El texto dice: "difficult to stay motivated without a teacher physically present".', fbBad:'Busca la palabra "However" — ahí comienzan las desventajas.'},
+    {num:21, q:'What is "blended learning"?', opts:[
+      {t:'A combination of online and in-person classes.',ok:true},{t:'Only virtual classes.',ok:false},{t:'Only traditional classes.',ok:false},{t:'A type of test.',ok:false}],
+      fbOk:'¡Correcto! El texto lo define explícitamente: "a combination of online and in-person classes".', fbBad:'Busca la definición exacta dentro del segundo párrafo.'},
+    {num:22, q:'According to the text, why do many experts support blended learning?', opts:[
+      {t:'It combines flexibility with face-to-face interaction.',ok:true},{t:'It removes the need for teachers.',ok:false},{t:'It is cheaper than other methods.',ok:false},{t:'It doesn\'t require technology.',ok:false}],
+      fbOk:'¡Correcto! El texto dice que permite "flexibility... while still having face-to-face interaction".', fbBad:'Busca la última oración del segundo párrafo.'}
+  ]},
+
+{ id:7, badge:'PART 7', title:'Long Reading Comprehension', instr:'Lee el texto y responde las preguntas 23 a 25.',
+  context: `<div class="reading-box"><p>Fast fashion refers to the mass production of cheap clothing that follows the latest trends. Big clothing companies release new collections every few weeks, encouraging consumers to buy more and more items at low prices. While this makes fashion accessible to almost everyone, it also creates serious problems. Factories that produce fast fashion often pay workers very low wages and require them to work in unsafe conditions. In addition, the fashion industry is one of the largest polluters in the world, using huge amounts of water and creating tons of textile waste every year.</p>
+  <p>As a response to these problems, a movement called "slow fashion" has emerged. Slow fashion encourages people to buy fewer, higher-quality clothes that last longer. It also promotes fair wages for workers and more sustainable production methods, such as using organic materials and reducing waste. Some experts suggest that consumers can make a difference by repairing their clothes instead of throwing them away, buying second-hand items, and supporting local designers who use ethical practices.</p>
+  <p>Although slow fashion is growing in popularity, fast fashion still dominates the global market because it is cheaper and more convenient for many people.</p></div>`,
+  questions:[
+    {num:23, q:'What is the main difference between fast fashion and slow fashion?', opts:[
+      {t:'Fast fashion produces cheap clothes quickly; slow fashion focuses on quality and sustainability.',ok:true},
+      {t:'Fast fashion is more expensive than slow fashion.',ok:false},
+      {t:'Slow fashion doesn\'t exist anymore.',ok:false},
+      {t:'There is no real difference between them.',ok:false}],
+      fbOk:'¡Correcto! Esa es la idea central que compara ambos movimientos.', fbBad:'Compara el primer y segundo párrafo: velocidad/precio vs. calidad/sostenibilidad.'},
+    {num:24, q:'According to the text, what problem does the fast fashion industry create for workers?', opts:[
+      {t:'Low wages and unsafe working conditions.',ok:true},{t:'Workers earn too much money.',ok:false},{t:'Workers don\'t have jobs at all.',ok:false},{t:'Workers only work one day a week.',ok:false}],
+      fbOk:'¡Correcto! El texto dice: "pay workers very low wages... unsafe conditions".', fbBad:'Busca la oración sobre las fábricas en el primer párrafo.'},
+    {num:25, q:'What can consumers do to support slow fashion, according to the text?', opts:[
+      {t:'Repair clothes, buy second-hand items, and support local designers.',ok:true},
+      {t:'Buy new clothes every week.',ok:false},
+      {t:'Stop wearing clothes completely.',ok:false},
+      {t:'Only buy from big fast fashion brands.',ok:false}],
+      fbOk:'¡Correcto! El texto lista exactamente estas tres acciones en el segundo párrafo.', fbBad:'Busca la lista de acciones sugeridas por los expertos al final del segundo párrafo.'}
+  ]}
+];
+
+const TOTAL_Q = 25;
+
+const SER_ITEMS = [
+  'Respondí las preguntas con honestidad, sin copiar de otros compañeros.',
+  'Administré bien mi tiempo durante todo el simulacro.',
+  'Leí cada texto y cada pregunta con atención antes de responder.',
+  'Mantuve la concentración durante toda la prueba, sin distracciones.',
+  'Revisé mis respuestas antes de finalizar el simulacro.'
+];
+
+const HACER_KEYWORDS = ['than','more','always','usually','often','sometimes','because','however','for example','important','different','similar','also','first','then','finally','recycle','online','learning','fashion','environment'];
+
+// =====================================================
+// STATE
+// =====================================================
+let curStep = 'cover';
+let S = (()=>{ try{ return JSON.parse(localStorage.getItem('ym_icfes_v1')) || {answers:{},ser:{},hacerText:'',participants:[]}; } catch { return {answers:{},ser:{},hacerText:'',participants:[]}; } })();
+
+function save(){ localStorage.setItem('ym_icfes_v1', JSON.stringify(S)); }
+
+function resetAll(){
+  if(!confirm('¿Reiniciar todo el simulacro? Se perderán todas las respuestas.')) return;
+  localStorage.removeItem('ym_icfes_v1');
+  S = {answers:{},ser:{},hacerText:'',participants:[]};
+  save(); goStep('cover');
+  toast('🔄','Simulacro reiniciado');
+}
+
+// =====================================================
+// SCORING
+// =====================================================
+function answeredCount(){ return Object.keys(S.answers).length; }
+function correctCount(){ return Object.values(S.answers).filter(a=>a.ok).length; }
+function getSaber(){
+  if(answeredCount() < TOTAL_Q) return null;
+  return Math.round((correctCount()/TOTAL_Q)*100);
+}
+function getSer(){
+  const n = Object.values(S.ser).filter(Boolean).length;
+  if(n===0) return null;
+  return Math.round((n/SER_ITEMS.length)*100);
+}
+function getSaberHacer(){
+  const text = (S.hacerText||'').toLowerCase();
+  if(text.trim().length < 15) return null;
+  const found = HACER_KEYWORDS.filter(k=>text.includes(k));
+  return Math.min(100, Math.round((found.length/6)*100));
+}
+function getNota(){
+  const ser=getSer(), saber=getSaber(), hacer=getSaberHacer();
+  if(ser===null||saber===null||hacer===null) return null;
+  const nota = ((ser*0.30)+(saber*0.35)+(hacer*0.35))/10;
+  return Math.min(10, Math.round(nota*10)/10);
+}
+
+function partStats(part){
+  let correct=0, total=part.questions.length;
+  part.questions.forEach(q=>{ const a=S.answers[q.num]; if(a && a.ok) correct++; });
+  return {correct, total};
+}
+
+// =====================================================
+// STEPPER
+// =====================================================
+function renderStepper(){
+  const idx = STEPS.indexOf(curStep);
+  document.getElementById('stepper').innerHTML = `<div class="stepper-inner">${STEPS.map((s,i)=>{
+    const cls = i===idx ? 'active' : (i<idx ? 'done' : '');
+    return `<div class="step ${cls}"><span class="step-num">${i<idx?'✓':i+1}</span>${STEP_LABELS[s]}</div>`;
+  }).join('')}</div>`;
+}
+
+function goStep(step){
+  curStep = step;
+  renderStepper();
+  const ct = document.getElementById('content');
+  if(step==='cover') ct.innerHTML = renderCover();
+  else if(step==='exam') ct.innerHTML = renderExam();
+  else if(step==='ser') ct.innerHTML = renderSer();
+  else if(step==='hacer') ct.innerHTML = renderHacer();
+  else if(step==='participants') ct.innerHTML = renderParticipants();
+  else if(step==='results') ct.innerHTML = renderResults();
+  window.scrollTo(0,0);
+}
+
+// =====================================================
+// COVER
+// =====================================================
+function renderCover(){
+  return `<div class="page">
+    <div class="cover-card">
+      <div class="cover-seal">🇬🇧</div>
+      <div class="cover-eyebrow">Simulacro Tipo Saber 11 · Grado 11</div>
+      <div class="cover-title">Prueba de Inglés</div>
+      <div class="cover-sub">Simulacro con las 7 partes de la Prueba de Inglés del Examen Saber 11, siguiendo la metodología de la Docente Yonatha Mendoza Molina. Responde con calma y honestidad — al final registrarás tu nombre y verás tu calificación.</div>
+      <div class="cover-meta">
+        <div class="cm-item"><div class="cm-val">25</div><div class="cm-lbl">Preguntas</div></div>
+        <div class="cm-item"><div class="cm-val">7</div><div class="cm-lbl">Partes</div></div>
+        <div class="cm-item"><div class="cm-val">A2-B1</div><div class="cm-lbl">Nivel</div></div>
+        <div class="cm-item"><div class="cm-val">/10</div><div class="cm-lbl">Nota final</div></div>
+      </div>
+      <div class="parts-preview">
+        ${PARTS.map(p=>`<div class="pp-item"><span class="pp-num">${p.id}</span><span class="pp-txt"><strong>${p.title}</strong>${p.instr.replace(/Lee.*preguntas /,'Preguntas ').replace(/Elige.*preguntas /,'Preguntas ')}</span></div>`).join('')}
+      </div>
+      <div class="rubric-note">
+        <strong>Forma de calificación:</strong> Ser <b>30%</b> (autoevaluación de actitud) + Saber <b>35%</b> (las 25 preguntas del simulacro) + Saber Hacer <b>35%</b> (producción escrita) = <strong>Nota final sobre 10.0</strong>
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px;padding:13px 34px;font-size:.88rem" onclick="goStep('exam')">🚀 Comenzar Simulacro</button>
+    </div>
+  </div>`;
+}
+
+// =====================================================
+// EXAM
+// =====================================================
+function renderExam(){
+  const answered = answeredCount();
+  const pct = Math.round((answered/TOTAL_Q)*100);
+
+  const partsHtml = PARTS.map(part=>{
+    const qHtml = part.questions.map(q=>{
+      const ans = S.answers[q.num];
+      const optsHtml = q.opts.map((o,oi)=>{
+        let cls='q-opt', disabled='';
+        if(ans){ disabled='disabled style="opacity:.72"'; if(oi===ans.idx) cls += ans.ok?' correct':' wrong'; }
+        return `<button class="${cls}" ${disabled} onclick="answerQ(${q.num},${oi},${o.ok},'${escQ(ans&&ans.ok?q.fbOk:q.fbBad)}')">${o.t}</button>`;
+      }).join('');
+      const fb = ans ? `<div class="q-fb show ${ans.ok?'ok':'bad'}">${ans.ok?'✅':'❌'} ${ans.ok?q.fbOk:q.fbBad}</div>` : '';
+      return `<div class="q-block">
+        <div class="q-text"><span class="q-numchip">${q.num}</span>${q.q}</div>
+        <div class="q-opts">${optsHtml}</div>
+        ${fb}
+      </div>`;
+    }).join('');
+    return `<div class="part-block">
+      <div class="part-hd"><span class="part-badge">${part.badge}</span><div><div class="part-title">${part.title}</div><div class="part-instr">${part.instr}</div></div></div>
+      ${part.context}
+      ${qHtml}
+    </div>`;
+  }).join('');
+
+  return `<div class="page">
+    <div class="exam-progress">
+      <span class="ep-txt">${answered}/${TOTAL_Q}</span>
+      <div class="ep-bar"><div class="ep-fill" style="width:${pct}%"></div></div>
+      <span class="ep-txt">${pct}%</span>
+    </div>
+    ${partsHtml}
+    <div class="finish-bar">
+      <div class="finish-txt">Has respondido <strong>${answered} de ${TOTAL_Q}</strong> preguntas.</div>
+      <button class="btn btn-primary" onclick="finishExam()">✅ Finalizar Simulacro</button>
+    </div>
+  </div>`;
+}
+
+function answerQ(num, oi, ok, fb){
+  S.answers[num] = {idx:oi, ok:ok};
+  save();
+  goStep('exam');
+  // restore scroll near the question roughly by not resetting to top for better UX
+}
+
+function finishExam(){
+  const answered = answeredCount();
+  if(answered < TOTAL_Q){
+    if(!confirm(`Solo has respondido ${answered} de ${TOTAL_Q} preguntas. ¿Deseas finalizar de todas formas? Las preguntas sin responder contarán como incorrectas.`)) return;
+  }
+  toast('📝', `Prueba finalizada: ${correctCount()}/${TOTAL_Q} correctas`);
+  goStep('ser');
+}
+
+// =====================================================
+// SER
+// =====================================================
+function renderSer(){
+  const html = SER_ITEMS.map((txt,i)=>`
+    <div class="ser-item ${S.ser[i]?'checked':''}" onclick="toggleSer(${i})">
+      <div class="ser-box">✓</div><div class="ser-txt">${txt}</div>
+    </div>`).join('');
+  const score = getSer();
+  return `<div class="page">
+    <div class="part-block">
+      <div class="part-hd"><span class="part-badge" style="background:var(--blue)">SER · 30%</span><div><div class="part-title">Autoevaluación de Actitud</div><div class="part-instr">Marca honestamente lo que cumpliste durante el simulacro.</div></div></div>
+      <div class="ser-list">${html}</div>
+    </div>
+    <div class="finish-bar">
+      <div class="finish-txt">${score!==null?`Puntaje Ser: <strong>${score}%</strong>`:'Marca al menos una casilla para continuar.'}</div>
+      <button class="btn btn-primary" onclick="goStep('hacer')" ${score===null?'disabled style="opacity:.5;cursor:not-allowed"':''}>Continuar →</button>
+    </div>
+  </div>`;
+}
+function toggleSer(i){ S.ser[i] = !S.ser[i]; save(); goStep('ser'); }
+
+// =====================================================
+// SABER HACER
+// =====================================================
+function renderHacer(){
+  const saved = S.hacerText || '';
+  const score = getSaberHacer();
+  const kwHtml = HACER_KEYWORDS.map(k=>{
+    const found = saved.toLowerCase().includes(k);
+    return `<span class="sh-kw-chip ${found?'found':''}">${k}</span>`;
+  }).join('');
+  return `<div class="page">
+    <div class="part-block">
+      <div class="part-hd"><span class="part-badge" style="background:var(--green)">SABER HACER · 35%</span><div><div class="part-title">Producción Escrita</div><div class="part-instr">Aplica en un texto lo que trabajaste en el simulacro.</div></div></div>
+      <div class="sh-prompt"><strong>🎯 Tu misión:</strong> Escribe un texto en inglés de mínimo 6 oraciones sobre uno de estos temas: tu rutina diaria, una comparación entre dos cosas (ciudades, tecnologías, estilos de vida) o tu opinión sobre la moda sostenible (fast fashion vs. slow fashion). Usa comparativos, adverbios de frecuencia y conectores como "because", "however" o "for example".</div>
+      <div style="margin-bottom:10px"><div style="font-size:.68rem;color:var(--gray-400);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;font-weight:700">Palabras y conectores sugeridos:</div><div class="sh-kw">${kwHtml}</div></div>
+      <textarea class="sh-ta" id="hacer-ta" placeholder="Write in English here..." oninput="onHacerInput()">${saved}</textarea>
+      <div class="sh-score ${score!==null?'show':''}" id="hacer-score">${score!==null?`Puntaje Saber Hacer: <b>${score}%</b> — se detectaron palabras clave en tu texto.`:''}</div>
+    </div>
+    <div class="finish-bar">
+      <div class="finish-txt">${score!==null?`Saber Hacer: <strong>${score}%</strong>`:'Escribe al menos 6 oraciones para continuar.'}</div>
+      <button class="btn btn-primary" onclick="goStep('participants')" ${score===null?'disabled style="opacity:.5;cursor:not-allowed"':''}>Continuar →</button>
+    </div>
+  </div>`;
+}
+function onHacerInput(){
+  S.hacerText = document.getElementById('hacer-ta').value;
+  save();
+  const score = getSaberHacer();
+  const sc = document.getElementById('hacer-score');
+  if(score!==null){ sc.classList.add('show'); sc.innerHTML = `Puntaje Saber Hacer: <b>${score}%</b> — se detectaron palabras clave en tu texto.`; }
+  else { sc.classList.remove('show'); }
+  document.querySelectorAll('.sh-kw-chip').forEach((chip,i)=>{
+    const k = HACER_KEYWORDS[i];
+    chip.classList.toggle('found', S.hacerText.toLowerCase().includes(k));
+  });
+  // enable/disable continue button
+  const btn = document.querySelector('.finish-bar .btn-primary');
+  if(btn){ if(score!==null){ btn.removeAttribute('disabled'); btn.style.opacity=1; btn.style.cursor='pointer'; } else { btn.setAttribute('disabled','true'); btn.style.opacity=.5; btn.style.cursor='not-allowed'; } }
+  const ft = document.querySelector('.finish-bar .finish-txt');
+  if(ft) ft.innerHTML = score!==null ? `Saber Hacer: <strong>${score}%</strong>` : 'Escribe al menos 6 oraciones para continuar.';
+}
+
+// =====================================================
+// PARTICIPANTS
+// =====================================================
+function renderParticipants(){
+  const chips = S.participants.map((name,i)=>`<span class="part-chip">${name}<button onclick="removeParticipant(${i})">✕</button></span>`).join('');
+  return `<div class="page">
+    <div class="part-block">
+      <div class="part-hd"><span class="part-badge" style="background:var(--gold);color:#5c4a10">👤</span><div><div class="part-title">Nombres de los Participantes</div><div class="part-instr">Registra el nombre de quien(es) presentaron este simulacro.</div></div></div>
+      <div class="part-form">
+        <input type="text" class="part-input" id="participant-input" placeholder="Escribe un nombre y presiona Enter o Agregar" onkeydown="if(event.key==='Enter'){addParticipant();event.preventDefault();}">
+        <button class="btn btn-primary" onclick="addParticipant()">+ Agregar</button>
+      </div>
+      <div class="part-chips" id="part-chips">${chips || '<div class="part-empty">Aún no has agregado participantes.</div>'}</div>
+    </div>
+    <div class="finish-bar">
+      <div class="finish-txt">${S.participants.length} participante(s) registrado(s).</div>
+      <button class="btn btn-primary" onclick="finishParticipants()" ${S.participants.length===0?'disabled style="opacity:.5;cursor:not-allowed"':''}>Ver Resultados →</button>
+    </div>
+  </div>`;
+}
+function addParticipant(){
+  const inp = document.getElementById('participant-input');
+  const name = inp.value.trim();
+  if(!name) return;
+  S.participants.push(name);
+  inp.value = '';
+  save();
+  goStep('participants');
+  document.getElementById('participant-input').focus();
+}
+function removeParticipant(i){ S.participants.splice(i,1); save(); goStep('participants'); }
+function finishParticipants(){
+  if(S.participants.length===0){ toast('⚠️','Agrega al menos un nombre.'); return; }
+  goStep('results');
+}
+
+// =====================================================
+// RESULTS
+// =====================================================
+function renderResults(){
+  const ser=getSer(), saber=getSaber(), hacer=getSaberHacer(), nota=getNota();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+
+  const partsRows = PARTS.map(p=>{
+    const st = partStats(p);
+    const pct = Math.round((st.correct/st.total)*100);
+    return `<tr><td>${p.badge} — ${p.title}</td><td>${st.correct}/${st.total}</td>
+      <td><div class="pt-bar-wrap"><div class="pt-bar"><div class="pt-bar-fill" style="width:${pct}%"></div></div><span style="font-size:.72rem;color:var(--gray-400)">${pct}%</span></div></td></tr>`;
+  }).join('');
+
+  return `<div class="page">
+    <div class="result-hero">
+      <div class="result-names">Participante(s)<strong>${S.participants.join(' · ')}</strong></div>
+      <div class="result-nota">${nota!==null?nota.toFixed(1):'—'}<span class="result-nota-max">/10.0</span></div>
+      <div class="result-date">Simulacro Saber 11 · Inglés — ${dateStr}</div>
+    </div>
+
+    <div class="rub-row">
+      <div class="rub-block"><div class="rub-lbl">Ser <b>30%</b></div><div class="rub-val">${ser}</div><div class="rub-pct">/ 100</div></div>
+      <div class="rub-block"><div class="rub-lbl">Saber <b>35%</b></div><div class="rub-val">${saber}</div><div class="rub-pct">${correctCount()}/${TOTAL_Q} correctas</div></div>
+      <div class="rub-block"><div class="rub-lbl">Saber Hacer <b>35%</b></div><div class="rub-val">${hacer}</div><div class="rub-pct">/ 100</div></div>
+    </div>
+
+    <table class="parts-table">
+      <thead><tr><th>Parte</th><th>Correctas</th><th>Desempeño</th></tr></thead>
+      <tbody>${partsRows}</tbody>
+    </table>
+
+    <div class="rubric-note" style="margin-bottom:22px">
+      <strong>Fórmula aplicada:</strong> (Ser × 0.30 + Saber × 0.35 + Saber Hacer × 0.35) ÷ 10 = <strong>${nota!==null?nota.toFixed(1):'—'} / 10.0</strong>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+      <button class="btn btn-outline" onclick="goStep('exam')">← Revisar respuestas</button>
+    </div>
+  </div>`;
+}
+
+// =====================================================
+// TOAST & UTILS
+// =====================================================
+function toast(icon,msg){
+  const t = document.getElementById('toast');
+  document.getElementById('t-icon').textContent = icon;
+  document.getElementById('t-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function escQ(s){ return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+// =====================================================
+// INIT
+// =====================================================
+goStep(answeredCount()>0 ? (answeredCount()>=TOTAL_Q ? 'exam' : 'exam') : 'cover');
+</script>
+</body>
+</html>
