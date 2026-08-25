@@ -544,19 +544,58 @@ function renderExam(){
 }
 
 function answerQ(num, oi, ok, fb){
+  // Guardar respuesta
   S.answers[num] = {idx:oi, ok:ok};
   save();
-  goStep('exam');
-  // restore scroll near the question roughly by not resetting to top for better UX
+  
+  // Actualizar SOLO la pregunta específica sin redibujar todo
+  const qBlocks = document.querySelectorAll('.q-block');
+  qBlocks.forEach(block => {
+    const chip = block.querySelector('.q-numchip');
+    if(chip && parseInt(chip.textContent) === num){
+      const opts = block.querySelectorAll('.q-opt');
+      opts.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.style.opacity = '0.72';
+        if(idx === oi){
+          btn.classList.add(ok ? 'correct' : 'wrong');
+        }
+      });
+      // Mostrar retroalimentación
+      let fbDiv = block.querySelector('.q-fb');
+      if(!fbDiv){
+        fbDiv = document.createElement('div');
+        fbDiv.className = 'q-fb';
+        block.appendChild(fbDiv);
+      }
+      fbDiv.className = 'q-fb show ' + (ok ? 'ok' : 'bad');
+      fbDiv.innerHTML = (ok ? '✅ ' : '❌ ') + (ok ? fb : fb);
+    }
+  });
+  
+  // Actualizar barra de progreso sin saltar
+  const answered = answeredCount();
+  const pct = Math.round((answered/TOTAL_Q)*100);
+  document.querySelector('.ep-txt').textContent = `${answered}/${TOTAL_Q}`;
+  document.querySelector('.ep-fill').style.width = pct + '%';
+  document.querySelectorAll('.ep-txt')[1].textContent = pct + '%';
+  
+  // Actualizar contador del footer
+  document.querySelector('.finish-txt strong').textContent = `${answered} de ${TOTAL_Q}`;
 }
 
-function finishExam(){
-  const answered = answeredCount();
-  if(answered < TOTAL_Q){
-    if(!confirm(`Solo has respondido ${answered} de ${TOTAL_Q} preguntas. ¿Deseas finalizar de todas formas? Las preguntas sin responder contarán como incorrectas.`)) return;
-  }
-  toast('📝', `Prueba finalizada: ${correctCount()}/${TOTAL_Q} correctas`);
-  goStep('ser');
+function goStep(step){
+  curStep = step;
+  renderStepper();
+  const ct = document.getElementById('content');
+  if(step==='cover') ct.innerHTML = renderCover();
+  else if(step==='exam') ct.innerHTML = renderExam();
+  else if(step==='ser') ct.innerHTML = renderSer();
+  else if(step==='hacer') ct.innerHTML = renderHacer();
+  else if(step==='participants') ct.innerHTML = renderParticipants();
+  else if(step==='results') ct.innerHTML = renderResults();
+  // Solo hacer scroll al top cuando cambias de paso, no al responder
+  if(step !== 'exam') window.scrollTo(0,0);
 }
 
 // =====================================================
