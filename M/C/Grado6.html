@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Inglés Grado 6 - People and Possessions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .student-info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .section {
+            background: #fafafa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+            border-radius: 4px;
+        }
+        .saber { border-color: #e74c3c; }
+        .saber-hacer { border-color: #f39c12; }
+        .ser { border-color: #2ecc71; }
+        
+        .question {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #btnDownload {
+            background-color: #27ae60;
+            margin-top: 15px;
+            display: none;
+        }
+        #btnDownload:hover {
+            background-color: #219653;
+        }
+        #results {
+            display: none;
+            background: #e8f8f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 2px solid #2ecc71;
+        }
+        .feedback {
+            font-size: 0.9em;
+            color: #555;
+            background: #eee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            display: none;
+        }
+        .input-inline {
+            width: auto !important;
+            display: inline-block !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Taller: People and Possessions</h1>
+        <p><strong>Unidad 3 - Grado 6</strong></p>
+    </div>
+
+    <div class="student-info">
+        <label for="studentName"><strong>Nombre completo del estudiante:</strong></label>
+        <input type="text" id="studentName" placeholder="Escribe tu nombre aquí..." required>
+    </div>
+
+    <form id="quizForm">
+        <!-- SECCIÓN SABER -->
+        <div class="section saber">
+            <h2>🧠 Saber (35%) - Teoría y Reglas</h2>
+            
+            <div class="question">
+                <p><strong>1. Según "La Fórmula del Dueño", ¿cuál es la forma correcta de decir "El carro de mi papá" en inglés?</strong></p>
+                <label><input type="radio" name="q1" value="a"> a) The car of my father</label><br>
+                <label><input type="radio" name="q1" value="b"> b) My father's car</label><br>
+                <label><input type="radio" name="q1" value="c"> c) My car's father</label>
+                <div class="feedback" id="fb1"><strong>Explicación:</strong> La respuesta es la B. Usamos el genitivo sajón ('s) como un gancho para unir al dueño con su objeto (Dueño + 's + Objeto).</div>
+            </div>
+
+            <div class="question">
+                <p><strong>2. Recuerda la "Regla de los Dedos". Si levantamos dos o más dedos usamos <i>There are</i>. Completa: "_________ three apples on the table".</strong></p>
+                <label><input type="radio" name="q2" value="a"> a) There is</label><br>
+                <label><input type="radio" name="q2" value="b"> b) There are</label><br>
+                <label><input type="radio" name="q2" value="c"> c) There</label>
+                <div class="feedback" id="fb2"><strong>Explicación:</strong> La respuesta es la B. Como son tres manzanas (plural), usamos 'There are'.</div>
+            </div>
+
+            <div class="question">
+                <p><strong>3. En el "Termómetro de gustos", usamos el "Escudo Protector de la 'S'" para hablar de él o ella (He/She). ¿Cuál de estas oraciones es correcta?</strong></p>
+                <label><input type="radio" name="q3" value="a"> a) She love pizza.</label><br>
+                <label><input type="radio" name="q3" value="b"> b) He like apples.</label><br>
+                <label><input type="radio" name="q3" value="c"> c) She likes chicken.</label>
+                <div class="feedback" id="fb3"><strong>Explicación:</strong> La respuesta es la C. En tercera persona afirmativa (He, She, It), el verbo debe llevar la 'S' del superhéroe al final (likes).</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN SABER HACER -->
+        <div class="section saber-hacer">
+            <h2>🛠️ Saber Hacer (35%) - Aplicación Práctica</h2>
+            
+            <div class="question">
+                <p><strong>4. Diferencia de género (His / Her): Completa la presentación.</strong></p>
+                <p>"This is my sister. <input type="text" id="q4a" class="input-inline" size="10" placeholder="Su (de ella)"> name is Sofia. And this is my brother. <input type="text" id="q4b" class="input-inline" size="10" placeholder="Su (de él)"> name is Tomas."</p>
+                <div class="feedback" id="fb4"><strong>Explicación:</strong> Las respuestas son 'Her' para la niña (Sofia) y 'His' para el niño (Tomas).</div>
+            </div>
+
+            <div class="question">
+                <p><strong>5. Preposiciones de lugar (in / on / under): Traduce la palabra en negrita.</strong></p>
+                <p>"Hay un gato <b>debajo</b> de la cama." 👉 There is a cat <input type="text" id="q5" class="input-inline" size="10"> the bed.</p>
+                <div class="feedback" id="fb5"><strong>Explicación:</strong> La respuesta es 'under'. Recuerda el gesto con las manos: in (dentro), on (sobre), under (debajo).</div>
+            </div>
+
+            <div class="question">
+                <p><strong>6. The "Disgusting Restaurant": Escribe en inglés "no le gusta" (en plural, para 'People').</strong></p>
+                <p>People <input type="text" id="q6" class="input-inline" size="20" placeholder="no les gusta"> spider soup.</p>
+                <div class="feedback" id="fb6"><strong>Explicación:</strong> La respuesta es 'don't like'. Como 'People' es plural (ellos), usamos don't.</div>
+            </div>
+
+            <div class="question">
+                <p><strong>7. Corrige el error usando el "ayudante fuerte" de la tercera persona:</strong></p>
+                <p>❌ My mother don't like onions.<br>
+                ✅ <input type="text" id="q7" placeholder="Escribe la oración correcta aquí..."></p>
+                <div class="feedback" id="fb7"><strong>Explicación:</strong> La correcta es "My mother doesn't like onions." 'My mother' equivale a 'She', así que necesita el auxiliar 'doesn't'.</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN SER -->
+        <div class="section ser">
+            <h2>❤️ Ser (30%) - Actitud y Reflexión</h2>
+            <p><i>(El sistema otorga los puntos al responder, pero el profesor leerá tus respuestas en el reporte final).</i></p>
+            
+            <div class="question">
+                <p><strong>8. Yummy or Yuck! Escribe UNA oración real en inglés sobre un alimento que AMES (I love...) y UNA sobre un alimento que ODIES (I hate...).</strong></p>
+                <textarea id="q8" rows="3" placeholder="Ej: I love pizza. I hate onions..."></textarea>
+            </div>
+
+            <div class="question">
+                <p><strong>9. The VIP Family Member: Escribe en inglés quién es tu familiar favorito, cómo se llama y dos adjetivos de su personalidad o físico (tall, funny, kind, etc.).</strong></p>
+                <textarea id="q9" rows="3" placeholder="Ej: My VIP is my uncle. His name is Pedro. He is tall and funny."></textarea>
+            </div>
+
+            <div class="question">
+                <p><strong>10. Autoevaluación Metacognitiva: ¿Cuál actividad te gustó más para aprender (Who is who, Spot the difference, o The Food Survey) y por qué?</strong></p>
+                <textarea id="q10" rows="3" placeholder="Escribe tu respuesta aquí..."></textarea>
+            </div>
+        </div>
+
+        <button type="button" onclick="calculateScore()">Terminar y Calificar</button>
+    </form>
+
+    <div id="results">
+        <h2>📊 Resultados de Evaluación</h2>
+        <h3 id="resName"></h3>
+        <p><strong>Saber (35%):</strong> <span id="resSaber"></span> / 35.0</p>
+        <p><strong>Saber Hacer (35%):</strong> <span id="resHacer"></span> / 35.0</p>
+        <p><strong>Ser (30%):</strong> <span id="resSer"></span> / 30.0</p>
+        <h3>NOTA FINAL: <span id="resFinal"></span> / 100</h3>
+        <p><i>Revisa las explicaciones debajo de cada pregunta arriba.</i></p>
+        <button id="btnDownload" onclick="downloadReport()">📥 Descargar Reporte (Entregar al Profesor)</button>
+    </div>
+</div>
+
+<script>
+    let reportData = "";
+
+    function calculateScore() {
+        const name = document.getElementById("studentName").value.trim();
+        if(name === "") {
+            alert("Por favor, escribe tu nombre antes de calificar.");
+            return;
+        }
+
+        // --- Puntuación SABER (3 preguntas, max 35) ---
+        let ptsSaber = 0;
+        const valQ1 = 35 / 3; 
+        
+        const q1 = document.querySelector('input[name="q1"]:checked');
+        if (q1 && q1.value === "b") ptsSaber += valQ1;
+        
+        const q2 = document.querySelector('input[name="q2"]:checked');
+        if (q2 && q2.value === "b") ptsSaber += valQ1;
+        
+        const q3 = document.querySelector('input[name="q3"]:checked');
+        if (q3 && q3.value === "c") ptsSaber += valQ1;
+
+        // --- Puntuación SABER HACER (4 preguntas, max 35) ---
+        let ptsHacer = 0;
+        const valQ2 = 35 / 4; 
+        
+        const q4a = document.getElementById("q4a").value.trim().toLowerCase();
+        const q4b = document.getElementById("q4b").value.trim().toLowerCase();
+        if (q4a === "her" && q4b === "his") ptsHacer += valQ2;
+        
+        const q5 = document.getElementById("q5").value.trim().toLowerCase();
+        if (q5 === "under") ptsHacer += valQ2;
+        
+        const q6 = document.getElementById("q6").value.trim().toLowerCase();
+        if (q6.includes("don't like") || q6.includes("do not like")) ptsHacer += valQ2;
+        
+        const q7 = document.getElementById("q7").value.trim().toLowerCase();
+        if (q7.includes("doesn't like") || q7.includes("does not like")) ptsHacer += valQ2;
+
+        // --- Puntuación SER (3 preguntas, max 30) ---
+        let ptsSer = 0;
+        const q8 = document.getElementById("q8").value.trim();
+        const q9 = document.getElementById("q9").value.trim();
+        const q10 = document.getElementById("q10").value.trim();
+        
+        if (q8.length > 5) ptsSer += 10;
+        if (q9.length > 5) ptsSer += 10;
+        if (q10.length > 5) ptsSer += 10;
+
+        // --- Totales ---
+        const notaSaber = ptsSaber.toFixed(1);
+        const notaHacer = ptsHacer.toFixed(1);
+        const notaSer = ptsSer.toFixed(1);
+        const notaFinal = (ptsSaber + ptsHacer + ptsSer).toFixed(1);
+
+        // --- Mostrar Resultados ---
+        document.getElementById("resName").innerText = "Estudiante: " + name;
+        document.getElementById("resSaber").innerText = notaSaber;
+        document.getElementById("resHacer").innerText = notaHacer;
+        document.getElementById("resSer").innerText = notaSer;
+        document.getElementById("resFinal").innerText = notaFinal;
+        
+        document.getElementById("results").style.display = "block";
+        document.getElementById("btnDownload").style.display = "block";
+
+        // Mostrar Feedback visual
+        for(let i=1; i<=7; i++) {
+            document.getElementById("fb"+i).style.display = "block";
+        }
+
+        // --- Preparar datos para el TXT ---
+        const date = new Date().toLocaleString('es-CO');
+        reportData = `===========================================
+REPORTE DE EVALUACIÓN - INGLÉS GRADO 6
+Unidad 3: People and Possessions
+===========================================
+Estudiante: ${name}
+Fecha: ${date}
+
+--- CALIFICACIONES ---
+Nota Saber (35%): ${notaSaber} / 35.0
+Nota Saber Hacer (35%): ${notaSaber} / 35.0
+Nota Ser (30%): ${notaSaber} / 30.0
+-------------------------------------------
+NOTA FINAL: ${notaFinal} / 100
+===========================================
+
+--- RESPUESTAS DEL ESTUDIANTE ---
+
+[SABER]
+1. (El carro de papá): ${q1 ? q1.value : "Sin responder"} (Correcta: b)
+2. (There are): ${q2 ? q2.value : "Sin responder"} (Correcta: b)
+3. (3ra persona): ${q3 ? q3.value : "Sin responder"} (Correcta: c)
+
+[SABER HACER]
+4. His/Her: A) ${document.getElementById("q4a").value} B) ${document.getElementById("q4b").value}
+5. Under: ${document.getElementById("q5").value}
+6. People don't like: ${document.getElementById("q6").value}
+7. Correction: ${document.getElementById("q7").value}
+
+[SER] (El profesor evaluará la pertinencia y vocabulario de estas respuestas)
+8. Gustos (Yummy/Yuck):
+${q8}
+
+9. VIP Family Member:
+${q9}
+
+10. Autoevaluación Metacognitiva:
+${q10}
+
+===========================================`;
+    }
+
+    function downloadReport() {
+        const name = document.getElementById("studentName").value.trim();
+        const blob = new Blob([reportData], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Reporte_${name.replace(/\s+/g, '_')}_Grado6.txt`;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+</body>
+</html>
