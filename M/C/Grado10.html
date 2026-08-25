@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulación Pedagógica — Unit 3: A Voice for Change | Grado 10° (Versión PIAR)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --ink:#1A1A2E;--ink2:#26264A;
+  --purple:#4A148C;--purple-lt:#6A1B9A;--purple-pale:#F3E5F5;
+  --blue:#0D47A1;--blue-lt:#1565C0;--blue-pale:#E3F2FD;
+  --teal:#00695C;--teal-lt:#00897B;--teal-pale:#E0F2F1;
+  --orange:#E65100;--orange-lt:#F57C00;--orange-pale:#FFF3E0;
+  --green:#1B5E20;--green-lt:#2E7D32;--green-pale:#E8F5E9;
+  --red:#B71C1C;--red-pale:#FFEBEE;
+  --gold:#F57F17;--gold-pale:#FFFDE7;
+  --gray1:#F8F9FA;--gray2:#E9ECEF;--gray3:#6C757D;
+  --white:#FFFFFF;--radius:14px;--radius-sm:10px;
+  --shadow:0 4px 24px rgba(26,26,46,.10);--shadow-sm:0 2px 8px rgba(26,26,46,.07);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#F0EEFA;color:var(--ink);line-height:1.75;font-size:16px}
+
+/* HEADER */
+.site-header{background:linear-gradient(135deg,#4A148C 0%,#1565C0 60%,#00897B 100%);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.30)}
+.header-inner{max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.header-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.header-title{flex:1}
+.header-title h1{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;line-height:1.25}
+.header-title p{font-size:12.5px;opacity:.8;margin-top:3px}
+.header-meta{display:flex;gap:8px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px;white-space:nowrap}
+.piar-banner{background:#FFD54F;color:#5D4037;text-align:center;font-size:13px;font-weight:700;padding:8px 16px;letter-spacing:.02em}
+
+/* NAV */
+.class-nav{background:#fff;border-bottom:2px solid var(--gray2);position:sticky;top:103px;z-index:90;box-shadow:var(--shadow-sm)}
+.class-nav-inner{max-width:1100px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.class-nav-inner::-webkit-scrollbar{display:none}
+.nav-tab{padding:15px 24px;cursor:pointer;font-weight:700;font-size:13.5px;color:var(--gray3);border-bottom:4px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px;user-select:none}
+.nav-tab:hover{color:var(--purple-lt);background:var(--purple-pale)}
+.nav-tab.active{color:var(--purple-lt);border-bottom-color:var(--purple-lt);background:var(--purple-pale)}
+
+/* LAYOUT */
+.main{max-width:1100px;margin:0 auto;padding:32px 20px 60px}
+.class-panel{display:none;animation:fadeIn .35s ease}
+.class-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* HERO */
+.class-hero{border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;position:relative;overflow:hidden}
+.class-hero::before{content:attr(data-num);position:absolute;right:24px;top:8px;font-family:'Fraunces',serif;font-size:110px;font-weight:700;opacity:.08;line-height:1;color:#fff}
+.class-hero h2{font-family:'Fraunces',serif;font-size:1.85rem;font-weight:700;color:#fff;line-height:1.25;margin-bottom:8px}
+.class-hero .subtitle{color:rgba(255,255,255,.85);font-size:14.5px;margin-bottom:6px}
+.class-hero .subtitle-es{color:rgba(255,255,255,.65);font-size:13px;font-style:italic;margin-bottom:14px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+.hero-chip{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:5px 13px;font-size:12.5px;color:#fff;font-weight:600}
+.h-c1{background:linear-gradient(135deg,#4A148C,#1565C0)}
+.h-c2{background:linear-gradient(135deg,#00695C,#1565C0)}
+.h-c3{background:linear-gradient(135deg,#E65100,#4A148C)}
+.h-c4{background:linear-gradient(135deg,#1B5E20,#00897B)}
+
+/* SECTION CARDS */
+.section-card{background:#fff;border-radius:var(--radius);margin-bottom:22px;box-shadow:var(--shadow-sm);overflow:hidden;border:1.5px solid var(--gray2)}
+.section-card-header{display:flex;align-items:center;gap:12px;padding:17px 22px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .2s}
+.section-card-header:hover{background:var(--gray1)}
+.section-card-header .sec-emoji{font-size:22px;flex-shrink:0}
+.section-card-header h3{font-size:14.5px;font-weight:800;letter-spacing:.02em;flex:1}
+.section-card-header .sec-sub{display:block;font-size:11.5px;font-weight:500;opacity:.7;margin-top:1px;text-transform:none;letter-spacing:0}
+.chevron{font-size:13px;color:var(--gray3);transition:transform .25s}
+.section-card-header.open{border-bottom-color:var(--gray2)}
+.section-card-header.open .chevron{transform:rotate(180deg)}
+.section-card-body{padding:24px;display:none}
+.section-card-body.open{display:block}
+
+.sec-risk    .section-card-header{background:var(--orange-pale)} .sec-risk h3{color:var(--orange)}
+.sec-obj     .section-card-header{background:var(--blue-pale)}   .sec-obj h3{color:var(--blue)}
+.sec-vocab   .section-card-header{background:var(--teal-pale)}   .sec-vocab h3{color:var(--teal)}
+.sec-grammar .section-card-header{background:var(--purple-pale)} .sec-grammar h3{color:var(--purple-lt)}
+.sec-visual  .section-card-header{background:var(--gold-pale)}   .sec-visual h3{color:var(--gold)}
+.sec-explain .section-card-header{background:var(--blue-pale)}   .sec-explain h3{color:var(--blue-lt)}
+.sec-sim     .section-card-header{background:var(--green-pale)}  .sec-sim h3{color:var(--green)}
+.sec-speak   .section-card-header{background:var(--teal-pale)}   .sec-speak h3{color:var(--teal-lt)}
+.sec-listen  .section-card-header{background:var(--blue-pale)}   .sec-listen h3{color:var(--blue-lt)}
+.sec-read    .section-card-header{background:var(--purple-pale)} .sec-read h3{color:var(--purple-lt)}
+.sec-write   .section-card-header{background:var(--green-pale)}  .sec-write h3{color:var(--green-lt)}
+.sec-nee     .section-card-header{background:var(--orange-pale)} .sec-nee h3{color:var(--orange)}
+.sec-check   .section-card-header{background:var(--green-pale)}  .sec-check h3{color:var(--green)}
+.sec-err     .section-card-header{background:var(--red-pale)}    .sec-err h3{color:var(--red)}
+.sec-exit    .section-card-header{background:var(--gold-pale)}   .sec-exit h3{color:var(--gold)}
+.sec-notes   .section-card-header{background:var(--blue-pale)}   .sec-notes h3{color:var(--blue)}
+.sec-hw      .section-card-header{background:var(--purple-pale)} .sec-hw h3{color:var(--purple)}
+.sec-train   .section-card-header{background:var(--orange-pale)} .sec-train h3{color:var(--orange-lt)}
+
+/* SIMPLIFY BADGE */
+.simple-badge{display:inline-flex;align-items:center;gap:6px;background:#FFF8E1;border:1.5px solid #FFD54F;border-radius:20px;padding:4px 12px;font-size:11.5px;font-weight:700;color:#8A6D00;margin-bottom:14px}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0}
+.tbl th{padding:11px 14px;text-align:left;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--gray2);vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--gray1)}
+.tbl.purple th{background:var(--purple-lt);color:#fff}
+.tbl.blue th{background:var(--blue-lt);color:#fff}
+.tbl.green th{background:var(--green);color:#fff}
+.tbl.orange th{background:var(--orange-lt);color:#fff}
+.tbl.teal th{background:var(--teal-lt);color:#fff}
+.word-en{font-weight:700;color:var(--teal-lt)}
+.word-es{color:var(--gray3);font-style:italic;font-size:13px}
+.word-pron{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray3)}
+.ans{color:var(--green-lt);font-weight:600}
+.correct-cell{color:var(--green-lt);font-weight:700}
+.wrong-cell{color:var(--red);font-weight:700;text-decoration:line-through}
+
+/* VISUAL BOX */
+.visual-box{background:var(--gold-pale);border:2.5px solid #FFD54F;border-radius:var(--radius);padding:22px 26px;margin:14px 0}
+.visual-box pre{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;color:var(--ink);white-space:pre-wrap}
+.visual-box.purple{background:var(--purple-pale);border-color:#CE93D8}
+.visual-box.blue{background:var(--blue-pale);border-color:#90CAF9}
+.visual-box.green{background:var(--green-pale);border-color:#A5D6A7}
+.visual-box.teal{background:var(--teal-pale);border-color:#80CBC4}
+
+/* DIALOGUE */
+.dialogue{display:flex;flex-direction:column;gap:11px;margin:12px 0}
+.dlg{display:flex;gap:12px;align-items:flex-start}
+.dlg.s{flex-direction:row-reverse}
+.dlg-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.dlg.t .dlg-av{background:var(--blue-pale)}
+.dlg.s .dlg-av{background:var(--teal-pale)}
+.dlg.n .dlg-av{background:var(--orange-pale)}
+.dlg-content{max-width:80%}
+.dlg-name{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.dlg.t .dlg-name{color:var(--blue-lt)}
+.dlg.s .dlg-name{color:var(--teal-lt);text-align:right}
+.dlg.n .dlg-name{color:var(--orange)}
+.dlg-text{padding:11px 15px;border-radius:14px;font-size:14px;line-height:1.65}
+.dlg.t .dlg-text{background:var(--blue-pale);border-bottom-left-radius:4px}
+.dlg.s .dlg-text{background:var(--teal-pale);border-bottom-right-radius:4px;text-align:right}
+.dlg.n .dlg-text{background:var(--orange-pale);border-bottom-left-radius:4px;border-left:3px solid var(--orange-lt)}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:16px;margin:8px 0}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step-num{width:30px;height:30px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-body strong{color:var(--blue-lt)}
+.step-body .es-note{display:block;font-size:13px;color:var(--gray3);font-style:italic;margin-top:4px}
+
+/* FORMULA */
+.formula{display:inline-flex;align-items:center;gap:6px;background:var(--ink2);color:#fff;border-radius:8px;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:14px;margin:6px 4px}
+.formula .plus{color:#CE93D8}
+
+/* BULLET */
+.blist{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:9px}
+.blist li{display:flex;gap:10px;font-size:14.5px;align-items:flex-start}
+.blist li::before{content:'▶';color:var(--purple-lt);font-size:9px;margin-top:5px;flex-shrink:0}
+
+/* ERROR PAIR */
+.err-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.err-w{background:var(--red-pale);border-left:5px solid var(--red);border-radius:var(--radius-sm);padding:12px 16px;font-size:14px}
+.err-w .lbl{font-size:10.5px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.err-c{background:var(--green-pale);border-left:5px solid var(--green-lt);border-radius:var(--radius-sm);padding:12px 16px;font-size:14px}
+.err-c .lbl{font-size:10.5px;font-weight:800;color:var(--green-lt);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+
+/* OBJ BOX */
+.obj-box{background:var(--blue-pale);border-left:6px solid var(--blue);border-radius:var(--radius);padding:18px 22px;font-size:14.5px;line-height:1.8;margin:6px 0}
+.obj-box .es-version{display:block;margin-top:10px;font-size:13.5px;color:var(--gray3);font-style:italic;border-top:1px dashed #90CAF9;padding-top:10px}
+
+/* READ BOX */
+.read-box{background:var(--gray1);border:1.5px solid var(--gray2);border-radius:var(--radius);padding:20px 24px;font-size:14.5px;line-height:1.9;margin:12px 0;white-space:pre-line}
+
+/* LEVEL GRID */
+.lvl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0}
+.lvl-card{border-radius:var(--radius-sm);padding:18px}
+.lvl-badge{font-size:24px;margin-bottom:8px}
+.lvl-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.lvl-task{font-size:14px;line-height:1.7}
+.lv1{background:#E3F2FD;border:1.5px solid #90CAF9}.lv1 .lvl-label{color:#1565C0}
+.lv2{background:#FFF9C4;border:1.5px solid #FFF176}.lv2 .lvl-label{color:#F57F17}
+
+/* EXIT */
+.exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.exit-card{background:var(--gold-pale);border:1.5px solid #FFD54F;border-radius:var(--radius-sm);padding:15px 17px;font-size:14px}
+.exit-q{font-weight:700;margin-bottom:6px;color:var(--gold)}
+.exit-a{color:var(--green-lt);font-size:13.5px}
+
+/* NOTES */
+.notes-list{display:flex;flex-direction:column;gap:10px}
+.note-item{display:flex;gap:12px;align-items:flex-start;background:var(--blue-pale);border-radius:var(--radius-sm);padding:13px 16px;font-size:14px}
+.note-item::before{content:'💡';font-size:17px;flex-shrink:0}
+
+/* HW */
+.hw-box{background:var(--purple-pale);border:2.5px dashed var(--purple-lt);border-radius:var(--radius);padding:20px 24px;margin:8px 0;font-size:14.5px}
+.hw-box h4{color:var(--purple-lt);margin-bottom:12px;font-size:15px}
+
+/* NEE */
+.nee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.nee-card{border-radius:var(--radius-sm);padding:16px;font-size:13.5px;line-height:1.7}
+.nee-card h4{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.nee1{background:#E3F2FD;border:1.5px solid #90CAF9}.nee1 h4{color:var(--blue-lt)}
+.nee2{background:#E0F2F1;border:1.5px solid #80CBC4}.nee2 h4{color:var(--teal-lt)}
+.nee3{background:#F3E5F5;border:1.5px solid #CE93D8}.nee3 h4{color:var(--purple-lt)}
+
+/* WORD BANK CHIPS */
+.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.wb-chip{background:#fff;border:2px solid var(--teal-lt);border-radius:20px;padding:6px 14px;font-size:13.5px;font-weight:600;color:var(--teal-lt)}
+
+@media(max-width:720px){
+  .lvl-grid,.nee-grid{grid-template-columns:1fr}
+  .err-pair,.exit-grid{grid-template-columns:1fr}
+  .class-hero{padding:24px 20px}
+  .class-hero h2{font-size:1.4rem}
+  .section-card-body{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-badge">I.E. Siglo XXI</div>
+    <div class="header-title">
+      <h1>Simulación Pedagógica — Unit 3: A Voice for Change</h1>
+      <p>Docente: Yonatha Mendoza Molina · Grado 10° · Inglés B1+ · 2026 · Versión adaptada PIAR</p>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill">🗣️ 4 Clases</span>
+      <span class="meta-pill">⏱ 2h académicas c/u</span>
+      <span class="meta-pill">👥 20 est.</span>
+      <span class="meta-pill">♿ Apoyos PIAR</span>
+    </div>
+  </div>
+  <div class="piar-banner">📋 VERSIÓN SIMPLIFICADA — Inglés sencillo, apoyo en español en puntos clave, actividades escalonadas paso a paso</div>
+</header>
+
+<nav class="class-nav">
+  <div class="class-nav-inner">
+    <div class="nav-tab active" onclick="showClass(1,this)"><span>🕵️</span> Clase 1 — Reported Q&A</div>
+    <div class="nav-tab" onclick="showClass(2,this)"><span>🔗</span> Clase 2 — Gerunds & Infinitives</div>
+    <div class="nav-tab" onclick="showClass(3,this)"><span>📢</span> Clase 3 — Voices for Change</div>
+    <div class="nav-tab" onclick="showClass(4,this)"><span>💥</span> Clase 4 — So & Such</div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════════ CLASS 1 ══════════════════════════ -->
+<div class="class-panel active" id="class-1">
+  <div class="class-hero h-c1" data-num="1">
+    <h2>🕵️ "The Interviewer's Secret"</h2>
+    <p class="subtitle">Reported Speech — Questions & Commands</p>
+    <p class="subtitle-es">Cómo reportar preguntas y órdenes en inglés — versión simple</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1+ (adaptado)</span>
+      <span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Julio 2026</span>
+      <span class="hero-chip">📌 Previo: Reported Speech (Statements)</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management <span class="sec-sub">Situaciones que pueden pasar y qué hacer</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl orange">
+        <thead><tr><th>Lo que puede pasar</th><th>Qué hacer</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mantener el orden de pregunta:</strong><br>Decir "He asked what was her name" en lugar de "He asked what her name was".</td><td><strong>The Statement Switch:</strong> Al reportar, la pregunta se convierte en una oración normal. El sujeto va ANTES del verbo, como siempre. <em>Sin signo de interrogación.</em></td></tr>
+          <tr><td><strong>Usar "said" para todo:</strong><br>Decir "She said me what I was doing."</td><td><strong>3 Verbos Clave:</strong> Para preguntas usamos <strong>ASK</strong>. Para órdenes usamos <strong>TELL</strong>. Nunca decimos "said me".</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">
+        Students will be able to report questions and commands in simple, correct English.
+        <span class="es-version">Los estudiantes podrán reportar preguntas y órdenes que alguien dijo, usando inglés simple y correcto.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary <span class="sec-sub">Solo 6 palabras importantes</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Vocabulario reducido — enfócate solo en estas 6 palabras</div>
+      <table class="tbl teal">
+        <thead><tr><th>Word</th><th>Significado</th><th>Pronunciation</th><th>Ejemplo simple</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">ask</td><td class="word-es">preguntar</td><td class="word-pron">/æsk/ → ASK</td><td>She asked where I lived.</td></tr>
+          <tr><td class="word-en">tell</td><td class="word-es">decirle a alguien que haga algo</td><td class="word-pron">/tel/ → TEL</td><td>He told me to sit down.</td></tr>
+          <tr><td class="word-en">order</td><td class="word-es">ordenar</td><td class="word-pron">/ˈɔːrdər/ → OR-der</td><td>The teacher ordered us to be quiet.</td></tr>
+          <tr><td class="word-en">wonder</td><td class="word-es">preguntarse</td><td class="word-pron">/ˈwʌndər/ → WAN-der</td><td>I wonder what time it is.</td></tr>
+          <tr><td class="word-en">if / whether</td><td class="word-es">si (para preguntas sí/no)</td><td class="word-pron">/ɪf/ → IF</td><td>He asked if I was hungry.</td></tr>
+          <tr><td class="word-en">wh-word</td><td class="word-es">what, where, when, who, why</td><td class="word-pron">→ WH-word</td><td>She asked what my name was.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus <span class="sec-sub">2 reglas simples, no más</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Solo 2 reglas — domina estas antes de ver más</div>
+
+      <h4 style="color:var(--purple-lt);margin-bottom:10px">REGLA 1 — Reporting Questions (Preguntas)</h4>
+      <div style="background:var(--purple-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula">Wh-word + Subject + Verb</div>
+        <div style="font-size:14px;margin-top:10px;line-height:2">
+          Direct: <em>"What is your name?"</em><br>
+          Reported: <strong>She asked what my name WAS.</strong><br><br>
+          Direct: <em>"Do you like pizza?"</em><br>
+          Reported: <strong>He asked IF I liked pizza.</strong>
+        </div>
+      </div>
+      <div style="background:var(--gold-pale);border:1.5px solid #FFD54F;border-radius:var(--radius-sm);padding:12px 16px;font-size:14px;margin-bottom:16px">
+        🚦 <strong>The Statement Switch:</strong> Cuando reportamos, la pregunta PIERDE sus "superpoderes" — vuelve a ser una oración normal. Sujeto antes del verbo. Sin signo de interrogación (?).
+      </div>
+
+      <h4 style="color:var(--teal-lt);margin-bottom:10px">REGLA 2 — Reporting Commands (Órdenes)</h4>
+      <div style="background:var(--teal-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula" style="background:var(--teal-lt)">TELL/ORDER + Person + TO + Verb</div>
+        <div style="font-size:14px;margin-top:10px;line-height:2">
+          Direct: <em>"Sit down!"</em><br>
+          Reported: <strong>The teacher told us TO sit down.</strong><br><br>
+          Direct: <em>"Don't run!"</em><br>
+          Reported: <strong>She told us NOT TO run.</strong>
+        </div>
+      </div>
+
+      <table class="tbl purple">
+        <thead><tr><th>✅ Correcto</th><th>❌ Incorrecto</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">She asked what my name was.</td><td class="wrong-cell">She asked what was my name.</td></tr>
+          <tr><td class="correct-cell">He told me to wait.</td><td class="wrong-cell">He said me to wait.</td></tr>
+          <tr><td class="correct-cell">She asked if I liked pizza.</td><td class="wrong-cell">She asked do I like pizza.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — The Power Down Map</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box">
+        <pre>   THE QUESTION'S "SUPERPOWERS" — BEFORE AND AFTER
+
+  DIRECT QUESTION (has superpowers ⚡):
+  "What IS your name?"
+   ↑ verb BEFORE subject + question mark (?)
+
+  REPORTED QUESTION (superpowers OFF 🔌):
+  She asked what my name WAS.
+   ↑ subject BEFORE verb + NO question mark
+
+  ┌─────────────────────────────────────────────┐
+  │  QUESTIONS:                                   │
+  │  Wh-word + Subject + Verb (no ?)             │
+  │  "Where do you live?" → asked where I lived  │
+  │                                                │
+  │  YES/NO QUESTIONS use IF:                     │
+  │  "Are you happy?" → asked IF I was happy     │
+  │                                                │
+  │  COMMANDS:                                    │
+  │  TELL + person + TO + verb                   │
+  │  "Sit down!" → told us TO sit down           │
+  │  "Don't talk!" → told us NOT TO talk         │
+  └─────────────────────────────────────────────┘</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation <span class="sec-sub">Paso a paso, muy lento</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — The Nosy Reporter:</strong> El docente pregunta a un estudiante: "What are you eating?" Luego pregunta a otro: "What did I ask him?" <span class="es-note">Esto activa la idea de reportar una pregunta — primero solo oral, sin escribir nada.</span></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>The Statement Switch — visual:</strong> Dibuja un interruptor de luz (⚡ ON / 🔌 OFF). 'La pregunta directa tiene superpoderes — el verbo va antes del sujeto. Cuando reportamos, apagamos el interruptor: el sujeto vuelve a ir primero.' <span class="es-note">Usa solo UN ejemplo al principio: "What is your name?" → "She asked what my name was."</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Repetición coral:</strong> Todos repiten juntos en voz alta 3 veces: "She asked what my name was." Esto ayuda a memorizar el patrón con el oído antes de analizarlo gramaticalmente.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Commands — un solo ejemplo:</strong> "Sit down!" se convierte en "The teacher told us to sit down." <span class="es-note">Solo TELL + TO + verbo. No agregar más verbos reportadores todavía.</span></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>The Interrogation Room (simplificada):</strong> En grupos de 3 (Detective, Sospechoso, Abogado). El Detective hace SOLO 2 preguntas simples y da SOLO 1 orden. El Abogado reporta con una frase modelo ya escrita en la pizarra para guiarse.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[a un estudiante] What are you eating? [a otro estudiante] Andrés — what did I just ask him?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">Uhh... you asked... what is he eating?</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Good try! Casi correcto. Cuando reportamos, apagamos el interruptor [hace el gesto] — el sujeto va primero. Not "what IS he" — "what HE WAS eating." Let's say it together, everyone!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Todos (coro)</div><div class="dlg-text">"I asked what he was eating."</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT! Now — commands. I say: "Stand up!" Valentina, how do we report that?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Valentina</div><div class="dlg-text">The teacher told us to stand up?</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXCELLENT, Valentina! TELL + TO + verb. Muy bien. Now — The Interrogation Room. Groups of 3. The Detective only asks 2 questions and gives 1 order. Use the model on the board!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Detective (Carlos)</div><div class="dlg-text">Stand up! Where were you yesterday?</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Abogado (Luisa, reportando)</div><div class="dlg-text">The detective told him to stand up. He asked where he was.</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Corrección suave</div><div class="dlg-text">Docente: "Good, Luisa! Almost perfect — just one small thing. Pasado de 'were' es 'had been'. Try: 'He asked where he had been.' But your sentence is very good for now!" [refuerzo positivo, sin presionar]</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training <span class="sec-sub">Solo 2 niveles, no 3</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Reducido a 2 niveles para más tiempo en cada uno</div>
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Elige</div><div class="lvl-task">He (said / asked) if I liked pizza.<br><br>The teacher (told / said) us to sit down.<br><br>She (asked / told) where the bank was.<br><br><em style="color:var(--green-lt)">✅ asked | told | asked</em></div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Completa</div><div class="lvl-task">The teacher told us _____ talk. (no hablar)<br><br>She asked me where _____ the bank was.<br><br><em style="color:var(--gold)">✅ not to | (nothing extra needed, just "the bank was")</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — The Interrogation Room (simplified)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:14.5px">Grupos de 3: Detective, Sospechoso, Abogado. El Detective hace solo 2 preguntas y da solo 1 orden. <strong>El modelo está escrito en la pizarra para copiar.</strong></p>
+      <table class="tbl green">
+        <thead><tr><th>Detective dice...</th><th>Abogado reporta (con modelo)</th></tr></thead>
+        <tbody>
+          <tr><td>"Stand up!"</td><td class="ans">"The detective told him to stand up."</td></tr>
+          <tr><td>"Where were you yesterday?"</td><td class="ans">"He asked where he was yesterday."</td></tr>
+          <tr><td>"Do you know the victim?"</td><td class="ans">"He asked if he knew the victim."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice <span class="sec-sub">Texto corto, frases simples</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="font-size:13.5px;margin-bottom:10px">El docente lee este texto DOS veces, despacio.</p>
+      <div class="read-box">"A police officer stopped a driver. He asked where she was going. He asked if she had her license. Then he told her to show her documents. She asked why he had stopped her. He told her to be more careful next time."</div>
+      <table class="tbl blue">
+        <thead><tr><th>Pregunta (simple)</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What did the officer ask first?</td><td class="ans">He asked where she was going.</td></tr>
+          <tr><td>What did he tell her to do?</td><td class="ans">He told her to show her documents.</td></tr>
+          <tr><td>What did she ask him?</td><td class="ans">She asked why he had stopped her.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice <span class="sec-sub">Texto corto y simple</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">My Job Interview
+
+Last week, I had a job interview. The manager asked me what my name was. She asked if I had experience. She asked where I had studied. Then she told me to wait outside.
+
+After ten minutes, she called me back. She told me I had the job! I was so happy.</div>
+      <table class="tbl purple">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What did the manager ask about experience?</td><td class="ans">She asked if I had experience.</td></tr>
+          <tr><td>What did she tell the person to do?</td><td class="ans">She told them to wait outside.</td></tr>
+          <tr><td>Did the person get the job?</td><td class="ans">Yes — she told them they had the job.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice <span class="sec-sub">Modelo completo para copiar y adaptar</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Tarea reducida — solo 6-8 oraciones, no 10-12</div>
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo (puedes usar las mismas frases, solo cambia los datos):</strong><br><br>
+        "I asked my mom what rules she had as a teenager. She told me she had to be home by 9 PM. I asked if she liked school. She said yes. Her mother told her to do her homework every day. I asked what music she had liked. She said she had liked rock music."
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1 — Entrevista:</strong> Pregunta a tus padres o abuelos sobre cuando eran adolescentes (reglas que tenían).</li>
+        <li><strong>Parte 2 — Escritura:</strong> Escribe un reporte corto (6-8 oraciones, usando el modelo de arriba).</li>
+        <li>Mínimo <strong>2 preguntas reportadas</strong> y <strong>2 órdenes reportadas</strong>.</li>
+        <li><strong>Nivel PRO (opcional):</strong> Graba un audio de 30 segundos contando lo más interesante que descubriste.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies — Apoyos PIAR</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>Dificultad lectora</h4>Tarjeta de referencia bilingüe con las 2 fórmulas (ASK / TELL) y un ejemplo cada una. Solo completa la palabra que falta en oraciones ya armadas, no produce desde cero.</div>
+        <div class="nee-card nee2"><h4>Dificultad atencional</h4>En el Interrogation Room, rol de "anotador" — solo escribe lo que el grupo dice, no necesita hablar en inglés frente a la clase. Trabaja con 1 pregunta y 1 orden, no más.</div>
+        <div class="nee-card nee3"><h4>Necesita más tiempo / Dificultad con el idioma</h4>Usa frases modelo siempre visibles en su mesa. Puede responder con apoyo en español primero, luego transformar la frase guiado por el docente o un compañero tutor.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿Qué verbo usamos para preguntas?</td><td class="ans">ASK</td></tr>
+          <tr><td>¿Qué verbo usamos para órdenes?</td><td class="ans">TELL</td></tr>
+          <tr><td>¿La pregunta reportada lleva signo de interrogación?</td><td class="ans">No.</td></tr>
+          <tr><td>Reporta: "Sit down!"</td><td class="ans">He told us to sit down.</td></tr>
+          <tr><td>Reporta: "Are you happy?"</td><td class="ans">She asked if I was happy.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>She asked what was her name.</div><div class="err-c"><div class="lbl">✅ Correcto</div>She asked what her name was.</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>She said me what I was doing.</div><div class="err-c"><div class="lbl">✅ Correcto</div>She asked me what I was doing.</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — fila de salida</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="font-size:14px;margin-bottom:14px">Para salir, transforma UNA oración (con apoyo de la tarjeta si es necesario):</p>
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">"Open the door!"</div><div class="exit-a">✅ "She told me to open the door."</div></div>
+        <div class="exit-card"><div class="exit-q">"Where do you live?"</div><div class="exit-a">✅ "She asked where I lived."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">Con estudiantes con ajustes PIAR, repite los mismos 2 ejemplos varias veces antes de pasar a producción libre — la repetición auditiva ayuda más que explicar nuevas reglas.</div>
+        <div class="note-item">Ten siempre el modelo escrito visible en el tablero durante toda la clase — copiar primero es válido y necesario.</div>
+        <div class="note-item">Permite respuestas mixtas (español + inglés) en la fase oral inicial — el objetivo es la comprensión del concepto antes que la perfección gramatical.</div>
+        <div class="note-item">No corrijas cada error en el momento — elige 1 corrección por estudiante y refuerza con elogio genuino primero.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏠</span><h3>Tarea — "The Family Interrogation Report" (versión simple)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación (reducida)</h4>
+        <ul class="blist">
+          <li><strong>Parte 1:</strong> Pregunta a tus padres o abuelos sobre sus reglas cuando eran adolescentes.</li>
+          <li><strong>Parte 2:</strong> Escribe 6-8 oraciones usando el modelo de la clase. Mínimo 2 preguntas y 2 órdenes reportadas.</li>
+          <li><strong>🎙️ Opcional:</strong> Graba un audio de 30 segundos sobre lo más sorprendente que descubriste.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-1 -->
+
+
+<!-- ══════════════════════════ CLASS 2 ══════════════════════════ -->
+<div class="class-panel" id="class-2">
+  <div class="class-hero h-c2" data-num="2">
+    <h2>🔗 "To Be or Not To Be"</h2>
+    <p class="subtitle">Gerunds and Infinitives — The Verb Pattern Challenge</p>
+    <p class="subtitle-es">Cuándo usar -ING y cuándo usar TO + verbo</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1+ (adaptado)</span>
+      <span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Agosto 2026</span>
+      <span class="hero-chip">📌 Previo: Action Verbs, -ing forms</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl orange">
+        <thead><tr><th>Lo que puede pasar</th><th>Qué hacer</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mezclar los patrones:</strong><br>Decir "I enjoy to play" o "I want playing".</td><td><strong>The Verb Families:</strong> Solo 2 familias para empezar. Familia ING (enjoy) y Familia TO (want). Tarjetas de color para cada familia.</td></tr>
+          <tr><td><strong>Infinitivo después de preposición:</strong><br>Decir "I am good at to draw".</td><td><strong>The Preposition Magnet:</strong> Las preposiciones (in, at, of) son imanes que SOLO atraen ING. Nunca TO.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">
+        Students will be able to use -ing or to + verb correctly after a small group of common verbs.
+        <span class="es-version">Los estudiantes podrán usar correctamente -ing o to + verbo después de un grupo pequeño de verbos comunes.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary <span class="sec-sub">Solo 6 verbos por familia</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Solo 3 verbos clave por familia — no la lista completa</div>
+      <table class="tbl teal">
+        <thead><tr><th>Familia ING 🎨</th><th>Familia TO 🎯</th><th>Preposition + ING 🧲</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">enjoy</td><td class="word-en">want</td><td class="word-en">good at</td></tr>
+          <tr><td class="word-en">avoid</td><td class="word-en">decide</td><td class="word-en">interested in</td></tr>
+          <tr><td class="word-en">finish</td><td class="word-en">hope</td><td class="word-en">tired of</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:var(--gray3);margin-top:8px;font-style:italic">Significados: enjoy = disfrutar | avoid = evitar | finish = terminar | want = querer | decide = decidir | hope = esperar (deseo)</p>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus <span class="sec-sub">3 reglas simples</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ 3 reglas, una por una — no las mezcles todavía</div>
+
+      <h4 style="color:var(--purple-lt);margin-bottom:10px">REGLA 1 — Familia ING 🎨</h4>
+      <div style="background:var(--purple-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula">enjoy / avoid / finish + VERB-ING</div>
+        <div style="font-size:14px;margin-top:10px">I <strong>enjoy playing</strong> soccer. &nbsp;|&nbsp; She <strong>avoids eating</strong> sugar.</div>
+      </div>
+
+      <h4 style="color:var(--blue-lt);margin-bottom:10px">REGLA 2 — Familia TO 🎯</h4>
+      <div style="background:var(--blue-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula" style="background:var(--blue-lt)">want / decide / hope + TO + VERB</div>
+        <div style="font-size:14px;margin-top:10px">I <strong>want to travel</strong>. &nbsp;|&nbsp; She <strong>decided to study</strong> medicine.</div>
+      </div>
+
+      <h4 style="color:var(--teal-lt);margin-bottom:10px">REGLA 3 — Preposition Magnet 🧲</h4>
+      <div style="background:var(--teal-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula" style="background:var(--teal-lt)">preposition (at/in/of) + VERB-ING</div>
+        <div style="font-size:14px;margin-top:10px">I am <strong>good at drawing</strong>. &nbsp;|&nbsp; She is <strong>interested in learning</strong> French.</div>
+      </div>
+
+      <table class="tbl purple">
+        <thead><tr><th>✅ Correcto</th><th>❌ Incorrecto</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">I enjoy playing soccer.</td><td class="wrong-cell">I enjoy to play soccer.</td></tr>
+          <tr><td class="correct-cell">I want to travel.</td><td class="wrong-cell">I want traveling.</td></tr>
+          <tr><td class="correct-cell">I am good at drawing.</td><td class="wrong-cell">I am good at to draw.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — Two Families Map</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box">
+        <pre>      TWO VERB FAMILIES — PICK THE RIGHT ONE
+
+  ┌─────────────────────┐    ┌─────────────────────┐
+  │   FAMILY ING  🎨    │    │   FAMILY TO  🎯     │
+  │                      │    │                      │
+  │   enjoy              │    │   want               │
+  │   avoid               │    │   decide             │
+  │   finish              │    │   hope               │
+  │                      │    │                      │
+  │   + VERB-ING         │    │   + TO + VERB        │
+  └─────────────────────┘    └─────────────────────┘
+
+  🧲 PREPOSITION MAGNET (separate rule):
+  at / in / of  +  VERB-ING  (always!)
+  good AT drawING
+  interested IN learnING
+  tired OF waitING
+
+  GERUND AS SUBJECT (extra, only if time):
+  VERB-ING at the START of a sentence
+  "Learning a new language is challenging."</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation <span class="sec-sub">Paso a paso</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — Two Truths and a Lie (auditivo):</strong> El docente dice: "I love eating pizza. I enjoy to study. I hate running." Pregunta: "¿Cuál suena raro?" <span class="es-note">No expliques todavía — solo deja que escuchen y sientan la diferencia.</span></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Solo la Familia ING primero:</strong> Presenta solo ENJOY con 2-3 ejemplos. Practica en coro: "I enjoy playing. I enjoy eating. I enjoy dancing." <span class="es-note">No introduzcas la Familia TO todavía — un concepto a la vez.</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Ahora la Familia TO:</strong> Presenta solo WANT con 2-3 ejemplos. "I want to play. I want to eat. I want to dance." Compara lado a lado: ENJOY+ING vs WANT+TO.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The Preposition Magnet:</strong> Solo 1 ejemplo: "I am good at drawing." Repite con gesto de imán (🧲) atrayendo el -ING.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Keep or Give Game (simplificado):</strong> En parejas, solo con los 6 verbos vistos (3+3). El estudiante toma una tarjeta y forma una oración. Si es correcta, gana un punto. Tarjetas con color (ING=verde, TO=azul) para ayudar visualmente.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Listen: "I love eating pizza. I enjoy to study. I hate running." ¿Cuál oración suena rara?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Camila</div><div class="dlg-text">¡La del medio! "Enjoy to study" suena raro.</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXACTLY, Camila! Tu oído ya sabe la regla. ENJOY siempre va con -ING. "I enjoy STUDYING." Let's say it together!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Todos (coro)</div><div class="dlg-text">"I enjoy studying! I enjoy playing! I enjoy dancing!"</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT! Now a different verb: WANT. "I want to play." Note — TO, not -ING. Andrés, make a sentence with WANT.</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">I want to eat pizza!</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">GREAT, Andrés! Now — the magnet. [hace gesto de imán] AT, IN, OF always pull -ING, never TO. "I am good at..." Valentina?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Valentina</div><div class="dlg-text">I am good at... dancing!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT! Now — Keep or Give Game. Take a card. If it's green (ING family), use -ing. If it's blue (TO family), use to.</div></div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Corrección suave</div><div class="dlg-text">Estudiante: "I avoid to eat sugar." → Docente: "Good attempt! AVOID is in the green family — remember -ING. Try again: 'I avoid EATING sugar.'" El estudiante repite con apoyo.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training <span class="sec-sub">2 niveles</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Clasifica</div><div class="lvl-task">Pon en la columna correcta:<br>enjoy · want · avoid · hope · finish · decide<br><br><strong>Familia ING:</strong> enjoy, avoid, finish<br><strong>Familia TO:</strong> want, hope, decide</div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Completa</div><div class="lvl-task">She is interested in _____ (learn) French.<br><br>I want _____ (travel) next year.<br><br><em style="color:var(--gold)">✅ learning | to travel</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — Keep or Give Game (simplified)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:14.5px">En parejas, solo con 6 verbos (3 ING + 3 TO). Tarjetas con color para identificar la familia.</p>
+      <table class="tbl green">
+        <thead><tr><th>Tarjeta (color)</th><th>Oración modelo</th></tr></thead>
+        <tbody>
+          <tr><td>🟢 AVOID</td><td class="ans">"I avoid eating sugar."</td></tr>
+          <tr><td>🔵 HOPE</td><td class="ans">"I hope to pass the exam."</td></tr>
+          <tr><td>🟢 FINISH</td><td class="ans">"I finish doing homework at 8 PM."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice <span class="sec-sub">Texto muy corto</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">"My name is Laura. I enjoy reading books. I want to be a doctor. I am good at helping people. I avoid eating junk food. I hope to study at university next year."</div>
+      <table class="tbl blue">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What does Laura enjoy?</td><td class="ans">She enjoys reading books.</td></tr>
+          <tr><td>What does she want to be?</td><td class="ans">She wants to be a doctor.</td></tr>
+          <tr><td>What does she avoid?</td><td class="ans">She avoids eating junk food.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice <span class="sec-sub">Texto corto</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">My Dream
+
+My name is Pedro. I enjoy playing soccer every day. I want to become a professional player. I am good at running fast. I avoid eating too much before games. I hope to play for a big team one day.</div>
+      <table class="tbl purple">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What does Pedro enjoy?</td><td class="ans">He enjoys playing soccer every day.</td></tr>
+          <tr><td>What is he good at?</td><td class="ans">He is good at running fast.</td></tr>
+          <tr><td>What does he hope to do?</td><td class="ans">He hopes to play for a big team.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice <span class="sec-sub">Modelo para copiar</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Reducido a 6-8 oraciones</div>
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo (solo cambia las palabras subrayadas):</strong><br><br>
+        "Dear future me, I hope to travel to many countries. I want to learn a new language. I enjoy spending time with family. I avoid wasting time on my phone. Working hard is important to me. I look forward to meeting you in 10 years!"
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1:</strong> Piensa en cómo quieres que sea tu vida en 10 años.</li>
+        <li><strong>Parte 2:</strong> Escribe una carta corta (6-8 oraciones) usando el modelo de arriba.</li>
+        <li>Mínimo <strong>2 verbos con TO</strong> y <strong>2 verbos/preposiciones con ING</strong>.</li>
+        <li><strong>Nivel PRO (opcional):</strong> Decora la carta como pergamino antiguo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies — Apoyos PIAR</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>Dificultad lectora</h4>Tarjeta de 2 colores (verde=ING, azul=TO) con solo 3 verbos cada familia, siempre visible. Solo completa el final de la palabra (play___) en lugar de escribir la oración completa.</div>
+        <div class="nee-card nee2"><h4>Dificultad atencional</h4>En Keep or Give, juega con solo 4 tarjetas (no 6). Puede usar gestos: mano hacia arriba = ING, mano hacia adelante = TO, antes de hablar.</div>
+        <div class="nee-card nee3"><h4>Necesita más tiempo / Dificultad con el idioma</h4>Plantilla de carta con espacios en blanco ya estructurados: "I hope to ___. I enjoy ___ing." Solo completa el verbo, no construye la oración entera.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿ENJOY va con -ING o TO?</td><td class="ans">-ING</td></tr>
+          <tr><td>¿WANT va con -ING o TO?</td><td class="ans">TO</td></tr>
+          <tr><td>¿Qué va después de una preposición (at, in, of)?</td><td class="ans">Siempre -ING</td></tr>
+          <tr><td>Corrige: "I enjoy to play."</td><td class="ans">I enjoy playing.</td></tr>
+          <tr><td>Corrige: "I want playing."</td><td class="ans">I want to play.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>I enjoy to play soccer.</div><div class="err-c"><div class="lbl">✅ Correcto</div>I enjoy playing soccer.</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>I am good at to draw.</div><div class="err-c"><div class="lbl">✅ Correcto</div>I am good at drawing.</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — Shout it Out</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="font-size:14px;margin-bottom:14px">El docente dice un verbo. La clase grita la terminación correcta:</p>
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">Docente: "Enjoy!"</div><div class="exit-a">✅ Todos gritan: "-ING!"</div></div>
+        <div class="exit-card"><div class="exit-q">Docente: "Want!"</div><div class="exit-a">✅ Todos gritan: "TO!"</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">No introduzcas las 2 familias el mismo momento — primero solo ENJOY, repite mucho, luego solo WANT. La separación temporal ayuda mucho a estudiantes con dificultades de procesamiento.</div>
+        <div class="note-item">Usa siempre el mismo código de colores (verde=ING, azul=TO) en todas las actividades — la consistencia visual es clave para estudiantes PIAR.</div>
+        <div class="note-item">El "Shout it Out" final es muy efectivo — el formato coral reduce la ansiedad de hablar solo frente a la clase.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏠</span><h3>Tarea — "A Letter to My Future Self" (versión simple)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación (reducida)</h4>
+        <ul class="blist">
+          <li><strong>Parte 1:</strong> Piensa en tu vida en 10 años (estudios, hobbies).</li>
+          <li><strong>Parte 2:</strong> Escribe una carta corta (6-8 oraciones) usando el modelo. Mínimo 2 con TO y 2 con ING.</li>
+          <li><strong>🎙️ Opcional:</strong> Decora la carta y léela a la clase.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-2 -->
+
+
+<!-- ══════════════════════════ CLASS 3 ══════════════════════════ -->
+<div class="class-panel" id="class-3">
+  <div class="class-hero h-c3" data-num="3">
+    <h2>📢 "Voices for Change"</h2>
+    <p class="subtitle">Vocabulary — Social Issues</p>
+    <p class="subtitle-es">Vocabulario sencillo para hablar de temas sociales</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1+ (adaptado)</span>
+      <span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Septiembre 2026</span>
+      <span class="hero-chip">📌 Previo: Global Issues básicos</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl orange">
+        <thead><tr><th>Lo que puede pasar</th><th>Qué hacer</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Miedo a expresar opiniones:</strong><br>Hablar de temas sensibles en otro idioma puede dar ansiedad.</td><td><strong>The Objective Observer:</strong> Asignar un personaje ("Eres un embajador de la ONU") para reducir la presión personal.</td></tr>
+          <tr><td><strong>Palabras abstractas sin entender:</strong><br>Usar "advocacy" sin saber qué significa.</td><td><strong>Concrete Scenarios:</strong> Dar un ejemplo real y simple en lugar de solo traducir.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">
+        Students will be able to use 5 simple words about social issues to share a basic opinion.
+        <span class="es-version">Los estudiantes podrán usar 5 palabras sencillas sobre temas sociales para compartir una opinión básica.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary <span class="sec-sub">Solo 5 palabras importantes</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Solo 5 palabras — no la lista completa de la unidad</div>
+      <table class="tbl teal">
+        <thead><tr><th>Word</th><th>Significado</th><th>Ejemplo concreto y simple</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">activism</td><td class="word-es">activismo (luchar por una causa)</td><td>She does activism for clean water.</td></tr>
+          <tr><td class="word-en">inequality</td><td class="word-es">desigualdad</td><td>Inequality means some people have more than others.</td></tr>
+          <tr><td class="word-en">advocacy</td><td class="word-es">defensa/apoyo a una causa</td><td>Advocacy is talking to the mayor to build a park for kids.</td></tr>
+          <tr><td class="word-en">human rights</td><td class="word-es">derechos humanos</td><td>Education is a human right.</td></tr>
+          <tr><td class="word-en">sustainability</td><td class="word-es">sostenibilidad (cuidar el planeta)</td><td>Sustainability means using less plastic.</td></tr>
+        </tbody>
+      </table>
+      <div class="wordbank">
+        <span class="wb-chip">activism = luchar</span>
+        <span class="wb-chip">inequality = desigualdad</span>
+        <span class="wb-chip">advocacy = defender</span>
+        <span class="wb-chip">human rights = derechos</span>
+        <span class="wb-chip">sustainability = cuidar el planeta</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus — Frases simples para opinar</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Solo 3 frases para opinar — usa estas siempre</div>
+      <div style="background:var(--purple-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div style="font-size:14.5px;line-height:2.4">
+          <strong>I think...</strong> (Yo pienso que...)<br>
+          <strong>This is important because...</strong> (Esto es importante porque...)<br>
+          <strong>We need to...</strong> (Necesitamos...)
+        </div>
+      </div>
+      <div style="background:var(--gold-pale);border:1.5px solid #FFD54F;border-radius:var(--radius-sm);padding:12px 16px;font-size:14px;margin-bottom:14px">
+        💬 <strong>Ejemplo completo:</strong> "I think education is a human right. This is important because every child needs to learn. We need to build more schools."
+      </div>
+      <table class="tbl purple">
+        <thead><tr><th>✅ Ejemplo simple</th><th>Significado</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">I think clean water is important.</td><td>Opinión simple con vocabulario clave.</td></tr>
+          <tr><td class="correct-cell">This is advocacy because we are helping kids.</td><td>Usa la palabra y la explica.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — 5 Words Map</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box">
+        <pre>      5 WORDS FOR VOICES OF CHANGE
+
+  ┌──────────────────────────────────────────────┐
+  │  ⚖️  INEQUALITY     = some have more, others less │
+  │  ✊  ACTIVISM       = fighting for a cause      │
+  │  📢  ADVOCACY       = speaking up to help        │
+  │  🌍  HUMAN RIGHTS   = things everyone deserves   │
+  │  🌱  SUSTAINABILITY = taking care of the planet   │
+  └──────────────────────────────────────────────┘
+
+  SIMPLE OPINION FORMULA:
+  "I think [TOPIC] is important because [REASON]."
+
+  Example:
+  "I think education is a human right.
+   This is important because every child needs to learn."</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation <span class="sec-sub">Paso a paso</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — The Protest Sign (visual, sin presión de hablar):</strong> Muestra un cartel de protesta icónico (ej. "I have a dream"). Pregunta simple: "What is this person fighting for?" <span class="es-note">Acepta respuestas cortas en español o inglés.</span></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Una palabra a la vez con ejemplo concreto:</strong> Presenta SOLO "advocacy" primero: "Advocacy is when you speak to the mayor to build a park for kids." <span class="es-note">No uses definiciones abstractas — siempre un ejemplo de la vida real.</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>The Objective Observer:</strong> "Hoy eres un embajador de la ONU. No hablas de TI — hablas como el personaje." Esto reduce la presión emocional de opinar personalmente en otro idioma.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The Social Campaign Pitch (simplificada):</strong> En grupos, reciben UN problema simple (ej. "Falta de agua"). Solo necesitan crear UN eslogan corto y UNA frase con la fórmula "I think... because...".</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Presentación con apoyo escrito:</strong> Cada grupo lee su frase de una tarjeta — no necesitan memorizar ni improvisar.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[Muestra cartel "I have a dream"] What is this person fighting for? Puedes responder en español si quieres.</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">¿Por la igualdad? Equality?</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">¡PERFECTO, Andrés! Equality — eso se conecta con nuestra palabra de hoy: INEQUALITY. Inequality means some people have more than others. ¿Pueden pensar en un ejemplo de inequality?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Camila</div><div class="dlg-text">¿Como cuando unos niños tienen escuela y otros no?</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXACTLY, Camila! That IS inequality. Now — today you are a UN ambassador. Not you — your character. Let's practice: 'I think education is a human right.' Repeat with me!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Todos (coro)</div><div class="dlg-text">"I think education is a human right!"</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT! Now — Social Campaign Pitch. Groups, your problem is: "Some kids don't have clean water." Make ONE slogan and ONE sentence with 'I think... because...'.</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Grupo 1</div><div class="dlg-text">Slogan: "Water for Everyone!" Sentence: "I think clean water is important because every child needs it."</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Apoyo positivo</div><div class="dlg-text">Docente: "EXCELLENT, group 1! You used 'I think' and 'important' perfectly. ¡Muy buen trabajo!" [refuerzo inmediato, sin corregir nada — la oración estaba bien]</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training <span class="sec-sub">2 niveles</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Empareja</div><div class="lvl-task">Relaciona la palabra con su significado:<br><br>inequality ↔ some have more than others<br>human rights ↔ things everyone deserves<br>sustainability ↔ taking care of the planet</div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Completa</div><div class="lvl-task">The city is investing in a new _____ (development) project.<br><br>I think clean water is a _____ (human right).<br><br><em style="color:var(--gold)">✅ development | human right</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — The Social Campaign Pitch (simplified)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:14.5px">Grupos reciben UN problema simple. Solo crean UN eslogan corto y UNA frase con la fórmula de opinión.</p>
+      <table class="tbl green">
+        <thead><tr><th>Problema</th><th>Frase modelo (con fórmula)</th></tr></thead>
+        <tbody>
+          <tr><td>Kids without school</td><td class="ans">"I think education is important because every child needs to learn."</td></tr>
+          <tr><td>Pollution in rivers</td><td class="ans">"I think clean rivers are important because we need clean water."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice <span class="sec-sub">Texto corto</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">"My name is Ana. I do activism for my community. I think clean water is a human right. There is inequality because some families don't have water at home. I want to help with advocacy — talking to local leaders about this problem."</div>
+      <table class="tbl blue">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What does Ana think is a human right?</td><td class="ans">Clean water.</td></tr>
+          <tr><td>What inequality does she mention?</td><td class="ans">Some families don't have water at home.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice <span class="sec-sub">Texto corto y simple</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">A Young Activist
+
+Greta is a young activist. She fights for sustainability. She thinks the planet needs our help. She talks to leaders about pollution. This is advocacy — speaking up for something important. Greta believes clean air is a human right for everyone.</div>
+      <table class="tbl purple">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>What does Greta fight for?</td><td class="ans">Sustainability.</td></tr>
+          <tr><td>What is advocacy, according to the text?</td><td class="ans">Speaking up for something important.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice <span class="sec-sub">Modelo guiado</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Reducido a 6-8 oraciones, no 15-20</div>
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo (cambia solo el tema):</strong><br><br>
+        "I think clean water is important. This is a human right. There is inequality because not everyone has clean water. I want to help with advocacy. We need to act for sustainability. This is my voice for change."
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1:</strong> Elige un tema social simple que te importe (agua limpia, igualdad, el planeta).</li>
+        <li><strong>Parte 2:</strong> Escribe 6-8 oraciones usando el modelo y la fórmula de opinión.</li>
+        <li>Usa <strong>mínimo 3 palabras del vocabulario</strong> de hoy.</li>
+        <li><strong>Nivel PRO (opcional):</strong> Diseña un póster simple en Canva.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies — Apoyos PIAR</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>Dificultad lectora</h4>Tarjeta visual bilingüe con las 5 palabras + íconos (⚖️✊📢🌍🌱). En el Campaign Pitch, solo señala/lee la frase ya escrita en lugar de producirla.</div>
+        <div class="nee-card nee2"><h4>Ansiedad al opinar / Dificultad emocional</h4>Usa siempre el rol del "Objective Observer" — habla como personaje, nunca expone su opinión personal directamente. Puede escribir su opinión antes de decirla.</div>
+        <div class="nee-card nee3"><h4>Necesita más tiempo / Dificultad con el idioma</h4>Plantilla con espacios: "I think ___ is important because ___." Solo completa los espacios en blanco con palabras del banco de vocabulario.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿Qué significa "inequality"?</td><td class="ans">Desigualdad — algunos tienen más que otros.</td></tr>
+          <tr><td>¿Qué significa "human rights"?</td><td class="ans">Derechos humanos — cosas que todos merecen.</td></tr>
+          <tr><td>¿Qué significa "sustainability"?</td><td class="ans">Sostenibilidad — cuidar el planeta.</td></tr>
+          <tr><td>Completa: "I think education is a _____."</td><td class="ans">human right</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>Usar "advocacy" sin entender qué significa.</div><div class="err-c"><div class="lbl">✅ Correcto</div>Siempre conectar con un ejemplo concreto: "Advocacy = hablar con el alcalde."</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — One Word Summary</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="font-size:14px;margin-bottom:14px">Define con tus propias palabras (español está bien) qué es "activism":</p>
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">Respuesta simple aceptable</div><div class="exit-a">✅ "Luchar por algo importante." / "Fighting for something important."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">Para temas sociales con estudiantes ansiosos al hablar, el rol del "Objective Observer" es esencial — siempre ofrece el personaje como escudo emocional.</div>
+        <div class="note-item">Acepta y valida respuestas en español durante la fase de comprensión — el objetivo es entender el concepto, no producir inglés perfecto de inmediato.</div>
+        <div class="note-item">Mantén siempre los mismos 5 íconos visuales (⚖️✊📢🌍🌱) en todas las actividades — la repetición visual ayuda a la memoria.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏠</span><h3>Tarea — "A Voice for Change" (versión simple)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación (reducida)</h4>
+        <ul class="blist">
+          <li><strong>Parte 1:</strong> Elige un tema social simple que te importe.</li>
+          <li><strong>Parte 2:</strong> Escribe 6-8 oraciones usando el modelo. Mínimo 3 palabras del vocabulario.</li>
+          <li><strong>🎨 Opcional:</strong> Diseña un póster simple acompañando tu texto.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-3 -->
+
+
+<!-- ══════════════════════════ CLASS 4 ══════════════════════════ -->
+<div class="class-panel" id="class-4">
+  <div class="class-hero h-c4" data-num="4">
+    <h2>💥 "So Good, Such a Success!"</h2>
+    <p class="subtitle">So and Such — Emphasizing Our Messages</p>
+    <p class="subtitle-es">Cómo agregar énfasis con SO y SUCH</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B1+ (adaptado)</span>
+      <span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Octubre 2026</span>
+      <span class="hero-chip">📌 Previo: Adjectives and Nouns</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-risk">
+    <div class="section-card-header open" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Risk Management</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body open">
+      <table class="tbl orange">
+        <thead><tr><th>Lo que puede pasar</th><th>Qué hacer</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Confusión de estructura:</strong><br>Decir "It was so a good movie".</td><td><strong>The Block Rule:</strong> SO va con SOLO el adjetivo. SUCH va con a/an + adjetivo + sustantivo (un bloque completo).</td></tr>
+          <tr><td><strong>Olvidar "a/an" con such:</strong><br>Decir "It was such good day".</td><td><strong>El Guardaespaldas:</strong> El sustantivo singular siempre necesita su guardaespaldas (a/an) para salir con SUCH.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-obj">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎯</span><h3>Learning Objective</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="obj-box">
+        Students will be able to use SO and SUCH to add emphasis in simple sentences.
+        <span class="es-version">Los estudiantes podrán usar SO y SUCH para enfatizar en oraciones simples.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📚</span><h3>Key Vocabulary <span class="sec-sub">Solo 6 adjetivos comunes</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Solo 6 adjetivos para practicar — los más comunes</div>
+      <table class="tbl teal">
+        <thead><tr><th>Adjective</th><th>Significado</th><th>Con SO</th><th>Con SUCH</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">good</td><td class="word-es">bueno</td><td>so good</td><td>such a good [noun]</td></tr>
+          <tr><td class="word-en">bad</td><td class="word-es">malo</td><td>so bad</td><td>such a bad [noun]</td></tr>
+          <tr><td class="word-en">tasty</td><td class="word-es">sabroso</td><td>so tasty</td><td>such a tasty [noun]</td></tr>
+          <tr><td class="word-en">boring</td><td class="word-es">aburrido</td><td>so boring</td><td>such a boring [noun]</td></tr>
+          <tr><td class="word-en">amazing</td><td class="word-es">increíble</td><td>so amazing</td><td>such an amazing [noun]</td></tr>
+          <tr><td class="word-en">friendly</td><td class="word-es">amigable</td><td>so friendly</td><td>such friendly [noun, plural]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📝</span><h3>Grammar Focus <span class="sec-sub">2 reglas simples</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Solo 2 fórmulas — practica cada una por separado</div>
+
+      <h4 style="color:var(--purple-lt);margin-bottom:10px">REGLA 1 — SO + Adjective (solo)</h4>
+      <div style="background:var(--purple-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula">SO + Adjective</div>
+        <div style="font-size:14px;margin-top:10px">The test was <strong>SO difficult</strong>. &nbsp;|&nbsp; This snack is <strong>SO tasty</strong>!</div>
+      </div>
+
+      <h4 style="color:var(--teal-lt);margin-bottom:10px">REGLA 2 — SUCH + a/an + Adjective + Noun</h4>
+      <div style="background:var(--teal-pale);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div class="formula" style="background:var(--teal-lt)">SUCH + a/an + Adjective + Noun</div>
+        <div style="font-size:14px;margin-top:10px">It was <strong>SUCH a difficult test</strong>. &nbsp;|&nbsp; It is <strong>SUCH an amazing flavor</strong>!</div>
+      </div>
+
+      <div style="background:var(--gold-pale);border:1.5px solid #FFD54F;border-radius:var(--radius-sm);padding:12px 16px;font-size:14px;margin-bottom:14px">
+        🛡️ <strong>El Guardaespaldas:</strong> Con SUCH, el sustantivo singular SIEMPRE necesita "a" o "an" antes — es su guardaespaldas. Sin guardaespaldas, no puede salir.
+      </div>
+
+      <table class="tbl purple">
+        <thead><tr><th>✅ Correcto</th><th>❌ Incorrecto</th></tr></thead>
+        <tbody>
+          <tr><td class="correct-cell">The weather is so nice today.</td><td class="wrong-cell">The weather is such nice today.</td></tr>
+          <tr><td class="correct-cell">It was such a beautiful house.</td><td class="wrong-cell">It was so a beautiful house.</td></tr>
+          <tr><td class="correct-cell">It was such a good day.</td><td class="wrong-cell">It was such good day.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🧠</span><h3>Visual Thinking — The Block Rule Map</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="visual-box">
+        <pre>      SO vs SUCH — TWO DIFFERENT BLOCKS
+
+  ┌───────────────────┐
+  │   SO  +  [Adj]     │      The movie was SO good.
+  │   (just 1 word)    │      I am SO tired.
+  └───────────────────┘
+
+  ┌─────────────────────────────────┐
+  │ SUCH + a/an + [Adj] + [Noun]     │  It was SUCH a good movie.
+  │ 🛡️ guardaespaldas needed!       │  This is SUCH an amazing day!
+  └─────────────────────────────────┘
+
+  QUICK TEST:
+  Is there a NOUN right after? 
+  → YES: use SUCH (a/an + adj + noun)
+  → NO (just the adjective): use SO
+
+  "This snack is SO tasty!"
+  "It is SUCH an amazing flavor!"</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation <span class="sec-sub">Paso a paso</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>IGNITE — The Exaggeration Game (visual y físico):</strong> El docente actúa cansado: "I am tired." Luego se desploma dramáticamente: "I am SO tired!" <span class="es-note">El gesto físico ayuda a entender el énfasis sin necesidad de explicar gramática todavía.</span></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Solo SO primero:</strong> Practica solo con SO + adjetivo, sin mencionar SUCH todavía. 3-4 ejemplos en coro: "So tired! So happy! So tasty!"</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Ahora solo SUCH:</strong> Presenta SUCH con UN ejemplo claro: "It is such a good day." <span class="es-note">Señala el guardaespaldas (a) con el dedo cada vez que lo dices.</span></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>The Quick Test (comparación directa):</strong> "¿Hay un sustantivo después? Si NO — usa SO. Si SÍ — usa SUCH + a/an." Practica con 2-3 pares de ejemplos solamente.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>The Transformation Duel (simplificado):</strong> En parejas, el docente lee una frase con SO. El estudiante la transforma a SUCH. Solo 4 rondas, no más — calidad sobre cantidad.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎭</span><h3>Classroom Simulation</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">[normal voice] "I am tired." [se desploma dramáticamente] "I am SO tired!" ¿Notan la diferencia?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Camila</div><div class="dlg-text">¡Jaja sí! La segunda suena más exagerada.</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">EXACTLY! SO adds emphasis — más énfasis. Let's practice together: "So happy! So tired! So tasty!"</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Todos (coro)</div><div class="dlg-text">"So happy! So tired! So tasty!"</div></div><div class="dlg-av">👥</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT! Now — a new pattern. "It is such a good day." [señala "a" con el dedo] ¿Ven el guardaespaldas "a"? Siempre va con SUCH cuando hay un sustantivo.</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Andrés</div><div class="dlg-text">¿Entonces SUCH siempre necesita "a" o "an"?</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">YES, Andrés! Exactamente — cuando el sustantivo es singular. Now — Quick Test. "This pizza is ___ tasty." Is there a noun after 'tasty'? No! So we use...?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Valentina</div><div class="dlg-text">¡SO! This pizza is SO tasty!</div></div><div class="dlg-av">🙋‍♀️</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">PERFECT, Valentina! Now — Transformation Duel. I say SO, you change it to SUCH. "The book was so interesting." Go!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Luis</div><div class="dlg-text">It was such an interesting book!</div></div><div class="dlg-av">🙋‍♂️</div></div>
+        <div class="dlg n"><div class="dlg-av">⚠️</div><div class="dlg-content"><div class="dlg-name">Apoyo positivo</div><div class="dlg-text">Docente: "EXCELLENT, Luis! You remembered the bodyguard 'an'! Perfect transformation." [refuerzo inmediato]</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏋️</span><h3>Training <span class="sec-sub">2 niveles</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Elige</div><div class="lvl-task">The weather is (so / such a) nice today.<br><br>It was (so / such a) good movie.<br><br><em style="color:var(--green-lt)">✅ so | such a</em></div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Completa</div><div class="lvl-task">They are _____ friendly people. (such)<br><br>This snack is _____ tasty! (so)<br><br><em style="color:var(--gold)">✅ such | so</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🗣️</span><h3>Speaking Practice — The Transformation Duel (simplified)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <p style="margin-bottom:14px;font-size:14.5px">En parejas, solo 4 rondas. El docente lee con SO, el estudiante transforma a SUCH.</p>
+      <table class="tbl green">
+        <thead><tr><th>Docente dice (SO)</th><th>Estudiante transforma (SUCH)</th></tr></thead>
+        <tbody>
+          <tr><td>"The book was so interesting."</td><td class="ans">"It was such an interesting book!"</td></tr>
+          <tr><td>"The pizza was so good."</td><td class="ans">"It was such a good pizza!"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">👂</span><h3>Listening Practice <span class="sec-sub">Texto corto</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">"I tried a new snack yesterday. It was so tasty! It was such an amazing flavor that I bought five bags. My friends are so friendly — they shared it with everyone. It was such a fun day!"</div>
+      <table class="tbl blue">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>How does the speaker describe the snack flavor?</td><td class="ans">"Such an amazing flavor."</td></tr>
+          <tr><td>How does the speaker describe their friends?</td><td class="ans">"So friendly."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📖</span><h3>Reading Practice <span class="sec-sub">Texto corto, estilo reseña</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="read-box">My Favorite Game
+
+I love this video game! It is so fun. It is such an exciting game that I play it every day. The graphics are so good. It is such a great experience. I recommend it to everyone!</div>
+      <table class="tbl purple">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr><td>Find one example with SO.</td><td class="ans">"It is so fun." / "The graphics are so good."</td></tr>
+          <tr><td>Find one example with SUCH.</td><td class="ans">"Such an exciting game." / "Such a great experience."</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-write">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✏️</span><h3>Writing Practice <span class="sec-sub">Modelo guiado</span></h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="simple-badge">✋ Reducido a 4-6 oraciones, no 10-12</div>
+      <div style="background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;margin-bottom:16px">
+        <strong style="color:var(--green)">📄 Modelo (cambia el producto):</strong><br><br>
+        "This snack is so tasty! It is such an amazing flavor that I buy it every day. My shampoo is so good for my hair. It is such a great product. I recommend it to everyone!"
+      </div>
+      <ul class="blist">
+        <li><strong>Parte 1:</strong> Elige 2 productos que usas a diario (un shampoo, un snack, un videojuego).</li>
+        <li><strong>Parte 2:</strong> Escribe reseñas cortas (4-6 oraciones en total).</li>
+        <li>Usa <strong>mínimo 2 SO</strong> y <strong>2 SUCH</strong> (4 en total).</li>
+        <li><strong>Nivel PRO (opcional):</strong> Graba un video corto de reseña como influencer.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card sec-nee">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">♿</span><h3>Inclusive Strategies — Apoyos PIAR</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="nee-grid">
+        <div class="nee-card nee1"><h4>Dificultad lectora</h4>Tarjeta con 2 cajas de colores: caja morada (SO + adjetivo) y caja verde (SUCH + a/an + adjetivo + sustantivo). Consulta visual constante durante toda la actividad.</div>
+        <div class="nee-card nee2"><h4>Dificultad atencional</h4>En el Transformation Duel, juega con solo 2 rondas en lugar de 4. Puede usar el gesto físico del docente (desplomarse) para reforzar el significado de "so".</div>
+        <div class="nee-card nee3"><h4>Necesita más tiempo / Dificultad con el idioma</h4>Plantilla de reseña con espacios: "This ___ is so ___! It is such a/an ___ ___." Solo completa los espacios en blanco con palabras del banco de vocabulario.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-check">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">✅</span><h3>Check for Understanding</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <table class="tbl green">
+        <thead><tr><th>Pregunta</th><th>Respuesta esperada</th></tr></thead>
+        <tbody>
+          <tr><td>¿SO va solo o con sustantivo?</td><td class="ans">Solo con el adjetivo.</td></tr>
+          <tr><td>¿Qué necesita SUCH antes del sustantivo singular?</td><td class="ans">a / an (el guardaespaldas)</td></tr>
+          <tr><td>Corrige: "It was so a good movie."</td><td class="ans">It was such a good movie.</td></tr>
+          <tr><td>Completa: "You are ___ smart!"</td><td class="ans">so</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-err">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">⚠️</span><h3>Common Mistakes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>It was so a good movie.</div><div class="err-c"><div class="lbl">✅ Correcto</div>It was such a good movie.</div></div>
+      <div class="err-pair"><div class="err-w"><div class="lbl">❌ Incorrecto</div>It was such good day.</div><div class="err-c"><div class="lbl">✅ Correcto</div>It was such a good day.</div></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-exit">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🎟️</span><h3>Exit Ticket — Fill the Gap</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="exit-grid">
+        <div class="exit-card"><div class="exit-q">"You are ___ smart!"</div><div class="exit-a">✅ so</div></div>
+        <div class="exit-card"><div class="exit-q">"You are ___ smart student!"</div><div class="exit-a">✅ such a</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-notes">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">📌</span><h3>Teacher Notes</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="notes-list">
+        <div class="note-item">El gesto físico (desplomarse al decir "so tired") es muy efectivo para estudiantes con dificultades de procesamiento — el cuerpo ayuda a fijar el significado antes de la gramática.</div>
+        <div class="note-item">Enseña SO y SUCH en momentos separados, nunca juntos al inicio — mézclalos solo después de que cada uno esté claro por separado.</div>
+        <div class="note-item">El código de color (morado=SO, verde=SUCH) debe mantenerse igual en todos los materiales de la clase para reforzar la memoria visual.</div>
+        <div class="note-item">Cierra la unidad recordando: Clase 1 reportar preguntas/órdenes, Clase 2 gerundios/infinitivos, Clase 3 vocabulario social, Clase 4 énfasis con SO/SUCH — todo conectado a "dar voz" a las propias ideas.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)">
+      <span class="sec-emoji">🏠</span><h3>Tarea — "The Product Review Blog" (versión simple)</h3><span class="chevron">▼</span>
+    </div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Asignación (reducida)</h4>
+        <ul class="blist">
+          <li><strong>Parte 1:</strong> Elige 2 productos que usas a diario.</li>
+          <li><strong>Parte 2:</strong> Escribe reseñas cortas (4-6 oraciones). Mínimo 2 SO y 2 SUCH.</li>
+          <li><strong>🎙️ Opcional:</strong> Graba un video corto de reseña como influencer.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-4 -->
+
+</main>
+
+<script>
+function showClass(num,tab){
+  document.querySelectorAll('.class-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('class-'+num).classList.add('active');
+  tab.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggle(h){
+  const b=h.nextElementSibling;
+  const open=h.classList.contains('open');
+  h.classList.toggle('open',!open);
+  b.classList.toggle('open',!open);
+}
+document.querySelectorAll('.section-card-header.open').forEach(h=>{
+  h.nextElementSibling.classList.add('open');
+});
+</script>
+</body>
+</html>
