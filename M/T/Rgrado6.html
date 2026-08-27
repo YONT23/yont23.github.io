@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misión: Pensar como una Máquina — Taller de 10 Preguntas</title>
+<style>
+  :root{
+    --azul-profundo:#0d3b66;
+    --azul-medio:#1d6fa5;
+    --azul-claro:#eaf3fb;
+    --blanco:#ffffff;
+    --gris-texto:#2a3540;
+    --verde-ok:#1e7a4c;
+    --rojo-no:#a33636;
+    --borde:#c9dcee;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Times New Roman", Times, serif;
+    background:linear-gradient(180deg,var(--azul-claro) 0%, var(--blanco) 320px);
+    color:var(--gris-texto);
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:780px;
+    margin:0 auto;
+    padding:24px 18px 60px;
+  }
+  header.top{
+    text-align:center;
+    padding:18px 10px 26px;
+  }
+  header.top .eyebrow{
+    letter-spacing:2px;
+    font-size:13px;
+    color:var(--azul-medio);
+    text-transform:uppercase;
+  }
+  header.top h1{
+    font-size:clamp(24px,5vw,34px);
+    color:var(--azul-profundo);
+    margin:6px 0 4px;
+  }
+  header.top p{
+    font-size:16px;
+    color:#4a5a68;
+    margin:0;
+  }
+
+  .progress-shell{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:14px;
+    padding:14px 18px;
+    margin-bottom:22px;
+  }
+  .progress-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:15px;
+    margin-bottom:8px;
+  }
+  .progress-row .score{
+    font-weight:bold;
+    color:var(--azul-profundo);
+  }
+  .bar-track{
+    background:var(--azul-claro);
+    border-radius:8px;
+    height:12px;
+    overflow:hidden;
+    border:1px solid var(--borde);
+  }
+  .bar-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--azul-medio),var(--azul-profundo));
+    transition:width .5s ease;
+  }
+  .steps-dots{
+    display:flex;
+    gap:6px;
+    margin-top:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .dot{
+    width:24px;height:24px;border-radius:50%;
+    border:2px solid var(--azul-medio);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px; color:var(--azul-medio); background:var(--blanco);
+    transition:all .3s ease;
+  }
+  .dot.done{background:var(--azul-medio);color:var(--blanco);}
+  .dot.active{border-color:var(--azul-profundo); box-shadow:0 0 0 3px rgba(13,59,102,.15);}
+
+  .card{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:16px;
+    padding:26px 24px;
+    box-shadow:0 6px 18px rgba(13,59,102,.06);
+    animation:fadeIn .45s ease;
+  }
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .mission-tag{
+    display:inline-block;
+    background:var(--azul-claro);
+    color:var(--azul-profundo);
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:13px;
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .card h2{
+    color:var(--azul-profundo);
+    margin:0 0 10px;
+    font-size:22px;
+  }
+  .instructions{
+    background:var(--azul-claro);
+    border-left:4px solid var(--azul-medio);
+    padding:10px 14px;
+    border-radius:8px;
+    font-size:15px;
+    margin-bottom:18px;
+  }
+  .activity{margin-bottom:16px;}
+
+  /* Mission: ordering */
+  .step-pool{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;}
+  .step-chip{
+    border:1px solid var(--azul-medio);
+    background:var(--blanco);
+    color:var(--azul-profundo);
+    padding:9px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:15px;
+    transition:all .2s ease;
+  }
+  .step-chip:hover{background:var(--azul-claro);}
+  .step-chip.picked{opacity:.35; cursor:default; background:var(--azul-claro);}
+  .answer-line{
+    min-height:48px;
+    border:2px dashed var(--borde);
+    border-radius:10px;
+    padding:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    background:#fbfdff;
+  }
+  .answer-line .num{
+    background:var(--azul-profundo);
+    color:var(--blanco);
+    border-radius:50%;
+    width:22px;height:22px;
+    font-size:12px;
+    display:inline-flex;align-items:center;justify-content:center;
+    margin-right:6px;
+  }
+  .answer-pill{
+    background:var(--azul-medio);
+    color:var(--blanco);
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:14px;
+  }
+
+  /* Mission: grid */
+  .grid-wrap{display:flex; justify-content:center; margin-bottom:10px;}
+  #cartGrid{
+    display:grid;
+    grid-template-columns:repeat(11,1fr);
+    grid-template-rows:repeat(11,1fr);
+    width:min(320px,80vw);
+    height:min(320px,80vw);
+    border:1px solid var(--borde);
+    background:var(--blanco);
+  }
+  .cell{
+    border:1px solid #e3edf6;
+    cursor:pointer;
+  }
+  .cell:hover{background:var(--azul-claro);}
+  .cell.axis{background:#dcebf8;}
+  .cell.selected{background:var(--azul-medio);}
+  .cell.correct-cell{background:var(--verde-ok) !important;}
+  .cell.wrong-cell{background:var(--rojo-no) !important;}
+  .target-label{
+    text-align:center;
+    font-size:18px;
+    margin-bottom:12px;
+    color:var(--azul-profundo);
+  }
+
+  /* MCQ */
+  .question{margin-bottom:18px;}
+  .question p.qtext{font-weight:bold; margin-bottom:8px;}
+  .opt{
+    display:block;
+    width:100%;
+    text-align:left;
+    border:1px solid var(--borde);
+    background:var(--blanco);
+    padding:10px 12px;
+    border-radius:10px;
+    margin-bottom:8px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:15px;
+    color:var(--gris-texto);
+    transition:all .2s ease;
+  }
+  .opt:hover{border-color:var(--azul-medio); background:var(--azul-claro);}
+  .opt.selected{border-color:var(--azul-profundo); background:var(--azul-claro); font-weight:bold;}
+  .opt.correct-opt{border-color:var(--verde-ok); background:#e8f5ee;}
+  .opt.wrong-opt{border-color:var(--rojo-no); background:#fbe9e9;}
+
+  /* Match */
+  .match-row{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+  }
+  .match-def{flex:1; min-width:220px; font-size:14.5px;}
+  select.match-select{
+    font-family:inherit;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid var(--azul-medio);
+    background:var(--blanco);
+    min-width:150px;
+  }
+
+  .btn{
+    font-family:inherit;
+    border:none;
+    padding:11px 22px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    background:var(--azul-profundo);
+    color:var(--blanco);
+    transition:transform .15s ease, background .2s ease;
+  }
+  .btn:hover{background:var(--azul-medio);}
+  .btn:active{transform:scale(.97);}
+  .btn:disabled{background:#a9bdd0; cursor:not-allowed;}
+  .btn.secondary{background:var(--blanco); color:var(--azul-profundo); border:1px solid var(--azul-medio);}
+  .btn.secondary:hover{background:var(--azul-claro);}
+
+  .btn-row{display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;}
+
+  .feedback{
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:15px;
+    display:none;
+    animation:fadeIn .35s ease;
+  }
+  .feedback.show{display:block;}
+  .feedback.ok{background:#e8f5ee; border:1px solid var(--verde-ok); color:#134d30;}
+  .feedback.no{background:#fbe9e9; border:1px solid var(--rojo-no); color:#6e2323;}
+  .feedback.partial{background:#fdf6e3; border:1px solid #c99a1e; color:#6e5210;}
+  .feedback .pts{font-weight:bold;}
+
+  /* Results screen */
+  .final-score{
+    text-align:center;
+    padding:20px 0 10px;
+  }
+  .final-score .big{
+    font-size:56px;
+    color:var(--azul-profundo);
+    font-weight:bold;
+    line-height:1;
+  }
+  .final-score .of10{font-size:20px; color:#5a6a78;}
+
+  /* Diana */
+  .diana-wrap{display:flex; justify-content:center; margin:14px 0;}
+  .aspect{margin-bottom:16px;}
+  .aspect label{display:block; margin-bottom:6px; font-size:15px;}
+  .aspect .scale{display:flex; gap:8px;}
+  .scale button{
+    width:38px; height:38px; border-radius:50%;
+    border:1px solid var(--azul-medio);
+    background:var(--blanco); color:var(--azul-profundo);
+    cursor:pointer; font-family:inherit; font-size:15px;
+  }
+  .scale button.on{background:var(--azul-profundo); color:var(--blanco);}
+
+  /* Team table */
+  table.team{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:14px;
+    font-size:15px;
+  }
+  table.team th, table.team td{
+    border:1px solid var(--borde);
+    padding:10px;
+    text-align:center;
+  }
+  table.team th{background:var(--azul-claro); color:var(--azul-profundo);}
+  .add-row{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  .add-row input[type=text]{
+    flex:1; min-width:180px;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid var(--azul-medio);
+    font-family:inherit;
+    font-size:15px;
+  }
+
+  .hidden{display:none !important;}
+
+  footer.note{
+    text-align:center;
+    font-size:13px;
+    color:#7a8a98;
+    margin-top:30px;
+  }
+
+  @media (max-width:480px){
+    .card{padding:20px 16px;}
+    .final-score .big{font-size:44px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Tecnología e Informática · Grado 6 · Periodo 3</div>
+    <h1>🤖 Pensar como una Máquina</h1>
+    <p>Taller interactivo de 10 misiones: Lógica Computacional y Programación</p>
+  </header>
+
+  <div class="progress-shell" id="progressShell">
+    <div class="progress-row">
+      <span>Progreso de misiones</span>
+      <span class="score">Puntaje: <span id="scoreNow">0</span>/10</span>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+    <div class="steps-dots" id="stepsDots"></div>
+  </div>
+
+  <!-- MISSION CONTAINER -->
+  <div id="missionArea"></div>
+
+  <!-- FINAL SCORE SCREEN -->
+  <div class="card hidden" id="finalScreen">
+    <div class="mission-tag">RESULTADOS</div>
+    <h2>¡Misiones completadas! 🚀</h2>
+    <div class="final-score">
+      <div class="big"><span id="finalScoreNum">0</span><span class="of10">/10</span></div>
+      <p id="finalScoreMsg"></p>
+    </div>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn" onclick="goToDiana()">Continuar a la Autoevaluación 🎯</button>
+    </div>
+  </div>
+
+  <!-- DIANA SCREEN -->
+  <div class="card hidden" id="dianaScreen">
+    <div class="mission-tag">AUTOEVALUACIÓN</div>
+    <h2>🎯 Diana de Autoevaluación</h2>
+    <div class="instructions">Valora tu desempeño en cada aspecto, del 1 (bajo) al 5 (alto).</div>
+
+    <div id="aspectsArea"></div>
+
+    <div class="diana-wrap">
+      <svg id="dianaSvg" width="260" height="260" viewBox="0 0 260 260"></svg>
+    </div>
+    <div class="final-score">
+      <p>Tu resultado de autoevaluación:</p>
+      <div class="big"><span id="dianaScoreNum">0</span><span class="of10">/5</span></div>
+    </div>
+
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn" onclick="goToTeam()">Continuar a Resultados del Equipo →</button>
+    </div>
+  </div>
+
+  <!-- TEAM SCREEN -->
+  <div class="card hidden" id="teamScreen">
+    <div class="mission-tag">EQUIPO</div>
+    <h2>👥 Resultados del Equipo</h2>
+    <div class="instructions">Cada integrante puede registrar su nombre. La nota de misiones es la del equipo y la autoevaluación es la calculada en la Diana 🎯.</div>
+
+    <div class="add-row">
+      <input type="text" id="participantName" placeholder="Nombre del participante">
+      <button class="btn" onclick="addParticipant()">Agregar al equipo</button>
+    </div>
+
+    <table class="team">
+      <thead>
+        <tr><th>Participante</th><th>Nota de misiones /10</th><th>Autoevaluación /5</th></tr>
+      </thead>
+      <tbody id="teamBody"></tbody>
+    </table>
+
+    <div class="btn-row">
+      <button class="btn secondary" onclick="restartAll()">Reiniciar taller</button>
+    </div>
+  </div>
+
+  <footer class="note">Docente: Yonatha Mendoza Molina — Institución Educativa Siglo XXI</footer>
+</div>
+
+<script>
+/* ---------------- DATA: 10 MISSIONS ---------------- */
+const missions = [
+  {
+    id:1,
+    tag:"MISIÓN 1",
+    title:"El Algoritmo del Semáforo",
+    instructions:"Haz clic en los pasos en el orden lógico correcto para cruzar la calle usando el semáforo peatonal.",
+    type:"order",
+    steps:[
+      "Mirar el color del semáforo peatonal",
+      "SI está en rojo, esperar",
+      "SI está en verde, cruzar mirando ambos lados",
+      "Acercarse a la esquina y detenerse"
+    ],
+    correctOrder:[3,0,1,2]
+  },
+  {
+    id:2,
+    tag:"MISIÓN 2",
+    title:"El Lienzo Digital",
+    instructions:"En el plano cartesiano digital, ubica el punto seleccionando la casilla adecuada.",
+    type:"coordinate",
+    target:{x:3,y:-2}
+  },
+  {
+    id:3,
+    tag:"MISIÓN 3",
+    title:"Decisiones y Repeticiones",
+    instructions:"Responde la pregunta sobre bucles condicionales.",
+    type:"mcq",
+    questions:[
+      {
+        q:"En un semáforo inteligente: SI hay un peatón, ENTONCES cambia a rojo por 5 segundos. SINO...",
+        options:["se apaga por completo","permanece en verde","cambia a un color aleatorio","reinicia el sistema"],
+        correct:1
+      }
+    ]
+  },
+  {
+    id:4,
+    tag:"MISIÓN 4",
+    title:"Cacería de Bugs",
+    instructions:"Identifica el error lógico (bug) en la siguiente secuencia de bloques de código.",
+    type:"debug",
+    code:"Al presionar Bandera Verde\n  Mover 10 pasos\n\nSI toca el borde ENTONCES rebotar",
+    options:[
+      "El condicional \"SI toca el borde\" está fuera de un bucle \"Por siempre\", por lo que solo evalúa una vez al inicio.",
+      "Falta agregar más personajes al escenario.",
+      "El comando mover no acepta 10 pasos.",
+      "No es posible combinar movimientos con condicionales."
+    ],
+    correct:0
+  },
+  {
+    id:5,
+    tag:"MISIÓN 5",
+    title:"Glosario del Programador",
+    instructions:"Relaciona cada concepto informático con su definición correcta.",
+    type:"match",
+    defs:[
+      {text:"Conjunto ordenado y finito de instrucciones para resolver un problema.", correct:"Algoritmo"},
+      {text:"Forma de escribir instrucciones usando lenguaje cotidiano estructurado.", correct:"Pseudocódigo"},
+      {text:"Error en el código que impide un funcionamiento correcto.", correct:"Bug"},
+      {text:"Objeto o personaje gráfico en el entorno de programación.", correct:"Sprite"},
+      {text:"Espacio de memoria donde se almacena un valor que puede cambiar.", correct:"Variable"}
+    ],
+    terms:["Algoritmo","Pseudocódigo","Bug","Sprite","Variable"]
+  },
+  {
+    id:6,
+    tag:"MISIÓN 6",
+    title:"Variables y Datos",
+    instructions:"Evalúa el uso adecuado de las variables en los juegos digitales.",
+    type:"mcq",
+    questions:[
+      {
+        q:"Si deseas crear un videojuego que guarde las vidas restantes de tu personaje, ¿qué elemento debes utilizar?",
+        options:["Un evento de teclado","Una Variable","Un bloque de sonido","Un disfraz"],
+        correct:1
+      }
+    ]
+  },
+  {
+    id:7,
+    tag:"MISIÓN 7",
+    title:"Algoritmo del Café / Té",
+    instructions:"Ordena los pasos lógicos para preparar una bebida caliente correctamente.",
+    type:"order",
+    steps:[
+      "Servir el agua caliente en la taza",
+      "Hervir el agua en la tetera",
+      "Agregar la bolsa de té o café y endulzar",
+      "Poner agua en la tetera"
+    ],
+    correctOrder:[3,1,0,2]
+  },
+  {
+    id:8,
+    tag:"MISIÓN 8",
+    title:"Rutas y Desplazamiento",
+    instructions:"Ubica las coordenadas finales del personaje después de moverse desde el centro (0,0).",
+    type:"coordinate",
+    target:{x:-4,y:3}
+  },
+  {
+    id:9,
+    tag:"MISIÓN 9",
+    title:"Diagramas de Flujo",
+    instructions:"Analiza la estructura de los diagramas de flujo y responde.",
+    type:"mcq",
+    questions:[
+      {
+        q:"En un diagrama de flujo, ¿qué figura geométrica se utiliza tradicionalmente para representar una toma de Decisión (Condicional)?",
+        options:["Un rectángulo","Un rombo","Un círculo","Un triángulo"],
+        correct:1
+      }
+    ]
+  },
+  {
+    id:10,
+    tag:"MISIÓN 10",
+    title:"Tipos de Datos",
+    instructions:"Selecciona la respuesta correcta sobre los valores booleanos en lógica.",
+    type:"mcq",
+    questions:[
+      {
+        q:"¿Cuáles son los únicos dos valores posibles que puede tomar una condición o dato de tipo Booleano?",
+        options:["Positivo / Negativo","Verdadero / Falso","1 / 100","Texto / Número"],
+        correct:1
+      }
+    ]
+  }
+];
+
+const aspects = [
+  "Comprendí los temas trabajados en el taller",
+  "Participé activamente en las misiones",
+  "Trabajé en equipo con mis compañeros",
+  "Cumplí las 10 misiones propuestas",
+  "Puedo aplicar lo aprendido en nuevas situaciones"
+];
+
+/* ---------------- STATE ---------------- */
+let currentMission = 0;
+let missionScores = new Array(missions.length).fill(null);
+let dianaValues = new Array(aspects.length).fill(0);
+let teamRows = [];
+
+/* ---------------- INIT ---------------- */
+function buildDots(){
+  const el = document.getElementById('stepsDots');
+  el.innerHTML = "";
+  missions.forEach((m,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (missionScores[i]!==null ? ' done' : '') + (i===currentMission ? ' active':'');
+    d.textContent = (i+1);
+    el.appendChild(d);
+  });
+}
+function updateProgress(){
+  const earned = Math.round(missionScores.reduce((a,b)=>a+(b||0),0)*10)/10;
+  document.getElementById('scoreNow').textContent = earned;
+  const doneCount = missionScores.filter(s=>s!==null).length;
+  document.getElementById('barFill').style.width = (doneCount/missions.length*100)+"%";
+  buildDots();
+}
+
+function renderMission(){
+  if(currentMission >= missions.length){
+    showFinal();
+    return;
+  }
+  const m = missions[currentMission];
+  const area = document.getElementById('missionArea');
+  let html = `<div class="card" id="missionCard">
+    <div class="mission-tag">${m.tag} · 1 punto</div>
+    <h2>${m.title}</h2>
+    <div class="instructions">${m.instructions}</div>
+    <div class="activity" id="activityZone"></div>
+    <div class="btn-row">
+      <button class="btn" id="checkBtn" onclick="checkMission()">Comprobar respuesta</button>
+      <button class="btn secondary hidden" id="nextBtn" onclick="nextMission()">Continuar →</button>
+    </div>
+    <div class="feedback" id="feedbackBox"></div>
+  </div>`;
+  area.innerHTML = html;
+  buildActivity(m);
+  updateProgress();
+}
+
+/* ---------------- BUILD ACTIVITIES ---------------- */
+let orderPicked = [];
+let coordPicked = null;
+let mcqPicked = [];
+let debugPicked = null;
+let matchPicked = [];
+
+function buildActivity(m){
+  const zone = document.getElementById('activityZone');
+  if(m.type === "order"){
+    orderPicked = [];
+    let poolHtml = `<div class="step-pool" id="stepPool">`;
+    m.steps.forEach((s,i)=>{
+      poolHtml += `<button class="step-chip" data-idx="${i}" onclick="pickStep(${i})">${s}</button>`;
+    });
+    poolHtml += `</div><div class="answer-line" id="answerLine"><span style="color:#8a99a6;">Haz clic en los pasos, en orden ▷</span></div>`;
+    zone.innerHTML = poolHtml;
+  }
+  else if(m.type === "coordinate"){
+    coordPicked = null;
+    zone.innerHTML = `<div class="target-label">Ubica el punto (X: ${m.target.x}, Y: ${m.target.y})</div>
+      <div class="grid-wrap"><div id="cartGrid"></div></div>`;
+    buildGrid(m.target);
+  }
+  else if(m.type === "mcq"){
+    mcqPicked = new Array(m.questions.length).fill(null);
+    let html = "";
+    m.questions.forEach((q,qi)=>{
+      html += `<div class="question" data-q="${qi}"><p class="qtext">${q.q}</p>`;
+      q.options.forEach((opt,oi)=>{
+        html += `<button class="opt" data-q="${qi}" data-o="${oi}" onclick="pickMcq(${qi},${oi})">${opt}</button>`;
+      });
+      html += `</div>`;
+    });
+    zone.innerHTML = html;
+  }
+  else if(m.type === "debug"){
+    debugPicked = null;
+    let html = `<pre style="background:var(--azul-claro); padding:12px 14px; border-radius:10px; font-family:'Courier New',monospace; font-size:14px; white-space:pre-wrap;">${m.code}</pre>`;
+    html += `<p class="qtext" style="margin-top:12px;">¿Cuál es el error (bug)?</p>`;
+    m.options.forEach((opt,oi)=>{
+      html += `<button class="opt" data-o="${oi}" onclick="pickDebug(${oi})">${opt}</button>`;
+    });
+    zone.innerHTML = html;
+  }
+  else if(m.type === "match"){
+    matchPicked = new Array(m.defs.length).fill("");
+    let html = "";
+    m.defs.forEach((d,di)=>{
+      html += `<div class="match-row"><div class="match-def">${di+1}. ${d.text}</div>
+        <select class="match-select" data-d="${di}" onchange="pickMatch(${di}, this.value)">
+        <option value="">— elige —</option>`;
+      m.terms.forEach(t=>{
+        html += `<option value="${t}">${t}</option>`;
+      });
+      html += `</select></div>`;
+    });
+    zone.innerHTML = html;
+  }
+}
+
+/* ---------------- INTERACTIONS ---------------- */
+function pickStep(i){
+  if(orderPicked.includes(i)) return;
+  orderPicked.push(i);
+  const chip = document.querySelector(`.step-chip[data-idx="${i}"]`);
+  if(chip) chip.classList.add('picked');
+  renderAnswerLine();
+}
+function renderAnswerLine(){
+  const m = missions[currentMission];
+  const line = document.getElementById('answerLine');
+  if(orderPicked.length===0){
+    line.innerHTML = `<span style="color:#8a99a6;">Haz clic en los pasos, en orden ▷</span>`;
+    return;
+  }
+  line.innerHTML = orderPicked.map((idx,pos)=>`<span class="answer-pill"><span class="num">${pos+1}</span>${m.steps[idx]}</span>`).join("");
+}
+
+function buildGrid(target){
+  const grid = document.getElementById('cartGrid');
+  grid.innerHTML = "";
+  for(let row=0; row<11; row++){
+    const y = 5-row;
+    for(let col=0; col<11; col++){
+      const x = col-5;
+      const cell = document.createElement('div');
+      cell.className = 'cell' + ((x===0||y===0) ? ' axis':'');
+      cell.dataset.x = x;
+      cell.dataset.y = y;
+      cell.onclick = ()=>selectCell(cell,x,y);
+      grid.appendChild(cell);
+    }
+  }
+}
+function selectCell(cell,x,y){
+  document.querySelectorAll('#cartGrid .cell').forEach(c=>c.classList.remove('selected'));
+  cell.classList.add('selected');
+  coordPicked = {x,y};
+}
+
+function pickMcq(qi,oi){
+  mcqPicked[qi]=oi;
+  document.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(b=>b.classList.remove('selected'));
+  document.querySelector(`.opt[data-q="${qi}"][data-o="${oi}"]`).classList.add('selected');
+}
+function pickDebug(oi){
+  debugPicked = oi;
+  document.querySelectorAll('.opt[data-o]').forEach(b=>b.classList.remove('selected'));
+  document.querySelector(`.opt[data-o="${oi}"]`).classList.add('selected');
+}
+function pickMatch(di,val){
+  matchPicked[di]=val;
+}
+
+/* ---------------- CHECK ---------------- */
+function checkMission(){
+  const m = missions[currentMission];
+  let points = 0;
+  let correctCount = 0;
+  let totalItems = 1;
+
+  if(m.type === "order"){
+    totalItems = 1;
+    const isCorrect = orderPicked.length === m.correctOrder.length &&
+      orderPicked.every((v,i)=>v===m.correctOrder[i]);
+    correctCount = isCorrect ? 1 : 0;
+    points = isCorrect ? 1 : 0;
+    document.querySelectorAll('.step-chip').forEach(c=>c.disabled=true);
+  }
+  else if(m.type === "coordinate"){
+    totalItems = 1;
+    const isCorrect = coordPicked && coordPicked.x===m.target.x && coordPicked.y===m.target.y;
+    correctCount = isCorrect ? 1 : 0;
+    points = isCorrect ? 1 : 0;
+    document.querySelectorAll('#cartGrid .cell').forEach(c=>{
+      c.onclick=null;
+      const cx=parseInt(c.dataset.x), cy=parseInt(c.dataset.y);
+      if(cx===m.target.x && cy===m.target.y) c.classList.add('correct-cell');
+      else if(c.classList.contains('selected') && !isCorrect) c.classList.add('wrong-cell');
+    });
+  }
+  else if(m.type === "mcq"){
+    totalItems = m.questions.length;
+    m.questions.forEach((q,qi)=>{ if(mcqPicked[qi]===q.correct) correctCount++; });
+    points = (correctCount/totalItems)*1;
+    m.questions.forEach((q,qi)=>{
+      document.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(btn=>{
+        btn.disabled=true;
+        const oi = parseInt(btn.dataset.o);
+        if(oi===q.correct) btn.classList.add('correct-opt');
+        else if(oi===mcqPicked[qi]) btn.classList.add('wrong-opt');
+      });
+    });
+  }
+  else if(m.type === "debug"){
+    totalItems = 1;
+    const isCorrect = debugPicked === m.correct;
+    correctCount = isCorrect ? 1 : 0;
+    points = isCorrect ? 1 : 0;
+    document.querySelectorAll('.opt[data-o]').forEach(btn=>{
+      btn.disabled=true;
+      const oi = parseInt(btn.dataset.o);
+      if(oi===m.correct) btn.classList.add('correct-opt');
+      else if(oi===debugPicked) btn.classList.add('wrong-opt');
+    });
+  }
+  else if(m.type === "match"){
+    totalItems = m.defs.length;
+    m.defs.forEach((d,di)=>{ if(matchPicked[di]===d.correct) correctCount++; });
+    points = (correctCount/totalItems)*1;
+    document.querySelectorAll('.match-select').forEach((sel,di)=>{
+      sel.disabled=true;
+      if(matchPicked[di]===m.defs[di].correct) sel.style.borderColor = 'var(--verde-ok)';
+      else sel.style.borderColor = 'var(--rojo-no)';
+    });
+  }
+
+  points = Math.round(points*10)/10;
+  missionScores[currentMission] = points;
+
+  const fb = document.getElementById('feedbackBox');
+  let styleClass, message;
+  if(correctCount === totalItems){
+    styleClass = 'ok';
+    message = `✅ ¡Correcto! <span class="pts">+${points} punto</span>`;
+  } else if(correctCount === 0){
+    styleClass = 'no';
+    message = `❌ No es correcto. <span class="pts">+0 puntos</span> — revisa la retroalimentación y continúa.`;
+  } else {
+    styleClass = 'partial';
+    message = `🟡 Acertaste ${correctCount} de ${totalItems}. <span class="pts">+${points} puntos</span> — revisa lo que falló.`;
+  }
+  fb.className = "feedback show " + styleClass;
+  fb.innerHTML = message;
+
+  document.getElementById('checkBtn').classList.add('hidden');
+  document.getElementById('nextBtn').classList.remove('hidden');
+  updateProgress();
+}
+
+function nextMission(){
+  currentMission++;
+  if(currentMission >= missions.length){
+    document.getElementById('missionArea').innerHTML = "";
+    showFinal();
+  } else {
+    renderMission();
+  }
+}
+
+/* ---------------- FINAL SCREEN ---------------- */
+function showFinal(){
+  const total = Math.round(missionScores.reduce((a,b)=>a+(b||0),0)*10)/10;
+  document.getElementById('finalScoreNum').textContent = total;
+  let msg = "";
+  if(total===10) msg = "¡Excelente! Completaste las 10 misiones correctamente. 🏆";
+  else if(total>=6) msg = "¡Buen trabajo! Dominas la mayoría de los conceptos lógicos. 💪";
+  else msg = "Sigue practicando los conceptos de lógica y programación. 🔁";
+  document.getElementById('finalScoreMsg').textContent = msg;
+  document.getElementById('finalScreen').classList.remove('hidden');
+  document.getElementById('progressShell').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goToDiana(){
+  document.getElementById('finalScreen').classList.add('hidden');
+  document.getElementById('dianaScreen').classList.remove('hidden');
+  buildDiana();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------------- DIANA ---------------- */
+function buildDiana(){
+  const area = document.getElementById('aspectsArea');
+  area.innerHTML = "";
+  aspects.forEach((a,ai)=>{
+    const div = document.createElement('div');
+    div.className = 'aspect';
+    let scaleHtml = `<div class="scale">`;
+    for(let v=1; v<=5; v++){
+      scaleHtml += `<button type="button" data-a="${ai}" data-v="${v}" onclick="setDiana(${ai},${v})">${v}</button>`;
+    }
+    scaleHtml += `</div>`;
+    div.innerHTML = `<label>${a}</label>${scaleHtml}`;
+    area.appendChild(div);
+  });
+  drawDiana();
+}
+function setDiana(ai,v){
+  dianaValues[ai]=v;
+  document.querySelectorAll(`.scale button[data-a="${ai}"]`).forEach(b=>{
+    b.classList.toggle('on', parseInt(b.dataset.v)<=v);
+  });
+  const avg = dianaValues.reduce((a,b)=>a+b,0)/aspects.length;
+  document.getElementById('dianaScoreNum').textContent = avg.toFixed(1);
+  drawDiana();
+}
+function drawDiana(){
+  const svg = document.getElementById('dianaSvg');
+  const cx=130, cy=130, maxR=110;
+  const n = aspects.length;
+  let rings = "";
+  for(let r=1; r<=5; r++){
+    const rad = maxR*(r/5);
+    rings += `<circle cx="${cx}" cy="${cy}" r="${rad}" fill="none" stroke="#c9dcee" stroke-width="1"/>`;
+  }
+  let axes = "";
+  let points = "";
+  for(let i=0;i<n;i++){
+    const angle = (Math.PI*2*i/n) - Math.PI/2;
+    const ex = cx + maxR*Math.cos(angle);
+    const ey = cy + maxR*Math.sin(angle);
+    axes += `<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="#c9dcee" stroke-width="1"/>`;
+    const val = dianaValues[i] || 0;
+    const pr = maxR*(val/5);
+    const px = cx + pr*Math.cos(angle);
+    const py = cy + pr*Math.sin(angle);
+    points += `${px},${py} `;
+  }
+  const poly = dianaValues.some(v=>v>0)
+    ? `<polygon points="${points}" fill="rgba(29,111,165,0.35)" stroke="#0d3b66" stroke-width="2"/>`
+    : "";
+  svg.innerHTML = rings + axes + poly + `<circle cx="${cx}" cy="${cy}" r="3" fill="#0d3b66"/>`;
+}
+
+function goToTeam(){
+  document.getElementById('dianaScreen').classList.add('hidden');
+  document.getElementById('teamScreen').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------------- TEAM ---------------- */
+function addParticipant(){
+  const nameInput = document.getElementById('participantName');
+  const name = nameInput.value.trim();
+  if(!name){ nameInput.focus(); return; }
+  const missionTotal = Math.round(missionScores.reduce((a,b)=>a+(b||0),0)*10)/10;
+  const dianaAvg = (dianaValues.reduce((a,b)=>a+b,0)/aspects.length).toFixed(1);
+  teamRows.push({name, missionTotal, dianaAvg});
+  nameInput.value = "";
+  renderTeam();
+}
+function renderTeam(){
+  const body = document.getElementById('teamBody');
+  body.innerHTML = teamRows.map(r=>`<tr><td>${r.name}</td><td>${r.missionTotal}/10</td><td>${r.dianaAvg}/5</td></tr>`).join("");
+}
+
+/* ---------------- RESTART ---------------- */
+function restartAll(){
+  currentMission = 0;
+  missionScores = new Array(missions.length).fill(null);
+  dianaValues = new Array(aspects.length).fill(0);
+  teamRows = [];
+  document.getElementById('teamBody').innerHTML = "";
+  document.getElementById('teamScreen').classList.add('hidden');
+  document.getElementById('dianaScreen').classList.add('hidden');
+  document.getElementById('finalScreen').classList.add('hidden');
+  document.getElementById('progressShell').classList.remove('hidden');
+  renderMission();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------------- START ---------------- */
+renderMission();
+</script>
+</body>
+</html>
