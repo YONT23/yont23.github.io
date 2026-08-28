@@ -115,7 +115,7 @@
             width: 50px;
             height: 50px;
             border-radius: 8px;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 2px solid rgba(0,0,0,0.15); /* Borde un poco más fuerte para que destaque el blanco */
         }
 
         .docente-name {
@@ -147,27 +147,27 @@
     </div>
 
     <script>
-        // 1. Datos iniciales
+        // 1. Datos iniciales (13 personas)
         const docentesIniciales = [
             "Eimys", "Maria Isabel", "Yuli", "Alejandro", "Kilian", 
             "Yorlenis", "Luisa", "Dayana", "Zaira", "Lareanys", 
             "Yonatha", "Kelithza", "Administración"
         ];
 
-        // 2. Definición de la Paleta Temática
+        // 2. Nueva Paleta Temática (Exactamente 13 colores)
         const paletaColores = [
-            { nombre: "Azul Innovación", hex: "#007bff", text: "white" },
-            { nombre: "Verde Sostenible", hex: "#28a745", text: "white" },
+            { nombre: "Negro Elegancia", hex: "#000000", text: "white" },
+            { nombre: "Blanco Paz", hex: "#ffffff", text: "black" },
             { nombre: "Naranja Emprendedor", hex: "#fd7e14", text: "white" },
+            { nombre: "Amarillo Creativo", hex: "#ffc107", text: "black" },
+            { nombre: "Gris Sofisticado", hex: "#6c757d", text: "white" },
+            { nombre: "Verde Sostenible", hex: "#28a745", text: "white" },
+            { nombre: "Azul Innovación", hex: "#007bff", text: "white" },
             { nombre: "Morado IA", hex: "#6f42c1", text: "white" },
             { nombre: "Rojo Pasión Cultural", hex: "#dc3545", text: "white" },
             { nombre: "Cian Tecnología", hex: "#17a2b8", text: "white" },
-            { nombre: "Amarillo Creativo", hex: "#ffc107", text: "black" },
             { nombre: "Rosa Empatía", hex: "#e83e8c", text: "white" },
-            { nombre: "Teal Futuro", hex: "#20c997", text: "white" },
             { nombre: "Marrón Tierra ODS", hex: "#795548", text: "white" },
-            { nombre: "Gris Sofisticado", hex: "#6c757d", text: "white" },
-            { nombre: "Lima Energía", hex: "#ccff00", text: "black" },
             { nombre: "Vinotinto Especial", hex: "#800020", text: "white" } // <-- Color reservado para Yonatha
         ];
 
@@ -182,7 +182,6 @@
         const finalGrid = document.getElementById('final-grid');
 
         function realizarSorteoCompleto() {
-            // Preparamos las listas
             docentesRestantes = [...docentesIniciales];
             coloresRestantes = [...paletaColores];
             resultadosFinales = [];
@@ -190,20 +189,16 @@
             btnDraw.disabled = true; 
             statusMessage.innerText = "Sorteando colores...";
 
-            // Bucle para sortear a todos instantáneamente
             while (docentesRestantes.length > 0) {
-                // 1. Elegimos al docente al azar
                 const indiceDocente = Math.floor(Math.random() * docentesRestantes.length);
                 const docenteElegido = docentesRestantes.splice(indiceDocente, 1)[0];
 
                 let indiceColor;
                 
-                // 2. Lógica trucada para Yonatha
                 if (docenteElegido === "Yonatha") {
                     indiceColor = coloresRestantes.findIndex(c => c.nombre === "Vinotinto Especial");
                     if (indiceColor === -1) indiceColor = 0; 
                 } else {
-                    // Nos aseguramos que nadie más tome el vinotinto mientras Yonatha falte
                     do {
                         indiceColor = Math.floor(Math.random() * coloresRestantes.length);
                     } while (coloresRestantes[indiceColor].nombre === "Vinotinto Especial" && docentesRestantes.includes("Yonatha"));
@@ -213,7 +208,6 @@
                 resultadosFinales.push({ docente: docenteElegido, color: colorElegido });
             }
 
-            // Ponemos un pequeño retraso visual para dar emoción de "carga" (medio segundo)
             setTimeout(() => {
                 finalizarSorteo();
             }, 500); 
