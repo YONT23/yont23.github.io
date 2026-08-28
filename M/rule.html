@@ -29,12 +29,14 @@
         h1 {
             color: var(--primary-color);
             margin-bottom: 10px;
+            text-align: center;
         }
 
         p.subtitle {
             margin-top: 0;
             color: #7f8c8d;
             margin-bottom: 30px;
+            text-align: center;
         }
 
         /* Zona de Controles */
@@ -96,7 +98,7 @@
         #results-zone {
             width: 100%;
             max-width: 800px;
-            display: none; /* Se activa al final */
+            display: none; 
         }
 
         #results-zone h2 {
@@ -139,19 +141,23 @@
     <h1>Sorteo de Colores Temáticos 🎨</h1>
     <p class="subtitle">Semana Cultural XXI - Colegio Siglo XXI</p>
 
+    <!-- Controles -->
     <div id="controls">
         <button id="btn-draw" onclick="drawOneByOne()">¡Elegir 1 Docente al Azar!</button>
         <button id="btn-reset" onclick="resetSorteo()" style="background-color: #7f8c8d; margin-left: 10px; display:none;">Reiniciar</button>
     </div>
 
+    <!-- Pantalla de Visualización del Sorteo 1 a 1 -->
     <div id="display-zone">
         <div id="current-selection">Esperando inicio...</div>
     </div>
 
+    <!-- Resultados Finales -->
     <div id="results-zone">
         <h2>Resultados Finales</h2>
         <div class="results-grid" id="final-grid">
-            </div>
+            <!-- Las tarjetas de resultados se generarán aquí -->
+        </div>
     </div>
 
     <script>
@@ -162,8 +168,7 @@
             "Yonatha", "Kelithza", "Administración"
         ];
 
-        // 2. Definición de la Paleta Temática (13 colores)
-        // Se eligen por contraste y vibrancia temática
+        // 2. Definición de la Paleta Temática
         const paletaColores = [
             { nombre: "Azul Innovación", hex: "#007bff", text: "white" },
             { nombre: "Verde Sostenible", hex: "#28a745", text: "white" },
@@ -180,12 +185,10 @@
             { nombre: "Índigo Autoridad", hex: "#4b0082", text: "white" }
         ];
 
-        // 3. Variables de estado del sorteo
         let docentesRestantes = [...docentesIniciales];
         let coloresRestantes = [...paletaColores];
         let resultadosFinales = [];
 
-        // Elementos del DOM
         const displayZone = document.getElementById('display-zone');
         const currentSelectionText = document.getElementById('current-selection');
         const btnDraw = document.getElementById('btn-draw');
@@ -193,38 +196,29 @@
         const resultsZone = document.getElementById('results-zone');
         const finalGrid = document.getElementById('final-grid');
 
-        // 4. Función Principal: Sorteo 1 a 1
         function drawOneByOne() {
             if (docentesRestantes.length === 0) return;
 
-            btnDraw.disabled = true; // Deshabilitar durante la animación
+            btnDraw.disabled = true; 
             displayZone.classList.add('active');
 
-            // --- ANIMACIÓN DE "PENSANDO" (Opcional, 1 segundo) ---
             currentSelectionText.innerText = "Eligiendo...";
-            currentSelectionText.style.color = "inherit";
-            displayZone.style.backgroundColor = var(--card-bg);
+            currentSelectionText.style.color = "#333";
+            displayZone.style.backgroundColor = "#fff"; // <-- Este era el error, ya está corregido
 
             setTimeout(() => {
-                // --- LÓGICA DEL AZAR TOTAL ---
-                
-                // Elegir Docente al azar
                 const indiceDocente = Math.floor(Math.random() * docentesRestantes.length);
                 const docenteElegido = docentesRestantes.splice(indiceDocente, 1)[0];
 
-                // Elegir Color al azar de los restantes
                 const indiceColor = Math.floor(Math.random() * coloresRestantes.length);
                 const colorElegido = coloresRestantes.splice(indiceColor, 1)[0];
 
-                // Guardar resultado
                 resultadosFinales.push({ docente: docenteElegido, color: colorElegido });
 
-                // --- ACTUALIZAR VISUALIZACIÓN (1a1) ---
                 currentSelectionText.innerText = `${docenteElegido}`;
                 displayZone.style.backgroundColor = colorElegido.hex;
                 currentSelectionText.style.color = colorElegido.text;
 
-                // Preparar siguiente turno o finalizar
                 if (docentesRestantes.length > 0) {
                     btnDraw.innerText = `¡Elegir Siguiente (${docentesRestantes.length} restantes)!`;
                     btnDraw.disabled = false;
@@ -233,10 +227,9 @@
                 }
                 displayZone.classList.remove('active');
 
-            }, 1000); // 1 segundo de "pensando"
+            }, 1000); 
         }
 
-        // 5. Función de Finalización
         function finalizarSorteo() {
             btnDraw.style.display = "none";
             btnReset.style.display = "inline-block";
@@ -247,10 +240,9 @@
             mostrarResultadosFinales();
         }
 
-        // 6. Mostrar la Tabla de Resultados
         function mostrarResultadosFinales() {
             resultsZone.style.display = "block";
-            finalGrid.innerHTML = ""; // Limpiar
+            finalGrid.innerHTML = ""; 
 
             resultadosFinales.forEach(res => {
                 const card = document.createElement('div');
@@ -263,7 +255,6 @@
             });
         }
 
-        // 7. Reiniciar todo
         function resetSorteo() {
             docentesRestantes = [...docentesIniciales];
             coloresRestantes = [...paletaColores];
@@ -275,9 +266,9 @@
             btnReset.style.display = "none";
             
             resultsZone.style.display = "none";
-            displayZone.style.backgroundColor = var(--card-bg);
+            displayZone.style.backgroundColor = "#fff"; // <-- Corregido aquí también
             currentSelectionText.innerText = "Esperando inicio...";
-            currentSelectionText.style.color = "inherit";
+            currentSelectionText.style.color = "#333";
         }
     </script>
 </body>
