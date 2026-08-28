@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulación Sorteo de Colores Docentes</title>
+    <title>Sorteo de Colores Docentes</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -67,31 +67,13 @@
             transform: none;
         }
 
-        /* Zona de Visualización 1a1 (La Simulación) */
-        #display-zone {
-            width: 100%;
-            max-width: 600px;
-            height: 150px;
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 40px;
-            transition: background-color 0.5s ease, color 0.5s ease;
-            border: 2px solid transparent;
-        }
-
-        #display-zone.active {
-            border-color: var(--accent-color);
-        }
-
-        #current-selection {
-            font-size: 2em;
+        /* Indicador de estado */
+        #status-message {
+            font-size: 1.2em;
             font-weight: bold;
-            text-align: center;
-            padding: 20px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            height: 25px;
         }
 
         /* Zona de Resultados Finales (Tabla) */
@@ -121,6 +103,12 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .color-box {
@@ -141,19 +129,21 @@
     <h1>Sorteo de Colores Temáticos 🎨</h1>
     <p class="subtitle">Semana Cultural XXI - Colegio Siglo XXI</p>
 
+    <!-- Controles -->
     <div id="controls">
-        <button id="btn-draw" onclick="drawOneByOne()">¡Elegir 1 Docente al Azar!</button>
+        <button id="btn-draw" onclick="realizarSorteoCompleto()">¡Realizar Sorteo!</button>
         <button id="btn-reset" onclick="resetSorteo()" style="background-color: #7f8c8d; margin-left: 10px; display:none;">Reiniciar</button>
     </div>
 
-    <div id="display-zone">
-        <div id="current-selection">Esperando inicio...</div>
-    </div>
+    <!-- Mensaje de estado -->
+    <div id="status-message">Esperando inicio...</div>
 
+    <!-- Resultados Finales -->
     <div id="results-zone">
         <h2>Resultados Finales</h2>
         <div class="results-grid" id="final-grid">
-            </div>
+            <!-- Las tarjetas de resultados se generarán aquí -->
+        </div>
     </div>
 
     <script>
@@ -164,7 +154,7 @@
             "Yonatha", "Kelithza", "Administración"
         ];
 
-        // 2. Definición de la Paleta Temática (Se agregó Vinotinto Especial)
+        // 2. Definición de la Paleta Temática
         const paletaColores = [
             { nombre: "Azul Innovación", hex: "#007bff", text: "white" },
             { nombre: "Verde Sostenible", hex: "#28a745", text: "white" },
@@ -178,31 +168,30 @@
             { nombre: "Marrón Tierra ODS", hex: "#795548", text: "white" },
             { nombre: "Gris Sofisticado", hex: "#6c757d", text: "white" },
             { nombre: "Lima Energía", hex: "#ccff00", text: "black" },
-            { nombre: "Vinotinto Especial", hex: "#800020", text: "white" } // <-- Color reservado
+            { nombre: "Vinotinto Especial", hex: "#800020", text: "white" } // <-- Color reservado para Yonatha
         ];
 
-        let docentesRestantes = [...docentesIniciales];
-        let coloresRestantes = [...paletaColores];
+        let docentesRestantes = [];
+        let coloresRestantes = [];
         let resultadosFinales = [];
 
-        const displayZone = document.getElementById('display-zone');
-        const currentSelectionText = document.getElementById('current-selection');
         const btnDraw = document.getElementById('btn-draw');
         const btnReset = document.getElementById('btn-reset');
+        const statusMessage = document.getElementById('status-message');
         const resultsZone = document.getElementById('results-zone');
         const finalGrid = document.getElementById('final-grid');
 
-        function drawOneByOne() {
-            if (docentesRestantes.length === 0) return;
+        function realizarSorteoCompleto() {
+            // Preparamos las listas
+            docentesRestantes = [...docentesIniciales];
+            coloresRestantes = [...paletaColores];
+            resultadosFinales = [];
 
             btnDraw.disabled = true; 
-            displayZone.classList.add('active');
+            statusMessage.innerText = "Sorteando colores...";
 
-            currentSelectionText.innerText = "Eligiendo...";
-            currentSelectionText.style.color = "#333";
-            displayZone.style.backgroundColor = "#fff"; 
-
-            setTimeout(() => {
+            // Bucle para sortear a todos instantáneamente
+            while (docentesRestantes.length > 0) {
                 // 1. Elegimos al docente al azar
                 const indiceDocente = Math.floor(Math.random() * docentesRestantes.length);
                 const docenteElegido = docentesRestantes.splice(indiceDocente, 1)[0];
@@ -211,44 +200,30 @@
                 
                 // 2. Lógica trucada para Yonatha
                 if (docenteElegido === "Yonatha") {
-                    // Buscamos el Vinotinto directamente
                     indiceColor = coloresRestantes.findIndex(c => c.nombre === "Vinotinto Especial");
-                    // Por si acaso no lo encuentra, toma el primero
                     if (indiceColor === -1) indiceColor = 0; 
                 } else {
-                    // Elegimos un color al azar, asegurándonos de NO darle el Vinotinto a otro
-                    // mientras Yonatha siga en la lista de espera.
+                    // Nos aseguramos que nadie más tome el vinotinto mientras Yonatha falte
                     do {
                         indiceColor = Math.floor(Math.random() * coloresRestantes.length);
                     } while (coloresRestantes[indiceColor].nombre === "Vinotinto Especial" && docentesRestantes.includes("Yonatha"));
                 }
 
                 const colorElegido = coloresRestantes.splice(indiceColor, 1)[0];
-
                 resultadosFinales.push({ docente: docenteElegido, color: colorElegido });
+            }
 
-                currentSelectionText.innerText = `${docenteElegido}`;
-                displayZone.style.backgroundColor = colorElegido.hex;
-                currentSelectionText.style.color = colorElegido.text;
-
-                if (docentesRestantes.length > 0) {
-                    btnDraw.innerText = `¡Elegir Siguiente (${docentesRestantes.length} restantes)!`;
-                    btnDraw.disabled = false;
-                } else {
-                    finalizarSorteo();
-                }
-                displayZone.classList.remove('active');
-
-            }, 1000); 
+            // Ponemos un pequeño retraso visual para dar emoción de "carga" (medio segundo)
+            setTimeout(() => {
+                finalizarSorteo();
+            }, 500); 
         }
 
         function finalizarSorteo() {
             btnDraw.style.display = "none";
             btnReset.style.display = "inline-block";
-            currentSelectionText.innerText = "¡Sorteo Finalizado!";
-            currentSelectionText.style.color = "white";
-            displayZone.style.backgroundColor = "#2c3e50";
-
+            statusMessage.innerText = "¡Sorteo Finalizado!";
+            
             mostrarResultadosFinales();
         }
 
@@ -268,19 +243,12 @@
         }
 
         function resetSorteo() {
-            docentesRestantes = [...docentesIniciales];
-            coloresRestantes = [...paletaColores];
-            resultadosFinales = [];
-
             btnDraw.style.display = "inline-block";
             btnDraw.disabled = false;
-            btnDraw.innerText = "¡Elegir 1 Docente al Azar!";
             btnReset.style.display = "none";
             
             resultsZone.style.display = "none";
-            displayZone.style.backgroundColor = "#fff"; 
-            currentSelectionText.innerText = "Esperando inicio...";
-            currentSelectionText.style.color = "#333";
+            statusMessage.innerText = "Esperando inicio...";
         }
     </script>
 </body>
