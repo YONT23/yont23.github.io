@@ -136,6 +136,16 @@ table td{padding:9px 8px;font-size:.83rem;border-bottom:1px solid #232323;}
 .set-row .set-timer-btn:hover{border-color:var(--blue);color:#fff;}
 .train-set-row .set-timer-btn{flex-shrink:0;width:34px;height:34px;border-radius:8px;background:var(--card2);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:.85rem;}
 .vol-hint{font-size:.68rem;color:var(--text3);font-family:'Space Mono',monospace;margin-bottom:10px;}
+
+/* VIDEO DE TÉCNICA — responsive 16:9, lazy-load con miniatura */
+.ex-video-wrap{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;margin-bottom:14px;}
+.ex-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
+.ex-video-thumb{position:absolute;inset:0;width:100%;height:100%;background-size:cover;background-position:center;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ex-video-thumb::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.35);}
+.ex-video-play{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;color:#fff;}
+.ex-video-play .play-circle{width:56px;height:56px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 20px rgba(211,47,47,.5);transition:transform .2s;}
+.ex-video-thumb:hover .play-circle{transform:scale(1.08);}
+.ex-video-play .play-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;font-family:'Space Mono',monospace;text-transform:uppercase;}
 .dp-badge{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:9px;font-size:.78rem;font-weight:600;margin-bottom:10px;}
 .dp-badge.ready{background:rgba(46,158,91,.12);border:1px solid rgba(46,158,91,.35);color:#7fe3a4;}
 .dp-badge.inprogress{background:rgba(21,101,192,.08);border:1px solid rgba(21,101,192,.25);color:#7db3f0;}
@@ -333,7 +343,7 @@ const TIER_COLOR = {P:'p', H:'h', D:'d', F:'f'};
 */
 const ROUTINE = {
 lunes:[
-  {id:'l1',name:'Sentadilla trasera',level:'P',equipment:'barbell',bilateral:true,weightMult:1,
+  {id:'l1',name:'Sentadilla trasera',level:'P',equipment:'barbell',bilateral:true,weightMult:1,videoId:'dsCuiccYNGs',
    muscles:'Cuádriceps, glúteo, core',secondary:'Aductores, erectores espinales',sets:3,approx:1,
    errors:'Valgo de rodilla, perder tensión abdominal, profundidad inconsistente, talones despegados.',
    technique:['Respira profundo hacia el abdomen (brace) antes de bajar, no hacia el pecho.',
@@ -344,39 +354,39 @@ lunes:[
      'Velocidad de bajada: controlada, 2-3 segundos.',
      'Velocidad de subida: explosiva pero técnica, empujando el piso.',
      'Exhala en el esfuerzo, al pasar el punto más difícil de la subida.']},
-  {id:'l2',name:'Prensa inclinada',level:'H',equipment:'machine',bilateral:true,weightMult:1,
+  {id:'l2',name:'Prensa inclinada',level:'H',equipment:'machine',bilateral:true,weightMult:1,videoId:'KdT2g0iSdG0',
    muscles:'Cuádriceps, glúteo',secondary:'Isquiotibiales',sets:3,approx:1,
    errors:'Bloquear rodillas arriba, rango incompleto, pies muy altos o muy bajos.',
    technique:['Pies a la anchura de hombros, en la zona media de la plataforma.',
      'Desciende hasta 90° de flexión de rodilla sin despegar la zona lumbar del respaldo.',
      'No bloquees completamente las rodillas en la extensión — mantén una ligera flexión.',
      'Controla la fase excéntrica, no dejes caer el peso.']},
-  {id:'l3',name:'Bulgarian Split Squat',level:'H',equipment:'dumbbell',bilateral:false,weightMult:2,
+  {id:'l3',name:'Bulgarian Split Squat',level:'H',equipment:'dumbbell',bilateral:false,weightMult:2,videoId:'qs-adxsCIrc',
    muscles:'Cuádriceps, glúteo (unilateral)',secondary:'Aductores, estabilizadores de cadera',sets:3,approx:1,
    errors:'Rodilla delantera colapsando hacia adentro, torso demasiado inclinado hacia adelante.',
    technique:['Pie trasero elevado sobre banco, pie delantero a un paso y medio de distancia.',
      'Desciende vertical, la rodilla delantera sigue la línea de la punta del pie.',
      'Torso ligeramente inclinado hacia adelante, core activo.',
      'El peso se distribuye principalmente en la pierna delantera.']},
-  {id:'l4',name:'Extensión de cuádriceps',level:'D',equipment:'machine',bilateral:true,weightMult:1,
+  {id:'l4',name:'Extensión de cuádriceps',level:'D',equipment:'machine',bilateral:true,weightMult:1,videoId:'E_W3ifue_9o',
    muscles:'Cuádriceps (aislado)',secondary:'—',sets:3,approx:0,
    errors:'Usar impulso, no pausar en la contracción máxima, rango parcial.',
    technique:['Espalda contra el respaldo, rodillas alineadas con el eje de la máquina.',
      'Extiende completamente y pausa 1 segundo apretando el cuádriceps.',
      'Controla la fase excéntrica, no dejes caer el peso de golpe.']},
-  {id:'l5',name:'Elevación de pantorrilla de pie',level:'D',equipment:'machine',bilateral:true,weightMult:1,
+  {id:'l5',name:'Elevación de pantorrilla de pie',level:'D',equipment:'machine',bilateral:true,weightMult:1,videoId:'18sXFgFD6sI',
    muscles:'Gastrocnemio',secondary:'Sóleo',sets:4,approx:0,
    errors:'Rango parcial, rebotar en la parte baja.',
    technique:['Rodillas extendidas (ligera flexión), apoyo en la punta del pie.',
      'Desciende hasta sentir estiramiento completo del gemelo.',
      'Sube con pausa de 1-2s en la contracción máxima.']},
-  {id:'l6',name:'Elevación de pantorrilla sentado',level:'D',equipment:'machine',bilateral:true,weightMult:1,
+  {id:'l6',name:'Elevación de pantorrilla sentado',level:'D',equipment:'machine',bilateral:true,weightMult:1,videoId:'OORIDeTi0BE',
    muscles:'Sóleo',secondary:'Gastrocnemio',sets:4,approx:0,
    errors:'Rango incompleto, tempo demasiado rápido.',
    technique:['Rodillas flexionadas a 90° para aislar el sóleo.',
      'Tempo lento, foco total en la contracción.',
      'Pausa arriba y en el estiramiento máximo.']},
-  {id:'l7',name:'Core — Plancha',level:'F',equipment:'bodyweight',bilateral:true,weightMult:1,
+  {id:'l7',name:'Core — Plancha',level:'F',equipment:'bodyweight',bilateral:true,weightMult:1,videoId:'ogfuXWgXVsg',
    muscles:'Core, estabilidad lumbar',secondary:'Hombros (isométrico)',sets:3,approx:0,unit:'segundos',
    errors:'Dejar caer la cadera, elevarla en exceso, aguantar la respiración.',
    technique:['Línea recta de hombros a talones, sin hundir ni elevar la cadera.',
@@ -1004,6 +1014,7 @@ function renderExCard(e, dayId){
     </div>
     <div class="ex-body">
       ${dpBadge}
+      ${renderExVideo(e)}
       <div class="row"><b>Músculos principales:</b> ${e.muscles}</div>
       <div class="row"><b>Músculos secundarios:</b> ${e.secondary||'—'}</div>
       <div class="row"><b>Errores comunes:</b> ${e.errors}</div>
@@ -1049,6 +1060,54 @@ function renderExCard(e, dayId){
   </div>`;
 }
 function toggleEx(id){ document.getElementById('ex-'+id).classList.toggle('open'); }
+
+/* ─────────────────────────────────────────────
+   VIDEOS DE TÉCNICA — YouTube (Fase 1: solo Lunes)
+   · No se almacena el video, solo el YouTube Video ID.
+   · Embed vía youtube-nocookie.com (Privacy Enhanced Mode).
+   · Lazy load: se muestra una miniatura ligera hasta que el
+     usuario pulsa "▶ VER TÉCNICA"; el iframe solo se inserta
+     en ese momento.
+   ───────────────────────────────────────────── */
+
+/** Extrae el Video ID desde cualquier formato soportado de URL de YouTube.
+ *  Soporta: youtu.be/ID · youtube.com/watch?v=ID · youtube.com/shorts/ID · youtube.com/embed/ID
+ *  Preparado para cuando se administren videos por URL en fases futuras. */
+function extractYouTubeId(url){
+  if(!url) return null;
+  const patterns = [
+    /youtu\.be\/([A-Za-z0-9_-]{6,})/,                 // youtu.be/ID
+    /youtube(?:-nocookie)?\.com\/embed\/([A-Za-z0-9_-]{6,})/, // youtube.com/embed/ID
+    /youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/,       // youtube.com/shorts/ID
+    /[?&]v=([A-Za-z0-9_-]{6,})/,                       // youtube.com/watch?v=ID
+  ];
+  for(const re of patterns){
+    const m = url.match(re);
+    if(m) return m[1];
+  }
+  return null;
+}
+
+/** Renderiza el bloque de video (miniatura lazy-load) para una tarjeta de ejercicio.
+ *  Devuelve '' si el ejercicio no tiene videoId asociado (fases futuras/otros días). */
+function renderExVideo(e){
+  if(!e.videoId) return '';
+  const thumbUrl = `https://img.youtube.com/vi/${e.videoId}/hqdefault.jpg`;
+  return `<div class="ex-video-wrap" id="video-${e.id}">
+    <div class="ex-video-thumb" style="background-image:url('${thumbUrl}')" onclick="loadExerciseVideo('${e.id}','${e.videoId}')">
+      <div class="ex-video-play"><div class="play-circle">▶</div><div class="play-label">Ver técnica</div></div>
+    </div>
+  </div>`;
+}
+
+/** Sustituye la miniatura por el iframe de YouTube (Privacy Enhanced Mode) al pulsar. */
+function loadExerciseVideo(exId, videoId){
+  const wrap = document.getElementById('video-'+exId);
+  if(!wrap) return;
+  wrap.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0"
+    title="Técnica del ejercicio" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen></iframe>`;
+}
 
 /* ─── LOG EXERCISE ─── */
 function logExercise(exId, dayId){
