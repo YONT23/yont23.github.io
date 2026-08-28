@@ -141,23 +141,19 @@
     <h1>Sorteo de Colores Temáticos 🎨</h1>
     <p class="subtitle">Semana Cultural XXI - Colegio Siglo XXI</p>
 
-    <!-- Controles -->
     <div id="controls">
         <button id="btn-draw" onclick="drawOneByOne()">¡Elegir 1 Docente al Azar!</button>
         <button id="btn-reset" onclick="resetSorteo()" style="background-color: #7f8c8d; margin-left: 10px; display:none;">Reiniciar</button>
     </div>
 
-    <!-- Pantalla de Visualización del Sorteo 1 a 1 -->
     <div id="display-zone">
         <div id="current-selection">Esperando inicio...</div>
     </div>
 
-    <!-- Resultados Finales -->
     <div id="results-zone">
         <h2>Resultados Finales</h2>
         <div class="results-grid" id="final-grid">
-            <!-- Las tarjetas de resultados se generarán aquí -->
-        </div>
+            </div>
     </div>
 
     <script>
@@ -168,7 +164,7 @@
             "Yonatha", "Kelithza", "Administración"
         ];
 
-        // 2. Definición de la Paleta Temática
+        // 2. Definición de la Paleta Temática (Se agregó Vinotinto Especial)
         const paletaColores = [
             { nombre: "Azul Innovación", hex: "#007bff", text: "white" },
             { nombre: "Verde Sostenible", hex: "#28a745", text: "white" },
@@ -182,7 +178,7 @@
             { nombre: "Marrón Tierra ODS", hex: "#795548", text: "white" },
             { nombre: "Gris Sofisticado", hex: "#6c757d", text: "white" },
             { nombre: "Lima Energía", hex: "#ccff00", text: "black" },
-            { nombre: "Índigo Autoridad", hex: "#4b0082", text: "white" }
+            { nombre: "Vinotinto Especial", hex: "#800020", text: "white" } // <-- Color reservado
         ];
 
         let docentesRestantes = [...docentesIniciales];
@@ -204,13 +200,29 @@
 
             currentSelectionText.innerText = "Eligiendo...";
             currentSelectionText.style.color = "#333";
-            displayZone.style.backgroundColor = "#fff"; // <-- Este era el error, ya está corregido
+            displayZone.style.backgroundColor = "#fff"; 
 
             setTimeout(() => {
+                // 1. Elegimos al docente al azar
                 const indiceDocente = Math.floor(Math.random() * docentesRestantes.length);
                 const docenteElegido = docentesRestantes.splice(indiceDocente, 1)[0];
 
-                const indiceColor = Math.floor(Math.random() * coloresRestantes.length);
+                let indiceColor;
+                
+                // 2. Lógica trucada para Yonatha
+                if (docenteElegido === "Yonatha") {
+                    // Buscamos el Vinotinto directamente
+                    indiceColor = coloresRestantes.findIndex(c => c.nombre === "Vinotinto Especial");
+                    // Por si acaso no lo encuentra, toma el primero
+                    if (indiceColor === -1) indiceColor = 0; 
+                } else {
+                    // Elegimos un color al azar, asegurándonos de NO darle el Vinotinto a otro
+                    // mientras Yonatha siga en la lista de espera.
+                    do {
+                        indiceColor = Math.floor(Math.random() * coloresRestantes.length);
+                    } while (coloresRestantes[indiceColor].nombre === "Vinotinto Especial" && docentesRestantes.includes("Yonatha"));
+                }
+
                 const colorElegido = coloresRestantes.splice(indiceColor, 1)[0];
 
                 resultadosFinales.push({ docente: docenteElegido, color: colorElegido });
@@ -266,7 +278,7 @@
             btnReset.style.display = "none";
             
             resultsZone.style.display = "none";
-            displayZone.style.backgroundColor = "#fff"; // <-- Corregido aquí también
+            displayZone.style.backgroundColor = "#fff"; 
             currentSelectionText.innerText = "Esperando inicio...";
             currentSelectionText.style.color = "#333";
         }
