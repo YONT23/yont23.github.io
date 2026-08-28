@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Sorteo de Colores Docentes</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --primary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --card-bg: #fff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            margin-top: 0;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        /* Zona de Controles */
+        #controls {
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        button:hover {
+            background-color: #34495e;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Zona de Visualización 1a1 (La Simulación) */
+        #display-zone {
+            width: 100%;
+            max-width: 600px;
+            height: 150px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            border: 2px solid transparent;
+        }
+
+        #display-zone.active {
+            border-color: var(--accent-color);
+        }
+
+        #current-selection {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Zona de Resultados Finales (Tabla) */
+        #results-zone {
+            width: 100%;
+            max-width: 800px;
+            display: none; /* Se activa al final */
+        }
+
+        #results-zone h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .result-card {
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .color-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .docente-name {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sorteo de Colores Temáticos 🎨</h1>
+    <p class="subtitle">Semana Cultural XXI - Colegio Siglo XXI</p>
+
+    <div id="controls">
+        <button id="btn-draw" onclick="drawOneByOne()">¡Elegir 1 Docente al Azar!</button>
+        <button id="btn-reset" onclick="resetSorteo()" style="background-color: #7f8c8d; margin-left: 10px; display:none;">Reiniciar</button>
+    </div>
+
+    <div id="display-zone">
+        <div id="current-selection">Esperando inicio...</div>
+    </div>
+
+    <div id="results-zone">
+        <h2>Resultados Finales</h2>
+        <div class="results-grid" id="final-grid">
+            </div>
+    </div>
+
+    <script>
+        // 1. Datos iniciales
+        const docentesIniciales = [
+            "Eimys", "Maria Isabel", "Yuli", "Alejandro", "Kilian", 
+            "Yorlenis", "Luisa", "Dayana", "Zaira", "Lareanys", 
+            "Yonatha", "Kelithza", "Administración"
+        ];
+
+        // 2. Definición de la Paleta Temática (13 colores)
+        // Se eligen por contraste y vibrancia temática
+        const paletaColores = [
+            { nombre: "Azul Innovación", hex: "#007bff", text: "white" },
+            { nombre: "Verde Sostenible", hex: "#28a745", text: "white" },
+            { nombre: "Naranja Emprendedor", hex: "#fd7e14", text: "white" },
+            { nombre: "Morado IA", hex: "#6f42c1", text: "white" },
+            { nombre: "Rojo Pasión Cultural", hex: "#dc3545", text: "white" },
+            { nombre: "Cian Tecnología", hex: "#17a2b8", text: "white" },
+            { nombre: "Amarillo Creativo", hex: "#ffc107", text: "black" },
+            { nombre: "Rosa Empatía", hex: "#e83e8c", text: "white" },
+            { nombre: "Teal Futuro", hex: "#20c997", text: "white" },
+            { nombre: "Marrón Tierra ODS", hex: "#795548", text: "white" },
+            { nombre: "Gris Sofisticado", hex: "#6c757d", text: "white" },
+            { nombre: "Lima Energía", hex: "#ccff00", text: "black" },
+            { nombre: "Índigo Autoridad", hex: "#4b0082", text: "white" }
+        ];
+
+        // 3. Variables de estado del sorteo
+        let docentesRestantes = [...docentesIniciales];
+        let coloresRestantes = [...paletaColores];
+        let resultadosFinales = [];
+
+        // Elementos del DOM
+        const displayZone = document.getElementById('display-zone');
+        const currentSelectionText = document.getElementById('current-selection');
+        const btnDraw = document.getElementById('btn-draw');
+        const btnReset = document.getElementById('btn-reset');
+        const resultsZone = document.getElementById('results-zone');
+        const finalGrid = document.getElementById('final-grid');
+
+        // 4. Función Principal: Sorteo 1 a 1
+        function drawOneByOne() {
+            if (docentesRestantes.length === 0) return;
+
+            btnDraw.disabled = true; // Deshabilitar durante la animación
+            displayZone.classList.add('active');
+
+            // --- ANIMACIÓN DE "PENSANDO" (Opcional, 1 segundo) ---
+            currentSelectionText.innerText = "Eligiendo...";
+            currentSelectionText.style.color = "inherit";
+            displayZone.style.backgroundColor = var(--card-bg);
+
+            setTimeout(() => {
+                // --- LÓGICA DEL AZAR TOTAL ---
+                
+                // Elegir Docente al azar
+                const indiceDocente = Math.floor(Math.random() * docentesRestantes.length);
+                const docenteElegido = docentesRestantes.splice(indiceDocente, 1)[0];
+
+                // Elegir Color al azar de los restantes
+                const indiceColor = Math.floor(Math.random() * coloresRestantes.length);
+                const colorElegido = coloresRestantes.splice(indiceColor, 1)[0];
+
+                // Guardar resultado
+                resultadosFinales.push({ docente: docenteElegido, color: colorElegido });
+
+                // --- ACTUALIZAR VISUALIZACIÓN (1a1) ---
+                currentSelectionText.innerText = `${docenteElegido}`;
+                displayZone.style.backgroundColor = colorElegido.hex;
+                currentSelectionText.style.color = colorElegido.text;
+
+                // Preparar siguiente turno o finalizar
+                if (docentesRestantes.length > 0) {
+                    btnDraw.innerText = `¡Elegir Siguiente (${docentesRestantes.length} restantes)!`;
+                    btnDraw.disabled = false;
+                } else {
+                    finalizarSorteo();
+                }
+                displayZone.classList.remove('active');
+
+            }, 1000); // 1 segundo de "pensando"
+        }
+
+        // 5. Función de Finalización
+        function finalizarSorteo() {
+            btnDraw.style.display = "none";
+            btnReset.style.display = "inline-block";
+            currentSelectionText.innerText = "¡Sorteo Finalizado!";
+            currentSelectionText.style.color = "white";
+            displayZone.style.backgroundColor = "#2c3e50";
+
+            mostrarResultadosFinales();
+        }
+
+        // 6. Mostrar la Tabla de Resultados
+        function mostrarResultadosFinales() {
+            resultsZone.style.display = "block";
+            finalGrid.innerHTML = ""; // Limpiar
+
+            resultadosFinales.forEach(res => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="color-box" style="background-color: ${res.color.hex};" title="${res.color.nombre}"></div>
+                    <div class="docente-name">${res.docente}</div>
+                `;
+                finalGrid.appendChild(card);
+            });
+        }
+
+        // 7. Reiniciar todo
+        function resetSorteo() {
+            docentesRestantes = [...docentesIniciales];
+            coloresRestantes = [...paletaColores];
+            resultadosFinales = [];
+
+            btnDraw.style.display = "inline-block";
+            btnDraw.disabled = false;
+            btnDraw.innerText = "¡Elegir 1 Docente al Azar!";
+            btnReset.style.display = "none";
+            
+            resultsZone.style.display = "none";
+            displayZone.style.backgroundColor = var(--card-bg);
+            currentSelectionText.innerText = "Esperando inicio...";
+            currentSelectionText.style.color = "inherit";
+        }
+    </script>
+</body>
+</html>
