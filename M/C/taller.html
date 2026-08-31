@@ -69,10 +69,11 @@
     color: var(--blue-dark);
     font-weight: 600;
     outline: none;
+    text-align: center;
     transition: border-color 0.3s;
   }
   input[type="text"]:focus {
-    border-bottom: 2px solid #F57F17; /* Toque de contraste al escribir */
+    border-bottom: 2px solid #F57F17;
   }
 
   select {
@@ -159,7 +160,6 @@
   
   .options { margin-top: 10px; display: flex; flex-direction: column; gap: 8px;}
   
-  /* Estilo para los botones de selección circular (Radio Buttons) */
   .radio-label {
     display: flex;
     align-items: center;
@@ -245,7 +245,7 @@
   </div>
 
   <div class="student-info">
-    <div>Name: <input type="text" style="width: 250px;" placeholder="Escribe tu nombre"></div>
+    <div>Name: <input type="text" style="width: 250px; text-align: left;" placeholder="Escribe tu nombre"></div>
     <div>Grade: <select><option>10° A</option><option>10° B</option><option>10° C</option></select></div>
     <div>Date: <input type="text" style="width: 120px;" placeholder="DD/MM/AAAA"></div>
   </div>
@@ -258,61 +258,61 @@
       <li>
         1. Eat (Comer) 
         <span>👉</span> 
-        <select>
+        <select id="s1_1">
           <option value="">-- Elige uno --</option>
-          <option>Stolen</option>
-          <option>Broken</option>
-          <option>Eaten</option>
-          <option>Forgotten</option>
-          <option>Gone</option>
+          <option value="stolen">Stolen</option>
+          <option value="broken">Broken</option>
+          <option value="eaten">Eaten</option>
+          <option value="forgotten">Forgotten</option>
+          <option value="gone">Gone</option>
         </select>
       </li>
       <li>
         2. Go (Ir) 
         <span>👉</span> 
-        <select>
+        <select id="s1_2">
           <option value="">-- Elige uno --</option>
-          <option>Stolen</option>
-          <option>Broken</option>
-          <option>Eaten</option>
-          <option>Forgotten</option>
-          <option>Gone</option>
+          <option value="stolen">Stolen</option>
+          <option value="broken">Broken</option>
+          <option value="eaten">Eaten</option>
+          <option value="forgotten">Forgotten</option>
+          <option value="gone">Gone</option>
         </select>
       </li>
       <li>
         3. Steal (Robar) 
         <span>👉</span> 
-        <select>
+        <select id="s1_3">
           <option value="">-- Elige uno --</option>
-          <option>Stolen</option>
-          <option>Broken</option>
-          <option>Eaten</option>
-          <option>Forgotten</option>
-          <option>Gone</option>
+          <option value="stolen">Stolen</option>
+          <option value="broken">Broken</option>
+          <option value="eaten">Eaten</option>
+          <option value="forgotten">Forgotten</option>
+          <option value="gone">Gone</option>
         </select>
       </li>
       <li>
         4. Break (Romper) 
         <span>👉</span> 
-        <select>
+        <select id="s1_4">
           <option value="">-- Elige uno --</option>
-          <option>Stolen</option>
-          <option>Broken</option>
-          <option>Eaten</option>
-          <option>Forgotten</option>
-          <option>Gone</option>
+          <option value="stolen">Stolen</option>
+          <option value="broken">Broken</option>
+          <option value="eaten">Eaten</option>
+          <option value="forgotten">Forgotten</option>
+          <option value="gone">Gone</option>
         </select>
       </li>
       <li>
         5. Forget (Olvidar) 
         <span>👉</span> 
-        <select>
+        <select id="s1_5">
           <option value="">-- Elige uno --</option>
-          <option>Stolen</option>
-          <option>Broken</option>
-          <option>Eaten</option>
-          <option>Forgotten</option>
-          <option>Gone</option>
+          <option value="stolen">Stolen</option>
+          <option value="broken">Broken</option>
+          <option value="eaten">Eaten</option>
+          <option value="forgotten">Forgotten</option>
+          <option value="gone">Gone</option>
         </select>
       </li>
     </ul>
@@ -369,12 +369,12 @@
     
     <div class="fill-blank">
       <strong>1. (Seguro que SÍ):</strong> Carlos sacó 0 en el examen. <br>
-      He <strong>must</strong> <input type="text" style="width: 80px;" placeholder="have"> <input type="text" style="width: 100px;" placeholder="forgotten"> (forgot) to study!
+      He <strong>must</strong> <input type="text" id="p4_1_1" style="width: 80px;" placeholder="..."> <input type="text" id="p4_1_2" style="width: 100px;" placeholder="..."> (forgot) to study!
     </div>
     
     <div class="fill-blank">
       <strong>2. (Quizás):</strong> No veo a la profesora en el salón. <br>
-      She <strong>might</strong> <input type="text" style="width: 80px;" placeholder="have"> <input type="text" style="width: 80px;" placeholder="gone"> (gone) to the bathroom.
+      She <strong>might</strong> <input type="text" id="p4_2_1" style="width: 80px;" placeholder="..."> <input type="text" id="p4_2_2" style="width: 80px;" placeholder="..."> (gone) to the bathroom.
     </div>
   </div>
 
@@ -389,31 +389,31 @@
     <ul style="padding-left: 10px; line-height: 2.2; list-style: none;">
       <li><strong>Sospechoso 1 (Tu hermano alérgico al queso):</strong> <br>
         My little brother 
-        <select>
+        <select id="s5_1">
           <option value="">-- Selecciona --</option>
-          <option>must have eaten</option>
-          <option>might have taken</option>
-          <option>can't have stolen</option>
+          <option value="must">must have eaten</option>
+          <option value="might">might have taken</option>
+          <option value="cant">can't have stolen</option>
         </select> 
         the pizza!
       </li>
       <li style="margin-top: 15px;"><strong>Sospechoso 2 (Tu papá, lo escuchaste a las 3 AM):</strong> <br>
         My dad 
-        <select>
+        <select id="s5_2">
           <option value="">-- Selecciona --</option>
-          <option>must have eaten</option>
-          <option>might have taken</option>
-          <option>can't have stolen</option>
+          <option value="must">must have eaten</option>
+          <option value="might">might have taken</option>
+          <option value="cant">can't have stolen</option>
         </select> 
         the pizza. I am 90% sure!
       </li>
       <li style="margin-top: 15px;"><strong>Sospechoso 3 (Tu perrito pequeño):</strong> <br>
         The dog 
-        <select>
+        <select id="s5_3">
           <option value="">-- Selecciona --</option>
-          <option>must have eaten</option>
-          <option>might have taken</option>
-          <option>can't have stolen</option>
+          <option value="must">must have eaten</option>
+          <option value="might">might have taken</option>
+          <option value="cant">can't have stolen</option>
         </select> 
         it, but he is too small to reach the top shelf.
       </li>
@@ -424,12 +424,48 @@
     <h3>🎉 EXIT TICKET</h3>
     <p style="text-align: center; margin-bottom: 15px;">Escribe una deducción usando la estructura que aprendimos sobre el profesor. (Ej: The teacher must have drank coffee today).</p>
     <div style="font-weight: bold; color: var(--blue-dark); margin-bottom: 10px;">Tu oración:</div>
-    <input type="text" style="width: 100%; border: 1px solid var(--blue-main); border-radius: 6px; padding: 12px; font-weight: 400;" placeholder="Escribe tu oración en inglés aquí...">
+    <input type="text" style="width: 100%; border: 1px solid var(--blue-main); border-radius: 6px; padding: 12px; font-weight: 400; text-align: left;" placeholder="Escribe tu oración en inglés aquí...">
   </div>
   
-  <button class="submit-btn" onclick="alert('¡Excelente trabajo, detective! Respuestas guardadas.')">ENVIAR RESPUESTAS AL PROFESOR 🚀</button>
+  <button class="submit-btn" onclick="checkAnswers()">ENVIAR RESPUESTAS AL PROFESOR 🚀</button>
 
 </div>
+
+<script>
+  // Simple check logic hidden in the JS
+  function checkAnswers() {
+    let score = 0;
+    let total = 11;
+    
+    // Paso 1
+    if(document.getElementById('s1_1').value === 'eaten') score++;
+    if(document.getElementById('s1_2').value === 'gone') score++;
+    if(document.getElementById('s1_3').value === 'stolen') score++;
+    if(document.getElementById('s1_4').value === 'broken') score++;
+    if(document.getElementById('s1_5').value === 'forgotten') score++;
+    
+    // Paso 3
+    let q1 = document.querySelector('input[name="q1"]:checked');
+    let q2 = document.querySelector('input[name="q2"]:checked');
+    if(q1 && q1.value === 'B') score++;
+    if(q2 && q2.value === 'A') score++;
+    
+    // Paso 4 (se limpian los espacios vacíos y se pasa a minúsculas)
+    let p4_1_1 = document.getElementById('p4_1_1').value.trim().toLowerCase();
+    let p4_1_2 = document.getElementById('p4_1_2').value.trim().toLowerCase();
+    let p4_2_1 = document.getElementById('p4_2_1').value.trim().toLowerCase();
+    let p4_2_2 = document.getElementById('p4_2_2').value.trim().toLowerCase();
+    
+    if(p4_1_1 === 'have' && p4_1_2 === 'forgotten') score++;
+    if(p4_2_1 === 'have' && p4_2_2 === 'gone') score++;
+    
+    // Paso 5
+    if(document.getElementById('s5_1').value === 'cant') score++;
+    if(document.getElementById('s5_2').value === 'must') score++;
+    
+    alert("¡Taller enviado! \n\nHas completado el entrenamiento de detective. 🕵️‍♂️");
+  }
+</script>
 
 </body>
 </html>
