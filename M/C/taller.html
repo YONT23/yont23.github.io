@@ -479,8 +479,8 @@
     btn.style.background = "#F57F17"; 
     btn.disabled = true;
 
-    // Aquí está el enlace que me diste (OJO: no enviará los datos sin generar la aplicación web en Apps Script)
-    const scriptURL = 'https://docs.google.com/spreadsheets/d/14H9qccV69H1GWNu2KqCbDsZhyJNsoCsUQ4O3pZhUtXw/edit?usp=drivesdk';
+    // Aquí está tu URL de Apps Script funcionando
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw1rWN42qXzDIsqEcEr5FzGhjEKBlarDF_eOjFNpU8ulUnU_VeLKxWpaZWKxY06h0-d/exec';
     
     const formData = new FormData();
     formData.append('nombre', nombre);
@@ -495,7 +495,7 @@
         btn.style.background = "#1B5E20"; 
       })
       .catch(error => {
-        alert("Hubo un error de conexión (Recuerda actualizar tu URL a Apps Script).");
+        alert("Hubo un error de conexión. Intenta enviar de nuevo.");
         btn.innerText = "ENVIAR RESPUESTAS AL PROFESOR 🚀";
         btn.style.background = "var(--blue-main)";
         btn.disabled = false;
