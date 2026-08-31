@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Exam Grade 7 - Unit 3</title>
+    <style>
+        :root {
+            --primary: #1F4E78;
+            --secondary: #2E75B6;
+            --bg: #F4F6F9;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin: 0 0 5px 0;
+            font-size: 1.6rem;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: #EBF1F5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .input-group input {
+            padding: 8px;
+            border: 1px solid #CCC;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .reading-box {
+            background-color: #F8F9FA;
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .reading-box h3 {
+            margin-top: 0;
+            color: var(--secondary);
+        }
+
+        .question-card {
+            background: #FFF;
+            border: 1px solid #E0E0E0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .options label {
+            display: block;
+            background: #F9F9F9;
+            padding: 10px 12px;
+            border: 1px solid #DDD;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .options label:hover {
+            background: #E8F1F5;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button.btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button.btn-submit:hover {
+            background: var(--secondary);
+        }
+
+        #result-section {
+            display: none;
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            border: 2px dashed var(--primary);
+            border-radius: 10px;
+        }
+
+        .alert-banner {
+            background-color: #FFD2D2;
+            border: 3px solid #D8000C;
+            color: #D8000C;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 20px 0;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .btn-print {
+            background: #28A745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        @media print {
+            .btn-submit, .btn-print { display: none; }
+            body { background: white; }
+            .container { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>ENGLISH EVALUATION - GRADE 7°</h1>
+        <p><strong>Unit 3: Bigger, Better, Faster!</strong></p>
+    </header>
+
+    <form id="quizForm">
+        <div class="student-info">
+            <div class="input-group">
+                <label for="studentName">Student Full Name / Nombre del Estudiante:</label>
+                <input type="text" id="studentName" required placeholder="Escribe tu nombre completo">
+            </div>
+            <div class="input-group">
+                <label for="examDate">Date / Fecha:</label>
+                <input type="text" id="examDate" readonly>
+            </div>
+        </div>
+
+        <div class="reading-box">
+            <h3>Text 1: The Two Metropolis</h3>
+            <p>Medellín and Bogotá are two important cities in Colombia. Medellín is <strong>warmer than</strong> Bogotá, making its weather more comfortable for many people. However, Bogotá is <strong>the largest</strong> city in the country and has <strong>more traffic than</strong> Medellín. Public transport in Medellín, like the Metro, is <strong>faster and cleaner than</strong> traditional buses.</p>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">1. According to the text, why do many people prefer Medellín’s weather?</div>
+            <div class="options">
+                <label><input type="radio" name="q1" value="A" required> A. Because it is the largest city in Colombia.</label>
+                <label><input type="radio" name="q1" value="B"> B. Because it is warmer and more comfortable than Bogotá.</label>
+                <label><input type="radio" name="q1" value="C"> C. Because it has more traffic than Bogotá.</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">2. What does the text say about Bogotá?</div>
+            <div class="options">
+                <label><input type="radio" name="q2" value="A"> A. It has a faster metro than Medellín.</label>
+                <label><input type="radio" name="q2" value="B"> B. It is warmer than Medellín.</label>
+                <label><input type="radio" name="q2" value="C"> C. It is the largest city in Colombia.</label>
+            </div>
+        </div>
+
+        <div class="reading-box">
+            <h3>Text 2: Extreme Nature Records</h3>
+            <p>The Earth has amazing places. Mount Everest is <strong>the highest</strong> mountain in the world. The Amazon Rainforest is <strong>the most biological diverse</strong> forest on the planet. Animals also set records: the Blue Whale is <strong>the heaviest</strong> animal on Earth, while the Cheetah is <strong>faster than</strong> any other land animal.</p>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">3. Which is the highest mountain on Earth?</div>
+            <div class="options">
+                <label><input type="radio" name="q3" value="A"> A. The Amazon Rainforest.</label>
+                <label><input type="radio" name="q3" value="B"> B. Mount Everest.</label>
+                <label><input type="radio" name="q3" value="C"> C. The Blue Whale.</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">4. Choose the CORRECT comparison about animals:</div>
+            <div class="options">
+                <label><input type="radio" name="q4" value="A"> A. The Cheetah is faster than any other land animal.</label>
+                <label><input type="radio" name="q4" value="B"> B. The Blue Whale is smaller than a cheetah.</label>
+                <label><input type="radio" name="q4" value="C"> C. The Cheetah is the heaviest animal on Earth.</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">5. Complete: "A lion is ________ than a domestic dog."</div>
+            <div class="options">
+                <label><input type="radio" name="q5" value="A"> A. strong</label>
+                <label><input type="radio" name="q5" value="B"> B. stronger</label>
+                <label><input type="radio" name="q5" value="C"> C. more strong</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">6. Identify the sentence with INCORRECT grammar:</div>
+            <div class="options">
+                <label><input type="radio" name="q6" value="A"> A. English is more interesting than Math.</label>
+                <label><input type="radio" name="q6" value="B"> B. The car is faster that the bike.</label>
+                <label><input type="radio" name="q6" value="C"> C. Jupiter is the biggest planet in the solar system.</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">7. Quantifiers: "How ________ apples do you need for the fruit salad?"</div>
+            <div class="options">
+                <label><input type="radio" name="q7" value="A"> A. many</label>
+                <label><input type="radio" name="q7" value="B"> B. much</label>
+                <label><input type="radio" name="q7" value="C"> C. often</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">8. Quantifiers: "I don't drink ________ soda because it is bad for my health."</div>
+            <div class="options">
+                <label><input type="radio" name="q8" value="A"> A. many</label>
+                <label><input type="radio" name="q8" value="B"> B. much</label>
+                <label><input type="radio" name="q8" value="C"> C. always</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">9. Adverbs of Frequency: Choose the sentence with CORRECT word order:</div>
+            <div class="options">
+                <label><input type="radio" name="q9" value="A"> A. I always eat healthy food in the morning.</label>
+                <label><input type="radio" name="q9" value="B"> B. I eat always healthy food in the morning.</label>
+                <label><input type="radio" name="q9" value="C"> C. Always I eat healthy food in the morning.</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-title">10. Adverbs of Frequency with Verb To Be: Choose the CORRECT option:</div>
+            <div class="options">
+                <label><input type="radio" name="q10" value="A"> A. She usually is happy at school.</label>
+                <label><input type="radio" name="q10" value="B"> B. She is usually happy at school.</label>
+                <label><input type="radio" name="q10" value="C"> C. Usually she is happy at school.</label>
+            </div>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="evaluateQuiz()">FINISH AND GRADE EXAM / FINALIZAR EXAMEN</button>
+    </form>
+
+    <div id="result-section">
+        <div class="alert-banner">
+            ⚠️ ¡RECUERDA! DEBES ENVIAR LA CAPTURA DE PANTALLA O FOTO DE ESTE RESULTADO A TU PROFESOR(A) COMO EVIDENCIA ⚠️
+        </div>
+        
+        <h2>EXAM RESULTS / RESULTADOS</h2>
+        <p><strong>Student:</strong> <span id="resName"></span></p>
+        <p><strong>Date:</strong> <span id="resDate"></span></p>
+        
+        <div class="score-display">
+            Score: <span id="finalScore">0</span> / 10
+        </div>
+        
+        <p id="feedbackMessage"></p>
+
+        <button class="btn-print" onclick="window.print()">🖨️ IMPRIMIR O GUARDAR EN PDF</button>
+    </div>
+</div>
+
+<script>
+    // Set auto date
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('es-ES', { 
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+    });
+    document.getElementById('examDate').value = formattedDate;
+
+    function evaluateQuiz() {
+        const nameInput = document.getElementById('studentName').value.trim();
+        if (!nameInput) {
+            alert('Por favor escribe tu nombre completo antes de finalizar.');
+            return;
+        }
+
+        const answers = {
+            q1: 'B', q2: 'C', q3: 'B', q4: 'A', q5: 'B',
+            q6: 'B', q7: 'A', q8: 'B', q9: 'A', q10: 'B'
+        };
+
+        let score = 0;
+        const form = document.getElementById('quizForm');
+
+        for (let q in answers) {
+            const selected = form.querySelector(`input[name="${q}"]:checked`);
+            if (selected && selected.value === answers[q]) {
+                score++;
+            }
+        }
+
+        // Display results
+        document.getElementById('quizForm').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+        
+        document.getElementById('resName').textContent = nameInput;
+        document.getElementById('resDate').textContent = formattedDate;
+        document.getElementById('finalScore').textContent = score;
+
+        const msg = document.getElementById('feedbackMessage');
+        if (score >= 8) {
+            msg.textContent = "¡Excelente trabajo! Has demostrado un gran dominio de las comparaciones y cuantificadores.";
+            msg.style.color = "green";
+        } else if (score >= 6) {
+            msg.textContent = "Buen trabajo. Repasa algunos detalles de gramática para mejorar.";
+            msg.style.color = "#D85B00";
+        } else {
+            msg.textContent = "Debes repasar las lecciones de la unidad 3 y volver a intentarlo.";
+            msg.style.color = "red";
+        }
+
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
