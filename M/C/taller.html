@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detective Training Worksheet</title>
+<title>Detective Training Worksheet - Digital</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
@@ -30,7 +30,7 @@
     max-width: 800px;
     margin: 0 auto;
     background-color: var(--white);
-    padding: 50px;
+    padding: 40px 50px;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(11, 37, 69, 0.15);
     border-top: 12px solid var(--blue-dark);
@@ -58,18 +58,46 @@
     font-size: 14px;
   }
 
+  /* Form Elements */
+  input[type="text"] {
+    border: 0;
+    border-bottom: 2px solid var(--blue-main);
+    background: transparent;
+    padding: 5px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--blue-dark);
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  input[type="text"]:focus {
+    border-bottom: 2px solid #F57F17; /* Toque de contraste al escribir */
+  }
+
+  select {
+    padding: 6px;
+    border: 2px solid var(--blue-light);
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-dark);
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus {
+    border-color: var(--blue-main);
+  }
+
   .student-info {
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     justify-content: space-between;
     margin-bottom: 40px;
     font-weight: 600;
     color: var(--blue-dark);
-  }
-
-  .line {
-    border-bottom: 1.5px solid var(--text);
-    display: inline-block;
-    min-width: 150px;
   }
 
   .step { margin-bottom: 35px; }
@@ -111,43 +139,52 @@
     font-weight: 600;
   }
 
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  .matching-list { list-style: none; }
+  .matching-list { list-style: none; display: flex; flex-direction: column; gap: 15px;}
   .matching-list li {
     display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
+    align-items: center;
+    gap: 15px;
     font-weight: 600;
   }
 
   .choice-box {
     background-color: var(--blue-pale);
     border: 1px solid var(--blue-light);
-    padding: 15px;
+    padding: 15px 20px;
     border-radius: 8px;
     margin-bottom: 15px;
   }
   
   .choice-box strong { color: var(--blue-dark); }
   
-  .options { margin-top: 10px; padding-left: 20px; }
-  .options li { margin-bottom: 5px; list-style-type: circle; }
-
-  .fill-blank {
-    margin-bottom: 15px;
-    padding-left: 10px;
+  .options { margin-top: 10px; display: flex; flex-direction: column; gap: 8px;}
+  
+  /* Estilo para los botones de selección circular (Radio Buttons) */
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--blue-light);
+    transition: all 0.2s;
+  }
+  .radio-label:hover {
+    background: var(--blue-light);
+  }
+  .radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--blue-main);
   }
 
-  .blank-line {
-    display: inline-block;
-    width: 100px;
-    border-bottom: 1.5px solid var(--text);
-    margin: 0 5px;
+  .fill-blank {
+    margin-bottom: 20px;
+    padding-left: 10px;
+    line-height: 2.2;
   }
 
   .word-bank {
@@ -175,10 +212,26 @@
     text-align: center;
     font-size: 20px;
   }
+  
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: var(--blue-main);
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    border: none;
+    border-radius: 8px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .submit-btn:hover { background: var(--blue-dark); }
 
-  @media print {
-    body { background-color: var(--white); padding: 0; }
-    .worksheet { box-shadow: none; border-top: 8px solid var(--blue-dark); }
+  @media(max-width:600px) {
+    .worksheet { padding: 25px 15px; }
   }
 </style>
 </head>
@@ -188,35 +241,81 @@
   
   <div class="header">
     <h1>🕵️ Detective Training</h1>
-    <p>Taller de Modales de Deducción (Past Modals)</p>
+    <p>Taller Interactivo de Modales de Deducción (Past Modals)</p>
   </div>
 
   <div class="student-info">
-    <div>Name: <span class="line" style="width: 300px;"></span></div>
-    <div>Grade: <span class="line" style="width: 80px;"></span></div>
-    <div>Date: <span class="line" style="width: 120px;"></span></div>
+    <div>Name: <input type="text" style="width: 250px;" placeholder="Escribe tu nombre"></div>
+    <div>Grade: <select><option>10° A</option><option>10° B</option><option>10° C</option></select></div>
+    <div>Date: <input type="text" style="width: 120px;" placeholder="DD/MM/AAAA"></div>
   </div>
 
   <div class="step">
     <div class="step-title">🧱 PASO 1: Las herramientas del detective</div>
-    <p style="margin-bottom: 15px;">Une con una línea el verbo en presente con su forma en participio pasado (puedes usar diccionario).</p>
+    <p style="margin-bottom: 15px;">Selecciona en la lista el verbo en <strong>Participio Pasado</strong> que le corresponde a cada verbo en presente.</p>
     
-    <div class="grid-2">
-      <ul class="matching-list">
-        <li>1. Eat (Comer) <span>•</span></li>
-        <li>2. Go (Ir) <span>•</span></li>
-        <li>3. Steal (Robar) <span>•</span></li>
-        <li>4. Break (Romper) <span>•</span></li>
-        <li>5. Forget (Olvidar) <span>•</span></li>
-      </ul>
-      <ul class="matching-list">
-        <li><span>•</span> Stolen</li>
-        <li><span>•</span> Broken</li>
-        <li><span>•</span> Eaten</li>
-        <li><span>•</span> Forgotten</li>
-        <li><span>•</span> Gone</li>
-      </ul>
-    </div>
+    <ul class="matching-list">
+      <li>
+        1. Eat (Comer) 
+        <span>👉</span> 
+        <select>
+          <option value="">-- Elige uno --</option>
+          <option>Stolen</option>
+          <option>Broken</option>
+          <option>Eaten</option>
+          <option>Forgotten</option>
+          <option>Gone</option>
+        </select>
+      </li>
+      <li>
+        2. Go (Ir) 
+        <span>👉</span> 
+        <select>
+          <option value="">-- Elige uno --</option>
+          <option>Stolen</option>
+          <option>Broken</option>
+          <option>Eaten</option>
+          <option>Forgotten</option>
+          <option>Gone</option>
+        </select>
+      </li>
+      <li>
+        3. Steal (Robar) 
+        <span>👉</span> 
+        <select>
+          <option value="">-- Elige uno --</option>
+          <option>Stolen</option>
+          <option>Broken</option>
+          <option>Eaten</option>
+          <option>Forgotten</option>
+          <option>Gone</option>
+        </select>
+      </li>
+      <li>
+        4. Break (Romper) 
+        <span>👉</span> 
+        <select>
+          <option value="">-- Elige uno --</option>
+          <option>Stolen</option>
+          <option>Broken</option>
+          <option>Eaten</option>
+          <option>Forgotten</option>
+          <option>Gone</option>
+        </select>
+      </li>
+      <li>
+        5. Forget (Olvidar) 
+        <span>👉</span> 
+        <select>
+          <option value="">-- Elige uno --</option>
+          <option>Stolen</option>
+          <option>Broken</option>
+          <option>Eaten</option>
+          <option>Forgotten</option>
+          <option>Gone</option>
+        </select>
+      </li>
+    </ul>
   </div>
 
   <div class="step">
@@ -237,61 +336,98 @@
 
   <div class="step">
     <div class="step-title">🔍 PASO 3: Entrenamiento de Deducción</div>
-    <p style="margin-bottom: 15px;">Lee la pista y marca con una "X" la deducción correcta.</p>
+    <p style="margin-bottom: 15px;">Lee la pista y <strong>selecciona</strong> la deducción lógica correcta.</p>
 
     <div class="choice-box">
       <strong>1. Pista:</strong> Juan llegó a la escuela todo mojado y no tiene paraguas.
-      <ul class="options">
-        <li>[ &nbsp; ] A) He <strong>can't have</strong> walked in the rain. (No puede haber caminado...)</li>
-        <li>[ &nbsp; ] B) He <strong>must have</strong> walked in the rain. (Debe haber caminado...)</li>
-      </ul>
+      <div class="options">
+        <label class="radio-label">
+          <input type="radio" name="q1" value="A"> A) He <strong>can't have</strong> walked in the rain. (No puede haber caminado...)
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="q1" value="B"> B) He <strong>must have</strong> walked in the rain. (Debe haber caminado...)
+        </label>
+      </div>
     </div>
 
     <div class="choice-box">
       <strong>2. Pista:</strong> María habla un inglés perfecto, como una nativa.
-      <ul class="options">
-        <li>[ &nbsp; ] A) She <strong>must have</strong> lived in the USA. (Debe haber vivido...)</li>
-        <li>[ &nbsp; ] B) She <strong>might have</strong> lived in the USA. (Quizás vivió...)</li>
-      </ul>
+      <div class="options">
+        <label class="radio-label">
+          <input type="radio" name="q2" value="A"> A) She <strong>must have</strong> lived in the USA. (Debe haber vivido...)
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="q2" value="B"> B) She <strong>might have</strong> lived in the USA. (Quizás vivió...)
+        </label>
+      </div>
     </div>
   </div>
 
   <div class="step">
     <div class="step-title">🧩 PASO 4: Completa la fórmula</div>
-    <p style="margin-bottom: 15px;">Rellena los espacios. Recuerda: Modal + HAVE + Participio.</p>
+    <p style="margin-bottom: 15px;">Escribe en los espacios para completar la fórmula: <strong>Modal + HAVE + Participio</strong>.</p>
     
     <div class="fill-blank">
       <strong>1. (Seguro que SÍ):</strong> Carlos sacó 0 en el examen. <br>
-      He <strong>must</strong> <span class="blank-line"></span> <span class="blank-line"></span> (forgot) to study!
+      He <strong>must</strong> <input type="text" style="width: 80px;" placeholder="have"> <input type="text" style="width: 100px;" placeholder="forgotten"> (forgot) to study!
     </div>
     
     <div class="fill-blank">
       <strong>2. (Quizás):</strong> No veo a la profesora en el salón. <br>
-      She <strong>might</strong> <span class="blank-line"></span> <span class="blank-line"></span> (gone) to the bathroom.
+      She <strong>might</strong> <input type="text" style="width: 80px;" placeholder="have"> <input type="text" style="width: 80px;" placeholder="gone"> (gone) to the bathroom.
     </div>
   </div>
 
   <div class="step">
     <div class="step-title">🍕 PASO 5: El Misterio Final (The Missing Pizza)</div>
-    <p style="margin-bottom: 15px;">La pizza desapareció de la nevera. Usa las palabras del banco para completar las conclusiones.</p>
+    <p style="margin-bottom: 15px;">La pizza desapareció de la nevera. <strong>Elige</strong> la conclusión para cada sospechoso.</p>
     
     <div class="word-bank">
       must have eaten &nbsp; | &nbsp; might have taken &nbsp; | &nbsp; can't have stolen
     </div>
 
-    <ul style="padding-left: 20px; line-height: 2;">
-      <li><strong>Sospechoso 1 (Tu hermano alérgico al queso):</strong> <br>My little brother <span class="line" style="width: 200px;"></span> the pizza!</li>
-      <li><strong>Sospechoso 2 (Tu papá, lo escuchaste a las 3 AM):</strong> <br>My dad <span class="line" style="width: 200px;"></span> the pizza. I am 90% sure!</li>
-      <li><strong>Sospechoso 3 (Tu perrito pequeño):</strong> <br>The dog <span class="line" style="width: 200px;"></span> it, but he is too small to reach the top shelf.</li>
+    <ul style="padding-left: 10px; line-height: 2.2; list-style: none;">
+      <li><strong>Sospechoso 1 (Tu hermano alérgico al queso):</strong> <br>
+        My little brother 
+        <select>
+          <option value="">-- Selecciona --</option>
+          <option>must have eaten</option>
+          <option>might have taken</option>
+          <option>can't have stolen</option>
+        </select> 
+        the pizza!
+      </li>
+      <li style="margin-top: 15px;"><strong>Sospechoso 2 (Tu papá, lo escuchaste a las 3 AM):</strong> <br>
+        My dad 
+        <select>
+          <option value="">-- Selecciona --</option>
+          <option>must have eaten</option>
+          <option>might have taken</option>
+          <option>can't have stolen</option>
+        </select> 
+        the pizza. I am 90% sure!
+      </li>
+      <li style="margin-top: 15px;"><strong>Sospechoso 3 (Tu perrito pequeño):</strong> <br>
+        The dog 
+        <select>
+          <option value="">-- Selecciona --</option>
+          <option>must have eaten</option>
+          <option>might have taken</option>
+          <option>can't have stolen</option>
+        </select> 
+        it, but he is too small to reach the top shelf.
+      </li>
     </ul>
   </div>
 
   <div class="exit-ticket">
     <h3>🎉 EXIT TICKET</h3>
-    <p style="text-align: center; margin-bottom: 15px;">Escribe una deducción sobre el profesor. (Ej: The teacher must have drank coffee today).</p>
-    <div style="font-weight: bold; color: var(--blue-dark);">Tu oración:</div>
-    <div class="line" style="width: 100%; margin-top: 25px;"></div>
+    <p style="text-align: center; margin-bottom: 15px;">Escribe una deducción usando la estructura que aprendimos sobre el profesor. (Ej: The teacher must have drank coffee today).</p>
+    <div style="font-weight: bold; color: var(--blue-dark); margin-bottom: 10px;">Tu oración:</div>
+    <input type="text" style="width: 100%; border: 1px solid var(--blue-main); border-radius: 6px; padding: 12px; font-weight: 400;" placeholder="Escribe tu oración en inglés aquí...">
   </div>
+  
+  <button class="submit-btn" onclick="alert('¡Excelente trabajo, detective! Respuestas guardadas.')">ENVIAR RESPUESTAS AL PROFESOR 🚀</button>
 
 </div>
 
