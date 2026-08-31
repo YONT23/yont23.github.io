@@ -432,11 +432,22 @@
 </div>
 
 <script>
-  // Simple check logic hidden in the JS
   function checkAnswers() {
     let score = 0;
     let total = 11;
+    let btn = document.querySelector('.submit-btn');
     
+    // Validar que escribió su nombre
+    let nombre = document.querySelector('input[placeholder="Escribe tu nombre"]').value;
+    let grado = document.querySelector('select').value;
+    let oracion = document.querySelector('input[placeholder="Escribe tu oración en inglés aquí..."]').value;
+
+    if (!nombre) {
+      alert("Por favor, escribe tu nombre antes de enviar.");
+      return;
+    }
+
+    // --- CÁLCULO DE LA NOTA ---
     // Paso 1
     if(document.getElementById('s1_1').value === 'eaten') score++;
     if(document.getElementById('s1_2').value === 'gone') score++;
@@ -450,7 +461,7 @@
     if(q1 && q1.value === 'B') score++;
     if(q2 && q2.value === 'A') score++;
     
-    // Paso 4 (se limpian los espacios vacíos y se pasa a minúsculas)
+    // Paso 4 
     let p4_1_1 = document.getElementById('p4_1_1').value.trim().toLowerCase();
     let p4_1_2 = document.getElementById('p4_1_2').value.trim().toLowerCase();
     let p4_2_1 = document.getElementById('p4_2_1').value.trim().toLowerCase();
@@ -462,8 +473,33 @@
     // Paso 5
     if(document.getElementById('s5_1').value === 'cant') score++;
     if(document.getElementById('s5_2').value === 'must') score++;
+
+    // --- ENVÍO A GOOGLE SHEETS ---
+    btn.innerText = "ENVIANDO... ⏳";
+    btn.style.background = "#F57F17"; 
+    btn.disabled = true;
+
+    // Aquí está el enlace que me diste (OJO: no enviará los datos sin generar la aplicación web en Apps Script)
+    const scriptURL = 'https://docs.google.com/spreadsheets/d/14H9qccV69H1GWNu2KqCbDsZhyJNsoCsUQ4O3pZhUtXw/edit?usp=drivesdk';
     
-    alert("¡Taller enviado! \n\nHas completado el entrenamiento de detective. 🕵️‍♂️");
+    const formData = new FormData();
+    formData.append('nombre', nombre);
+    formData.append('grado', grado);
+    formData.append('puntaje', score + " / " + total);
+    formData.append('oracion', oracion);
+
+    fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+      .then(response => {
+        alert("¡Taller enviado con éxito! 🕵️‍♂️\nTu puntaje fue: " + score + " de " + total);
+        btn.innerText = "¡ENVIADO!";
+        btn.style.background = "#1B5E20"; 
+      })
+      .catch(error => {
+        alert("Hubo un error de conexión (Recuerda actualizar tu URL a Apps Script).");
+        btn.innerText = "ENVIAR RESPUESTAS AL PROFESOR 🚀";
+        btn.style.background = "var(--blue-main)";
+        btn.disabled = false;
+      });
   }
 </script>
 
