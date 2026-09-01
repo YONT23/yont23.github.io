@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Inglés - Grado 2</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background-color: #E8F4F8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 4px solid #4CAF50;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #2E7D32;
+        }
+        .info-header {
+            background-color: #FFF9C4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed #FBC02D;
+        }
+        .info-header input {
+            font-size: 18px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+        .question {
+            background-color: #F1F8E9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #8BC34A;
+        }
+        .question p {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 10px 0;
+            font-size: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options label:hover {
+            background-color: #E0F7FA;
+        }
+        .emoji {
+            font-size: 40px;
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #F57C00;
+        }
+        #results {
+            display: none;
+            text-align: center;
+        }
+        .feedback {
+            text-align: left;
+            background-color: #FFEBEE;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #F44336;
+            margin-top: 20px;
+        }
+        .success-msg {
+            color: #2E7D32;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .teacher-note {
+            background-color: #E3F2FD;
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #2196F3;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1565C0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exam-container">
+    <h1>🌟 Examen de Inglés 🌟</h1>
+    
+    <div class="info-header">
+        <p><strong>Nivel:</strong> Grado 2</p>
+        <p><strong>Fecha:</strong> <span id="current-date"></span></p>
+        <p><label for="student-name"><strong>Escribe tu nombre:</strong></label><br>
+        <input type="text" id="student-name" placeholder="Ejemplo: María Pérez"></p>
+    </div>
+
+    <h2>Lee con cuidado y elige la respuesta correcta. ¡Tú puedes! 🚀</h2>
+
+    <form id="quiz-form">
+        <!-- TEMA: Numbers 50 to 100 -->
+        <div class="question" id="q1">
+            <span class="emoji">💯</span>
+            <p>1. ¿Cómo se dice el número 50 en inglés?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="a"> a) Fifteen</label>
+                <label><input type="radio" name="q1" value="b"> b) Fifty</label>
+                <label><input type="radio" name="q1" value="c"> c) Five</label>
+            </div>
+        </div>
+
+        <div class="question" id="q2">
+            <p>2. ¿Qué número es "Eighty-five"?</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="a"> a) 85</label>
+                <label><input type="radio" name="q2" value="b"> b) 58</label>
+                <label><input type="radio" name="q2" value="c"> c) 95</label>
+            </div>
+        </div>
+
+        <div class="question" id="q3">
+            <span class="emoji">🥇</span>
+            <p>3. ¿Cómo se dice 100 en inglés?</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="a"> a) One ten</label>
+                <label><input type="radio" name="q3" value="b"> b) One thousand</label>
+                <label><input type="radio" name="q3" value="c"> c) One hundred</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Family Members -->
+        <div class="question" id="q4">
+            <span class="emoji">👵</span>
+            <p>4. Observa la imagen. ¿Cómo se dice "Abuela" en inglés?</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="a"> a) Sister</label>
+                <label><input type="radio" name="q4" value="b"> b) Grandmother</label>
+                <label><input type="radio" name="q4" value="c"> c) Mother</label>
+            </div>
+        </div>
+
+        <div class="question" id="q5">
+            <span class="emoji">👦</span>
+            <p>5. ¿Quién es el "Brother"?</p>
+            <div class="options">
+                <label><input type="radio" name="q5" value="a"> a) El hermano</label>
+                <label><input type="radio" name="q5" value="b"> b) El tío</label>
+                <label><input type="radio" name="q5" value="c"> c) El primo</label>
+            </div>
+        </div>
+
+        <div class="question" id="q6">
+            <p>6. Si "Father" es Papá, ¿cómo se dice Mamá en inglés?</p>
+            <div class="options">
+                <label><input type="radio" name="q6" value="a"> a) Aunt</label>
+                <label><input type="radio" name="q6" value="b"> b) Mother</label>
+                <label><input type="radio" name="q6" value="c"> c) Cousin</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Parts of the Body -->
+        <div class="question" id="q7">
+            <span class="emoji">👁️</span>
+            <p>7. ¿Qué parte del cuerpo muestra la imagen? (Ojo)</p>
+            <div class="options">
+                <label><input type="radio" name="q7" value="a"> a) Nose</label>
+                <label><input type="radio" name="q7" value="b"> b) Ear</label>
+                <label><input type="radio" name="q7" value="c"> c) Eye</label>
+            </div>
+        </div>
+
+        <div class="question" id="q8">
+            <p>8. ¿Cómo se dice "Cabeza" en inglés?</p>
+            <div class="options">
+                <label><input type="radio" name="q8" value="a"> a) Head</label>
+                <label><input type="radio" name="q8" value="b"> b) Hand</label>
+                <label><input type="radio" name="q8" value="c"> c) Hair</label>
+            </div>
+        </div>
+
+        <div class="question" id="q9">
+            <span class="emoji">🏃‍♂️</span>
+            <p>9. ¿Con qué parte del cuerpo podemos correr y saltar?</p>
+            <div class="options">
+                <label><input type="radio" name="q9" value="a"> a) Arms (Brazos)</label>
+                <label><input type="radio" name="q9" value="b"> b) Legs (Piernas)</label>
+                <label><input type="radio" name="q9" value="c"> c) Fingers (Dedos)</label>
+            </div>
+        </div>
+
+        <div class="question" id="q10">
+            <span class="emoji">🤷‍♂️</span>
+            <p>10. ¿Qué son los "Shoulders"?</p>
+            <div class="options">
+                <label><input type="radio" name="q10" value="a"> a) Hombros</label>
+                <label><input type="radio" name="q10" value="b"> b) Rodillas</label>
+                <label><input type="radio" name="q10" value="c"> c) Pies</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="submitExam()">Terminar Examen ✅</button>
+    </form>
+</div>
+
+<!-- Contenedor de Resultados -->
+<div class="container" id="results">
+    <h1>🎉 ¡Examen Terminado! 🎉</h1>
+    <h2 id="result-name"></h2>
+    <p class="success-msg" id="score-msg"></p>
+    <p><strong>Tiempo invertido: </strong> <span id="time-spent"></span></p>
+
+    <div id="mistakes-container" class="feedback"></div>
+
+    <div class="teacher-note">
+        📸 ¡ATENCIÓN!<br><br>
+        Por favor, tómale una foto o captura de pantalla a esta página y envíasela a tu Docente: <strong>Yonatha Mendoza</strong>.
+    </div>
+</div>
+
+<script>
+    // Variables para el temporizador y respuestas
+    let startTime;
+    const correctAnswers = {
+        q1: 'b', q2: 'a', q3: 'c', q4: 'b', q5: 'a',
+        q6: 'b', q7: 'c', q8: 'a', q9: 'b', q10: 'a'
+    };
+
+    // Al cargar la página
+    window.onload = function() {
+        // Poner la fecha actual automáticamente
+        const dateSpan = document.getElementById('current-date');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateSpan.innerText = new Date().toLocaleDateString('es-ES', options);
+
+        // Iniciar temporizador
+        startTime = new Date();
+    };
+
+    function submitExam() {
+        const studentName = document.getElementById('student-name').value.trim();
+        if (studentName === "") {
+            alert("¡Hola! Por favor, escribe tu nombre antes de terminar el examen.");
+            return;
+        }
+
+        let score = 0;
+        let mistakesHTML = "<h3>📝 Revisión:</h3><ul>";
+        let hasMistakes = false;
+        const form = document.getElementById('quiz-form');
+
+        // Evaluar respuestas
+        for (let i = 1; i <= 10; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = form.elements[questionName].value;
+            const questionText = document.querySelector(`#${questionName} p`).innerText;
+
+            if (selectedOption === correctAnswers[questionName]) {
+                score++;
+            } else {
+                hasMistakes = true;
+                // Encontrar el texto de la respuesta correcta
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>❌ Te equivocaste. La respuesta correcta era: <em>${correctLabel}</em></li><br>`;
+            }
+        }
+        mistakesHTML += "</ul>";
+
+        // Calcular tiempo
+        const endTime = new Date();
+        const timeDiff = Math.floor((endTime - startTime) / 1000); // en segundos
+        const minutes = Math.floor(timeDiff / 60);
+        const seconds = timeDiff % 60;
+
+        // Mostrar resultados
+        document.getElementById('exam-container').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+        document.getElementById('result-name').innerText = "Estudiante: " + studentName;
+        document.getElementById('score-msg').innerText = `Tu calificación es: ${score} de 10`;
+        document.getElementById('time-spent').innerText = `${minutes} minutos y ${seconds} segundos.`;
+
+        const mistakesContainer = document.getElementById('mistakes-container');
+        if (hasMistakes) {
+            mistakesContainer.innerHTML = mistakesHTML;
+        } else {
+            mistakesContainer.innerHTML = "<h3>🌟 ¡Perfecto! No tuviste ningún error. ¡Excelente trabajo! 🌟</h3>";
+            mistakesContainer.style.backgroundColor = "#E8F5E9";
+            mistakesContainer.style.borderLeftColor = "#4CAF50";
+        }
+    }
+</script>
+
+</body>
+</html>
