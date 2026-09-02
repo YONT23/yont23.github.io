@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medidor de Aura de Alumnos</title>
+    <title>Medidor de Aura Acumulable</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -74,6 +74,7 @@
             justify-content: space-between;
             align-items: center;
             font-size: 18px;
+            transition: 0.3s;
         }
         .con-aura {
             color: #2e7d32;
@@ -83,57 +84,92 @@
             color: #c62828;
             font-weight: bold;
         }
+        .neutro {
+            color: #555;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
     <div class="contenedor">
-        <h1>✨ Medidor de Aura de Alumnos ✨</h1>
+        <h1>✨ Registro de Aura Acumulable ✨</h1>
         
         <input type="text" id="nombreAlumno" placeholder="Escribe el nombre del alumno...">
         
         <div class="botones">
-            <button class="btn-aura" onclick="agregarAlumno(true)">Con Aura ✨</button>
-            <button class="btn-sin-aura" onclick="agregarAlumno(false)">Sin Aura 💀</button>
+            <button class="btn-aura" onclick="modificarAura(true)">+1000 Aura ✨</button>
+            <button class="btn-sin-aura" onclick="modificarAura(false)">-1000 Aura 💀</button>
         </div>
 
         <ul id="listaAlumnos">
-            </ul>
+            <!-- Aquí aparecerán los alumnos -->
+        </ul>
     </div>
 
     <script>
-        function agregarAlumno(tieneAura) {
-            // Obtener el valor del campo de texto
-            const input = document.getElementById('nombreAlumno');
-            const nombre = input.value.trim();
+        // Objeto para guardar la memoria de los alumnos y sus puntos
+        let baseDeDatosAlumnos = {};
 
-            // Validar que no esté vacío
-            if (nombre === "") {
+        function modificarAura(sumaAura) {
+            const input = document.getElementById('nombreAlumno');
+            const nombreOriginal = input.value.trim();
+
+            if (nombreOriginal === "") {
                 alert("¡Oye! Primero escribe el nombre del alumno.");
                 return;
             }
 
-            // Crear el elemento de la lista
-            const lista = document.getElementById('listaAlumnos');
-            const nuevoElemento = document.createElement('li');
+            // Convertimos el nombre a minúsculas para que "Juan" y "juan" sean el mismo alumno
+            const nombreClave = nombreOriginal.toLowerCase();
+            const puntosAModificar = sumaAura ? 1000 : -1000;
 
-            // Definir el estado según el botón que se presionó
-            let estado = "";
-            if (tieneAura) {
-                estado = '<span class="con-aura">+1000 Aura ✨</span>';
+            // Si el alumno ya existe, le sumamos/restamos. Si no, lo creamos.
+            if (baseDeDatosAlumnos[nombreClave]) {
+                baseDeDatosAlumnos[nombreClave].puntos += puntosAModificar;
             } else {
-                estado = '<span class="sin-aura">-1000 Aura 💀</span>';
+                baseDeDatosAlumnos[nombreClave] = {
+                    nombreDisplay: nombreOriginal,
+                    puntos: puntosAModificar
+                };
             }
 
-            // Agregar el contenido al elemento
-            nuevoElemento.innerHTML = `<span>${nombre}</span> ${estado}`;
-
-            // Añadirlo a la lista en pantalla
-            lista.prepend(nuevoElemento); // prepend para que los más recientes salgan arriba
-
-            // Limpiar el campo de texto para el siguiente alumno
+            actualizarPantalla();
+            
+            // Limpiar input
             input.value = "";
             input.focus();
+        }
+
+        function actualizarPantalla() {
+            const lista = document.getElementById('listaAlumnos');
+            lista.innerHTML = ""; // Limpiamos la lista para volver a dibujarla con los datos actualizados
+
+            // Recorremos todos los alumnos guardados
+            for (let clave in baseDeDatosAlumnos) {
+                let alumno = baseDeDatosAlumnos[clave];
+                let li = document.createElement('li');
+
+                // Decidimos los colores y emojis dependiendo de si está en positivo o negativo
+                let estilo = "";
+                let textoPuntos = "";
+
+                if (alumno.puntos > 0) {
+                    estilo = "con-aura";
+                    textoPuntos = `+${alumno.puntos} Aura ✨`;
+                } else if (alumno.puntos < 0) {
+                    estilo = "sin-aura";
+                    textoPuntos = `${alumno.puntos} Aura 💀`;
+                } else {
+                    estilo = "neutro";
+                    textoPuntos = `0 Aura 😐`;
+                }
+
+                li.innerHTML = `<span>${alumno.nombreDisplay}</span> <span class="${estilo}">${textoPuntos}</span>`;
+                
+                // Los agregamos a la lista
+                lista.prepend(li);
+            }
         }
     </script>
 
