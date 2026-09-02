@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medidor de Aura de Alumnos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        .contenedor {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .botones {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-aura {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-aura:hover {
+            background-color: #45a049;
+        }
+        .btn-sin-aura {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-sin-aura:hover {
+            background-color: #da190b;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #eee;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+        }
+        .con-aura {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .sin-aura {
+            color: #c62828;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <h1>✨ Medidor de Aura de Alumnos ✨</h1>
+        
+        <input type="text" id="nombreAlumno" placeholder="Escribe el nombre del alumno...">
+        
+        <div class="botones">
+            <button class="btn-aura" onclick="agregarAlumno(true)">Con Aura ✨</button>
+            <button class="btn-sin-aura" onclick="agregarAlumno(false)">Sin Aura 💀</button>
+        </div>
+
+        <ul id="listaAlumnos">
+            </ul>
+    </div>
+
+    <script>
+        function agregarAlumno(tieneAura) {
+            // Obtener el valor del campo de texto
+            const input = document.getElementById('nombreAlumno');
+            const nombre = input.value.trim();
+
+            // Validar que no esté vacío
+            if (nombre === "") {
+                alert("¡Oye! Primero escribe el nombre del alumno.");
+                return;
+            }
+
+            // Crear el elemento de la lista
+            const lista = document.getElementById('listaAlumnos');
+            const nuevoElemento = document.createElement('li');
+
+            // Definir el estado según el botón que se presionó
+            let estado = "";
+            if (tieneAura) {
+                estado = '<span class="con-aura">+1000 Aura ✨</span>';
+            } else {
+                estado = '<span class="sin-aura">-1000 Aura 💀</span>';
+            }
+
+            // Agregar el contenido al elemento
+            nuevoElemento.innerHTML = `<span>${nombre}</span> ${estado}`;
+
+            // Añadirlo a la lista en pantalla
+            lista.prepend(nuevoElemento); // prepend para que los más recientes salgan arriba
+
+            // Limpiar el campo de texto para el siguiente alumno
+            input.value = "";
+            input.focus();
+        }
+    </script>
+
+</body>
+</html>
