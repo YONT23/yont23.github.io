@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Tecnología - Grado 2</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background-color: #F3E5F5; /* Color suave morado/lila */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 4px solid #9C27B0;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #6A1B9A;
+        }
+        .info-header {
+            background-color: #FFF9C4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed #FBC02D;
+        }
+        .info-header input {
+            font-size: 18px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+        .question {
+            background-color: #E1BEE7;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #8E24AA;
+        }
+        .question p {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 10px 0;
+            font-size: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options label:hover {
+            background-color: #F3E5F5;
+        }
+        .emoji {
+            font-size: 40px;
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #F57C00;
+        }
+        #results {
+            display: none;
+            text-align: center;
+        }
+        .feedback {
+            text-align: left;
+            background-color: #FFEBEE;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #F44336;
+            margin-top: 20px;
+        }
+        .success-msg {
+            color: #2E7D32;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .teacher-note {
+            background-color: #E3F2FD;
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #2196F3;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1565C0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exam-container">
+    <h1>🤖 Examen de Tecnología 🤖</h1>
+    
+    <div class="info-header">
+        <p><strong>Nivel:</strong> Grado 2</p>
+        <p><strong>Fecha:</strong> <span id="current-date"></span></p>
+        <p><label for="student-name"><strong>Escribe tu nombre:</strong></label><br>
+        <input type="text" id="student-name" placeholder="Ejemplo: Juan Pérez"></p>
+    </div>
+
+    <h2>Lee con cuidado y elige la respuesta correcta. ¡Eres un genio! 🚀</h2>
+
+    <form id="quiz-form">
+        <!-- TEMA: Qué es una máquina -->
+        <div class="question" id="q1">
+            <span class="emoji">⚙️</span>
+            <p>1. ¿Qué es una máquina?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="a"> a) Un animal que vive en el bosque.</label>
+                <label><input type="radio" name="q1" value="b"> b) Un objeto que nos ayuda a hacer nuestro trabajo más fácil y rápido.</label>
+                <label><input type="radio" name="q1" value="c"> c) Una planta que da frutas.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q2">
+            <span class="emoji">🧺</span>
+            <p>2. ¿Cuál de estos objetos es una máquina que nos ayuda en la casa a lavar la ropa?</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="a"> a) Una lavadora</label>
+                <label><input type="radio" name="q2" value="b"> b) Un oso de peluche</label>
+                <label><input type="radio" name="q2" value="c"> c) Una cama</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Tipos de máquinas -->
+        <div class="question" id="q3">
+            <span class="emoji">✂️</span>
+            <p>3. Las máquinas que tienen muy poquitas piezas, como unas tijeras o un martillo, se llaman:</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="a"> a) Máquinas simples</label>
+                <label><input type="radio" name="q3" value="b"> b) Máquinas compuestas</label>
+                <label><input type="radio" name="q3" value="c"> c) Máquinas mágicas</label>
+            </div>
+        </div>
+
+        <div class="question" id="q4">
+            <span class="emoji">🚴‍♂️</span>
+            <p>4. Una bicicleta o una computadora tienen MUCHAS piezas que trabajan juntas. ¿Qué tipo de máquinas son?</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="a"> a) Máquinas simples</label>
+                <label><input type="radio" name="q4" value="b"> b) Máquinas compuestas</label>
+                <label><input type="radio" name="q4" value="c"> c) Máquinas dormidas</label>
+            </div>
+        </div>
+
+        <div class="question" id="q5">
+            <span class="emoji">🛞</span>
+            <p>5. ¿Cuál de los siguientes objetos es un ejemplo de una "máquina simple"?</p>
+            <div class="options">
+                <label><input type="radio" name="q5" value="a"> a) Un teléfono celular inteligente</label>
+                <label><input type="radio" name="q5" value="b"> b) Una rueda redonda</label>
+                <label><input type="radio" name="q5" value="c"> c) Un avión de pasajeros</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Concepto de vender -->
+        <div class="question" id="q6">
+            <span class="emoji">🤝</span>
+            <p>6. ¿Qué significa la palabra "vender"?</p>
+            <div class="options">
+                <label><input type="radio" name="q6" value="a"> a) Regalar tus juguetes y no pedir nada a cambio.</label>
+                <label><input type="radio" name="q6" value="b"> b) Dar un producto a otra persona y recibir dinero a cambio.</label>
+                <label><input type="radio" name="q6" value="c"> c) Esconder tus cosas para que nadie las vea.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q7">
+            <span class="emoji">🍋</span>
+            <p>7. Si haces limonada y un vecino te da monedas para poder beber un vaso, tú estás:</p>
+            <div class="options">
+                <label><input type="radio" name="q7" value="a"> a) Vendiendo limonada</label>
+                <label><input type="radio" name="q7" value="b"> b) Comprando limonada</label>
+                <label><input type="radio" name="q7" value="c"> c) Rompiendo la limonada</label>
+            </div>
+        </div>
+
+        <div class="question" id="q8">
+            <span class="emoji">🛍️</span>
+            <p>8. ¿Cómo se le llama a la persona que va a una tienda y paga por los productos?</p>
+            <div class="options">
+                <label><input type="radio" name="q8" value="a"> a) El inventor</label>
+                <label><input type="radio" name="q8" value="b"> b) El vendedor</label>
+                <label><input type="radio" name="q8" value="c"> c) El cliente o comprador</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Qué es un invento -->
+        <div class="question" id="q9">
+            <span class="emoji">💡</span>
+            <p>9. ¿Qué es un invento?</p>
+            <div class="options">
+                <label><input type="radio" name="q9" value="a"> a) Algo nuevo creado por una persona que antes no existía.</label>
+                <label><input type="radio" name="q9" value="b"> b) Un árbol que crece en el parque.</label>
+                <label><input type="radio" name="q9" value="c"> c) Una nube en el cielo.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q10">
+            <span class="emoji">🚗</span>
+            <p>10. Hace mucho tiempo las personas viajaban a caballo porque no existían los motores. Luego, alguien creó una máquina con ruedas y motor para viajar. ¿Qué inventaron?</p>
+            <div class="options">
+                <label><input type="radio" name="q10" value="a"> a) El sol</label>
+                <label><input type="radio" name="q10" value="b"> b) El automóvil (carro)</label>
+                <label><input type="radio" name="q10" value="c"> c) Las montañas</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="submitExam()">Terminar Examen ✅</button>
+    </form>
+</div>
+
+<!-- Contenedor de Resultados -->
+<div class="container" id="results">
+    <h1>🎉 ¡Examen Terminado! 🎉</h1>
+    <h2 id="result-name"></h2>
+    <p class="success-msg" id="score-msg"></p>
+    <p><strong>Tiempo invertido: </strong> <span id="time-spent"></span></p>
+
+    <div id="mistakes-container" class="feedback"></div>
+
+    <div class="teacher-note">
+        📸 ¡ATENCIÓN!<br><br>
+        Por favor, tómale una foto o captura de pantalla a tus resultados y envíasela a tu Docente: <strong>Yonatha Mendoza</strong>.
+    </div>
+</div>
+
+<script>
+    // Variables para el temporizador y respuestas
+    let startTime;
+    const correctAnswers = {
+        q1: 'b', q2: 'a', q3: 'a', q4: 'b', q5: 'b',
+        q6: 'b', q7: 'a', q8: 'c', q9: 'a', q10: 'b'
+    };
+
+    // Al cargar la página
+    window.onload = function() {
+        // Poner la fecha actual automáticamente
+        const dateSpan = document.getElementById('current-date');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateSpan.innerText = new Date().toLocaleDateString('es-ES', options);
+
+        // Iniciar temporizador
+        startTime = new Date();
+    };
+
+    function submitExam() {
+        const studentName = document.getElementById('student-name').value.trim();
+        if (studentName === "") {
+            alert("¡Hola! Por favor, escribe tu nombre antes de terminar el examen.");
+            return;
+        }
+
+        let score = 0;
+        let mistakesHTML = "<h3>📝 Revisión de tus respuestas:</h3><ul>";
+        let hasMistakes = false;
+        const form = document.getElementById('quiz-form');
+
+        // Evaluar respuestas
+        for (let i = 1; i <= 10; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = form.elements[questionName].value;
+            const questionText = document.querySelector(`#${questionName} p`).innerText;
+
+            if (selectedOption === correctAnswers[questionName]) {
+                score++;
+            } else if (selectedOption !== "") {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>❌ Te equivocaste. La respuesta correcta era: <br><em>${correctLabel}</em></li><br>`;
+            } else {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>⚠️ No respondiste. La respuesta correcta era: <br><em>${correctLabel}</em></li><br>`;
+            }
+        }
+        mistakesHTML += "</ul>";
+
+        // Calcular tiempo
+        const endTime = new Date();
+        const timeDiff = Math.floor((endTime - startTime) / 1000); // en segundos
+        const minutes = Math.floor(timeDiff / 60);
+        const seconds = timeDiff % 60;
+
+        // Mostrar resultados
+        document.getElementById('exam-container').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+        document.getElementById('result-name').innerText = "Estudiante: " + studentName;
+        document.getElementById('score-msg').innerText = `Tu calificación es: ${score} de 10`;
+        
+        let timeText = "";
+        if(minutes > 0) {
+            timeText = `${minutes} minutos y ${seconds} segundos.`;
+        } else {
+            timeText = `${seconds} segundos.`;
+        }
+        document.getElementById('time-spent').innerText = timeText;
+
+        const mistakesContainer = document.getElementById('mistakes-container');
+        if (hasMistakes) {
+            mistakesContainer.innerHTML = mistakesHTML;
+        } else {
+            mistakesContainer.innerHTML = "<h3>🌟 ¡Perfecto! No tuviste ningún error. ¡Eres un experto en Tecnología! 🌟</h3>";
+            mistakesContainer.style.backgroundColor = "#E8F5E9";
+            mistakesContainer.style.borderLeftColor = "#4CAF50";
+        }
+    }
+</script>
+
+</body>
+</html>
