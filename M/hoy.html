@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 4: My Place in the World | Grado 11°</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --ink:#171717;--ink2:#262626;
+  --crimson:#7A1124;--crimson-lt:#9E1B32;--crimson-pale:#FBE9EC;
+  --navy:#0B2545;--navy-lt:#13315C;--navy-pale:#E7ECF5;
+  --mustard:#8A6D00;--mustard-lt:#B8860B;--mustard-pale:#FFF6DC;
+  --teal:#00474F;--teal-lt:#00695C;--teal-pale:#E0F2F1;
+  --green:#1B5E20;--green-lt:#2E7D32;--green-pale:#E8F5E9;
+  --gold:#F57F17;--gold-pale:#FFFDE7;
+  --gray1:#F7F7F5;--gray2:#E5E5E0;--gray3:#6B6B66;
+  --white:#FFFFFF;--radius:14px;--radius-sm:10px;
+  --shadow-sm:0 2px 8px rgba(23,23,23,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#EFEEE7;color:var(--ink);line-height:1.7;font-size:16px}
+
+.site-header{background:linear-gradient(135deg,#171717 0%,#7A1124 60%,#0B2545 100%);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.25)}
+.header-inner{max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.header-title h1{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700}
+.header-title p{font-size:12.5px;opacity:.8;margin-top:3px}
+.header-meta{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.meta-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px}
+
+.class-nav{background:#fff;border-bottom:2px solid var(--gray2);position:sticky;top:69px;z-index:90;box-shadow:var(--shadow-sm)}
+.class-nav-inner{max-width:1100px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.class-nav-inner::-webkit-scrollbar{display:none}
+.nav-tab{padding:14px 20px;cursor:pointer;font-weight:700;font-size:13px;color:var(--gray3);border-bottom:4px solid transparent;white-space:nowrap;transition:.2s;display:flex;gap:8px;align-items:center}
+.nav-tab:hover{color:var(--crimson-lt);background:var(--crimson-pale)}
+.nav-tab.active{color:var(--crimson-lt);border-bottom-color:var(--crimson-lt);background:var(--crimson-pale)}
+
+.main{max-width:1100px;margin:0 auto;padding:30px 20px 60px}
+.class-panel{display:none;animation:fadeIn .3s ease}
+.class-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.class-hero{border-radius:var(--radius);padding:30px 34px;margin-bottom:26px;position:relative;overflow:hidden}
+.class-hero::before{content:attr(data-num);position:absolute;right:22px;top:6px;font-family:'Fraunces',serif;font-size:100px;font-weight:700;opacity:.07;line-height:1;color:#fff}
+.class-hero h2{font-family:'Fraunces',serif;font-size:1.65rem;font-weight:700;color:#fff;margin-bottom:6px}
+.class-hero .subtitle{color:rgba(255,255,255,.85);font-size:14px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.hero-chip{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 12px;font-size:12px;color:#fff;font-weight:600}
+.h-c1{background:linear-gradient(135deg,#7A1124,#0B2545)}
+
+.section-card{background:#fff;border-radius:var(--radius);margin-bottom:20px;box-shadow:var(--shadow-sm);overflow:hidden;border:1.5px solid var(--gray2)}
+.section-card-header{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;transition:background .2s}
+.section-card-header:hover{background:var(--gray1)}
+.section-card-header .sec-emoji{font-size:20px}
+.section-card-header h3{font-size:14px;font-weight:800;flex:1}
+.chevron{font-size:12px;color:var(--gray3);transition:transform .25s}
+.section-card-header.open{border-bottom:1px solid var(--gray2)}
+.section-card-header.open .chevron{transform:rotate(180deg)}
+.section-card-body{padding:22px;display:none}
+.section-card-body.open{display:block}
+
+.sec-explain .section-card-header{background:var(--navy-pale)} .sec-explain h3{color:var(--navy-lt)}
+.sec-sim     .section-card-header{background:var(--green-pale)} .sec-sim h3{color:var(--green)}
+.sec-vocab   .section-card-header{background:var(--teal-pale)} .sec-vocab h3{color:var(--teal)}
+.sec-grammar .section-card-header{background:var(--crimson-pale)} .sec-grammar h3{color:var(--crimson-lt)}
+.sec-visual  .section-card-header{background:var(--mustard-pale)} .sec-visual h3{color:var(--mustard-lt)}
+.sec-train   .section-card-header{background:var(--mustard-pale)} .sec-train h3{color:var(--mustard)}
+.sec-speak   .section-card-header{background:var(--teal-pale)} .sec-speak h3{color:var(--teal-lt)}
+.sec-read    .section-card-header{background:var(--crimson-pale)} .sec-read h3{color:var(--crimson-lt)}
+.sec-listen  .section-card-header{background:var(--navy-pale)} .sec-listen h3{color:var(--navy-lt)}
+.sec-hw      .section-card-header{background:var(--mustard-pale)} .sec-hw h3{color:var(--mustard)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.tbl th{padding:10px 14px;text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700}
+.tbl td{padding:10px 14px;border-bottom:1px solid var(--gray2);vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--gray1)}
+.tbl.teal th{background:var(--teal-lt);color:#fff}
+.word-en{font-weight:700;color:var(--teal-lt)}
+.word-pron{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gray3)}
+
+.visual-box{background:var(--mustard-pale);border:2px solid #E0C45C;border-radius:var(--radius);padding:20px 24px;margin:14px 0}
+.visual-box pre{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;white-space:pre-wrap}
+
+.dialogue{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.dlg{display:flex;gap:12px;align-items:flex-start}
+.dlg.s{flex-direction:row-reverse}
+.dlg-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.dlg.t .dlg-av{background:var(--navy-pale)}
+.dlg.s .dlg-av{background:var(--teal-pale)}
+.dlg-content{max-width:80%}
+.dlg-name{font-size:10.5px;font-weight:700;text-transform:uppercase;margin-bottom:4px}
+.dlg.t .dlg-name{color:var(--navy-lt)}
+.dlg.s .dlg-name{color:var(--teal-lt);text-align:right}
+.dlg-text{padding:10px 14px;border-radius:14px;font-size:14px}
+.dlg.t .dlg-text{background:var(--navy-pale);border-bottom-left-radius:4px}
+.dlg.s .dlg-text{background:var(--teal-pale);border-bottom-right-radius:4px;text-align:right}
+
+.formula{display:inline-flex;align-items:center;gap:6px;background:var(--ink2);color:#fff;border-radius:8px;padding:7px 15px;font-family:'JetBrains Mono',monospace;font-size:14px;margin:6px 4px}
+
+.blist{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:9px}
+.blist li{display:flex;gap:10px;font-size:14.5px}
+.blist li::before{content:'▶';color:var(--crimson-lt);font-size:9px;margin-top:5px;flex-shrink:0}
+
+.read-box{background:var(--gray1);border:1.5px solid var(--gray2);border-radius:var(--radius);padding:22px 26px;font-size:14.5px;line-height:1.95;margin:12px 0;white-space:pre-line;font-family:'Fraunces',serif}
+
+.lvl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.lvl-card{border-radius:var(--radius-sm);padding:16px}
+.lvl-badge{font-size:22px;margin-bottom:8px}
+.lvl-label{font-size:11px;font-weight:800;text-transform:uppercase;margin-bottom:8px}
+.lvl-task{font-size:13.5px;line-height:1.7}
+.lv1{background:#E7ECF5;border:1.5px solid #9FB1D1}.lv1 .lvl-label{color:var(--navy-lt)}
+.lv2{background:#FFF6DC;border:1.5px solid #E0C45C}.lv2 .lvl-label{color:var(--mustard-lt)}
+.lv3{background:#FBE9EC;border:1.5px solid #E8A6B2}.lv3 .lvl-label{color:var(--crimson-lt)}
+
+.hw-box{background:var(--crimson-pale);border:2.5px dashed var(--crimson-lt);border-radius:var(--radius);padding:20px 24px;font-size:14.5px}
+.hw-box h4{color:var(--crimson-lt);margin-bottom:12px}
+
+.qbox{background:#fff;border:2px solid var(--gray2);border-radius:var(--radius-sm);padding:14px 16px;margin:10px 0}
+.qbox .qtext{font-size:14.5px;font-weight:600;margin-bottom:10px}
+.reveal-btn{background:var(--navy-lt);color:#fff;border:none;border-radius:20px;padding:7px 16px;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .2s;font-family:'Inter',sans-serif}
+.reveal-btn:hover{background:var(--navy)}
+.reveal-btn.shown{background:var(--gray3)}
+.answer-area{display:none;margin-top:10px;padding:10px 14px;background:var(--green-pale);border-left:4px solid var(--green-lt);border-radius:var(--radius-sm);font-size:14px;color:var(--green)}
+.answer-area.show{display:block}
+.qa-grid{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+
+/* TTS BUTTON */
+.tts-bar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.tts-btn{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border:none;border-radius:24px;padding:9px 18px;font-size:13.5px;font-weight:700;cursor:pointer;transition:background .2s;font-family:'Inter',sans-serif}
+.tts-btn:hover{background:var(--navy-lt)}
+.tts-btn.playing{background:var(--crimson-lt)}
+.tts-btn:disabled{background:var(--gray3);cursor:not-allowed}
+.tts-speed{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--gray3)}
+.tts-speed select{border:1.5px solid var(--gray2);border-radius:8px;padding:4px 8px;font-family:'Inter',sans-serif;font-size:12.5px}
+.tts-hint{font-size:11.5px;color:var(--gray3);font-style:italic}
+
+@media(max-width:720px){
+  .lvl-grid{grid-template-columns:1fr}
+  .class-hero{padding:22px 18px}
+  .class-hero h2{font-size:1.3rem}
+  .section-card-body{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-badge">I.E. Siglo XXI</div>
+    <div class="header-title">
+      <h1>Unit 4: My Place in the World - Higher Education</h1>
+      <p>Grado 11° · Inglés B2/C1 · 2026</p>
+    </div>
+    <div class="header-meta">
+      <span class="meta-pill">🦋 Unidad 4</span>
+      <span class="meta-pill">⏱ 2h académicas</span>
+    </div>
+  </div>
+</header>
+
+<nav class="class-nav">
+  <div class="class-nav-inner">
+    <div class="nav-tab active"><span>🚀</span> Clase 1 — The Roadmap</div>
+    <div class="nav-tab" style="opacity: 0.5; cursor: default;"><span>📝</span> Clase 2 — The Personal Statement</div>
+    <div class="nav-tab" style="opacity: 0.5; cursor: default;"><span>🗣️</span> Clase 3 — Real-World Interviews</div>
+    <div class="nav-tab" style="opacity: 0.5; cursor: default;"><span>💼</span> Clase 4 — Professional Portfolio</div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════ CLASS 1 ══════════════════════ -->
+<div class="class-panel active" id="class-1">
+  <div class="class-hero h-c1" data-num="1">
+    <h2>🚀 "Life After High School: The Roadmap"</h2>
+    <p class="subtitle">Future Perfect & Future Continuous in Professional Contexts</p>
+    <div class="hero-chips">
+      <span class="hero-chip">🎯 B2 / C1</span>
+      <span class="hero-chip">⏱ 2h académicas</span>
+      <span class="hero-chip">📅 Octubre 2026</span>
+    </div>
+  </div>
+
+  <div class="section-card sec-explain">
+    <div class="section-card-header open" onclick="toggle(this)"><span class="sec-emoji">👨‍🏫</span><h3>Teacher Explanation</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body open">
+      <p style="font-size:14.5px;margin-bottom:10px"><strong>The Future Selfie:</strong> El docente pide a los alumnos imaginar dónde estarán exactamente a esta hora el próximo año, y qué estarán haciendo. La transición al mundo post-escolar requiere de un plan de vida estructurado.</p>
+      <p style="font-size:14.5px;margin-bottom:10px"><strong>Grammar Tetris:</strong> Es vital diferenciar las acciones futuras en progreso de las metas futuras ya completadas[span_0](start_span)[span_0](end_span). Future Perfect es una <strong>"foto"</strong> de la meta alcanzada (check ✅), mientras que Future Continuous es un <strong>"video"</strong> de la acción sucediendo en ese momento[span_1](start_span)[span_1](end_span).</p>
+      <p style="font-size:14.5px">Al hablar de nuestro plan de carrera, usaremos bloques inalterables: [WILL HAVE + V3] para el Perfect, y [WILL BE + V-ING] para el Continuous. Si mezclas las piezas (ej: <em>will been working</em> ❌), pierdes profesionalismo.</p>
+    </div>
+  </div>
+
+  <div class="section-card sec-sim">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🎭</span><h3>Classroom Simulation — "The 2030 Time Capsule"</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <p style="font-size:14px;margin-bottom:14px">En grupos, los alumnos diseñan cómo será su vida profesional para el 2030. Deben compartir 3 hitos que habrán terminado (Perfect) y 3 procesos en marcha (Continuous)[span_2](start_span)[span_2](end_span).</p>
+      <div class="dialogue">
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Let's open the 2030 Time Capsule. By the time we meet again in four years, what will have changed? Give me milestones and ongoing processes!</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Mateo</div><div class="dlg-text">By 2030, I will have graduated with my degree in software engineering. That's a major milestone.</div></div><div class="dlg-av">👨‍🎓</div></div>
+        <div class="dlg t"><div class="dlg-av">👨‍🏫</div><div class="dlg-content"><div class="dlg-name">Docente</div><div class="dlg-text">Great photo of the finish line, Mateo. And what will the "video" look like? What will you be doing daily?</div></div></div>
+        <div class="dlg s"><div class="dlg-content"><div class="dlg-name">Mateo</div><div class="dlg-text">I will be working for an international tech company, and I'll probably be managing my own startup on the side.</div></div><div class="dlg-av">👨‍🎓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-vocab">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">📚</span><h3>Key Vocabulary</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <table class="tbl teal">
+        <thead><tr><th>Word/Phrase</th><th>Significado</th><th>Pronunciation</th></tr></thead>
+        <tbody>
+          <tr><td class="word-en">milestone</td><td>hito importante</td><td class="word-pron">/ˈmaɪlstoʊn/</td></tr>
+          <tr><td class="word-en">career path</td><td>trayectoria profesional</td><td class="word-pron">/kəˈrɪər pæθ/</td></tr>
+          <tr><td class="word-en">achievement</td><td>logro</td><td class="word-pron">/əˈtʃiːvmənt/</td></tr>
+          <tr><td class="word-en">journey</td><td>camino / proceso</td><td class="word-pron">/ˈdʒɜːrni/</td></tr>
+          <tr><td class="word-en">long-term goal</td><td>meta a largo plazo</td><td class="word-pron">/lɔːŋ tɜːrm ɡoʊl/</td></tr>
+          <tr><td class="word-en">timeline</td><td>línea de tiempo / cronograma</td><td class="word-pron">/ˈtaɪmlaɪn/</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card sec-grammar">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">📝</span><h3>Grammar Focus</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="formula">Future Perfect: Subject + WILL HAVE + Past Participle (V3)</div>
+      <p style="font-size:14px;margin:8px 0"><em>By the end of this year, I will have finished my high school studies. (Completed action)</em></p>
+      <div class="formula">Future Continuous: Subject + WILL BE + V-ing</div>
+      <p style="font-size:14px;margin:8px 0"><em>This time next September, I will be attending university lectures. (Action in progress)</em></p>
+    </div>
+  </div>
+
+  <div class="section-card sec-visual">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🧠</span><h3>Visual Thinking</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="visual-box">
+        <pre>       YOUR PROFESSIONAL ROADMAP
+
+  📸 FUTURE PERFECT = The Photo (Completed Milestone)
+     [WILL + HAVE + V3]
+     "By 2030, I will have earned my degree." ✅ (Check!)
+
+  🎥 FUTURE CONTINUOUS = The Video (Daily Reality)
+     [WILL + BE + V-ING]
+     "In 2030, I will be living in Bogota." 🔄 (In motion)
+
+  ⛔ FATAL ERRORS TO AVOID IN INTERVIEWS:
+  ❌ "I will been working" (Don't mix the blocks)
+  ❌ "I will have finish" (Don't forget the V3/ED ending)</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card sec-train">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🏋️</span><h3>Training</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="lvl-grid">
+        <div class="lvl-card lv1"><div class="lvl-badge">🥉</div><div class="lvl-label">Nivel 1 — Elige</div><div class="lvl-task">Next month, I (will be taking / will have taken) my final university exams.</div></div>
+        <div class="lvl-card lv2"><div class="lvl-badge">🥈</div><div class="lvl-label">Nivel 2 — Completa</div><div class="lvl-task">By 2028, I ___ (complete) at least two professional internships.</div></div>
+        <div class="lvl-card lv3"><div class="lvl-badge">🥇</div><div class="lvl-label">Nivel 3 — Corrige</div><div class="lvl-task">❌ In five years, I will been managing my own business.</div></div>
+      </div>
+      <div class="qa-grid" id="q-c1-train"></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-speak">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🗣️</span><h3>Speaking Practice</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <p style="font-size:14.5px;margin-bottom:10px"><strong>Speed Networking:</strong> Levántate de tu silla. Cambiarás de pareja cada 2 minutos respondiendo rápidamente a las preguntas clave como si estuvieras en una feria de carreras profesionales.</p>
+      <div class="qa-grid" id="q-c1-speak"></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-read">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">📖</span><h3>Reading Practice</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="read-box">A Letter to My High School Self
+
+If I could speak to myself back in 11th grade, I would tell him to stop worrying so much about the exact timeline of success. Back then, I thought that by age 25, I would have already figured everything out. I assumed I would have bought an apartment and that I would be directing a huge marketing agency.
+
+The reality is a bit different, but equally exciting. Right now, I am 25. I haven't bought a house yet, but by the end of this year, I will have paid off my student loans, which is a massive milestone. Next month, I will be moving to Montreal to start a master's degree. While my friends here will be working their usual 9-to-5 jobs, I will be navigating a new culture and learning French.
+
+The career path is rarely a straight line. By the time you reach your goals, your goals will have evolved. Enjoy the journey.</div>
+      <div class="qa-grid" id="q-c1-read"></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-listen">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">👂</span><h3>Listening Practice</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="tts-bar">
+        <button class="tts-btn" id="tts-c1" onclick="speakText('tts-c1', ttsTexts['tts-c1'])">🔊 Escuchar</button>
+        <div class="tts-speed">
+          <label for="rate-c1">Velocidad:</label>
+          <select id="rate-c1"><option value="0.75">Lenta</option><option value="1" selected>Normal</option><option value="1.25">Rápida</option></select>
+        </div>
+        <span class="tts-hint">Cierra los ojos y concéntrate en identificar los tiempos verbales.</span>
+      </div>
+      <div class="read-box">"When they ask me where I see myself in ten years, I like to be specific. Ten years from now, I will be thirty-one years old. I won't be working in a traditional office. Instead, I will be traveling globally as an environmental consultant. By that time, I will have published my research on sustainable urban planning, and I will have built a strong network of professionals who share my vision. It requires a lot of hard work today, but I know that this time next decade, I will be living exactly the life I am designing right now."</div>
+      <div class="qa-grid" id="q-c1-listen"></div>
+    </div>
+  </div>
+
+  <div class="section-card sec-hw">
+    <div class="section-card-header" onclick="toggle(this)"><span class="sec-emoji">🏠</span><h3>Homework — "My Personal Roadmap"</h3><span class="chevron">▼</span></div>
+    <div class="section-card-body">
+      <div class="hw-box">
+        <h4>📝 Assignment</h4>
+        <ul class="blist">
+          <li><strong>El Reto:</strong> Escribe un ensayo breve (10-12 oraciones) detallando tu visión profesional y personal a 5 años (para el año 2031).</li>
+          <li><strong>Requisitos de gramática:</strong> Debes incluir estrictamente <strong>3 oraciones en Future Perfect</strong> detallando logros consolidados (ej. <em>I will have graduated...</em>) y <strong>3 oraciones en Future Continuous</strong> describiendo tu estilo de vida o trabajo diario (ej. <em>I will be designing...</em>).</li>
+          <li><strong>Vocabulario:</strong> Usa al menos tres palabras de la lista de la clase (milestone, journey, timeline, achievement).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /class-1 -->
+
+</main>
+
+<script>
+function toggle(h){
+  const b=h.nextElementSibling;
+  const open=h.classList.contains('open');
+  h.classList.toggle('open',!open);
+  b.classList.toggle('open',!open);
+}
+document.querySelectorAll('.section-card-header.open').forEach(h=>{
+  h.nextElementSibling.classList.add('open');
+});
+
+// ── TEXT-TO-SPEECH ──────────────────────────────────────────────
+const ttsTexts = {
+  'tts-c1': "When they ask me where I see myself in ten years, I like to be specific. Ten years from now, I will be thirty-one years old. I won't be working in a traditional office. Instead, I will be traveling globally as an environmental consultant. By that time, I will have published my research on sustainable urban planning, and I will have built a strong network of professionals who share my vision. It requires a lot of hard work today, but I know that this time next decade, I will be living exactly the life I am designing right now.",
+};
+
+let currentUtterance = null;
+
+function pickEnglishVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  return voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang && v.lang.startsWith('en')) || null;
+}
+
+function speakText(btnId, text) {
+  if (!('speechSynthesis' in window)) {
+    alert('Tu navegador no soporta lectura en voz alta. Prueba con Chrome o Edge.');
+    return;
+  }
+  const btn = document.getElementById(btnId);
+  const rateSelect = document.getElementById('rate-' + btnId.split('-')[1]);
+  const rate = rateSelect ? parseFloat(rateSelect.value) : 1;
+
+  if (window.speechSynthesis.speaking && btn.classList.contains('playing')) {
+    window.speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Escuchar';
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  document.querySelectorAll('.tts-btn').forEach(b => { b.classList.remove('playing'); b.textContent = '🔊 Escuchar'; });
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = rate;
+  const voice = pickEnglishVoice();
+  if (voice) utterance.voice = voice;
+
+  utterance.onstart = () => { btn.classList.add('playing'); btn.textContent = '⏸ Detener'; };
+  utterance.onend = () => { btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar'; };
+  utterance.onerror = () => { btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar'; };
+
+  currentUtterance = utterance;
+  window.speechSynthesis.speak(utterance);
+}
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => {};
+}
+
+// ── QUESTION/ANSWER DATA ──────────────────────────────────────────
+const QA = {
+  'q-c1-train': [
+    ["Next month, I (will be taking / will have taken) my final university exams.", "I WILL BE TAKING my final university exams (it's a process happening at that time)."],
+    ["By 2028, I ___ (complete) at least two professional internships.", "I WILL HAVE COMPLETED at least two professional internships."],
+    ["Corrige el error: In five years, I will been managing my own business.", "In five years, I will BE managing my own business."],
+  ],
+  'q-c1-speak': [
+    ["What major milestone will you have achieved by 2030?", "Respuesta libre usando Future Perfect: 'By 2030, I will have...'"],
+    ["What will you be doing on a normal Tuesday morning in five years?", "Respuesta libre usando Future Continuous: 'I will be working at... / I will be studying...'"],
+  ],
+  'q-c1-read': [
+    ["What did the author assume they would have achieved by age 25?", "They assumed they would have bought an apartment and would be directing a huge marketing agency."],
+    ["What massive milestone will the author have completed by the end of the year?", "They will have paid off their student loans."],
+    ["What will the author be doing next month while their friends are working 9-to-5?", "They will be navigating a new culture and learning French in Montreal."],
+  ],
+  'q-c1-listen': [
+    ["Will the speaker be working in a traditional office in ten years?", "No, they will be traveling globally as an environmental consultant."],
+    ["Name one thing the speaker will have accomplished by that time.", "They will have published their research OR they will have built a strong network of professionals."],
+  ],
+};
+
+function buildQA() {
+  Object.keys(QA).forEach(id => {
+    const container = document.getElementById(id);
+    if (!container) return;
+    QA[id].forEach((pair, idx) => {
+      const uid = id + '-' + idx;
+      const box = document.createElement('div');
+      box.className = 'qbox';
+      box.innerHTML = `
+        <div class="qtext">${pair[0]}</div>
+        <button class="reveal-btn" onclick="revealAnswer('${uid}', this)">Ver respuesta</button>
+        <div class="answer-area" id="ans-${uid}">${pair[1]}</div>
+      `;
+      container.appendChild(box);
+    });
+  });
+}
+function revealAnswer(uid, btn) {
+  const area = document.getElementById('ans-' + uid);
+  const showing = area.classList.contains('show');
+  area.classList.toggle('show', !showing);
+  btn.textContent = showing ? 'Ver respuesta' : 'Ocultar respuesta';
+  btn.classList.toggle('shown', !showing);
+}
+buildQA();
+</script>
+</body>
+</html>
