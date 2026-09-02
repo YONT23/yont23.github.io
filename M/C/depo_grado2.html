@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Educación Física - Grado 2</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background-color: #E0F2F1; /* Verde agua muy suave */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 4px solid #009688;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #00796B;
+        }
+        .info-header {
+            background-color: #FFF9C4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed #FBC02D;
+        }
+        .info-header input {
+            font-size: 18px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+        .question {
+            background-color: #E8F5E9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #4CAF50;
+        }
+        .question-video {
+            background-color: #FFF3E0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #FF9800;
+        }
+        .question p {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 10px 0;
+            font-size: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options label:hover {
+            background-color: #B2DFDB;
+        }
+        .emoji {
+            font-size: 40px;
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #FF5722;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #E64A19;
+        }
+        #results {
+            display: none;
+            text-align: center;
+        }
+        .feedback {
+            text-align: left;
+            background-color: #FFEBEE;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #F44336;
+            margin-top: 20px;
+        }
+        .success-msg {
+            color: #00796B;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .teacher-note {
+            background-color: #E3F2FD;
+            padding: 25px;
+            border-radius: 10px;
+            border: 3px solid #2196F3;
+            margin-top: 30px;
+            font-size: 20px;
+            color: #1565C0;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+            border: 2px solid #1DA851;
+        }
+        .whatsapp-btn:hover {
+            background-color: #1EBE5D;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exam-container">
+    <h1>⚽ Examen de Deportes 🏀</h1>
+    
+    <div class="info-header">
+        <p><strong>Nivel:</strong> Grado 2</p>
+        <p><strong>Fecha:</strong> <span id="current-date"></span></p>
+        <p><label for="student-name"><strong>Escribe tu nombre:</strong></label><br>
+        <input type="text" id="student-name" placeholder="Ejemplo: Carlos Gómez"></p>
+    </div>
+
+    <h2>¡Diviértete respondiendo! Recuerda que el juego limpio es lo más importante. 🏃‍♂️💨</h2>
+
+    <form id="quiz-form">
+        <!-- Pregunta 1: Importancia del juego -->
+        <div class="question" id="q1">
+            <span class="emoji">🤸‍♀️</span>
+            <p>1. ¿Por qué es importante jugar con nuestros compañeros?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="a"> a) Solo para ganar y decir que somos los mejores.</label>
+                <label><input type="radio" name="q1" value="b"> b) Para divertirnos, hacer ejercicio y aprender a compartir.</label>
+                <label><input type="radio" name="q1" value="c"> c) Para pelear por los juguetes.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 2: Actividades amistosas -->
+        <div class="question" id="q2">
+            <span class="emoji">🤝</span>
+            <p>2. Si estás jugando una carrera y un compañero se tropieza y cae, ¿qué es lo más amistoso que puedes hacer?</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="a"> a) Detenerme, preguntarle si está bien y ayudarlo a levantarse.</label>
+                <label><input type="radio" name="q2" value="b"> b) Reírme de él porque se ensució.</label>
+                <label><input type="radio" name="q2" value="c"> c) Seguir corriendo sin importar nada para ganar el primer lugar.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 3: Orientación Espacial -->
+        <div class="question" id="q3">
+            <span class="emoji">➡️</span>
+            <p>3. En la clase, el profesor Yonatha te dice: "Da un gran salto hacia ADELANTE". ¿Hacia dónde debes moverte?</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="a"> a) Hacia mi espalda (atrás).</label>
+                <label><input type="radio" name="q3" value="b"> b) Hacia el techo (arriba).</label>
+                <label><input type="radio" name="q3" value="c"> c) Hacia el frente (adelante).</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 4: Orientación Espacial -->
+        <div class="question" id="q4">
+            <span class="emoji">⭕</span>
+            <p>4. Jugando al "Pato al agua, pato a la tierra", si el profesor dice "¡Pato al agua!" y el agua es ADENTRO del aro, ¿dónde debes saltar?</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="a"> a) Al centro del aro (adentro).</label>
+                <label><input type="radio" name="q4" value="b"> b) Lejos del aro (afuera).</label>
+                <label><input type="radio" name="q4" value="c"> c) Debajo del aro.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 5: Actividades amistosas -->
+        <div class="question" id="q5">
+            <span class="emoji">👏</span>
+            <p>5. Al terminar un partido de fútbol o baloncesto, ¿qué debes decirle al otro equipo?</p>
+            <div class="options">
+                <label><input type="radio" name="q5" value="a"> a) "¡Les ganamos, son muy malos!"</label>
+                <label><input type="radio" name="q5" value="b"> b) Irme corriendo sin hablar con nadie.</label>
+                <label><input type="radio" name="q5" value="c"> c) Darles la mano y decir "¡Buen juego, amigos!"</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 6: El Video -->
+        <div class="question-video">
+            <h3 style="color: #E65100; font-size: 26px;">📹 Pregunta 6: ¡La Gran Misión en Video! (Vale 5 puntos) 📹</h3>
+            <p style="font-size: 20px;">
+                Esta pregunta es especial. Con la ayuda de un adulto, graba un video corto de ti mismo (máximo 1 minuto).<br><br>
+                <strong>¿Qué debes hacer en el video?</strong><br>
+                Realiza o explica una <em>"actividad amistosa"</em>. Por ejemplo: 
+                <ul>
+                    <li>Saludar chocando los 5.</li>
+                    <li>Darle un abrazo a alguien de tu familia.</li>
+                    <li>Explicar con tus propias palabras qué significa ser un buen compañero.</li>
+                </ul>
+                <br>
+                <em>Nota: Al terminar este examen, tendrás un botón para enviarle tu calificación y tu video al Profe Yonatha por WhatsApp.</em>
+            </p>
+        </div>
+
+        <button type="button" onclick="submitExam()">Terminar Examen y Ver Resultados ✅</button>
+    </form>
+</div>
+
+<!-- Contenedor de Resultados -->
+<div class="container" id="results">
+    <h1>🎉 ¡Felicidades! Terminaste el cuestionario 🎉</h1>
+    <h2 id="result-name"></h2>
+    
+    <div style="background-color: #FFF9C4; padding: 20px; border-radius: 10px; font-size: 22px; border: 2px solid #FBC02D; margin-bottom: 20px;">
+        <p class="success-msg" id="score-msg"></p>
+        <p style="color: #E65100;"><strong>Recuerda:</strong> Faltan los 5 puntos de tu video para completar tu nota final de 10.</p>
+    </div>
+
+    <p><strong>Tiempo invertido: </strong> <span id="time-spent"></span></p>
+
+    <div id="mistakes-container" class="feedback"></div>
+
+    <div class="teacher-note">
+        <h3>📲 ¡ÚLTIMO PASO IMPORTANTÍSIMO! 📲</h3>
+        <p>Ahora debes enviar tu calificación y tu <strong>VIDEO AMISTOSO</strong> al WhatsApp del Docente Yonatha Mendoza.</p>
+        <p>1. Tómale foto a esta pantalla.<br>2. Dale clic al botón verde para ir a WhatsApp.<br>3. ¡No olvides adjuntar tu video!</p>
+        
+        <a id="whatsapp-link" class="whatsapp-btn" href="#" target="_blank">
+            💬 Enviar Tarea por WhatsApp al 3014032934
+        </a>
+    </div>
+</div>
+
+<script>
+    // Variables para el temporizador y respuestas
+    let startTime;
+    const correctAnswers = {
+        q1: 'b', q2: 'a', q3: 'c', q4: 'a', q5: 'c'
+    };
+
+    window.onload = function() {
+        const dateSpan = document.getElementById('current-date');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateSpan.innerText = new Date().toLocaleDateString('es-ES', options);
+        startTime = new Date();
+    };
+
+    function submitExam() {
+        const studentName = document.getElementById('student-name').value.trim();
+        if (studentName === "") {
+            alert("¡Hola! Por favor, escribe tu nombre antes de terminar el examen.");
+            return;
+        }
+
+        let score = 0;
+        let mistakesHTML = "<h3>📝 Revisión de tus respuestas:</h3><ul>";
+        let hasMistakes = false;
+        const form = document.getElementById('quiz-form');
+
+        // Evaluar las 5 respuestas
+        for (let i = 1; i <= 5; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = form.elements[questionName].value;
+            const questionText = document.querySelector(`#${questionName} p`).innerText;
+
+            if (selectedOption === correctAnswers[questionName]) {
+                score++; // Cada pregunta vale 1 punto
+            } else if (selectedOption !== "") {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>❌ Te equivocaste. La correcta era: <br><em>${correctLabel}</em></li><br>`;
+            } else {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>⚠️ No respondiste. La correcta era: <br><em>${correctLabel}</em></li><br>`;
+            }
+        }
+        mistakesHTML += "</ul>";
+
+        // Calcular tiempo
+        const endTime = new Date();
+        const timeDiff = Math.floor((endTime - startTime) / 1000);
+        const minutes = Math.floor(timeDiff / 60);
+        const seconds = timeDiff % 60;
+
+        // Mostrar resultados
+        document.getElementById('exam-container').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+        document.getElementById('result-name').innerText = "Estudiante: " + studentName;
+        document.getElementById('score-msg').innerText = `Tu puntaje en las preguntas es: ${score} de 5 puntos.`;
+        
+        let timeText = minutes > 0 ? `${minutes} minutos y ${seconds} segundos.` : `${seconds} segundos.`;
+        document.getElementById('time-spent').innerText = timeText;
+
+        const mistakesContainer = document.getElementById('mistakes-container');
+        if (hasMistakes) {
+            mistakesContainer.innerHTML = mistakesHTML;
+        } else {
+            mistakesContainer.innerHTML = "<h3>🌟 ¡Perfecto! Respondiste todas las preguntas súper bien. 🌟</h3>";
+            mistakesContainer.style.backgroundColor = "#E8F5E9";
+            mistakesContainer.style.borderLeftColor = "#4CAF50";
+        }
+
+        // Configurar Link de WhatsApp
+        // Número del profesor: 3014032934, Código de país: +57 (Colombia)
+        const phoneNumber = "573014032934";
+        const msjWhatsapp = `¡Hola profe Yonatha! Soy ${studentName}. Acabo de terminar mi examen de deportes. Saqué ${score}/5 en las preguntas y tardé ${timeText}. ¡Aquí le envío la foto de mis resultados y mi VIDEO AMISTOSO para completar mis 10 puntos!`;
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(msjWhatsapp)}`;
+        
+        document.getElementById('whatsapp-link').href = whatsappUrl;
+    }
+</script>
+
+</body>
+</html>
