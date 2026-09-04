@@ -970,10 +970,10 @@ const Import = (() => {
         </table>
       </div>
       <div class="aviso-actions" style="margin-top:14px;">
-        <button class="btn btn-primary" ${err>0?'disabled':''} onclick="Import.confirmar()">Confirmar importación (${ok+warn})</button>
+        <button class="btn btn-primary" ${(ok+warn)===0?'disabled':''} onclick="Import.confirmar()">Confirmar importación (${ok+warn})</button>
         <button class="btn btn-ghost" onclick="document.getElementById('importPreviewZone').innerHTML=''">Cancelar</button>
       </div>
-      ${err>0 ? '<p class="helper" style="color:var(--rojo);">Corrige los registros en error en tu archivo de origen y vuelve a importar; los registros correctos y con advertencias sí pueden confirmarse.</p>' : ''}
+      ${err>0 ? `<p class="helper" style="color:var(--rojo);">${err} registro(s) en error se omitirán de esta importación. Corrígelos en el origen y vuelve a importarlos por separado; los ${ok+warn} registros correctos y con advertencias sí se importarán ahora.</p>` : ''}
     `;
   }
 
