@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>MAvisos — Comunicación escolar inteligente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+/* ============================================================
+   MAvisos — Design tokens
+   Paleta: Azul institucional + Blanco (fijada por el brief)
+   Tipografía: Fraunces (marca / titulares) + Inter (UI / datos)
+   ============================================================ */
+:root{
+  --azul-950:#0b1d3a;
+  --azul-900:#12275a;
+  --azul-800:#1a3579;
+  --azul-700:#22459c;
+  --azul-600:#2c56bd;
+  --azul-500:#3d6de0;
+  --azul-100:#e6ecfb;
+  --azul-50:#f3f6fd;
+  --blanco:#ffffff;
+  --tinta:#101826;
+  --gris-600:#5b6472;
+  --gris-400:#939bab;
+  --gris-200:#e1e5ec;
+  --gris-100:#f1f3f8;
+  --verde:#1a8f5c;
+  --verde-bg:#e7f6ef;
+  --ambar:#b9770e;
+  --ambar-bg:#fbf0dd;
+  --rojo:#c23b3b;
+  --rojo-bg:#fbe9e9;
+  --radius-s:8px;
+  --radius-m:14px;
+  --radius-l:22px;
+  --sombra: 0 1px 2px rgba(11,29,58,.06), 0 8px 24px -12px rgba(11,29,58,.18);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  color:var(--tinta);
+  background:var(--azul-50);
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:76px;
+}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+a{color:inherit;}
+::selection{background:var(--azul-100);}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  background:var(--azul-950);
+  color:var(--blanco);
+  padding:14px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  box-shadow:var(--sombra);
+}
+.brand{display:flex; align-items:baseline; gap:10px;}
+.brand-mark{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:22px;
+  letter-spacing:.2px;
+}
+.brand-tag{
+  font-size:12.5px;
+  color:#aebde8;
+  display:none;
+}
+@media(min-width:640px){ .brand-tag{display:inline;} }
+.topbar-actions{display:flex; gap:8px; align-items:center;}
+.icon-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  color:var(--blanco);
+  border-radius:10px;
+  width:38px; height:38px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+}
+.icon-btn:hover{background:rgba(255,255,255,.16);}
+
+/* ---------- Global search ---------- */
+.search-shell{
+  padding:14px 20px 0 20px;
+  max-width:1180px;
+  margin:0 auto;
+}
+.search-box{
+  position:relative;
+  display:flex; align-items:center;
+  background:var(--blanco);
+  border:1px solid var(--gris-200);
+  border-radius:var(--radius-m);
+  padding:0 14px;
+  box-shadow:var(--sombra);
+}
+.search-box input{
+  flex:1; border:none; outline:none; background:transparent;
+  padding:13px 8px; font-size:15px; color:var(--tinta);
+}
+.search-box .glyph{color:var(--gris-400); font-size:16px;}
+.search-results{
+  position:absolute; top:calc(100% + 8px); left:0; right:0;
+  background:var(--blanco); border:1px solid var(--gris-200);
+  border-radius:var(--radius-m); box-shadow:var(--sombra);
+  max-height:340px; overflow:auto; z-index:50; display:none;
+}
+.search-results.open{display:block;}
+.search-row{
+  padding:11px 14px; border-bottom:1px solid var(--gris-100);
+  display:flex; justify-content:space-between; gap:10px; align-items:center;
+}
+.search-row:last-child{border-bottom:none;}
+.search-row:hover{background:var(--azul-50); cursor:pointer;}
+.search-row .who{font-weight:600; font-size:14px;}
+.search-row .meta{font-size:12.5px; color:var(--gris-600);}
+
+/* ---------- Layout / views ---------- */
+main{max-width:1180px; margin:0 auto; padding:18px 20px 40px;}
+.view{display:none;}
+.view.active{display:block; animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+.section-head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin:28px 0 14px;
+  gap:10px; flex-wrap:wrap;
+}
+.section-head h2{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:21px;
+  margin:0;
+}
+.section-head .hint{font-size:13px; color:var(--gris-600);}
+
+.hero{
+  background:linear-gradient(135deg, var(--azul-900), var(--azul-700) 65%, var(--azul-600));
+  color:var(--blanco);
+  border-radius:var(--radius-l);
+  padding:30px 26px;
+  margin-top:16px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after{
+  content:"";
+  position:absolute; right:-60px; top:-60px;
+  width:220px; height:220px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.14), transparent 70%);
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(24px,4vw,32px);
+  margin:0 0 6px;
+}
+.hero p{margin:0; color:#c7d4f2; font-size:15px; max-width:520px;}
+
+/* ---------- Stat cards ---------- */
+.stats-grid{
+  display:grid; gap:12px; margin-top:18px;
+  grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+}
+.stat-card{
+  background:var(--blanco); border:1px solid var(--gris-200);
+  border-radius:var(--radius-m); padding:16px 16px 14px;
+}
+.stat-card .num{font-family:var(--font-display); font-size:28px; font-weight:600; color:var(--azul-800);}
+.stat-card .lbl{font-size:12.5px; color:var(--gris-600); margin-top:2px;}
+.stat-card.warn .num{color:var(--ambar);}
+.stat-card.good .num{color:var(--verde);}
+
+/* ---------- Grade cards ---------- */
+.grades-grid{
+  display:grid; gap:14px; margin-top:14px;
+  grid-template-columns:repeat(auto-fill, minmax(190px,1fr));
+}
+.grade-card{
+  background:var(--blanco); border:1px solid var(--gris-200);
+  border-radius:var(--radius-m); padding:18px;
+  text-align:left; transition:transform .15s ease, box-shadow .15s ease;
+}
+.grade-card:hover{transform:translateY(-2px); box-shadow:var(--sombra);}
+.grade-card .g-name{font-family:var(--font-display); font-weight:600; font-size:18px; color:var(--azul-900);}
+.grade-card .g-meta{font-size:13px; color:var(--gris-600); margin:8px 0 14px;}
+.grade-card .g-cta{
+  font-size:13px; font-weight:600; color:var(--azul-600);
+  display:flex; align-items:center; gap:6px;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  border:none; border-radius:10px; padding:9px 15px;
+  font-weight:600; font-size:13.5px; display:inline-flex; align-items:center; gap:7px;
+}
+.btn-primary{background:var(--azul-700); color:var(--blanco);}
+.btn-primary:hover{background:var(--azul-800);}
+.btn-ghost{background:var(--gris-100); color:var(--tinta);}
+.btn-ghost:hover{background:var(--gris-200);}
+.btn-wa{background:var(--verde); color:var(--blanco);}
+.btn-wa:hover{background:#157a4e;}
+.btn-call{background:var(--azul-100); color:var(--azul-800);}
+.btn-call:hover{background:#d7e2fa;}
+.btn-danger{background:var(--rojo-bg); color:var(--rojo);}
+.btn-sm{padding:7px 11px; font-size:12.5px; border-radius:8px;}
+.btn-block{width:100%; justify-content:center;}
+.btn[disabled]{opacity:.45; pointer-events:none;}
+
+/* ---------- Directory ---------- */
+.toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px;}
+.toolbar input[type=text], .toolbar select{
+  border:1px solid var(--gris-200); border-radius:10px; padding:10px 12px;
+  font-size:14px; background:var(--blanco);
+}
+.chip-row{display:flex; gap:8px; flex-wrap:wrap;}
+.chip{
+  border:1px solid var(--gris-200); background:var(--blanco); border-radius:999px;
+  padding:6px 13px; font-size:12.5px; font-weight:600; color:var(--gris-600);
+}
+.chip.active{background:var(--azul-700); border-color:var(--azul-700); color:var(--blanco);}
+
+.directory-list{margin-top:16px; display:flex; flex-direction:column; gap:10px;}
+.student-row{
+  background:var(--blanco); border:1px solid var(--gris-200); border-radius:var(--radius-m);
+  padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.student-row:hover{cursor:pointer; border-color:var(--azul-500);}
+.s-main{display:flex; flex-direction:column; gap:3px; min-width:180px;}
+.s-name{font-weight:700; font-size:15px;}
+.s-grade{font-size:12px; color:var(--gris-600);}
+.s-guardian{display:flex; flex-direction:column; gap:2px; font-size:13px; color:var(--gris-600); min-width:170px;}
+.s-guardian b{color:var(--tinta); font-weight:600;}
+.s-actions{display:flex; gap:8px;}
+.empty-state{
+  text-align:center; padding:40px 20px; color:var(--gris-600);
+  background:var(--blanco); border:1px dashed var(--gris-200); border-radius:var(--radius-m);
+}
+.empty-state .big{font-size:32px; margin-bottom:6px;}
+
+/* ---------- Modal ---------- */
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(11,29,58,.5);
+  display:none; align-items:flex-end; justify-content:center; z-index:100;
+  backdrop-filter:blur(2px);
+}
+.modal-backdrop.open{display:flex;}
+@media(min-width:720px){ .modal-backdrop{align-items:center;} }
+.modal{
+  background:var(--blanco); width:100%; max-width:560px;
+  border-radius:20px 20px 0 0; max-height:88vh; overflow:auto;
+  padding:22px 22px 26px; animation:slideup .2s ease;
+}
+@media(min-width:720px){ .modal{border-radius:var(--radius-l);} }
+@keyframes slideup{from{transform:translateY(24px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+.modal-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.modal-head h3{font-family:var(--font-display); font-size:20px; margin:0 0 4px;}
+.modal-head .sub{font-size:13px; color:var(--gris-600);}
+.modal-close{background:var(--gris-100); border:none; border-radius:8px; width:32px; height:32px; font-size:15px;}
+.guardian-card{
+  border:1px solid var(--gris-200); border-radius:var(--radius-m); padding:14px; margin-top:12px;
+}
+.guardian-card .top-row{display:flex; justify-content:space-between; align-items:center;}
+.guardian-card .g-nombre{font-weight:700; font-size:14.5px;}
+.badge-principal{
+  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+  background:var(--azul-100); color:var(--azul-700); padding:3px 8px; border-radius:6px;
+}
+.guardian-card .g-rel{font-size:12.5px; color:var(--gris-600); margin:2px 0 10px;}
+.guardian-card .g-actions{display:flex; gap:8px; flex-wrap:wrap;}
+.link-btn{background:none; border:none; color:var(--azul-600); font-size:12px; font-weight:600; padding:0;}
+
+/* ---------- Forms ---------- */
+.field{margin-top:12px;}
+.field label{display:block; font-size:12.5px; font-weight:600; color:var(--gris-600); margin-bottom:5px;}
+.field input, .field select, .field textarea{
+  width:100%; border:1px solid var(--gris-200); border-radius:10px; padding:10px 12px; font-size:14px;
+}
+.field textarea{min-height:110px; resize:vertical; line-height:1.5;}
+.field-row{display:flex; gap:10px; flex-wrap:wrap;}
+.field-row .field{flex:1; min-width:140px;}
+.helper{font-size:12px; color:var(--gris-600); margin-top:4px;}
+
+/* ---------- Tabs (import) ---------- */
+.tabs{display:flex; gap:6px; border-bottom:1px solid var(--gris-200); margin-top:12px; flex-wrap:wrap;}
+.tab-btn{
+  background:none; border:none; padding:10px 14px; font-size:13.5px; font-weight:600;
+  color:var(--gris-600); border-bottom:2px solid transparent; margin-bottom:-1px;
+}
+.tab-btn.active{color:var(--azul-700); border-bottom-color:var(--azul-700);}
+.tab-panel{display:none; padding-top:16px;}
+.tab-panel.active{display:block;}
+.dropzone{
+  border:2px dashed var(--gris-200); border-radius:var(--radius-m); padding:30px 16px;
+  text-align:center; color:var(--gris-600); background:var(--blanco);
+}
+.dropzone.drag{border-color:var(--azul-500); background:var(--azul-50);}
+.dropzone .big{font-size:26px;}
+
+/* ---------- Preview table ---------- */
+.preview-summary{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0;}
+.pill{border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600; flex:1; min-width:110px;}
+.pill.ok{background:var(--verde-bg); color:var(--verde);}
+.pill.warn{background:var(--ambar-bg); color:var(--ambar);}
+.pill.err{background:var(--rojo-bg); color:var(--rojo);}
+.pill.total{background:var(--azul-100); color:var(--azul-800);}
+.table-wrap{overflow:auto; border:1px solid var(--gris-200); border-radius:var(--radius-m); max-height:340px;}
+table{border-collapse:collapse; width:100%; font-size:13px;}
+th{
+  text-align:left; padding:9px 10px; background:var(--gris-100); position:sticky; top:0;
+  font-size:11.5px; text-transform:none; color:var(--gris-600); font-weight:700; white-space:nowrap;
+}
+td{padding:8px 10px; border-top:1px solid var(--gris-100); white-space:nowrap;}
+tr.row-err td{background:var(--rojo-bg);}
+tr.row-warn td{background:var(--ambar-bg);}
+.status-tag{font-size:11px; font-weight:700; padding:2px 7px; border-radius:6px;}
+.status-tag.ok{background:var(--verde-bg); color:var(--verde);}
+.status-tag.warn{background:var(--ambar-bg); color:var(--ambar);}
+.status-tag.err{background:var(--rojo-bg); color:var(--rojo);}
+
+/* ---------- Avisos / historial ---------- */
+.aviso-card{
+  background:var(--blanco); border:1px solid var(--gris-200); border-radius:var(--radius-m);
+  padding:14px 16px; margin-bottom:10px;
+}
+.aviso-top{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+.aviso-top .nombre{font-weight:700; font-size:14.5px;}
+.aviso-top .grado{font-size:12px; color:var(--gris-600);}
+.aviso-mid{font-size:13px; color:var(--gris-600); margin:8px 0;}
+.aviso-mid b{color:var(--tinta);}
+.state-select{
+  border:1px solid var(--gris-200); border-radius:8px; padding:6px 9px; font-size:12.5px; font-weight:600;
+}
+.state-select.st-pendiente{color:var(--ambar); background:var(--ambar-bg); border-color:transparent;}
+.state-select.st-preparado{color:var(--azul-700); background:var(--azul-100); border-color:transparent;}
+.state-select.st-contactado, .state-select.st-llamado{color:var(--verde); background:var(--verde-bg); border-color:transparent;}
+.state-select.st-no_contesto{color:var(--rojo); background:var(--rojo-bg); border-color:transparent;}
+.state-select.st-cerrado{color:var(--gris-600); background:var(--gris-100); border-color:transparent;}
+.aviso-actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+
+.hist-row{
+  background:var(--blanco); border:1px solid var(--gris-200); border-radius:var(--radius-m);
+  padding:12px 15px; margin-bottom:8px; font-size:13px;
+}
+.hist-row .h-top{display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;}
+.hist-row .h-date{color:var(--gris-600); font-size:12px;}
+
+/* ---------- Templates ---------- */
+.tpl-grid{display:grid; gap:12px; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); margin-top:12px;}
+.tpl-card{background:var(--blanco); border:1px solid var(--gris-200); border-radius:var(--radius-m); padding:15px;}
+.tpl-card h4{margin:0 0 6px; font-size:14.5px; font-family:var(--font-display); font-weight:600;}
+.tpl-card p{margin:0 0 10px; font-size:12.5px; color:var(--gris-600); max-height:54px; overflow:hidden;}
+.tpl-actions{display:flex; gap:8px;}
+.var-chip{
+  background:var(--azul-100); color:var(--azul-700); border:none; border-radius:7px;
+  padding:5px 9px; font-size:11.5px; font-weight:700; margin:0 5px 5px 0;
+}
+
+/* ---------- Message preview ---------- */
+.msg-preview{
+  background:var(--azul-50); border:1px solid var(--azul-100); border-radius:var(--radius-m);
+  padding:16px; margin-top:14px; white-space:pre-wrap; font-size:14px; line-height:1.6;
+}
+
+/* ---------- Bottom nav (mobile) ---------- */
+.bottom-nav{
+  position:fixed; bottom:0; left:0; right:0; z-index:60;
+  background:var(--blanco); border-top:1px solid var(--gris-200);
+  display:flex; padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 16px rgba(11,29,58,.06);
+}
+.nav-btn{
+  flex:1; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:6px 2px; color:var(--gris-600); font-size:10.5px; font-weight:600; border-radius:10px;
+}
+.nav-btn .ic{font-size:19px;}
+.nav-btn.active{color:var(--azul-700);}
+@media(min-width:900px){
+  .bottom-nav{display:none;}
+  body{padding-bottom:0;}
+}
+.desktop-nav{display:none; gap:4px; margin-top:14px; flex-wrap:wrap;}
+@media(min-width:900px){ .desktop-nav{display:flex;} }
+.desktop-nav .nav-btn{
+  flex:none; flex-direction:row; padding:9px 14px; border-radius:10px; background:var(--blanco);
+  border:1px solid var(--gris-200);
+}
+.desktop-nav .nav-btn.active{background:var(--azul-700); color:var(--blanco); border-color:var(--azul-700);}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+  background:var(--tinta); color:var(--blanco); padding:11px 18px; border-radius:10px;
+  font-size:13.5px; z-index:200; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+@media(min-width:900px){ .toast{bottom:24px;} }
+
+.divider{height:1px; background:var(--gris-200); margin:22px 0;}
+.two-col{display:grid; gap:16px; grid-template-columns:1fr;}
+@media(min-width:820px){ .two-col{grid-template-columns:1.1fr .9fr;} }
+.card{background:var(--blanco); border:1px solid var(--gris-200); border-radius:var(--radius-m); padding:18px;}
+.small-note{font-size:12px; color:var(--gris-400); margin-top:20px; text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-mark">MAvisos</span>
+    <span class="brand-tag">Comunicación escolar inteligente</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Exportar respaldo" onclick="Storage.descargarBackup()">⭳</button>
+    <button class="icon-btn" title="Importar respaldo" onclick="document.getElementById('backupFile').click()">⭱</button>
+    <input type="file" id="backupFile" accept=".json" style="display:none" onchange="Storage.restaurarBackup(event)">
+  </div>
+</div>
+
+<div class="search-shell">
+  <div class="search-box">
+    <span class="glyph">🔎</span>
+    <input type="text" id="globalSearch" placeholder="Buscar estudiante, acudiente, teléfono o grado…" oninput="UI.buscarGlobal(this.value)">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+  <nav class="desktop-nav">
+    <button class="nav-btn active" data-view="dashboard" onclick="UI.irA('dashboard')"><span class="ic">🏠</span>Inicio</button>
+    <button class="nav-btn" data-view="directorio" onclick="UI.irA('directorio')"><span class="ic">📇</span>Directorio</button>
+    <button class="nav-btn" data-view="mensajes" onclick="UI.irA('mensajes')"><span class="ic">💬</span>Mensajes</button>
+    <button class="nav-btn" data-view="plantillas" onclick="UI.irA('plantillas')"><span class="ic">🧩</span>Plantillas</button>
+    <button class="nav-btn" data-view="avisos" onclick="UI.irA('avisos')"><span class="ic">📮</span>Avisos</button>
+    <button class="nav-btn" data-view="historial" onclick="UI.irA('historial')"><span class="ic">🕘</span>Historial</button>
+    <button class="nav-btn" data-view="importar" onclick="UI.irA('importar')"><span class="ic">📥</span>Importar</button>
+  </nav>
+</div>
+
+<main>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <section class="view active" id="view-dashboard">
+    <div class="hero">
+      <h1>MAvisos</h1>
+      <p>Encuentra al estudiante, ubica a su acudiente y envía el aviso — en cuatro toques.</p>
+    </div>
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="section-head">
+      <h2>Grados</h2>
+      <span class="hint" id="gradesHint"></span>
+    </div>
+    <div class="grades-grid" id="gradesGrid"></div>
+
+    <div class="section-head">
+      <h2>Avisos recientes</h2>
+      <button class="btn btn-ghost btn-sm" onclick="UI.irA('avisos')">Ver todos</button>
+    </div>
+    <div id="dashAvisos"></div>
+  </section>
+
+  <!-- ===================== DIRECTORIO ===================== -->
+  <section class="view" id="view-directorio">
+    <div class="section-head">
+      <h2 id="dirTitle">Directorio</h2>
+      <button class="btn btn-ghost btn-sm" onclick="UI.irA('dashboard')">← Grados</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="dirSearch" placeholder="Buscar estudiante o acudiente…" oninput="UI.renderDirectorio()">
+      <select id="dirGradoFilter" onchange="UI.renderDirectorio()"></select>
+    </div>
+    <div class="directory-list" id="directoryList"></div>
+  </section>
+
+  <!-- ===================== MENSAJES ===================== -->
+  <section class="view" id="view-mensajes">
+    <div class="section-head"><h2>Mensajes</h2><span class="hint">Redacta y envía en segundos</span></div>
+    <div class="two-col">
+      <div class="card">
+        <div class="field">
+          <label>Grado</label>
+          <select id="msgGrado" onchange="UI.msgActualizarEstudiantes()"></select>
+        </div>
+        <div class="field">
+          <label>Estudiante</label>
+          <select id="msgEstudiante" onchange="UI.msgActualizarAcudientes()"></select>
+        </div>
+        <div class="field">
+          <label>Acudiente</label>
+          <select id="msgAcudiente" onchange="UI.msgRenderPreview()"></select>
+        </div>
+        <div class="field">
+          <label>Plantilla</label>
+          <select id="msgPlantilla" onchange="UI.msgAplicarPlantilla()"></select>
+        </div>
+        <div class="field">
+          <label>Motivo (opcional)</label>
+          <input type="text" id="msgMotivo" placeholder="Ej: Actividad pendiente de Inglés" oninput="UI.msgRenderPreview()">
+        </div>
+        <div class="field">
+          <label>Mensaje</label>
+          <textarea id="msgTexto" oninput="UI.msgRenderPreview()" placeholder="Escribe aquí o elige una plantilla…"></textarea>
+          <div class="helper">Variables: {acudiente} {estudiante} {grado} {parentesco} {fecha} {docente} {motivo}</div>
+        </div>
+      </div>
+      <div class="card">
+        <label style="font-size:12.5px;font-weight:600;color:var(--gris-600);">Vista previa</label>
+        <div class="msg-preview" id="msgPreview">Selecciona un estudiante y un acudiente para ver el mensaje.</div>
+        <div class="aviso-actions">
+          <button class="btn btn-ghost" onclick="UI.msgCopiar()">📋 Copiar mensaje</button>
+          <button class="btn btn-wa" onclick="UI.msgAbrirWhatsapp()">💬 Abrir WhatsApp</button>
+        </div>
+        <div class="helper" style="margin-top:10px;">Abrir WhatsApp registra el contacto en el historial como "Preparado". Confirma el estado real en Avisos.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PLANTILLAS ===================== -->
+  <section class="view" id="view-plantillas">
+    <div class="section-head">
+      <h2>Plantillas</h2>
+      <button class="btn btn-primary btn-sm" onclick="UI.abrirModalPlantilla()">+ Nueva plantilla</button>
+    </div>
+    <div class="tpl-grid" id="tplGrid"></div>
+  </section>
+
+  <!-- ===================== AVISOS ===================== -->
+  <section class="view" id="view-avisos">
+    <div class="section-head"><h2>Avisos pendientes</h2></div>
+    <div class="chip-row" id="avisoFiltros"></div>
+    <div id="avisosList" style="margin-top:14px;"></div>
+  </section>
+
+  <!-- ===================== HISTORIAL ===================== -->
+  <section class="view" id="view-historial">
+    <div class="section-head"><h2>Historial</h2></div>
+    <div id="historialList"></div>
+  </section>
+
+  <!-- ===================== IMPORTAR ===================== -->
+  <section class="view" id="view-importar">
+    <div class="section-head"><h2>Importar datos</h2></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tabArchivo" onclick="UI.cambiarTabImport('tabArchivo')">Excel / CSV</button>
+      <button class="tab-btn" data-tab="tabMarkdown" onclick="UI.cambiarTabImport('tabMarkdown')">Pegar Markdown</button>
+      <button class="tab-btn" data-tab="tabMensajes" onclick="UI.cambiarTabImport('tabMensajes')">Importar mensajes</button>
+    </div>
+
+    <div class="tab-panel active" id="tabArchivo">
+      <div class="dropzone" id="dropzone">
+        <div class="big">📄</div>
+        <p>Arrastra aquí un archivo <b>.xlsx</b> o <b>.csv</b>, o</p>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileInput').click()">Elegir archivo</button>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="Import.manejarArchivo(event.target.files[0])">
+        <p class="helper">Columnas esperadas: ID Estudiante, Grado, Estudiante, Acudiente, Parentesco, Teléfono (o encabezados equivalentes).</p>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tabMarkdown">
+      <div class="field">
+        <label>Pega el contenido en Markdown</label>
+        <textarea id="mdInput" style="min-height:220px;" placeholder="## Grado 7&#10;&#10;- Thalía Motos&#10;  - Acudiente: María Motos&#10;  - Parentesco: Madre&#10;  - Teléfono: 3001234567"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="Import.procesarMarkdown()">Analizar Markdown</button>
+    </div>
+
+    <div class="tab-panel" id="tabMensajes">
+      <p class="helper">Carga un Excel/CSV con columnas: ID Estudiante, Estudiante, Grado, Motivo, Mensaje. Se generará un aviso por cada fila, vinculado automáticamente al acudiente correspondiente.</p>
+      <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileInputMsg').click()">Elegir archivo</button>
+      <input type="file" id="fileInputMsg" accept=".xlsx,.xls,.csv" style="display:none" onchange="Import.manejarArchivoMensajes(event.target.files[0])">
+    </div>
+
+    <div id="importPreviewZone"></div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="dashboard" onclick="UI.irA('dashboard')"><span class="ic">🏠</span>Inicio</button>
+  <button class="nav-btn" data-view="directorio" onclick="UI.irA('directorio')"><span class="ic">📇</span>Directorio</button>
+  <button class="nav-btn" data-view="mensajes" onclick="UI.irA('mensajes')"><span class="ic">💬</span>Mensajes</button>
+  <button class="nav-btn" data-view="avisos" onclick="UI.irA('avisos')"><span class="ic">📮</span>Avisos</button>
+  <button class="nav-btn" data-view="importar" onclick="UI.irA('importar')"><span class="ic">📥</span>Más</button>
+</nav>
+
+<!-- ===================== MODALES ===================== -->
+<div class="modal-backdrop" id="modalPerfil" onclick="if(event.target===this)UI.cerrarModal('modalPerfil')">
+  <div class="modal" id="modalPerfilContent"></div>
+</div>
+
+<div class="modal-backdrop" id="modalPlantilla" onclick="if(event.target===this)UI.cerrarModal('modalPlantilla')">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="tplModalTitulo">Nueva plantilla</h3><div class="sub">Usa variables entre llaves, ej. {acudiente}</div></div>
+      <button class="modal-close" onclick="UI.cerrarModal('modalPlantilla')">✕</button>
+    </div>
+    <input type="hidden" id="tplEditId">
+    <div class="field">
+      <label>Nombre</label>
+      <input type="text" id="tplNombre" placeholder="Ej: Inasistencia">
+    </div>
+    <div class="field">
+      <label>Texto</label>
+      <textarea id="tplTexto" placeholder="Hola {acudiente}, me comunico con usted..."></textarea>
+    </div>
+    <div style="margin-top:8px;">
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{acudiente}')">{acudiente}</button>
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{estudiante}')">{estudiante}</button>
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{grado}')">{grado}</button>
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{parentesco}')">{parentesco}</button>
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{fecha}')">{fecha}</button>
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{docente}')">{docente}</button>
+      <button class="var-chip" onclick="UI.insertarVariableTpl('{motivo}')">{motivo}</button>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="UI.guardarPlantilla()">Guardar plantilla</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   MAvisos — app.js (módulos: Storage, Data, Contacts, Import,
+   Messages, WhatsApp, UI) — todo en un archivo por preferencia de
+   despliegue autocontenido, pero organizado por responsabilidad.
+   ================================================================ */
+
+/* ---------------------------------------------------------------
+   MÓDULO: Storage — persistencia en localStorage + backup
+   --------------------------------------------------------------- */
+const Storage = (() => {
+  const KEY = 'mavisos_db_v1';
+
+  function vacio(){
+    return { estudiantes: [], acudientes: [], relaciones: [], mensajes: [], plantillas: [], historial: [], _seq: 1 };
+  }
+
+  function cargar(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){ console.error('Error leyendo almacenamiento', e); return null; }
+  }
+
+  function guardar(db){
+    localStorage.setItem(KEY, JSON.stringify(db));
+  }
+
+  function nuevoId(prefijo){
+    const db = DB;
+    const n = String(db._seq++).padStart(4,'0');
+    guardar(db);
+    return `${prefijo}-${n}`;
+  }
+
+  function descargarBackup(){
+    const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const fecha = new Date().toISOString().slice(0,10);
+    a.href = url; a.download = `mavisos_backup_${fecha}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    UI.toast('Respaldo descargado');
+  }
+
+  function restaurarBackup(evt){
+    const file = evt.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const data = JSON.parse(reader.result);
+        if(!data.estudiantes || !data.acudientes){ UI.toast('Archivo de respaldo no válido'); return; }
+        DB = data;
+        guardar(DB);
+        UI.renderAll();
+        UI.toast('Respaldo restaurado correctamente');
+      }catch(e){ UI.toast('No se pudo leer el archivo de respaldo'); }
+    };
+    reader.readAsText(file);
+    evt.target.value = '';
+  }
+
+  return { cargar, guardar, nuevoId, descargarBackup, restaurarBackup, vacio };
+})();
+
+/* ---------------------------------------------------------------
+   MÓDULO: Data — datos de demostración (ficticios)
+   --------------------------------------------------------------- */
+const DemoData = (() => {
+  function generar(){
+    const db = Storage.vacio();
+    const acu = (nombre, tel, correo) => {
+      const id = `ACU-${String(db._seq++).padStart(4,'0')}`;
+      db.acudientes.push({ id, nombre, telefono: Contacts.normalizarTelefono(tel), correo: correo||'' });
+      return id;
+    };
+    const est = (nombre, grado) => {
+      const id = `EST-${String(db._seq++).padStart(4,'0')}`;
+      db.estudiantes.push({ id, nombre, grado, estado:'activo' });
+      return id;
+    };
+    const rel = (estudianteId, acudienteId, parentesco, principal) => {
+      db.relaciones.push({ id:`REL-${String(db._seq++).padStart(4,'0')}`, estudianteId, acudienteId, parentesco, principal: !!principal, etiqueta:'Personal' });
+    };
+
+    const e1 = est('Thalía Motos', 'Grado 7');
+    const a1 = acu('María Motos', '3001234567', 'maria.motos@example.com');
+    const a2 = acu('Carlos Motos', '3019876543', 'carlos.motos@example.com');
+    rel(e1, a1, 'Madre', true); rel(e1, a2, 'Padre', false);
+
+    const e2 = est('Juan Pérez', 'Grado 7');
+    const a3 = acu('Carlos Pérez', '3101234567', 'carlos.perez@example.com');
+    rel(e2, a3, 'Padre', true);
+
+    const e3 = est('Valentina Ríos', 'Grado 6');
+    const a4 = acu('Sandra Ríos', '3123456789', 'sandra.rios@example.com');
+    rel(e3, a4, 'Madre', true);
+
+    const e4 = est('Samuel Ortega', 'Grado 6');
+    rel(e4, a4, 'Tía', false); // acudiente compartido con otro grado — demuestra relación N:N
+
+    const e5 = est('Mariana Cotes', 'Grado 8');
+    const a5 = acu('Deisy Cotes', '3187654321', 'deisy.cotes@example.com');
+    rel(e5, a5, 'Madre', true);
+
+    const e6 = est('Andrés Molina', 'Grado 9');
+    const a6 = acu('Rubiela Molina', '3145558899', '');
+    rel(e6, a6, 'Madre', true);
+
+    const e7 = est('Camila Barros', 'Grado 11');
+    const a7 = acu('José Barros', 'No tiene', '');
+    rel(e7, a7, 'Padre', true);
+
+    db.plantillas = [
+      { id:'PLT-0001', nombre:'Actividad pendiente', texto:'Hola {acudiente}, me comunico con usted para informarle que {estudiante}, del {grado}, tiene pendiente la siguiente actividad:\n\n{motivo}\n\nAgradezco su atención y colaboración.\n\n{docente}' },
+      { id:'PLT-0002', nombre:'Inasistencia', texto:'Hola {acudiente}, le informo que {estudiante}, del {grado}, no asistió a clases el día {fecha}. Por favor comunicarse con la institución para justificar la inasistencia.\n\nSaludos, {docente}' },
+      { id:'PLT-0003', nombre:'Citación a reunión', texto:'Hola {acudiente}, se le cita a una reunión para tratar temas relacionados con {estudiante}, del {grado}. Motivo: {motivo}. Quedo atento(a) a su confirmación.\n\n{docente}' },
+      { id:'PLT-0004', nombre:'Recordatorio general', texto:'Hola {acudiente}, este es un recordatorio para {estudiante} ({grado}): {motivo}.\n\nGracias por su atención.' },
+    ];
+
+    db.mensajes = [
+      { id:'AV-0001', estudianteId:e2, acudienteId:a3, motivo:'Reunión de padres de familia', mensaje:'', estado:'Pendiente', tipo:'texto', fecha:new Date().toISOString() },
+      { id:'AV-0002', estudianteId:e5, acudienteId:a5, motivo:'Situación académica', mensaje:'', estado:'Preparado', tipo:'texto', fecha:new Date().toISOString() },
+    ];
+
+    db.historial = [
+      { fecha:new Date(Date.now()-86400000).toISOString(), estudianteId:e1, acudienteId:a1, tipo:'WhatsApp', motivo:'Actividad pendiente', estado:'Contactado', observaciones:'' },
+    ];
+
+    return db;
+  }
+  return { generar };
+})();
+
+/* ---------------------------------------------------------------
+   MÓDULO: Contacts — normalización de teléfonos y utilidades
+   --------------------------------------------------------------- */
+const Contacts = (() => {
+  let codigoPais = '57';
+
+  function normalizarTelefono(raw){
+    if(!raw) return '';
+    const limpio = String(raw).trim();
+    if(/^no\s*tiene$/i.test(limpio) || limpio === '' || limpio === '*' || /^no$/i.test(limpio)) return '';
+    let digitos = limpio.replace(/[^\d+]/g,'');
+    if(digitos.startsWith('+')){
+      digitos = digitos; // ya tiene código de país
+    } else if(digitos.startsWith('00')){
+      digitos = '+' + digitos.slice(2);
+    } else if(digitos.length === 10){
+      digitos = `+${codigoPais}${digitos}`;
+    } else if(digitos.startsWith(codigoPais) && digitos.length >= 11){
+      digitos = `+${digitos}`;
+    } else if(digitos.length > 10){
+      digitos = `+${digitos}`;
+    } else {
+      return raw.trim(); // no reconocible; se conserva tal cual para revisión manual
+    }
+    return digitos;
+  }
+
+  function esTelefonoValido(norm){
+    if(!norm) return false;
+    return /^\+\d{10,15}$/.test(norm);
+  }
+
+  function setCodigoPais(c){ codigoPais = c; }
+
+  return { normalizarTelefono, esTelefonoValido, setCodigoPais };
+})();
+
+/* ---------------------------------------------------------------
+   MÓDULO: WhatsApp / llamadas
+   --------------------------------------------------------------- */
+const WhatsappMod = (() => {
+  function link(telefono, mensaje){
+    const num = telefono.replace(/[^\d]/g,'');
+    let url = `https://wa.me/${num}`;
+    if(mensaje) url += `?text=${encodeURIComponent(mensaje)}`;
+    return url;
+  }
+  function abrir(telefono, mensaje){
+    if(!Contacts.esTelefonoValido(telefono)){
+      UI.toast('Este teléfono no parece válido — revísalo antes de contactar');
+      return false;
+    }
+    window.open(link(telefono, mensaje), '_blank');
+    return true;
+  }
+  function llamar(telefono){
+    if(!Contacts.esTelefonoValido(telefono)){
+      UI.toast('Este teléfono no parece válido — revísalo antes de llamar');
+      return;
+    }
+    window.location.href = `tel:${telefono}`;
+  }
+  return { link, abrir, llamar };
+})();
+
+/* ---------------------------------------------------------------
+   MÓDULO: Import — Excel/CSV/Markdown con previsualización
+   --------------------------------------------------------------- */
+const Import = (() => {
+  let pendiente = null; // {tipo, filas:[...]}
+
+  const ALIAS_COLUMNAS = {
+    idEstudiante: ['id estudiante','id_estudiante','id','identificador'],
+    grado: ['grado','curso'],
+    estudiante: ['estudiante','nombre estudiante','alumno','nombre alumno','nombre del estudiante'],
+    acudiente: ['acudiente','nombre acudiente','padre','madre','responsable'],
+    parentesco: ['parentesco','relacion','relación'],
+    telefono: ['telefono','teléfono','whatsapp','celular','numero','número'],
+    correo: ['correo','email','correo electronico','correo electrónico'],
+    motivo: ['motivo','asunto'],
+    mensaje: ['mensaje','texto','detalle'],
+  };
+
+  function detectarColumna(headers, campo){
+    const opciones = ALIAS_COLUMNAS[campo];
+    const idx = headers.findIndex(h => opciones.includes(String(h).trim().toLowerCase()));
+    return idx;
+  }
+
+  function leerArchivoComoFilas(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try{
+          const wb = XLSX.read(e.target.result, {type:'array'});
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const filas = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+          resolve(filas);
+        }catch(err){ reject(err); }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  function filasATexto(filas){
+    if(filas.length < 1) return [];
+    const headers = filas[0].map(h => String(h));
+    const iId = detectarColumna(headers,'idEstudiante');
+    const iGrado = detectarColumna(headers,'grado');
+    const iEst = detectarColumna(headers,'estudiante');
+    const iAcu = detectarColumna(headers,'acudiente');
+    const iPar = detectarColumna(headers,'parentesco');
+    const iTel = detectarColumna(headers,'telefono');
+    const iCorreo = detectarColumna(headers,'correo');
+
+    const registros = [];
+    for(let r=1; r<filas.length; r++){
+      const fila = filas[r];
+      if(!fila || fila.every(c => String(c).trim()==='')) continue;
+      registros.push({
+        idEstudianteRaw: iId>=0 ? String(fila[iId]||'').trim() : '',
+        grado: iGrado>=0 ? String(fila[iGrado]||'').trim() : '',
+        estudiante: iEst>=0 ? String(fila[iEst]||'').trim() : '',
+        acudiente: iAcu>=0 ? String(fila[iAcu]||'').trim() : '',
+        parentesco: iPar>=0 ? String(fila[iPar]||'').trim() : '',
+        telefono: iTel>=0 ? String(fila[iTel]||'').trim() : '',
+        correo: iCorreo>=0 ? String(fila[iCorreo]||'').trim() : '',
+      });
+    }
+    return registros;
+  }
+
+  function validarRegistros(registros){
+    const telsVistos = new Map();
+    const estVistos = new Map();
+    return registros.map(reg => {
+      const problemas = [];
+      const telNorm = Contacts.normalizarTelefono(reg.telefono);
+      if(!reg.estudiante) problemas.push('Falta nombre de estudiante');
+      if(!reg.grado) problemas.push('Falta grado');
+      if(!reg.acudiente) problemas.push('Falta acudiente');
+      if(!reg.telefono || !Contacts.esTelefonoValido(telNorm)) problemas.push('Teléfono inválido o vacío');
+
+      let advertencias = [];
+      const keyEst = `${reg.estudiante.toLowerCase()}|${reg.grado.toLowerCase()}`;
+      if(estVistos.has(keyEst)) advertencias.push('Estudiante repetido en el archivo');
+      estVistos.set(keyEst,true);
+
+      if(telNorm){
+        if(telsVistos.has(telNorm) && telsVistos.get(telNorm) !== reg.acudiente){
+          advertencias.push('Teléfono ya usado por otro acudiente en este archivo');
+        }
+        telsVistos.set(telNorm, reg.acudiente);
+      }
+
+      const gradoExistente = DB.estudiantes.some(e => e.grado.toLowerCase() === reg.grado.toLowerCase())
+        || GRADOS_VALIDOS.some(g => g.toLowerCase() === reg.grado.toLowerCase());
+      if(reg.grado && !gradoExistente) advertencias.push('Grado no reconocido (se creará)');
+
+      const estado = problemas.length ? 'error' : (advertencias.length ? 'advertencia' : 'ok');
+      return { ...reg, telefonoNormalizado: telNorm, problemas, advertencias, estado };
+    });
+  }
+
+  function mostrarPreview(registros, tipo){
+    pendiente = { tipo, registros };
+    const total = registros.length;
+    const ok = registros.filter(r=>r.estado==='ok').length;
+    const warn = registros.filter(r=>r.estado==='advertencia').length;
+    const err = registros.filter(r=>r.estado==='error').length;
+
+    const filasHtml = registros.map((r,i) => {
+      const cls = r.estado==='error' ? 'row-err' : (r.estado==='advertencia' ? 'row-warn' : '');
+      const tagCls = r.estado==='error'?'err':(r.estado==='advertencia'?'warn':'ok');
+      const tagTxt = r.estado==='error'?'Error':(r.estado==='advertencia'?'Revisar':'Correcto');
+      const detalle = [...r.problemas, ...r.advertencias].join('; ') || '—';
+      return `<tr class="${cls}">
+        <td><span class="status-tag ${tagCls}">${tagTxt}</span></td>
+        <td>${UI.esc(r.grado)}</td>
+        <td>${UI.esc(r.estudiante)}</td>
+        <td>${UI.esc(r.acudiente)}</td>
+        <td>${UI.esc(r.parentesco)}</td>
+        <td>${UI.esc(r.telefonoNormalizado || r.telefono)}</td>
+        <td style="max-width:220px;white-space:normal;color:var(--gris-600);font-size:12px;">${UI.esc(detalle)}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('importPreviewZone').innerHTML = `
+      <div class="section-head"><h2>Datos encontrados</h2></div>
+      <div class="preview-summary">
+        <div class="pill total">Registros: ${total}</div>
+        <div class="pill ok">Correctos: ${ok}</div>
+        <div class="pill warn">Advertencias: ${warn}</div>
+        <div class="pill err">Errores: ${err}</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Estado</th><th>Grado</th><th>Estudiante</th><th>Acudiente</th><th>Parentesco</th><th>Teléfono</th><th>Detalle</th></tr></thead>
+          <tbody>${filasHtml}</tbody>
+        </table>
+      </div>
+      <div class="aviso-actions" style="margin-top:14px;">
+        <button class="btn btn-primary" ${err>0?'disabled':''} onclick="Import.confirmar()">Confirmar importación (${ok+warn})</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('importPreviewZone').innerHTML=''">Cancelar</button>
+      </div>
+      ${err>0 ? '<p class="helper" style="color:var(--rojo);">Corrige los registros en error en tu archivo de origen y vuelve a importar; los registros correctos y con advertencias sí pueden confirmarse.</p>' : ''}
+    `;
+  }
+
+  function confirmar(){
+    if(!pendiente) return;
+    const validos = pendiente.registros.filter(r => r.estado !== 'error');
+    let creados = 0;
+    validos.forEach(r => {
+      let estudiante = DB.estudiantes.find(e => e.nombre.toLowerCase()===r.estudiante.toLowerCase() && e.grado.toLowerCase()===r.grado.toLowerCase());
+      if(!estudiante){
+        estudiante = { id: Storage.nuevoId('EST'), nombre:r.estudiante, grado:r.grado, estado:'activo' };
+        DB.estudiantes.push(estudiante);
+      }
+      let acudiente = DB.acudientes.find(a => a.nombre.toLowerCase()===r.acudiente.toLowerCase() && a.telefono===r.telefonoNormalizado);
+      if(!acudiente){
+        acudiente = { id: Storage.nuevoId('ACU'), nombre:r.acudiente, telefono:r.telefonoNormalizado||r.telefono, correo:r.correo||'' };
+        DB.acudientes.push(acudiente);
+      }
+      const yaExiste = DB.relaciones.some(rel => rel.estudianteId===estudiante.id && rel.acudienteId===acudiente.id);
+      if(!yaExiste){
+        DB.relaciones.push({ id:Storage.nuevoId('REL'), estudianteId:estudiante.id, acudienteId:acudiente.id, parentesco:r.parentesco||'Acudiente', principal: !DB.relaciones.some(x=>x.estudianteId===estudiante.id), etiqueta:'Personal' });
+      }
+      creados++;
+    });
+    Storage.guardar(DB);
+    UI.renderAll();
+    document.getElementById('importPreviewZone').innerHTML = `<div class="empty-state"><div class="big">✅</div><b>${creados} registros importados</b><br>El directorio ya se actualizó.</div>`;
+    pendiente = null;
+  }
+
+  async function manejarArchivo(file){
+    if(!file) return;
+    try{
+      const filas = await leerArchivoComoFilas(file);
+      const registros = filasATexto(filas);
+      if(registros.length===0){ UI.toast('No se encontraron registros en el archivo'); return; }
+      mostrarPreview(validarRegistros(registros), 'directorio');
+    }catch(e){ UI.toast('No se pudo leer el archivo. Verifica el formato.'); console.error(e); }
+  }
+
+  function procesarMarkdown(){
+    const texto = document.getElementById('mdInput').value;
+    if(!texto.trim()){ UI.toast('Pega contenido en Markdown primero'); return; }
+    const lineas = texto.split('\n');
+    let gradoActual = '';
+    let registros = [];
+    let actual = null;
+    lineas.forEach(linea => {
+      const tGrado = linea.match(/^##\s*Grado\s*(.+)/i);
+      const tEstudiante = linea.match(/^-\s+([^\n]+)/);
+      const tCampo = linea.match(/^\s+-\s*(Acudiente|Parentesco|Teléfono|Telefono)\s*:\s*(.+)/i);
+      if(tGrado){ gradoActual = `Grado ${tGrado[1].trim()}`; return; }
+      if(tCampo && actual){
+        const campo = tCampo[1].toLowerCase();
+        const valor = tCampo[2].trim();
+        if(campo==='acudiente') actual.acudiente = valor;
+        else if(campo==='parentesco') actual.parentesco = valor;
+        else actual.telefono = valor;
+        return;
+      }
+      if(tEstudiante && !linea.trim().startsWith('- Acudiente') && !tCampo){
+        if(actual) registros.push(actual);
+        actual = { grado:gradoActual, estudiante:tEstudiante[1].trim(), acudiente:'', parentesco:'', telefono:'', correo:'' };
+      }
+    });
+    if(actual) registros.push(actual);
+    if(registros.length===0){ UI.toast('No se reconoció ninguna estructura válida'); return; }
+    mostrarPreview(validarRegistros(registros), 'directorio');
+  }
+
+  async function manejarArchivoMensajes(file){
+    if(!file) return;
+    try{
+      const filas = await leerArchivoComoFilas(file);
+      if(filas.length<2){ UI.toast('Archivo vacío'); return; }
+      const headers = filas[0].map(h=>String(h));
+      const iId = detectarColumna(headers,'idEstudiante');
+      const iEst = detectarColumna(headers,'estudiante');
+      const iGrado = detectarColumna(headers,'grado');
+      const iMotivo = detectarColumna(headers,'motivo');
+      const iMsg = detectarColumna(headers,'mensaje');
+
+      let generados = 0, sinCoincidencia = 0;
+      for(let r=1; r<filas.length; r++){
+        const fila = filas[r];
+        if(!fila || fila.every(c=>String(c).trim()==='')) continue;
+        const idRaw = iId>=0 ? String(fila[iId]||'').trim() : '';
+        const nombre = iEst>=0 ? String(fila[iEst]||'').trim() : '';
+        const grado = iGrado>=0 ? String(fila[iGrado]||'').trim() : '';
+        const motivo = iMotivo>=0 ? String(fila[iMotivo]||'').trim() : '';
+        const mensaje = iMsg>=0 ? String(fila[iMsg]||'').trim() : '';
+
+        let estudiante = DB.estudiantes.find(e => e.id===idRaw) ||
+          DB.estudiantes.find(e => e.nombre.toLowerCase()===nombre.toLowerCase() && (!grado || e.grado.toLowerCase()===grado.toLowerCase()));
+        if(!estudiante){ sinCoincidencia++; continue; }
+        const relacion = DB.relaciones.find(rel => rel.estudianteId===estudiante.id && rel.principal) ||
+          DB.relaciones.find(rel => rel.estudianteId===estudiante.id);
+        if(!relacion){ sinCoincidencia++; continue; }
+        DB.mensajes.push({ id:Storage.nuevoId('AV'), estudianteId:estudiante.id, acudienteId:relacion.acudienteId, motivo:motivo||'Aviso importado', mensaje, estado:'Pendiente', tipo:'texto', fecha:new Date().toISOString() });
+        generados++;
+      }
+      Storage.guardar(DB);
+      UI.renderAll();
+      document.getElementById('importPreviewZone').innerHTML = `<div class="empty-state"><div class="big">📮</div><b>${generados} avisos generados</b><br>${sinCoincidencia>0 ? sinCoincidencia+' filas no encontraron estudiante/acudiente y se omitieron.' : 'Revísalos en la Bandeja de avisos.'}</div>`;
+    }catch(e){ UI.toast('No se pudo leer el archivo de mensajes'); console.error(e); }
+  }
+
+  return { manejarArchivo, procesarMarkdown, confirmar, manejarArchivoMensajes };
+})();
+
+/* ---------------------------------------------------------------
+   Estado global
+   --------------------------------------------------------------- */
+const GRADOS_VALIDOS = ['Grado 1','Grado 2','Grado 3','Grado 4','Grado 5','Grado 6','Grado 7','Grado 8','Grado 9','Grado 10','Grado 11'];
+let DB = Storage.cargar() || DemoData.generar();
+Storage.guardar(DB);
+let currentGrado = null;
+
+/* ---------------------------------------------------------------
+   MÓDULO: UI — vistas, render, interacciones
+   --------------------------------------------------------------- */
+const UI = (() => {
+
+  function esc(s){
+    return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=>t.classList.remove('show'), 2400);
+  }
+
+  function irA(vista){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+vista).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===vista));
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(vista==='directorio') renderDirectorio();
+    if(vista==='mensajes') renderMensajesForm();
+    if(vista==='plantillas') renderPlantillas();
+    if(vista==='avisos') renderAvisos();
+    if(vista==='historial') renderHistorial();
+  }
+
+  function acudientesDe(estudianteId){
+    return DB.relaciones.filter(r=>r.estudianteId===estudianteId).map(r => ({
+      relacion:r, acudiente: DB.acudientes.find(a=>a.id===r.acudienteId)
+    })).filter(x=>x.acudiente);
+  }
+  function estudiantesDe(acudienteId){
+    return DB.relaciones.filter(r=>r.acudienteId===acudienteId).map(r=>({
+      relacion:r, estudiante: DB.estudiantes.find(e=>e.id===r.estudianteId)
+    })).filter(x=>x.estudiante);
+  }
+  function principalDe(estudianteId){
+    const rels = acudientesDe(estudianteId);
+    return rels.find(x=>x.relacion.principal) || rels[0] || null;
+  }
+
+  /* ---------- Dashboard ---------- */
+  function renderDashboard(){
+    const totalEst = DB.estudiantes.length;
+    const totalAcu = DB.acudientes.length;
+    const totalContactos = DB.relaciones.length;
+    const pendientes = DB.mensajes.filter(m=>m.estado==='Pendiente').length;
+    const realizados = DB.historial.filter(h=>['Contactado','Llamado','Cerrado'].includes(h.estado)).length;
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-card"><div class="num">${totalEst}</div><div class="lbl">Estudiantes</div></div>
+      <div class="stat-card"><div class="num">${totalAcu}</div><div class="lbl">Acudientes</div></div>
+      <div class="stat-card"><div class="num">${totalContactos}</div><div class="lbl">Contactos registrados</div></div>
+      <div class="stat-card warn"><div class="num">${pendientes}</div><div class="lbl">Mensajes pendientes</div></div>
+      <div class="stat-card good"><div class="num">${realizados}</div><div class="lbl">Contactos realizados</div></div>
+    `;
+
+    const gradosPresentes = [...new Set(DB.estudiantes.map(e=>e.grado))];
+    const orden = [...GRADOS_VALIDOS, ...gradosPresentes.filter(g=>!GRADOS_VALIDOS.includes(g))];
+    const gradosOrdenados = orden.filter(g=>gradosPresentes.includes(g));
+
+    document.getElementById('gradesHint').textContent = `${gradosOrdenados.length} grados con datos`;
+
+    if(gradosOrdenados.length===0){
+      document.getElementById('gradesGrid').innerHTML = `<div class="empty-state"><div class="big">📚</div>Aún no hay estudiantes. Ve a <b>Importar</b> para cargar tu directorio.</div>`;
+    } else {
+      document.getElementById('gradesGrid').innerHTML = gradosOrdenados.map(g => {
+        const est = DB.estudiantes.filter(e=>e.grado===g);
+        const acuIds = new Set();
+        est.forEach(e => acudientesDe(e.id).forEach(x=>acuIds.add(x.acudiente.id)));
+        return `<button class="grade-card" onclick="UI.abrirGrado('${esc(g)}')">
+          <div class="g-name">${esc(g)}</div>
+          <div class="g-meta">${est.length} estudiantes · ${acuIds.size} acudientes</div>
+          <div class="g-cta">Ver directorio →</div>
+        </button>`;
+      }).join('');
+    }
+
+    const recientes = [...DB.mensajes].filter(m=>m.estado!=='Cerrado').slice(-3).reverse();
+    document.getElementById('dashAvisos').innerHTML = recientes.length
+      ? recientes.map(m => avisoCardHtml(m)).join('')
+      : `<div class="empty-state">No hay avisos pendientes por el momento.</div>`;
+  }
+
+  function abrirGrado(g){
+    currentGrado = g;
+    irA('directorio');
+    document.getElementById('dirTitle').textContent = 'Directorio · ' + g;
+    document.getElementById('dirGradoFilter').value = g;
+    renderDirectorio();
+  }
+
+  /* ---------- Directorio ---------- */
+  function poblarSelectorGrados(selectId, incluirTodos){
+    const sel = document.getElementById(selectId);
+    const gradosPresentes = [...new Set(DB.estudiantes.map(e=>e.grado))];
+    const orden = [...GRADOS_VALIDOS, ...gradosPresentes.filter(g=>!GRADOS_VALIDOS.includes(g))].filter(g=>gradosPresentes.includes(g));
+    sel.innerHTML = (incluirTodos ? '<option value="">Todos los grados</option>' : '') + orden.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  }
+
+  function renderDirectorio(){
+    if(!document.getElementById('dirGradoFilter').dataset.filled){
+      poblarSelectorGrados('dirGradoFilter', true);
+      document.getElementById('dirGradoFilter').dataset.filled='1';
+      if(currentGrado) document.getElementById('dirGradoFilter').value = currentGrado;
+    }
+    const q = document.getElementById('dirSearch').value.trim().toLowerCase();
+    const gradoSel = document.getElementById('dirGradoFilter').value;
+    document.getElementById('dirTitle').textContent = gradoSel ? 'Directorio · '+gradoSel : 'Directorio';
+
+    let lista = DB.estudiantes.filter(e => !gradoSel || e.grado===gradoSel);
+    if(q){
+      lista = lista.filter(e => {
+        if(e.nombre.toLowerCase().includes(q)) return true;
+        return acudientesDe(e.id).some(x => x.acudiente.nombre.toLowerCase().includes(q) || x.acudiente.telefono.includes(q));
+      });
+    }
+    lista.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+
+    if(lista.length===0){
+      document.getElementById('directoryList').innerHTML = `<div class="empty-state"><div class="big">🔍</div>Sin resultados.</div>`;
+      return;
+    }
+
+    document.getElementById('directoryList').innerHTML = lista.map(e => {
+      const pr = principalDe(e.id);
+      const tel = pr ? pr.acudiente.telefono : '';
+      return `<div class="student-row" onclick="UI.abrirPerfil('${e.id}')">
+        <div class="s-main"><span class="s-name">${esc(e.nombre)}</span><span class="s-grade">${esc(e.grado)}</span></div>
+        <div class="s-guardian">
+          ${pr ? `<span><b>${esc(pr.acudiente.nombre)}</b></span><span>${esc(pr.relacion.parentesco)} · ${esc(tel||'sin teléfono')}</span>` : '<span>Sin acudiente registrado</span>'}
+        </div>
+        <div class="s-actions" onclick="event.stopPropagation()">
+          <button class="btn btn-wa btn-sm" onclick="WhatsappMod.abrir('${esc(tel)}','')" ${tel?'':'disabled'}>💬</button>
+          <button class="btn btn-call btn-sm" onclick="WhatsappMod.llamar('${esc(tel)}')" ${tel?'':'disabled'}>📞</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ---------- Perfil estudiante ---------- */
+  function abrirPerfil(estId){
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    if(!est) return;
+    const acus = acudientesDe(est.id);
+    document.getElementById('modalPerfilContent').innerHTML = `
+      <div class="modal-head">
+        <div><h3>${esc(est.nombre)}</h3><div class="sub">${esc(est.grado)} · ${esc(est.estado)}</div></div>
+        <button class="modal-close" onclick="UI.cerrarModal('modalPerfil')">✕</button>
+      </div>
+      <label style="font-size:12.5px;font-weight:600;color:var(--gris-600);display:block;margin-top:16px;">Acudientes</label>
+      ${acus.length ? acus.map(x => `
+        <div class="guardian-card">
+          <div class="top-row">
+            <span class="g-nombre">${esc(x.acudiente.nombre)}</span>
+            ${x.relacion.principal ? '<span class="badge-principal">Principal</span>' : `<button class="link-btn" onclick="UI.marcarPrincipal('${est.id}','${x.acudiente.id}')">Marcar como principal</button>`}
+          </div>
+          <div class="g-rel">${esc(x.relacion.parentesco)} · ${esc(x.acudiente.telefono || 'sin teléfono')}${x.acudiente.correo ? ' · '+esc(x.acudiente.correo):''}</div>
+          <div class="g-actions">
+            <button class="btn btn-wa btn-sm" ${x.acudiente.telefono?'':'disabled'} onclick="WhatsappMod.abrir('${esc(x.acudiente.telefono)}','')">💬 WhatsApp</button>
+            <button class="btn btn-call btn-sm" ${x.acudiente.telefono?'':'disabled'} onclick="WhatsappMod.llamar('${esc(x.acudiente.telefono)}')">📞 Llamar</button>
+            <button class="btn btn-ghost btn-sm" onclick="UI.irAMensajeDesdePerfil('${est.id}','${x.acudiente.id}')">✉️ Redactar aviso</button>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state">Sin acudientes registrados para este estudiante.</div>'}
+    `;
+    document.getElementById('modalPerfil').classList.add('open');
+  }
+
+  function marcarPrincipal(estId, acuId){
+    DB.relaciones.forEach(r => { if(r.estudianteId===estId) r.principal = (r.acudienteId===acuId); });
+    Storage.guardar(DB);
+    abrirPerfil(estId);
+    renderDirectorio();
+    toast('Acudiente principal actualizado');
+  }
+
+  function cerrarModal(id){ document.getElementById(id).classList.remove('open'); }
+
+  function irAMensajeDesdePerfil(estId, acuId){
+    cerrarModal('modalPerfil');
+    irA('mensajes');
+    renderMensajesForm();
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    document.getElementById('msgGrado').value = est.grado;
+    msgActualizarEstudiantes();
+    document.getElementById('msgEstudiante').value = estId;
+    msgActualizarAcudientes();
+    document.getElementById('msgAcudiente').value = acuId;
+    msgRenderPreview();
+  }
+
+  /* ---------- Búsqueda global ---------- */
+  function buscarGlobal(q){
+    const box = document.getElementById('searchResults');
+    q = q.trim().toLowerCase();
+    if(q.length<2){ box.classList.remove('open'); box.innerHTML=''; return; }
+
+    const resEst = DB.estudiantes.filter(e=>e.nombre.toLowerCase().includes(q)).slice(0,5)
+      .map(e => ({tipo:'Estudiante', label:e.nombre, meta:e.grado, action:`UI.cerrarBusqueda();UI.abrirPerfil('${e.id}')`}));
+    const resAcu = DB.acudientes.filter(a=>a.nombre.toLowerCase().includes(q) || a.telefono.includes(q)).slice(0,5)
+      .map(a => {
+        const rels = estudiantesDe(a.id);
+        return {tipo:'Acudiente', label:a.nombre, meta:`${a.telefono||'sin tel.'} · ${rels.map(r=>r.estudiante.nombre).join(', ')||'sin estudiante'}`,
+          action: rels[0] ? `UI.cerrarBusqueda();UI.abrirPerfil('${rels[0].estudiante.id}')` : `UI.cerrarBusqueda()`};
+      });
+    const resGrado = GRADOS_VALIDOS.filter(g=>g.toLowerCase().includes(q)).slice(0,3)
+      .map(g => ({tipo:'Grado', label:g, meta:`${DB.estudiantes.filter(e=>e.grado===g).length} estudiantes`, action:`UI.cerrarBusqueda();UI.abrirGrado('${g}')`}));
+
+    const todos = [...resEst, ...resAcu, ...resGrado];
+    if(todos.length===0){
+      box.innerHTML = `<div class="search-row"><span class="meta">Sin resultados para “${esc(q)}”</span></div>`;
+    } else {
+      box.innerHTML = todos.map(r => `<div class="search-row" onclick="${r.action}">
+        <div><div class="who">${esc(r.label)}</div><div class="meta">${esc(r.tipo)} · ${esc(r.meta)}</div></div>
+      </div>`).join('');
+    }
+    box.classList.add('open');
+  }
+  function cerrarBusqueda(){
+    document.getElementById('searchResults').classList.remove('open');
+    document.getElementById('globalSearch').value='';
+  }
+
+  /* ---------- Mensajes ---------- */
+  function renderMensajesForm(){
+    poblarSelectorGrados('msgGrado', false);
+    msgActualizarEstudiantes();
+    const selPlt = document.getElementById('msgPlantilla');
+    selPlt.innerHTML = '<option value="">Sin plantilla (mensaje libre)</option>' + DB.plantillas.map(p=>`<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
+  }
+  function msgActualizarEstudiantes(){
+    const grado = document.getElementById('msgGrado').value;
+    const sel = document.getElementById('msgEstudiante');
+    const lista = DB.estudiantes.filter(e=>e.grado===grado).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+    sel.innerHTML = lista.map(e=>`<option value="${e.id}">${esc(e.nombre)}</option>`).join('') || '<option value="">— sin estudiantes —</option>';
+    msgActualizarAcudientes();
+  }
+  function msgActualizarAcudientes(){
+    const estId = document.getElementById('msgEstudiante').value;
+    const sel = document.getElementById('msgAcudiente');
+    const acus = acudientesDe(estId);
+    sel.innerHTML = acus.map(x=>`<option value="${x.acudiente.id}">${esc(x.acudiente.nombre)} (${esc(x.relacion.parentesco)})</option>`).join('') || '<option value="">— sin acudientes —</option>';
+    msgRenderPreview();
+  }
+  function msgAplicarPlantilla(){
+    const pid = document.getElementById('msgPlantilla').value;
+    const plt = DB.plantillas.find(p=>p.id===pid);
+    document.getElementById('msgTexto').value = plt ? plt.texto : '';
+    msgRenderPreview();
+  }
+  function reemplazarVariables(texto, ctx){
+    return texto
+      .replaceAll('{acudiente}', ctx.acudiente||'')
+      .replaceAll('{estudiante}', ctx.estudiante||'')
+      .replaceAll('{grado}', ctx.grado||'')
+      .replaceAll('{parentesco}', ctx.parentesco||'')
+      .replaceAll('{fecha}', ctx.fecha||'')
+      .replaceAll('{docente}', ctx.docente||'')
+      .replaceAll('{motivo}', ctx.motivo||'')
+      .replaceAll('{mensaje}', ctx.mensaje||'');
+  }
+  function msgContexto(){
+    const estId = document.getElementById('msgEstudiante').value;
+    const acuId = document.getElementById('msgAcudiente').value;
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    const acu = DB.acudientes.find(a=>a.id===acuId);
+    const rel = DB.relaciones.find(r=>r.estudianteId===estId && r.acudienteId===acuId);
+    return { est, acu, rel };
+  }
+  function msgRenderPreview(){
+    const { est, acu, rel } = msgContexto();
+    const preview = document.getElementById('msgPreview');
+    if(!est || !acu){ preview.textContent = 'Selecciona un estudiante y un acudiente para ver el mensaje.'; return; }
+    const plantillaTexto = document.getElementById('msgTexto').value;
+    const motivo = document.getElementById('msgMotivo').value;
+    const fecha = new Date().toLocaleDateString('es-CO');
+    const texto = reemplazarVariables(plantillaTexto || `Hola {acudiente}, me comunico con usted sobre {estudiante} ({grado}).`, {
+      acudiente: acu.nombre, estudiante: est.nombre, grado: est.grado, parentesco: rel?.parentesco||'',
+      fecha, docente: 'Docente Yonatha Mendoza', motivo
+    });
+    preview.textContent = texto;
+  }
+  function msgCopiar(){
+    const texto = document.getElementById('msgPreview').textContent;
+    navigator.clipboard?.writeText(texto).then(()=>toast('Mensaje copiado')).catch(()=>toast('No se pudo copiar'));
+  }
+  function msgAbrirWhatsapp(){
+    const { est, acu, rel } = msgContexto();
+    if(!est || !acu){ toast('Selecciona estudiante y acudiente'); return; }
+    const texto = document.getElementById('msgPreview').textContent;
+    const abierto = WhatsappMod.abrir(acu.telefono, texto);
+    if(abierto){
+      DB.historial.unshift({ fecha:new Date().toISOString(), estudianteId:est.id, acudienteId:acu.id, tipo:'WhatsApp', motivo:document.getElementById('msgMotivo').value||'Mensaje directo', mensaje:texto, estado:'Preparado', observaciones:'' });
+      Storage.guardar(DB);
+      toast('WhatsApp abierto — confirma el estado en Historial cuando el acudiente responda');
+    }
+  }
+
+  /* ---------- Plantillas ---------- */
+  function renderPlantillas(){
+    document.getElementById('tplGrid').innerHTML = DB.plantillas.map(p => `
+      <div class="tpl-card">
+        <h4>${esc(p.nombre)}</h4>
+        <p>${esc(p.texto)}</p>
+        <div class="tpl-actions">
+          <button class="btn btn-ghost btn-sm" onclick="UI.abrirModalPlantilla('${p.id}')">Editar</button>
+          <button class="btn btn-ghost btn-sm" onclick="UI.duplicarPlantilla('${p.id}')">Duplicar</button>
+          <button class="btn btn-danger btn-sm" onclick="UI.eliminarPlantilla('${p.id}')">Eliminar</button>
+        </div>
+      </div>`).join('') || '<div class="empty-state">Aún no hay plantillas.</div>';
+  }
+  function abrirModalPlantilla(id){
+    document.getElementById('tplEditId').value = id||'';
+    if(id){
+      const p = DB.plantillas.find(x=>x.id===id);
+      document.getElementById('tplModalTitulo').textContent = 'Editar plantilla';
+      document.getElementById('tplNombre').value = p.nombre;
+      document.getElementById('tplTexto').value = p.texto;
+    } else {
+      document.getElementById('tplModalTitulo').textContent = 'Nueva plantilla';
+      document.getElementById('tplNombre').value = '';
+      document.getElementById('tplTexto').value = '';
+    }
+    document.getElementById('modalPlantilla').classList.add('open');
+  }
+  function insertarVariableTpl(v){
+    const ta = document.getElementById('tplTexto');
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    ta.value = ta.value.slice(0,start) + v + ta.value.slice(end);
+    ta.focus();
+  }
+  function guardarPlantilla(){
+    const id = document.getElementById('tplEditId').value;
+    const nombre = document.getElementById('tplNombre').value.trim();
+    const texto = document.getElementById('tplTexto').value.trim();
+    if(!nombre || !texto){ toast('Completa nombre y texto'); return; }
+    if(id){
+      const p = DB.plantillas.find(x=>x.id===id);
+      p.nombre = nombre; p.texto = texto;
+    } else {
+      DB.plantillas.push({ id:Storage.nuevoId('PLT'), nombre, texto });
+    }
+    Storage.guardar(DB);
+    cerrarModal('modalPlantilla');
+    renderPlantillas();
+    toast('Plantilla guardada');
+  }
+  function duplicarPlantilla(id){
+    const p = DB.plantillas.find(x=>x.id===id);
+    DB.plantillas.push({ id:Storage.nuevoId('PLT'), nombre:p.nombre+' (copia)', texto:p.texto });
+    Storage.guardar(DB);
+    renderPlantillas();
+  }
+  function eliminarPlantilla(id){
+    if(!confirm('¿Eliminar esta plantilla?')) return;
+    DB.plantillas = DB.plantillas.filter(x=>x.id!==id);
+    Storage.guardar(DB);
+    renderPlantillas();
+  }
+
+  /* ---------- Avisos ---------- */
+  const ESTADOS_AVISO = ['Pendiente','Preparado','Contactado','Llamado','No contestó','Cerrado'];
+  let filtroAviso = 'Todos';
+
+  function avisoCardHtml(m){
+    const est = DB.estudiantes.find(e=>e.id===m.estudianteId);
+    const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
+    if(!est || !acu) return '';
+    const slug = m.estado.toLowerCase().replace(/\s+/g,'_').replace('ó','o');
+    return `<div class="aviso-card">
+      <div class="aviso-top">
+        <div><div class="nombre">${esc(est.nombre)}</div><div class="grado">${esc(est.grado)}</div></div>
+        <select class="state-select st-${slug}" onchange="UI.cambiarEstadoAviso('${m.id}', this.value)">
+          ${ESTADOS_AVISO.map(s=>`<option value="${s}" ${s===m.estado?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="aviso-mid">Acudiente: <b>${esc(acu.nombre)}</b> · Motivo: <b>${esc(m.motivo)}</b></div>
+      <div class="aviso-actions">
+        <button class="btn btn-ghost btn-sm" onclick="UI.verMensajeAviso('${m.id}')">Ver mensaje</button>
+        <button class="btn btn-wa btn-sm" ${acu.telefono?'':'disabled'} onclick="UI.contactarAviso('${m.id}')">💬 WhatsApp</button>
+        <button class="btn btn-call btn-sm" ${acu.telefono?'':'disabled'} onclick="WhatsappMod.llamar('${esc(acu.telefono)}')">📞 Llamar</button>
+      </div>
+    </div>`;
+  }
+  function renderAvisos(){
+    document.getElementById('avisoFiltros').innerHTML = ['Todos', ...ESTADOS_AVISO].map(s =>
+      `<button class="chip ${filtroAviso===s?'active':''}" onclick="UI.filtrarAvisos('${s}')">${s}</button>`).join('');
+    let lista = [...DB.mensajes].reverse();
+    if(filtroAviso!=='Todos') lista = lista.filter(m=>m.estado===filtroAviso);
+    document.getElementById('avisosList').innerHTML = lista.map(avisoCardHtml).join('') || '<div class="empty-state">No hay avisos en este filtro.</div>';
+  }
+  function filtrarAvisos(s){ filtroAviso = s; renderAvisos(); }
+  function cambiarEstadoAviso(id, estado){
+    const m = DB.mensajes.find(x=>x.id===id);
+    m.estado = estado;
+    Storage.guardar(DB);
+    if(['Contactado','Llamado','Cerrado','No contestó'].includes(estado)){
+      const est = DB.estudiantes.find(e=>e.id===m.estudianteId);
+      const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
+      DB.historial.unshift({ fecha:new Date().toISOString(), estudianteId:m.estudianteId, acudienteId:m.acudienteId, tipo:'Aviso', motivo:m.motivo, estado, observaciones:'' });
+      Storage.guardar(DB);
+    }
+    renderAvisos();
+    renderDashboard();
+    toast('Estado actualizado');
+  }
+  function verMensajeAviso(id){
+    const m = DB.mensajes.find(x=>x.id===id);
+    alert(m.mensaje || `Motivo: ${m.motivo}\n\n(Este aviso no tiene un texto de mensaje predefinido — redáctalo desde Mensajes.)`);
+  }
+  function contactarAviso(id){
+    const m = DB.mensajes.find(x=>x.id===id);
+    const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
+    const est = DB.estudiantes.find(e=>e.id===m.estudianteId);
+    const texto = m.mensaje || reemplazarVariables('Hola {acudiente}, me comunico con usted sobre {estudiante} ({grado}). Motivo: {motivo}.', { acudiente:acu.nombre, estudiante:est.nombre, grado:est.grado, motivo:m.motivo });
+    if(WhatsappMod.abrir(acu.telefono, texto)){
+      cambiarEstadoAviso(id, 'Preparado');
+    }
+  }
+
+  /* ---------- Historial ---------- */
+  function renderHistorial(){
+    const lista = [...DB.historial];
+    document.getElementById('historialList').innerHTML = lista.map(h => {
+      const est = DB.estudiantes.find(e=>e.id===h.estudianteId);
+      const acu = DB.acudientes.find(a=>a.id===h.acudienteId);
+      const f = new Date(h.fecha).toLocaleString('es-CO', {dateStyle:'medium', timeStyle:'short'});
+      return `<div class="hist-row">
+        <div class="h-top"><span><b>${esc(est?.nombre||'—')}</b> · ${esc(acu?.nombre||'—')}</span><span class="h-date">${f}</span></div>
+        <div>${esc(h.tipo)} · ${esc(h.motivo)} · <b>${esc(h.estado)}</b></div>
+      </div>`;
+    }).join('') || '<div class="empty-state">Aún no hay historial de contactos.</div>';
+  }
+
+  /* ---------- Import tabs ---------- */
+  function cambiarTabImport(tabId){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tabId));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id===tabId));
+    document.getElementById('importPreviewZone').innerHTML = '';
+  }
+
+  function renderAll(){
+    document.getElementById('dirGradoFilter').dataset.filled='';
+    renderDashboard();
+    renderDirectorio();
+    renderPlantillas();
+    renderAvisos();
+    renderHistorial();
+  }
+
+  return {
+    esc, toast, irA, abrirGrado, renderDirectorio, abrirPerfil, marcarPrincipal, cerrarModal,
+    irAMensajeDesdePerfil, buscarGlobal, cerrarBusqueda, msgActualizarEstudiantes, msgActualizarAcudientes,
+    msgAplicarPlantilla, msgRenderPreview, msgCopiar, msgAbrirWhatsapp, abrirModalPlantilla, insertarVariableTpl,
+    guardarPlantilla, duplicarPlantilla, eliminarPlantilla, filtrarAvisos, cambiarEstadoAviso, verMensajeAviso,
+    contactarAviso, cambiarTabImport, renderAll, renderDashboard
+  };
+})();
+
+/* ---------------------------------------------------------------
+   Drag & drop en la zona de importación
+   --------------------------------------------------------------- */
+const dz = document.getElementById('dropzone');
+['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
+dz.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if(f) Import.manejarArchivo(f); });
+
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.search-box')) UI.cerrarBusqueda();
+});
+
+/* ---------------------------------------------------------------
+   Arranque
+   --------------------------------------------------------------- */
+UI.renderDashboard();
+</script>
+</body>
+</html>
