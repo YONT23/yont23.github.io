@@ -1,622 +1,526 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Yonatha Mendoza — Desarrollador Full Stack especializado en plataformas educativas y SaaS. Ingeniero de Sistemas con +5 años de experiencia en EdTech, automatización y sistemas de gestión.">
-  <meta name="keywords" content="desarrollador full stack, edtech, ingeniero sistemas, Colombia, SaaS, PHP, JavaScript">
-  <title>Yonatha Mendoza | Desarrollador Full Stack & EdTech</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yonatha Mendoza | Ingeniero de Sistemas, Docente y Creador Digital</title>
+<meta name="description" content="Portafolio profesional de Yonatha Mendoza: Ingeniería de Sistemas, desarrollo de software, EdTech, inteligencia artificial y productos digitales.">
+<meta name="keywords" content="Yonatha Mendoza, MENDOZATIC, Ingeniero de Sistemas, Docente, EdTech, desarrollo full stack, Riohacha, La Guajira">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Yonatha Mendoza | Desarrollador Full Stack & EdTech">
-  <meta property="og:description" content="Ingeniero de Sistemas con +5 años construyendo plataformas educativas, SaaS y sistemas de gestión de alto impacto.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yont23.github.io/">
+<meta property="og:title" content="Yonatha Mendoza | Ingeniero de Sistemas, Docente y Creador Digital">
+<meta property="og:description" content="Construyo tecnología que resuelve problemas reales. Ingeniería de Sistemas, desarrollo de software, EdTech, IA y productos digitales.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yont23.github.io/">
+<meta property="og:image" content="img/profile/mifoto.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="./css/style.css" />
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230B111D'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Georgia,serif' fill='%232D6CDF' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
-  <!-- ===================== HEADER ===================== -->
-  <header>
-    <div class="nav-container">
-      <div class="logo">MENDOZATIC.</div>
+<a class="skip-link" href="#main">Saltar al contenido</a>
 
-      <button class="mobile-toggle" aria-label="Abrir menú">
-        <i class="fas fa-bars"></i>
-      </button>
+<!-- ============ NAV ============ -->
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="#top" class="wordmark">MENDOZATIC<span>.</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#inicio">Inicio</a>
+      <a href="#docente">Docente</a>
+      <a href="#ingeniero">Ingeniero</a>
+      <a href="#productos">Productos</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#experiencia">Experiencia</a>
+      <a href="#mlab">M-Lab</a>
+      <a href="#contacto" class="nav-cta">Contacto</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
 
-      <nav class="nav-links">
-        <a href="#about">Perfil</a>
-        <a href="#experience">Experiencia</a>
-        <a href="#stack">Stack</a>
-        <a href="#projects">Proyectos</a>
-        <a href="#testimonials">Clientes</a>
-        <a href="#contact" class="btn-nav">Contacto</a>
-      </nav>
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="inicio">
+  <div class="hero-inner">
+    <p class="hero-kicker">Riohacha, La Guajira · Colombia</p>
+    <h1 class="hero-name">Yonatha<br>Mendoza</h1>
+    <p class="hero-role">Ingeniero de Sistemas · Docente · Creador de Productos Digitales</p>
+    <p class="hero-line">Construyo tecnología que resuelve problemas reales.</p>
+    <p class="hero-sub">Desarrollo productos digitales, plataformas web y soluciones tecnológicas para educación, empresas y rendimiento.</p>
+    <div class="hero-actions">
+      <a href="#perfil" class="btn btn-primary">Conocer mi perfil</a>
+      <a href="#proyectos" class="btn btn-ghost">Ver proyectos</a>
     </div>
-  </header>
+  </div>
 
-  <!-- ===================== HERO ===================== -->
-  <section class="hero-section">
-    <div class="profile-pic-container" data-aos="zoom-in">
-      <img src="./img/mifoto.png" alt="Yonatha Mendoza" class="profile-pic" id="profilePic" />
-      <div class="profile-card" id="profileCard">
-        <h3>Yonatha Mendoza</h3>
-        <p>Desarrollador Full Stack & EdTech</p>
-        <div class="profile-social">
-          <!-- Seguridad: links generados por JS, no en HTML plano -->
-          <a href="#" id="heroWaLink" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        </div>
-      </div>
+  <div class="doors" id="perfil">
+    <a href="#docente" class="door door-docente">
+      <span class="door-tag">01</span>
+      <span class="door-emoji">🧑‍🏫</span>
+      <h2>Docente</h2>
+      <p>Educación · Tecnología · IA · Metodologías</p>
+    </a>
+    <a href="#ingeniero" class="door door-ingeniero">
+      <span class="door-tag">02</span>
+      <span class="door-emoji">🧑‍💻</span>
+      <h2>Ingeniero</h2>
+      <p>Software · Web · Apps · SaaS · IA</p>
+    </a>
+    <a href="#productos" class="door door-productos">
+      <span class="door-tag">03</span>
+      <span class="door-emoji">🚀</span>
+      <h2>Productos</h2>
+      <p>Productos propios · Innovación · Emprendimiento</p>
+    </a>
+  </div>
+</section>
+
+<!-- ============ NARRATIVE STRIP ============ -->
+<section class="narrative">
+  <p>No solamente programo. También entiendo problemas educativos, empresariales y de usuarios porque he trabajado directamente con ellos.</p>
+  <ol class="process">
+    <li><span>01</span>Problema</li>
+    <li><span>02</span>Diseño</li>
+    <li><span>03</span>Desarrollo</li>
+    <li><span>04</span>Implementación</li>
+    <li><span>05</span>Mejora</li>
+  </ol>
+</section>
+
+<!-- ============ MÉTRICAS ============ -->
+<section class="metrics" aria-label="Métricas">
+  <div class="metric"><span class="metric-num">+200</span><span class="metric-label">estudiantes impactados</span></div>
+  <div class="metric"><span class="metric-num">+4</span><span class="metric-label">clientes</span></div>
+  <div class="metric"><span class="metric-num">4+</span><span class="metric-label">productos / plataformas desarrolladas</span></div>
+  <div class="metric"><span class="metric-num">2+</span><span class="metric-label">sitios web en producción</span></div>
+  <div class="metric"><span class="metric-num">+60%</span><span class="metric-label">mejora de velocidad<br><small>(proyecto web específico)</small></span></div>
+</section>
+
+<!-- ============ DOCENTE ============ -->
+<section class="profile-section" id="docente">
+  <div class="section-head">
+    <p class="section-eyebrow">01 · Perfil docente</p>
+    <h2>Yonatha como Docente</h2>
+    <p class="section-lede">No solamente enseño tecnología. También construyo tecnología para enseñar.</p>
+  </div>
+
+  <div class="skill-cloud">
+    <span>Tecnología e Informática</span>
+    <span>Inglés</span>
+    <span>Educación digital</span>
+    <span>EdTech</span>
+    <span>IA aplicada a educación</span>
+    <span>Evaluación por competencias</span>
+    <span>ICFES</span>
+    <span>Gamificación</span>
+    <span>Design Thinking</span>
+    <span>STEAM</span>
+    <span>Active Mind 7D</span>
+    <span>Diseño de experiencias educativas</span>
+    <span>Uso pedagógico de tecnología</span>
+  </div>
+
+  <div class="split-block">
+    <div>
+      <h3>Práctica en el aula</h3>
+      <ul class="check-list">
+        <li>Diseño de clases y planeación curricular</li>
+        <li>Evaluación por competencias, formato ICFES</li>
+        <li>Diseño de proyectos educativos</li>
+        <li>Formación TIC para equipos docentes</li>
+        <li>Integración de herramientas digitales en el aula</li>
+      </ul>
     </div>
-
-    <h1 data-aos="fade-up" data-aos-delay="50">Desarrollador Full Stack<br><span class="hero-accent">& Especialista EdTech</span></h1>
-<div class="hero-badge" data-aos="fade-up">
-      <span class="status-dot"></span> Disponible para proyectos
+    <div class="teach-card">
+      <p class="teach-role">Docente de Tecnología e Informática</p>
+      <p class="teach-org">Institución Educativa Siglo XXI</p>
+      <p class="teach-dates">2020 — Presente</p>
+      <p class="teach-detail">Currículos digitales para +200 estudiantes · Evaluaciones alineadas al modelo ICFES · Formación docente en TIC.</p>
     </div>
-    <p class="subtitle" data-aos="fade-up" data-aos-delay="100">
-      Ingeniero de Sistemas con <strong>+5 años</strong> construyendo plataformas educativas,
-      sistemas SaaS y soluciones de gestión de alto impacto en Colombia.
-    </p>
-   
-    <!-- Stats rápidas -->
-    <div class="hero-stats" data-aos="fade-up" data-aos-delay="150">
-      <div class="hero-stat">
-        <strong>4+</strong>
-        <span>Plataformas en producción</span>
-      </div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat">
-        <strong>3</strong>
-        <span>Verticales de impacto</span>
-      </div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat">
-        <strong>Bilingüe</strong>
-        <span>Español & Inglés</span>
-      </div>
+  </div>
+
+  <h3 class="subgroup-title">Proyectos relacionados</h3>
+  <div class="mini-project-grid">
+    <article class="mini-project" data-filter="educacion software">
+      <p class="mini-status status-uso">🔵 En uso</p>
+      <h4>MEscolar</h4>
+      <p>Plataforma de gestión educativa.</p>
+    </article>
+    <article class="mini-project" data-filter="educacion software">
+      <p class="mini-status status-uso">🔵 En uso</p>
+      <h4>MNovedades</h4>
+      <p>Sistema para gestionar novedades académicas y disciplinarias.</p>
+    </article>
+    <article class="mini-project" data-filter="educacion ia">
+      <p class="mini-status status-uso">🔵 En uso</p>
+      <h4>Teacher AI</h4>
+      <p>Solución de IA aplicada a planeación y evaluación educativa.</p>
+    </article>
+    <article class="mini-project" data-filter="educacion">
+      <p class="mini-status status-desarrollo">🟡 En desarrollo</p>
+      <h4>MAvisos</h4>
+      <p>Proyecto relacionado, actualmente en desarrollo. <span class="tbc">[DATO POR CONFIRMAR]</span></p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ INGENIERO ============ -->
+<section class="profile-section alt" id="ingeniero">
+  <div class="section-head">
+    <p class="section-eyebrow">02 · Perfil técnico</p>
+    <h2>Yonatha como Ingeniero de Sistemas</h2>
+    <p class="section-lede">Software, plataformas y sistemas construidos para resolver necesidades reales de organizaciones y usuarios.</p>
+  </div>
+
+  <div class="build-grid">
+    <h3>Qué sé construir</h3>
+    <div class="build-items">
+      <div class="build-item"><h4>Aplicaciones web</h4><p>Plataformas a medida, orientadas a la operación real de una organización.</p></div>
+      <div class="build-item"><h4>Sistemas administrativos</h4><p>Gestión de cartera, reportes y flujo de procesos internos.</p></div>
+      <div class="build-item"><h4>SaaS</h4><p>Productos multi-cliente con módulos independientes.</p></div>
+      <div class="build-item"><h4>Aplicaciones móviles</h4><p>Apps enfocadas en registro de actividad y seguimiento.</p></div>
+      <div class="build-item"><h4>Dashboards</h4><p>Visualización de métricas para tomar decisiones rápidas.</p></div>
+      <div class="build-item"><h4>APIs & bases de datos</h4><p>Integraciones y estructuras de datos que sostienen cada plataforma.</p></div>
     </div>
+  </div>
 
-    <div class="hero-actions" data-aos="fade-in" data-aos-delay="200">
-      <a href="#projects" class="btn-secondary">Ver Proyectos</a>
-      <!-- CV: cambia esta URL al link público de tu Google Drive o repositorio -->
-      <a href="https://drive.google.com/file/d/TU_ID_AQUI/view" target="_blank" rel="noopener noreferrer" class="btn-nav" id="cvBtn">
-        <i class="fas fa-file-arrow-down"></i> Descargar CV
-      </a>
-    </div>
-  </section>
-
-  <!-- ===================== PERFIL ESTRATÉGICO ===================== -->
-  <section id="about" data-aos="fade-up">
-    <div class="section-header">
-      <h2>Perfil Estratégico</h2>
-      <p>Mi enfoque une la estructura de la ingeniería con la pedagogía y la disciplina del alto rendimiento.</p>
-    </div>
-
-    <div class="about-content">
-      <div class="about-split">
-        <div class="service-column">
-          <h3><i class="fas fa-brain" style="color:var(--primary);"></i> Mentalidad & Métricas</h3>
-          <ul class="service-list">
-            <li><i class="fas fa-check"></i> Pensamiento analítico basado en datos.</li>
-            <li><i class="fas fa-check"></i> Diseño de sistemas escalables (SaaS).</li>
-            <li><i class="fas fa-check"></i> Disciplina y mejora continua (Kaizen).</li>
-            <li><i class="fas fa-check"></i> Optimización de procesos.</li>
-          </ul>
-        </div>
-        <div class="service-column">
-          <h3><i class="fas fa-chalkboard-teacher" style="color:var(--primary);"></i> Enfoque Pedagógico</h3>
-          <ul class="service-list">
-            <li><i class="fas fa-check"></i> Diseño de experiencias (Design Thinking).</li>
-            <li><i class="fas fa-check"></i> Evaluaciones por competencias.</li>
-            <li><i class="fas fa-check"></i> Gamificación educativa.</li>
-            <li><i class="fas fa-check"></i> Comunicación bilingüe efectiva.</li>
-          </ul>
-        </div>
+  <div class="stack-block">
+    <h3>Con qué lo construyo</h3>
+    <div class="stack-groups">
+      <div>
+        <p class="stack-group-label">Frontend</p>
+        <div class="stack-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>React</span></div>
       </div>
-    </div>
-  </section>
-
-  <!-- ===================== EXPERIENCIA LABORAL ===================== -->
-  <section id="experience" data-aos="fade-up">
-    <div class="section-header">
-      <h2>Experiencia Profesional</h2>
-      <p>Trayectoria documentada en instituciones educativas y desarrollo de software.</p>
-    </div>
-
-    <div class="timeline">
-
-      <div class="timeline-item" data-aos="fade-left">
-        <div class="timeline-marker"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <h3>Docente de Tecnología e Informática</h3>
-              <!-- ⬇️ PERSONALIZA: cambia el nombre de la institución -->
-              <p class="timeline-company"><i class="fas fa-building"></i> Institución Educativa Siglo XXI</p>
-            </div>
-            <!-- ⬇️ PERSONALIZA: ajusta las fechas -->
-            <span class="timeline-date">2020 — Presente</span>
-          </div>
-          <ul class="timeline-list">
-            <!-- ⬇️ PERSONALIZA: agrega tus logros reales con números -->
-            <li>Implementación de currículos digitales bilingües para +200 estudiantes.</li>
-            <li>Diseño de evaluaciones por competencias alineadas al modelo ICFES.</li>
-            <li>Formación docente en herramientas TIC para el equipo de profesores.</li>
-          </ul>
-          <div class="tags">
-            <span>EdTech</span><span>Pedagogía</span><span>Bilingüe</span>
-          </div>
-        </div>
+      <div>
+        <p class="stack-group-label">Backend</p>
+        <div class="stack-tags"><span>PHP</span><span>MySQL</span><span>Python</span><span>APIs</span></div>
       </div>
-
-      <div class="timeline-item" data-aos="fade-left" data-aos-delay="100">
-        <div class="timeline-marker"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <h3>Desarrollador Full Stack — Freelance</h3>
-              <p class="timeline-company"><i class="fas fa-laptop-code"></i> Independiente</p>
-            </div>
-            <span class="timeline-date">2019 — Presente</span>
-          </div>
-          <ul class="timeline-list">
-            <li>Desarrollo de M-Escolar: sistema de gestión académica activo en instituciones educativas.</li>
-            <li>Construcción de MFit Suite: SaaS de gestión deportiva con +2 gimnasios registrados.</li>
-            <li>Rediseño y optimización de sitios web corporativos con mejoras de velocidad +60%.</li>
-          </ul>
-          <div class="tags">
-            <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>SaaS</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ⬇️ PERSONALIZA: agrega más experiencias si tienes -->
-      <!--
-      <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
-        <div class="timeline-marker"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <h3>Tu Otro Rol Aquí</h3>
-              <p class="timeline-company"><i class="fas fa-building"></i> Empresa / Institución</p>
-            </div>
-            <span class="timeline-date">Año — Año</span>
-          </div>
-          <ul class="timeline-list">
-            <li>Logro 1 con métrica concreta.</li>
-          </ul>
-        </div>
-      </div>
-      -->
-
-    </div>
-
-    <!-- Educación -->
-    <div class="education-grid" data-aos="fade-up">
-      <div class="edu-card">
-        <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
-        <div>
-          <h4>Ingeniería de Sistemas</h4>
-          <!-- ⬇️ PERSONALIZA: tu universidad real -->
-          <p>Universidad — Colombia</p>
-          <span class="timeline-date">Año de grado</span>
-        </div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-icon"><i class="fas fa-certificate"></i></div>
-        <div>
-          <h4>Docente Bilingüe Certificado</h4>
-          <!-- ⬇️ PERSONALIZA: tu certificación real -->
-          <p>Institución certificadora</p>
-          <span class="timeline-date">Año</span>
-        </div>
+      <div>
+        <p class="stack-group-label">Herramientas</p>
+        <div class="stack-tags"><span>Git</span><span>GitHub</span><span>IA / LLMs</span></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===================== STACK TÉCNICO ===================== -->
-  <section id="stack" data-aos="fade-up">
-    <div class="section-header">
-      <h2>Stack Tecnológico</h2>
-      <p>Herramientas y tecnologías con las que construyo soluciones reales.</p>
-    </div>
+<!-- ============ PRODUCTOS & INNOVACIÓN ============ -->
+<section class="profile-section" id="productos">
+  <div class="section-head">
+    <p class="section-eyebrow">03 · Productos & Innovación</p>
+    <h2>Identifico, diseño, desarrollo, pruebo, itero</h2>
+    <p class="section-lede">No solamente desarrollo por encargo. Construyo productos propios, los pruebo con usuarios reales y los mejoro con el tiempo.</p>
+  </div>
 
-    <div class="stack-grid">
-      <div class="stack-category">
-        <h4>Frontend</h4>
-        <div class="stack-items">
-          <div class="stack-item"><i class="fab fa-html5" style="color:#e34f26"></i><span>HTML5</span></div>
-          <div class="stack-item"><i class="fab fa-css3-alt" style="color:#264de4"></i><span>CSS3</span></div>
-          <div class="stack-item"><i class="fab fa-js-square" style="color:#f7df1e"></i><span>JavaScript</span></div>
-          <div class="stack-item"><i class="fab fa-react" style="color:#61dafb"></i><span>React</span></div>
-        </div>
-      </div>
-      <div class="stack-category">
-        <h4>Backend</h4>
-        <div class="stack-items">
-          <div class="stack-item"><i class="fab fa-php" style="color:#777bb4"></i><span>PHP</span></div>
-          <div class="stack-item"><i class="fas fa-database" style="color:#4479a1"></i><span>MySQL</span></div>
-          <div class="stack-item"><i class="fab fa-python" style="color:#3776ab"></i><span>Python</span></div>
-          <div class="stack-item"><i class="fas fa-server" style="color:#var(--primary)"></i><span>REST APIs</span></div>
-        </div>
-      </div>
-      <div class="stack-category">
-        <h4>Herramientas</h4>
-        <div class="stack-items">
-          <div class="stack-item"><i class="fab fa-git-alt" style="color:#f05032"></i><span>Git</span></div>
-          <div class="stack-item"><i class="fab fa-github" style="color:var(--text-main)"></i><span>GitHub</span></div>
-          <div class="stack-item"><i class="fas fa-robot" style="color:#10b981"></i><span>IA / LLMs</span></div>
-          <div class="stack-item"><i class="fas fa-mobile-alt" style="color:var(--primary)"></i><span>Responsive</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="innovation-flow">
+    <span>Identifico problemas</span>
+    <span>Diseño soluciones</span>
+    <span>Desarrollo</span>
+    <span>Pruebo</span>
+    <span>Itero</span>
+    <span>Llevo a usuarios reales</span>
+  </div>
 
-  <!-- ===================== METODOLOGÍA ===================== -->
-  <section id="methodology" data-aos="fade-up">
-    <div class="section-header">
-      <h2>Cómo Trabajo</h2>
-      <p>Un proceso estructurado para garantizar resultados, sea en software o en el aula.</p>
-    </div>
-    <div class="methodology-steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <h4>Diagnóstico</h4>
-        <p>Entender la necesidad real del usuario o estudiante.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <h4>Diseño</h4>
-        <p>Planificación estratégica de la solución o currículo.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <h4>Desarrollo</h4>
-        <p>Ejecución técnica con código limpio o pedagogía activa.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">4</div>
-        <h4>Implementación</h4>
-        <p>Puesta en marcha y medición de impacto.</p>
-      </div>
-    </div>
-  </section>
+  <div class="mini-project-grid">
+    <article class="mini-project" data-filter="fitness"><p class="mini-status status-uso">🔵 En uso</p><h4>MLab</h4><p>Plataforma digital de entrenamiento.</p></article>
+    <article class="mini-project" data-filter="software fitness mobile"><p class="mini-status status-tbc">⚪ [DATO POR CONFIRMAR]</p><h4>MRunning</h4><p>Aplicación móvil para running.</p></article>
+    <article class="mini-project" data-filter="educacion"><p class="mini-status status-uso">🔵 En uso</p><h4>MEscolar</h4><p>Producto EdTech.</p></article>
+    <article class="mini-project" data-filter="fitness software"><p class="mini-status status-uso">🔵 En uso</p><h4>MFit</h4><p>Gestión deportiva: métricas, planes y recepción.</p></article>
+  </div>
+</section>
 
-  <!-- ===================== VERTICALES ===================== -->
-  <section id="services" data-aos="fade-up">
-    <div class="section-header">
-      <h2>3 Verticales de Impacto</h2>
-      <p>Desarrollo soluciones tecnológicas adaptadas a contextos específicos.</p>
-    </div>
-    <div class="services-grid">
-      <div class="service-column">
-        <h3><i class="fas fa-graduation-cap"></i> EdTech & Metodología</h3>
-        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Transformación digital para el aula.</p>
-        <ul class="service-list">
-          <li><i class="fas fa-angle-right"></i> Currículos digitales y bilingües.</li>
-          <li><i class="fas fa-angle-right"></i> Evaluaciones tipo ICFES/A1.</li>
-          <li><i class="fas fa-angle-right"></i> Formación docente en TIC.</li>
+<!-- ============ PROYECTOS PRINCIPALES ============ -->
+<section class="projects-section" id="proyectos">
+  <div class="section-head">
+    <p class="section-eyebrow">Portafolio de soluciones</p>
+    <h2>Proyectos</h2>
+    <p class="section-lede">Plataformas reales, con problema, solución y estado verificable — no solo una lista de tecnologías.</p>
+  </div>
+
+  <div class="filters" id="filters" role="tablist" aria-label="Filtrar proyectos">
+    <button class="filter-btn active" data-filter="todos">Todos</button>
+    <button class="filter-btn" data-filter="educacion">Educación</button>
+    <button class="filter-btn" data-filter="software">Software</button>
+    <button class="filter-btn" data-filter="ia">IA</button>
+    <button class="filter-btn" data-filter="fitness">Fitness</button>
+    <button class="filter-btn" data-filter="web">Web</button>
+    <button class="filter-btn" data-filter="mobile">Mobile</button>
+  </div>
+
+  <div class="project-grid" id="projectGrid">
+    <!-- Nivel 1 -->
+    <article class="project-card tier-1" data-filter="software educacion web" data-project="mcoop">
+      <div class="project-card-top">
+        <p class="project-status status-produccion">🟢 En producción</p>
+        <span class="project-tier">Destacado</span>
+      </div>
+      <h3>MCoop</h3>
+      <p class="project-cat">Software empresarial · Gestión · Plataforma</p>
+      <p class="project-desc">Plataforma de software desarrollada para cooperativas.</p>
+      <div class="project-actions">
+        <a href="https://mcoop.institucioneducativasigloxxi.edu.co/" target="_blank" rel="noopener">Ver sitio</a>
+        <button class="case-toggle" data-case="mcoop">Caso de estudio</button>
+      </div>
+    </article>
+
+    <article class="project-card tier-1" data-filter="fitness software" data-project="mlab">
+      <div class="project-card-top">
+        <p class="project-status status-uso">🔵 En uso</p>
+        <span class="project-tier">Destacado</span>
+      </div>
+      <h3>MLab</h3>
+      <p class="project-cat">Fitness Technology · Plataforma digital</p>
+      <p class="project-desc">Plataforma de entrenamiento, desarrollada, probada y actualmente utilizada por algunos clientes. Permite trabajar planes de entrenamiento y reproducir video de técnica de los ejercicios.</p>
+      <div class="project-actions">
+        <a href="https://yont23.github.io/M/MLab.html" target="_blank" rel="noopener">Probar MLab</a>
+        <button class="case-toggle" data-case="mlab">Caso de estudio</button>
+      </div>
+    </article>
+
+    <article class="project-card tier-1" data-filter="educacion software" data-project="mescolar">
+      <div class="project-card-top">
+        <p class="project-status status-uso">🔵 En uso</p>
+        <span class="project-tier">Destacado</span>
+      </div>
+      <h3>MEscolar</h3>
+      <p class="project-cat">EdTech · Gestión educativa</p>
+      <p class="project-desc">Plataforma de gestión escolar activa en instituciones educativas.</p>
+      <div class="project-actions">
+        <span class="access-note">Acceso privado</span>
+        <button class="case-toggle" data-case="mescolar">Caso de estudio</button>
+      </div>
+    </article>
+
+    <article class="project-card tier-1" data-filter="educacion software" data-project="mnovedades">
+      <div class="project-card-top">
+        <p class="project-status status-uso">🔵 En uso</p>
+        <span class="project-tier">Destacado</span>
+      </div>
+      <h3>MNovedades</h3>
+      <p class="project-cat">EdTech · PWA · Gestión</p>
+      <p class="project-desc">Aplicación mobile-first para registrar novedades académicas y disciplinarias. Almacenamiento local/offline y comunicación vía WhatsApp.</p>
+      <div class="project-actions">
+        <a href="https://yont23.github.io/M/Novedad.html" target="_blank" rel="noopener">Probar MNovedades</a>
+        <button class="case-toggle" data-case="mnovedades">Caso de estudio</button>
+      </div>
+    </article>
+
+    <article class="project-card tier-1" data-filter="ia educacion" data-project="teacherai">
+      <div class="project-card-top">
+        <p class="project-status status-uso">🔵 En uso</p>
+        <span class="project-tier">Destacado</span>
+      </div>
+      <h3>Teacher AI</h3>
+      <p class="project-cat">IA · EdTech</p>
+      <p class="project-desc">Solución de IA aplicada a la planeación, generación de contenidos y evaluación por competencias.</p>
+      <div class="project-actions">
+        <span class="access-note">Acceso privado</span>
+        <button class="case-toggle" data-case="teacherai">Caso de estudio</button>
+      </div>
+    </article>
+
+    <!-- Nivel 2 -->
+    <article class="project-card tier-2" data-filter="fitness mobile" data-project="mrunning">
+      <div class="project-card-top">
+        <p class="project-status status-tbc">⚪ [DATO POR CONFIRMAR]</p>
+      </div>
+      <h3>MRunning</h3>
+      <p class="project-cat">Mobile · Fitness · Running</p>
+      <p class="project-desc">App móvil para registrar actividades de running: tiempo, distancia, ritmo, registro de actividad y personalización de imagen con resultados.</p>
+      <div class="project-actions">
+        <button class="case-toggle" data-case="mrunning">Caso de estudio</button>
+      </div>
+    </article>
+
+    <article class="project-card tier-2" data-filter="fitness software" data-project="mfit">
+      <div class="project-card-top">
+        <p class="project-status status-uso">🔵 En uso</p>
+      </div>
+      <h3>MFit Suite</h3>
+      <p class="project-cat">Performance Tech · SaaS · Analytics</p>
+      <p class="project-desc">SaaS de gestión deportiva: métricas físicas, planes y recepción, con gimnasios activos usándolo hoy.</p>
+      <div class="project-actions">
+        <span class="access-note">Acceso privado</span>
+        <button class="case-toggle" data-case="mfit">Caso de estudio</button>
+      </div>
+    </article>
+
+    <article class="project-card tier-2" data-filter="software" data-project="sga">
+      <div class="project-card-top">
+        <p class="project-status status-uso">🔵 En uso</p>
+      </div>
+      <h3>SGA Institutos</h3>
+      <p class="project-cat">Software administrativo · Gestión financiera</p>
+      <p class="project-desc">Sistema administrativo para instituciones: control de cartera y flujo de caja en tiempo real.</p>
+      <div class="project-actions">
+        <span class="access-note">Acceso privado</span>
+        <button class="case-toggle" data-case="sga">Caso de estudio</button>
+      </div>
+    </article>
+  </div>
+
+  <!-- Case study panel (populated by JS) -->
+  <div class="case-study" id="caseStudy" hidden>
+    <button class="case-close" id="caseClose" aria-label="Cerrar caso de estudio">✕</button>
+    <div class="case-content" id="caseContent"></div>
+  </div>
+</section>
+
+<!-- ============ SITIOS WEB / CLIENTES ============ -->
+<section class="clients-section">
+  <div class="section-head">
+    <p class="section-eyebrow">Experiencia con organizaciones</p>
+    <h2>Sitios y sistemas para clientes</h2>
+  </div>
+  <div class="client-grid">
+    <a class="client-card" href="https://institucioneducativasigloxxi.edu.co/" target="_blank" rel="noopener">
+      <p class="client-cat">Desarrollo Web · Educación · Sitio Institucional</p>
+      <h3>Institución Educativa Siglo XXI</h3>
+      <p>Sitio web institucional desarrollado por mí.</p>
+      <span class="client-link">institucioneducativasigloxxi.edu.co ↗</span>
+    </a>
+    <a class="client-card" href="https://www.medicenterespecializado.co/" target="_blank" rel="noopener">
+      <p class="client-cat">Desarrollo Web · Sitio Corporativo</p>
+      <h3>Medicenter Especializado</h3>
+      <p>Sitio web corporativo desarrollado por mí.</p>
+      <span class="client-link">medicenterespecializado.co ↗</span>
+    </a>
+  </div>
+
+  <div class="testimonials">
+    <blockquote>
+      <p>Lo que antes tardaba días en boletines, ahora se resuelve en horas. El sistema es intuitivo y el soporte, excelente.</p>
+      <cite>R.C. — Coordinador Académico, Institución Educativa, La Guajira</cite>
+    </blockquote>
+    <blockquote>
+      <p>MFit Suite nos dio el control total del gimnasio: recepción, caja y reportes en un solo lugar.</p>
+      <cite>L.M. — Propietario, Power House Gym</cite>
+    </blockquote>
+    <blockquote>
+      <p>El rediseño de nuestro sitio superó las expectativas: rápido, responsivo y fiel a nuestra identidad.</p>
+      <cite>M.E. — Director General, Medicenter Especializado</cite>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCIA ============ -->
+<section class="experience-section" id="experiencia">
+  <div class="section-head">
+    <p class="section-eyebrow">Trayectoria</p>
+    <h2>Experiencia</h2>
+  </div>
+
+  <div class="exp-columns">
+    <div class="exp-col">
+      <h3>Docente</h3>
+      <div class="exp-item">
+        <p class="exp-role">Docente de Tecnología e Informática</p>
+        <p class="exp-org">Institución Educativa Siglo XXI</p>
+        <p class="exp-dates">2020 — Presente</p>
+        <ul>
+          <li>Currículos digitales bilingües para +200 estudiantes</li>
+          <li>Evaluaciones por competencias alineadas al modelo ICFES</li>
+          <li>Formación docente en herramientas TIC</li>
         </ul>
       </div>
-      <div class="service-column">
-        <h3><i class="fas fa-laptop-code"></i> Desarrollo & Software</h3>
-        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Ingeniería de software pura.</p>
-        <ul class="service-list">
-          <li><i class="fas fa-angle-right"></i> Automatización de procesos.</li>
-          <li><i class="fas fa-angle-right"></i> Sistemas de Gestión (SGA/CRM).</li>
-          <li><i class="fas fa-angle-right"></i> Desarrollo Web Full Stack.</li>
-        </ul>
-      </div>
-      <div class="service-column" style="border-left-color: #ea580c;">
-        <h3><i class="fas fa-heartbeat"></i> Performance Tech</h3>
-        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">Tecnología aplicada al bienestar.</p>
-        <ul class="service-list">
-          <li><i class="fas fa-angle-right"></i> Plataformas de gestión deportiva.</li>
-          <li><i class="fas fa-angle-right"></i> Dashboards de métricas físicas.</li>
-          <li><i class="fas fa-angle-right"></i> Algoritmos de seguimiento.</li>
+    </div>
+    <div class="exp-col">
+      <h3>Ingeniero / Desarrollador</h3>
+      <div class="exp-item">
+        <p class="exp-role">Desarrollador Full Stack — Independiente</p>
+        <p class="exp-org">Freelance</p>
+        <p class="exp-dates">2019 — Presente</p>
+        <ul>
+          <li>Desarrollo de MEscolar, sistema de gestión académica activo</li>
+          <li>Construcción de MFit Suite, SaaS de gestión deportiva</li>
+          <li>Rediseño y optimización de sitios web corporativos</li>
         </ul>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ===================== PROYECTOS ===================== -->
-  <section id="projects">
-    <div class="section-header" data-aos="fade-up">
-      <h2>Portafolio de Soluciones</h2>
-      <p>Plataformas reales en producción — con métricas, stack y acceso directo.</p>
+  <h3 class="subgroup-title">Educación</h3>
+  <div class="edu-grid">
+    <div class="edu-item">
+      <p class="edu-title">Ingeniería de Sistemas</p>
+      <p class="edu-org tbc">[DATO POR CONFIRMAR — universidad]</p>
+      <p class="edu-year tbc">[DATO POR CONFIRMAR — año]</p>
     </div>
-
-<div class="project-grid">
-
-      <!-- 1. M-ESCOLAR -->
-      <div class="project-card" data-aos="fade-up">
-        <div class="card-icon blue-bg">
-          <i class="fas fa-graduation-cap"></i>
-        </div>
-        <div class="card-content">
-          <h3>M-Escolar</h3>
-          <p>Plataforma de gestión académica para instituciones educativas.</p>
-          <div class="project-metrics">
-            <div class="metric"><strong>100%</strong><span>Notas centralizadas</span></div>
-            <div class="metric"><strong>~80%</strong><span>Menos tiempo en boletines</span></div>
-          </div>
-          <div class="tags">
-            <span>PHP</span><span>MySQL</span><span>EdTech</span>
-          </div>
-          <div class="card-actions">
-            <a href="#" class="btn-demo" title="Demo no disponible públicamente">
-              <i class="fas fa-lock"></i> Acceso privado
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. SGA INSTITUTOS -->
-      <div class="project-card" data-aos="fade-up" data-aos-delay="100">
-        <div class="card-icon green-bg">
-          <i class="fas fa-building"></i>
-        </div>
-        <div class="card-content">
-          <h3>SGA Institutos</h3>
-          <p>Software administrativo financiero para institutos de educación.</p>
-          <div class="project-metrics">
-            <div class="metric"><strong>100%</strong><span>Control de cartera</span></div>
-            <div class="metric"><strong>Real-time</strong><span>Flujo de caja</span></div>
-          </div>
-          <div class="tags">
-            <span>SaaS</span><span>Fintech</span><span>Reportes</span>
-          </div>
-          <div class="card-actions">
-            <a href="#" class="btn-demo">
-              <i class="fas fa-lock"></i> Acceso privado
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. MFIT SUITE + MLAB -->
-      <div class="project-card" data-aos="fade-up" data-aos-delay="200">
-        <div class="card-icon orange-bg">
-          <i class="fas fa-dumbbell"></i>
-        </div>
-        <div class="card-content">
-          <h3>MFit Suite</h3>
-          <p>SaaS de gestión deportiva: métricas físicas, planes y recepción automatizados.</p>
-          <div class="project-metrics">
-            <div class="metric"><strong>2+</strong><span>Gimnasios activos</span></div>
-            <div class="metric"><strong>3 módulos</strong><span>Integrados</span></div>
-          </div>
-          <div class="tags">
-            <span>Performance Tech</span><span>SaaS</span><span>Analytics</span>
-          </div>
-          <div class="card-actions">
-            <!-- AQUÍ ESTÁ EL ENLACE A MLAB -->
-            <a href="./M/MLab.html" target="_blank" rel="noopener noreferrer" class="btn-demo btn-demo-live">
-              <i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Probar MLab v3
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. TEACHER AI -->
-      <div class="project-card" data-aos="fade-up" data-aos-delay="300">
-        <div class="card-icon purple-bg">
-          <i class="fas fa-brain"></i>
-        </div>
-        <div class="card-content">
-          <h3>Teacher AI</h3>
-          <p>IA aplicada a la docencia: generación ágil de planeadores y evaluaciones por competencias.</p>
-          <div class="project-metrics">
-            <div class="metric"><strong>~90%</strong><span>Menos tiempo en planeación</span></div>
-            <div class="metric"><strong>GPT-4</strong><span>Motor de IA</span></div>
-          </div>
-          <div class="tags">
-            <span>Python</span><span>GPT-4 API</span><span>Prompt</span>
-          </div>
-          <div class="card-actions">
-            <a href="#" class="btn-demo">
-              <i class="fas fa-lock"></i> Acceso privado
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. M-NOVEDADES (¡NUEVO!) -->
-      <div class="project-card" data-aos="fade-up" data-aos-delay="400">
-        <!-- Usamos un color azul corporativo distinto -->
-        <div class="card-icon" style="background: #E8F1FF; color: #2F6FCE;">
-          <i class="fas fa-clipboard-check"></i>
-        </div>
-        <div class="card-content">
-          <h3>MNovedades App</h3>
-          <p>Web App "Mobile-First" para registrar incidencias académicas y disciplinarias de estudiantes en tiempo real.</p>
-          <div class="project-metrics">
-            <div class="metric"><strong>WhatsApp</strong><span>Envío de reportes</span></div>
-            <div class="metric"><strong>Offline</strong><span>Almacenamiento Local</span></div>
-          </div>
-          <div class="tags">
-            <span>JavaScript Puro</span><span>PWA / UI</span><span>Gestión</span>
-          </div>
-          <div class="card-actions">
-            <!-- AQUÍ ESTÁ EL ENLACE A NOVEDADES -->
-            <a href="./M/Novedad.html" target="_blank" rel="noopener noreferrer" class="btn-demo btn-demo-live" style="color: #2F6FCE; border-color: #E8F1FF; background: #F4F8FF;">
-              <i class="fas fa-circle" style="font-size:0.5rem; color:#2F6FCE;"></i> Probar MNovedades
-            </a>
-          </div>
-        </div>
-      </div>
-
+    <div class="edu-item">
+      <p class="edu-title">Docente Bilingüe Certificado</p>
+      <p class="edu-org tbc">[DATO POR CONFIRMAR — institución certificadora]</p>
+      <p class="edu-year tbc">[DATO POR CONFIRMAR — año]</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===================== TRANSFORMACIONES ===================== -->
-  <section id="redesigns" data-aos="fade-up">
-    <div class="section-header">
-      <h2>Transformaciones Digitales</h2>
-      <p>Rediseños estratégicos enfocados en UX, velocidad e identidad visual.</p>
+<!-- ============ M-LAB ============ -->
+<section class="mlab-section" id="mlab">
+  <div class="section-head">
+    <p class="section-eyebrow">Laboratorio</p>
+    <h2>M-LAB</h2>
+    <p class="section-lede">Laboratorio de tecnología, productos e ideas: experimentos, prototipos, IA, automatización y nuevas ideas en construcción. No confundir con MLab, la plataforma de fitness.</p>
+  </div>
+  <div class="mlab-note">
+    <p>MLab — Fitness Platform</p>
+    <p>M-LAB — Technology Lab</p>
+  </div>
+  <div class="mlab-grid" id="mlabGrid">
+    <div class="mlab-card">
+      <p class="mini-status status-desarrollo">🟡 En desarrollo</p>
+      <h4>Próximos experimentos</h4>
+      <p>Este espacio está preparado para sumar nuevos prototipos, automatizaciones y pruebas de IA a medida que se desarrollen. <span class="tbc">[DATO POR CONFIRMAR]</span></p>
     </div>
+  </div>
+</section>
 
-    <div class="redesign-grid">
-      <div class="redesign-card">
-        <div class="redesign-preview">
-          <img src="./img/1.png" alt="Rediseño Web Corporativa — versión después" class="img-cover" />
-          <div class="preview-info">
-            <h3>Rediseño Web Corporativa</h3>
-            <span class="btn-expand"><i class="fas fa-chevron-down"></i> Ver el cambio</span>
-          </div>
-        </div>
-        <div class="redesign-hidden">
-          <div class="comparison-content">
-            <p><strong>El Reto:</strong> El sitio anterior no era responsivo y tenía carga lenta. Se rediseñó con enfoque mobile-first, mejorando la velocidad de carga y la identidad visual.</p>
-            <div class="gallery-row">
-              <div class="gallery-item">
-                <span>Antes</span>
-                <img src="./img/1A.png" alt="Versión anterior del sitio web corporativo" />
-              </div>
-              <div class="gallery-item">
-                <span>Versión Móvil</span>
-                <img src="./img/1M.png" alt="Versión móvil del rediseño" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="redesign-card">
-        <div class="redesign-preview">
-          <img src="./img/2.png" alt="Optimización de Dashboard — versión después" class="img-cover" />
-          <div class="preview-info">
-            <h3>Optimización Dashboard</h3>
-            <span class="btn-expand"><i class="fas fa-chevron-down"></i> Ver detalles</span>
-          </div>
-        </div>
-        <div class="redesign-hidden">
-          <div class="comparison-content">
-            <p><strong>El Reto:</strong> Interfaz confusa para el usuario final. Se rediseñó la arquitectura de información y el sistema visual para mejorar la usabilidad.</p>
-            <div class="gallery-row">
-              <div class="gallery-item">
-                <span>Innovador</span>
-                <img src="./img/2A.png" alt="Vista innovadora del dashboard" />
-              </div>
-              <div class="gallery-item">
-                <span>Versión Móvil</span>
-                <img src="./img/2M.png" alt="Versión móvil del dashboard" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== TESTIMONIOS ===================== -->
-  <section id="testimonials" data-aos="fade-up">
-    <div class="section-header">
-      <h2>Lo Que Dicen los Clientes</h2>
-      <p>Resultados que hablan por sí solos.</p>
-    </div>
-
-    <div class="testimonials-grid">
-      <!-- ⬇️ PERSONALIZA: reemplaza con testimonios reales -->
-      <div class="testimonial-card">
-        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
-        <p>"Yonatha transformó completamente nuestra gestión académica. Lo que antes tardaba días en boletines, ahora lo hacemos en horas. El sistema es intuitivo y el soporte excelente."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">RC</div>
-          <div>
-            <strong>R.C.</strong>
-            <span>Coordinador Académico — Institución Educativa, La Guajira</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-card">
-        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
-        <p>"MFit Suite nos dio el control total del gimnasio: recepción, caja y reportes en un solo lugar. Profesional, puntual y siempre dispuesto a mejorar la plataforma."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">LM</div>
-          <div>
-            <strong>L.M.</strong>
-            <span>Propietario — Power House Gym</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-card">
-        <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
-        <p>"El rediseño de nuestro sitio web superó las expectativas. Rápido, responsivo y con una identidad visual que refleja perfectamente nuestra marca."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">ME</div>
-          <div>
-            <strong>M.E.</strong>
-            <span>Director General — Medicenter Especializado</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== CONTACTO ===================== -->
-  <section id="contact" data-aos="fade-up">
-    <div class="contact-container">
-      <div class="contact-info">
-        <h2>Conectemos visiones</h2>
-        <p>¿Buscas optimizar procesos educativos, tecnológicos o deportivos? Tengo la estrategia y el código.</p>
-
-        <div class="social-links-vertical">
-          <!-- Seguridad: email y WA generados por JS -->
-          <a href="#" id="contactMailLink" class="contact-link">
-            <i class="fas fa-envelope"></i> <span id="contactMailText">Cargando...</span>
-          </a>
-          <a href="#" id="contactWaLink" class="contact-link">
-            <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
-          </a>
-          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener noreferrer" class="contact-link">
-            <i class="fab fa-linkedin"></i> Perfil LinkedIn
-          </a>
-        </div>
-
-        <!-- CV download repetido en contacto -->
-        <a href="https://drive.google.com/file/d/TU_ID_AQUI/view" target="_blank" rel="noopener noreferrer" class="btn-cv-contact">
-          <i class="fas fa-file-arrow-down"></i> Descargar CV
-        </a>
-      </div>
-
-      <form id="contactForm" class="clean-form" novalidate>
-        <div class="form-group">
-          <label for="name">Nombre</label>
-          <input type="text" id="name" name="name" placeholder="Tu nombre completo" required autocomplete="name" />
-        </div>
-        <div class="form-group">
-          <label for="email">Correo</label>
-          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required autocomplete="email" />
-        </div>
-        <div class="form-group">
-          <label for="message">Mensaje</label>
-          <textarea id="message" name="message" placeholder="Cuéntame sobre tu proyecto o consulta..." required rows="5"></textarea>
-        </div>
-        <button type="submit" id="submitBtn">
-          <span id="submitText"><i class="fab fa-whatsapp"></i> Enviar por WhatsApp</span>
-        </button>
+<!-- ============ CONTACTO ============ -->
+<section class="contact-section" id="contacto">
+  <div class="contact-inner">
+    <h2>¿Tienes un problema que podamos convertir en una solución digital?</h2>
+    <div class="contact-grid">
+      <form class="contact-form" id="contactForm">
+        <label>Nombre<input type="text" name="nombre" required></label>
+        <label>Empresa / organización<input type="text" name="empresa"></label>
+        <label>Correo<input type="email" name="correo" required></label>
+        <label>Tipo de proyecto
+          <select name="tipo">
+            <option>Educación / EdTech</option>
+            <option>Desarrollo de software</option>
+            <option>Sitio web</option>
+            <option>Producto / SaaS</option>
+            <option>Otro</option>
+          </select>
+        </label>
+        <label>Mensaje<textarea name="mensaje" rows="4" required></textarea></label>
+        <button type="submit" class="btn btn-primary">Enviar por WhatsApp</button>
       </form>
+      <div class="contact-side">
+        <a class="contact-link" href="#" id="whatsappLink" target="_blank" rel="noopener">WhatsApp <span class="tbc">[DATO POR CONFIRMAR — número]</span></a>
+        <a class="contact-link" href="mailto:correo@dominio.co" id="emailLink">Correo <span class="tbc">[DATO POR CONFIRMAR — correo]</span></a>
+        <a class="contact-link" href="https://github.com/yont23" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="contact-link" href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===================== FOOTER ===================== -->
-  <footer>
-    <p>© 2025 Yonatha Mendoza | Estrategia, Tecnología y Educación.</p>
-    <p style="margin-top:6px; font-size:0.8rem;">Desarrollado con HTML5, CSS3 & JS puro · Desplegado en GitHub Pages</p>
-  </footer>
+</main>
 
-  <script src="./js/main.js"></script>
+<footer class="site-footer">
+  <p>© 2026 Yonatha Mendoza · MENDOZATIC — Ingeniería, Educación y Producto.</p>
+  <p>Desarrollado con HTML5, CSS3 & JS puro · Desplegado en GitHub Pages</p>
+</footer>
+
+<script src="js/projects.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
