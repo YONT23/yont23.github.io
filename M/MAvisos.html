@@ -480,7 +480,9 @@ tr.row-warn td{background:var(--ambar-bg);}
     <div class="toolbar">
       <input type="text" id="dirSearch" placeholder="Buscar estudiante o acudiente…" oninput="UI.renderDirectorio()">
       <select id="dirGradoFilter" onchange="UI.renderDirectorio()"></select>
+      <button class="btn btn-ghost btn-sm" onclick="UI.buscarDuplicadosDirectorio()">🔎 Buscar posibles duplicados</button>
     </div>
+    <div id="dupDirectorioZone"></div>
     <div class="directory-list" id="directoryList"></div>
   </section>
 
@@ -833,6 +835,60 @@ const WhatsappMod = (() => {
 })();
 
 /* ---------------------------------------------------------------
+   MÓDULO: Dedupe — detección de estudiantes con nombres similares
+   (no solo idénticos) para evitar duplicados por variaciones de
+   escritura (ej. "Wanda Ledesma" y "Wanda Sabina Ledesma Vergara").
+   --------------------------------------------------------------- */
+const Dedupe = (() => {
+  const STOPWORDS = ['de','del','la','las','los','y'];
+
+  function normalizar(s){
+    return String(s||'')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .toLowerCase().trim().replace(/\s+/g,' ');
+  }
+  function tokens(s){
+    return normalizar(s).split(' ').filter(t => t.length>=2 && !STOPWORDS.includes(t));
+  }
+  function levenshtein(a,b){
+    const m=a.length, n=b.length;
+    if(m===0) return n; if(n===0) return m;
+    const dp = Array.from({length:m+1}, (_,i)=>[i, ...Array(n).fill(0)]);
+    for(let j=0;j<=n;j++) dp[0][j]=j;
+    for(let i=1;i<=m;i++){
+      for(let j=1;j<=n;j++){
+        dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]);
+      }
+    }
+    return dp[m][n];
+  }
+  function tokensSimilares(t1,t2){
+    if(t1===t2) return true;
+    if(t1.length>=4 && t2.length>=4 && levenshtein(t1,t2)<=1) return true;
+    const corto = t1.length<t2.length ? t1:t2, largo = t1.length<t2.length ? t2:t1;
+    if(corto.length>=3 && largo.startsWith(corto)) return true;
+    return false;
+  }
+  // Devuelve true si `a` y `b` probablemente son la misma persona (pero no son
+  // idénticos ya normalizados — esos se consideran duplicados exactos aparte).
+  function nombresSimilares(a,b){
+    const na = normalizar(a), nb = normalizar(b);
+    if(na===nb) return false; // idéntico: se trata como duplicado exacto, no "posible"
+    const ta = tokens(a), tb = tokens(b);
+    if(ta.length<2 || tb.length<2) return false; // evita falsos positivos con un solo nombre
+    const [corta, larga] = ta.length<=tb.length ? [ta,tb] : [tb,ta];
+    const largaDisponible = [...larga];
+    let coincidencias = 0;
+    corta.forEach(t => {
+      const idx = largaDisponible.findIndex(x => tokensSimilares(t,x));
+      if(idx>=0){ coincidencias++; largaDisponible.splice(idx,1); }
+    });
+    return (coincidencias/corta.length) >= 0.66;
+  }
+  return { normalizar, nombresSimilares };
+})();
+
+/* ---------------------------------------------------------------
    MÓDULO: Import — Excel/CSV/Markdown con previsualización
    --------------------------------------------------------------- */
 const Import = (() => {
@@ -903,7 +959,8 @@ const Import = (() => {
   function validarRegistros(registros){
     const telsVistos = new Map();
     const estVistos = new Map();
-    return registros.map(reg => {
+    const procesados = []; // para comparar contra filas anteriores del mismo lote
+    return registros.map((reg, idx) => {
       const problemas = [];
       const telNorm = Contacts.normalizarTelefono(reg.telefono);
       if(!reg.estudiante) problemas.push('Falta nombre de estudiante');
@@ -913,12 +970,12 @@ const Import = (() => {
 
       let advertencias = [];
       const keyEst = `${reg.estudiante.toLowerCase()}|${reg.grado.toLowerCase()}`;
-      if(estVistos.has(keyEst)) advertencias.push('Estudiante repetido en el archivo');
+      if(estVistos.has(keyEst)) advertencias.push('Estudiante repetido en el archivo (nombre idéntico)');
       estVistos.set(keyEst,true);
 
       if(telNorm){
-        if(telsVistos.has(telNorm) && telsVistos.get(telNorm) !== reg.acudiente){
-          advertencias.push('Teléfono ya usado por otro acudiente en este archivo');
+        if(telsVistos.has(telNorm) && Dedupe.normalizar(telsVistos.get(telNorm)) !== Dedupe.normalizar(reg.acudiente)){
+          advertencias.push(`Mismo teléfono que "${telsVistos.get(telNorm)}" — se vinculará como el mismo acudiente (padre/madre con varios hijos)`);
         }
         telsVistos.set(telNorm, reg.acudiente);
       }
@@ -927,8 +984,24 @@ const Import = (() => {
         || GRADOS_VALIDOS.some(g => g.toLowerCase() === reg.grado.toLowerCase());
       if(reg.grado && !gradoExistente) advertencias.push('Grado no reconocido (se creará)');
 
+      // Detección de posible duplicado por nombre similar (no idéntico):
+      // primero contra estudiantes ya guardados, luego contra filas anteriores del mismo lote.
+      let duplicado = null;
+      if(!problemas.length && reg.estudiante && reg.grado){
+        const existente = DB.estudiantes.find(e => e.grado.toLowerCase()===reg.grado.toLowerCase() && Dedupe.nombresSimilares(reg.estudiante, e.nombre));
+        if(existente){
+          duplicado = { tipo:'existente', id:existente.id, nombre:existente.nombre };
+        } else {
+          const enLote = procesados.find(p => p.grado.toLowerCase()===reg.grado.toLowerCase() && Dedupe.nombresSimilares(reg.estudiante, p.estudiante));
+          if(enLote) duplicado = { tipo:'lote', indice:enLote._indice, nombre:enLote.estudiante };
+        }
+        if(duplicado) advertencias.push(`Posible duplicado de "${duplicado.nombre}"`);
+      }
+
       const estado = problemas.length ? 'error' : (advertencias.length ? 'advertencia' : 'ok');
-      return { ...reg, telefonoNormalizado: telNorm, problemas, advertencias, estado };
+      const resultado = { ...reg, telefonoNormalizado: telNorm, problemas, advertencias, estado, duplicado, fusionDecision: duplicado ? 'merge' : null, _indice: idx };
+      procesados.push(resultado);
+      return resultado;
     });
   }
 
@@ -944,6 +1017,12 @@ const Import = (() => {
       const tagCls = r.estado==='error'?'err':(r.estado==='advertencia'?'warn':'ok');
       const tagTxt = r.estado==='error'?'Error':(r.estado==='advertencia'?'Revisar':'Correcto');
       const detalle = [...r.problemas, ...r.advertencias].join('; ') || '—';
+      const dupCell = r.duplicado
+        ? `<select class="state-select" style="font-size:11px;" onchange="Import.actualizarFusion(${i}, this.value)">
+             <option value="merge" ${r.fusionDecision==='merge'?'selected':''}>Fusionar con: ${UI.esc(r.duplicado.nombre)}</option>
+             <option value="nuevo" ${r.fusionDecision==='nuevo'?'selected':''}>Crear como nuevo estudiante</option>
+           </select>`
+        : '—';
       return `<tr class="${cls}">
         <td><span class="status-tag ${tagCls}">${tagTxt}</span></td>
         <td>${UI.esc(r.grado)}</td>
@@ -951,6 +1030,7 @@ const Import = (() => {
         <td>${UI.esc(r.acudiente)}</td>
         <td>${UI.esc(r.parentesco)}</td>
         <td>${UI.esc(r.telefonoNormalizado || r.telefono)}</td>
+        <td>${dupCell}</td>
         <td style="max-width:220px;white-space:normal;color:var(--gris-600);font-size:12px;">${UI.esc(detalle)}</td>
       </tr>`;
     }).join('');
@@ -965,7 +1045,7 @@ const Import = (() => {
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Estado</th><th>Grado</th><th>Estudiante</th><th>Acudiente</th><th>Parentesco</th><th>Teléfono</th><th>Detalle</th></tr></thead>
+          <thead><tr><th>Estado</th><th>Grado</th><th>Estudiante</th><th>Acudiente</th><th>Parentesco</th><th>Teléfono</th><th>¿Es duplicado?</th><th>Detalle</th></tr></thead>
           <tbody>${filasHtml}</tbody>
         </table>
       </div>
@@ -974,33 +1054,67 @@ const Import = (() => {
         <button class="btn btn-ghost" onclick="document.getElementById('importPreviewZone').innerHTML=''">Cancelar</button>
       </div>
       ${err>0 ? `<p class="helper" style="color:var(--rojo);">${err} registro(s) en error se omitirán de esta importación. Corrígelos en el origen y vuelve a importarlos por separado; los ${ok+warn} registros correctos y con advertencias sí se importarán ahora.</p>` : ''}
+      <p class="helper">Si ves "Fusionar con: …", el sistema detectó que probablemente es el mismo estudiante ya registrado (o repetido en este archivo) y lo unirá en un solo registro. Cambia a "Crear como nuevo estudiante" si en realidad son personas distintas.</p>
     `;
+  }
+
+  function actualizarFusion(indice, valor){
+    if(!pendiente) return;
+    pendiente.registros[indice].fusionDecision = valor;
   }
 
   function confirmar(){
     if(!pendiente) return;
-    const validos = pendiente.registros.filter(r => r.estado !== 'error');
+    const registros = pendiente.registros;
+    const idEstudianteCreado = new Array(registros.length).fill(null);
     let creados = 0;
-    validos.forEach(r => {
-      let estudiante = DB.estudiantes.find(e => e.nombre.toLowerCase()===r.estudiante.toLowerCase() && e.grado.toLowerCase()===r.grado.toLowerCase());
-      if(!estudiante){
-        estudiante = { id: Storage.nuevoId('EST'), nombre:r.estudiante, grado:r.grado, estado:'activo' };
-        DB.estudiantes.push(estudiante);
+    registros.forEach((r, idx) => {
+      if(r.estado === 'error') return;
+
+      // ---- Resolver el estudiante: fusionar con uno existente/del lote si aplica ----
+      let estudianteId = null;
+      if(r.duplicado && r.fusionDecision === 'merge'){
+        if(r.duplicado.tipo === 'existente') estudianteId = r.duplicado.id;
+        else if(r.duplicado.tipo === 'lote') estudianteId = idEstudianteCreado[r.duplicado.indice];
       }
-      let acudiente = DB.acudientes.find(a => a.nombre.toLowerCase()===r.acudiente.toLowerCase() && a.telefono===r.telefonoNormalizado);
+      if(!estudianteId){
+        let estudiante = DB.estudiantes.find(e => e.nombre.toLowerCase()===r.estudiante.toLowerCase() && e.grado.toLowerCase()===r.grado.toLowerCase());
+        if(!estudiante){
+          estudiante = { id: Storage.nuevoId('EST'), nombre:r.estudiante, grado:r.grado, estado:'activo' };
+          DB.estudiantes.push(estudiante);
+        }
+        estudianteId = estudiante.id;
+      }
+      idEstudianteCreado[idx] = estudianteId;
+
+      // ---- Resolver el acudiente: el teléfono es el identificador más confiable —
+      // si coincide con uno ya guardado (aunque el nombre venga escrito distinto,
+      // ej. "Génesis Vergara" vs "Génesis Vergara Muñiz"), se reutiliza el mismo
+      // acudiente en vez de crear uno nuevo. Así un padre con varios hijos queda
+      // en un solo registro con todos sus hijos vinculados. ----
+      let acudiente = null;
+      if(r.telefonoNormalizado){
+        acudiente = DB.acudientes.find(a => a.telefono === r.telefonoNormalizado);
+      }
+      if(!acudiente){
+        acudiente = DB.acudientes.find(a => a.nombre.toLowerCase()===r.acudiente.toLowerCase() && a.telefono===r.telefonoNormalizado);
+      }
       if(!acudiente){
         acudiente = { id: Storage.nuevoId('ACU'), nombre:r.acudiente, telefono:r.telefonoNormalizado||r.telefono, correo:r.correo||'' };
         DB.acudientes.push(acudiente);
+      } else if(!acudiente.correo && r.correo){
+        acudiente.correo = r.correo; // completa el correo si el registro existente no lo tenía
       }
-      const yaExiste = DB.relaciones.some(rel => rel.estudianteId===estudiante.id && rel.acudienteId===acudiente.id);
+
+      const yaExiste = DB.relaciones.some(rel => rel.estudianteId===estudianteId && rel.acudienteId===acudiente.id);
       if(!yaExiste){
-        DB.relaciones.push({ id:Storage.nuevoId('REL'), estudianteId:estudiante.id, acudienteId:acudiente.id, parentesco:r.parentesco||'Acudiente', principal: !DB.relaciones.some(x=>x.estudianteId===estudiante.id), etiqueta:'Personal' });
+        DB.relaciones.push({ id:Storage.nuevoId('REL'), estudianteId, acudienteId:acudiente.id, parentesco:r.parentesco||'Acudiente', principal: !DB.relaciones.some(x=>x.estudianteId===estudianteId), etiqueta:'Personal' });
       }
       creados++;
     });
     Storage.guardar(DB);
     UI.renderAll();
-    document.getElementById('importPreviewZone').innerHTML = `<div class="empty-state"><div class="big">✅</div><b>${creados} registros importados</b><br>El directorio ya se actualizó.</div>`;
+    document.getElementById('importPreviewZone').innerHTML = `<div class="empty-state"><div class="big">✅</div><b>${creados} registros importados</b><br>El directorio ya se actualizó. Los estudiantes fusionados y los acudientes con hijos en común quedaron agrupados en un solo registro.</div>`;
     pendiente = null;
   }
 
@@ -1081,7 +1195,7 @@ const Import = (() => {
     }catch(e){ UI.toast('No se pudo leer el archivo de mensajes'); console.error(e); }
   }
 
-  return { manejarArchivo, procesarMarkdown, confirmar, manejarArchivoMensajes };
+  return { manejarArchivo, procesarMarkdown, confirmar, manejarArchivoMensajes, actualizarFusion };
 })();
 
 /* ---------------------------------------------------------------
@@ -1233,6 +1347,104 @@ const UI = (() => {
         </div>
       </div>`;
     }).join('');
+  }
+
+  /* ---------- Detección y fusión de duplicados ya guardados ---------- */
+  function buscarDuplicadosDirectorio(){
+    const zone = document.getElementById('dupDirectorioZone');
+
+    // Estudiantes con nombre similar (no idéntico) dentro del mismo grado
+    const paresEst = [];
+    const vistos = new Set();
+    DB.estudiantes.forEach((a,i) => {
+      DB.estudiantes.forEach((b,j) => {
+        if(i>=j || a.grado.toLowerCase()!==b.grado.toLowerCase()) return;
+        const key = [a.id,b.id].sort().join('|');
+        if(vistos.has(key)) return;
+        if(Dedupe.nombresSimilares(a.nombre, b.nombre)){ paresEst.push([a,b]); vistos.add(key); }
+      });
+    });
+
+    // Acudientes con el mismo teléfono pero registrados como filas distintas
+    const porTelefono = new Map();
+    DB.acudientes.filter(a=>a.telefono).forEach(a => {
+      if(!porTelefono.has(a.telefono)) porTelefono.set(a.telefono, []);
+      porTelefono.get(a.telefono).push(a);
+    });
+    const paresAcu = [...porTelefono.values()].filter(lista => lista.length>1);
+
+    if(paresEst.length===0 && paresAcu.length===0){
+      zone.innerHTML = `<div class="empty-state" style="margin:14px 0;"><div class="big">✅</div>No se encontraron posibles duplicados en este directorio.</div>`;
+      return;
+    }
+
+    const htmlEst = paresEst.map(([a,b]) => `
+      <div class="aviso-card">
+        <div class="aviso-mid">Posibles duplicados en <b>${esc(a.grado)}</b>:</div>
+        <div class="aviso-top"><span class="nombre">${esc(a.nombre)}</span><span class="nombre">${esc(b.nombre)}</span></div>
+        <div class="aviso-actions">
+          <button class="btn btn-primary btn-sm" onclick="UI.fusionarEstudiantes('${a.id}','${b.id}')">Mantener "${esc(a.nombre)}"</button>
+          <button class="btn btn-primary btn-sm" onclick="UI.fusionarEstudiantes('${b.id}','${a.id}')">Mantener "${esc(b.nombre)}"</button>
+          <button class="btn btn-ghost btn-sm" onclick="this.closest('.aviso-card').remove()">No son la misma persona</button>
+        </div>
+      </div>`).join('');
+
+    const htmlAcu = paresAcu.map(lista => `
+      <div class="aviso-card">
+        <div class="aviso-mid">Mismo teléfono <b>${esc(lista[0].telefono)}</b> en ${lista.length} registros de acudiente:</div>
+        <div class="aviso-top">${lista.map(a=>`<span class="nombre">${esc(a.nombre)}</span>`).join('')}</div>
+        <div class="aviso-actions">
+          ${lista.map(a=>`<button class="btn btn-primary btn-sm" onclick="UI.fusionarAcudientes('${a.id}','${lista.filter(x=>x.id!==a.id).map(x=>x.id).join(',')}')">Mantener "${esc(a.nombre)}"</button>`).join('')}
+          <button class="btn btn-ghost btn-sm" onclick="this.closest('.aviso-card').remove()">No es el mismo acudiente</button>
+        </div>
+      </div>`).join('');
+
+    zone.innerHTML = `
+      ${paresEst.length ? `<div class="section-head"><h2>Estudiantes con nombre parecido (${paresEst.length})</h2></div>${htmlEst}` : ''}
+      ${paresAcu.length ? `<div class="section-head"><h2>Acudientes con el mismo teléfono (${paresAcu.length})</h2></div>${htmlAcu}` : ''}
+    `;
+  }
+
+  function fusionarEstudiantes(keepId, mergeId){
+    if(keepId===mergeId) return;
+    DB.relaciones.forEach(r => { if(r.estudianteId===mergeId) r.estudianteId = keepId; });
+    // evita relaciones duplicadas hacia el mismo acudiente tras la fusión
+    const vistos = new Set();
+    DB.relaciones = DB.relaciones.filter(r => {
+      if(r.estudianteId!==keepId) return true;
+      if(vistos.has(r.acudienteId)) return false;
+      vistos.add(r.acudienteId);
+      return true;
+    });
+    DB.historial.forEach(h => { if(h.estudianteId===mergeId) h.estudianteId = keepId; });
+    DB.mensajes.forEach(m => { if(m.estudianteId===mergeId) m.estudianteId = keepId; });
+    DB.estudiantes = DB.estudiantes.filter(e => e.id!==mergeId);
+    Storage.guardar(DB);
+    renderAll();
+    buscarDuplicadosDirectorio();
+    toast('Estudiantes fusionados');
+  }
+
+  function fusionarAcudientes(keepId, mergeIdsCsv){
+    const mergeIds = mergeIdsCsv.split(',').filter(Boolean);
+    mergeIds.forEach(mergeId => {
+      if(mergeId===keepId) return;
+      DB.relaciones.forEach(r => { if(r.acudienteId===mergeId) r.acudienteId = keepId; });
+    });
+    const vistos = new Set();
+    DB.relaciones = DB.relaciones.filter(r => {
+      const key = r.estudianteId+'|'+r.acudienteId;
+      if(vistos.has(key)) return false;
+      vistos.add(key);
+      return true;
+    });
+    DB.historial.forEach(h => { if(mergeIds.includes(h.acudienteId)) h.acudienteId = keepId; });
+    DB.mensajes.forEach(m => { if(mergeIds.includes(m.acudienteId)) m.acudienteId = keepId; });
+    DB.acudientes = DB.acudientes.filter(a => !mergeIds.includes(a.id));
+    Storage.guardar(DB);
+    renderAll();
+    buscarDuplicadosDirectorio();
+    toast('Acudientes fusionados — todos sus hijos quedaron en un solo registro');
   }
 
   /* ---------- Perfil estudiante ---------- */
@@ -1551,7 +1763,8 @@ const UI = (() => {
     irAMensajeDesdePerfil, buscarGlobal, cerrarBusqueda, msgActualizarEstudiantes, msgActualizarAcudientes,
     msgAplicarPlantilla, msgRenderPreview, msgCopiar, msgAbrirWhatsapp, abrirModalPlantilla, insertarVariableTpl,
     guardarPlantilla, duplicarPlantilla, eliminarPlantilla, filtrarAvisos, cambiarEstadoAviso, verMensajeAviso,
-    contactarAviso, cambiarTabImport, renderAll, renderDashboard
+    contactarAviso, cambiarTabImport, renderAll, renderDashboard, buscarDuplicadosDirectorio,
+    fusionarEstudiantes, fusionarAcudientes
   };
 })();
 
