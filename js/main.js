@@ -97,10 +97,29 @@ document.addEventListener("DOMContentLoaded", () => {
      mientras estén vacíos, sus enlaces NO se muestran en el sitio, para no
      exponer datos sin confirmar a los visitantes. En cuanto los completes
      aquí, los botones aparecerán automáticamente en la sección de contacto. */
-  const WHATSAPP_NUMBER = ""; // ej. "573001234567"
-  const EMAIL_ADDRESS = "";   // ej. "yonatha@mendozatic.co"
+  const WHATSAPP_NUMBER = "573184800091";
+  const EMAIL_ADDRESS = "yonathamdz@gmail.com";
 
   const contactSide = document.getElementById("contactSide");
+  const heroWaLink = document.getElementById("heroWaLink");
+  const floatingWa = document.getElementById("floatingWa");
+
+  if (WHATSAPP_NUMBER && floatingWa) {
+    floatingWa.href = `https://wa.me/${WHATSAPP_NUMBER}`;
+    floatingWa.classList.remove("hidden");
+  } else if (floatingWa) {
+    floatingWa.remove();
+  }
+
+  if (WHATSAPP_NUMBER && heroWaLink) {
+    heroWaLink.href = `https://wa.me/${WHATSAPP_NUMBER}`;
+    heroWaLink.target = "_blank";
+    heroWaLink.rel = "noopener";
+    heroWaLink.classList.remove("hidden");
+  } else if (heroWaLink) {
+    heroWaLink.remove();
+  }
+
   if (contactSide) {
     if (WHATSAPP_NUMBER) {
       const waLink = document.createElement("a");
