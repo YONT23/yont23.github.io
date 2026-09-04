@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 /* ============================================================
-   MAvisos — Design tokens
+   MAvisos — MendozaTic
    Paleta: Azul institucional + Blanco (fijada por el brief)
    Tipografía: Fraunces (marca / titulares) + Inter (UI / datos)
    ============================================================ */
@@ -427,6 +427,7 @@ tr.row-warn td{background:var(--ambar-bg);}
     <button class="icon-btn" title="Exportar respaldo" onclick="Storage.descargarBackup()">⭳</button>
     <button class="icon-btn" title="Importar respaldo" onclick="document.getElementById('backupFile').click()">⭱</button>
     <input type="file" id="backupFile" accept=".json" style="display:none" onchange="Storage.restaurarBackup(event)">
+    <button class="icon-btn" title="Reiniciar datos (borrar todo y empezar de cero)" onclick="Storage.reiniciarDatos()">⟲</button>
   </div>
 </div>
 
@@ -558,6 +559,7 @@ tr.row-warn td{background:var(--ambar-bg);}
       <button class="tab-btn active" data-tab="tabArchivo" onclick="UI.cambiarTabImport('tabArchivo')">Excel / CSV</button>
       <button class="tab-btn" data-tab="tabMarkdown" onclick="UI.cambiarTabImport('tabMarkdown')">Pegar Markdown</button>
       <button class="tab-btn" data-tab="tabMensajes" onclick="UI.cambiarTabImport('tabMensajes')">Importar mensajes</button>
+      <button class="tab-btn" data-tab="tabNovedades" onclick="UI.cambiarTabImport('tabNovedades')">Novedades (MNovedades)</button>
     </div>
 
     <div class="tab-panel active" id="tabArchivo">
@@ -582,6 +584,25 @@ tr.row-warn td{background:var(--ambar-bg);}
       <p class="helper">Carga un Excel/CSV con columnas: ID Estudiante, Estudiante, Grado, Motivo, Mensaje. Se generará un aviso por cada fila, vinculado automáticamente al acudiente correspondiente.</p>
       <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileInputMsg').click()">Elegir archivo</button>
       <input type="file" id="fileInputMsg" accept=".xlsx,.xls,.csv" style="display:none" onchange="Import.manejarArchivoMensajes(event.target.files[0])">
+    </div>
+
+    <div class="tab-panel" id="tabNovedades">
+      <p class="helper">Pega o carga uno o varios registros de novedades (por ejemplo, exportados de MNovedades) con este formato — un bloque por estudiante, separado por línea en blanco:</p>
+      <div class="msg-preview" style="font-size:12.5px;">ESTUDIANTE: Iguaran Aranza
+GRADO: Séptimo
+DEPENDENCIAS: Coordinación
+ASIGNATURA: Inglés
+FALTAS: Cuaderno pendiente, Actividades pendientes de la plataforma English Central</div>
+      <div class="field" style="margin-top:14px;">
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileInputNovedades').click()">📄 Cargar archivo .txt / .md</button>
+        <input type="file" id="fileInputNovedades" accept=".txt,.md" style="display:none" onchange="Novedades.manejarArchivo(event.target.files[0])">
+      </div>
+      <div class="field">
+        <label>O pega el texto aquí</label>
+        <textarea id="novInput" style="min-height:200px;" placeholder="ESTUDIANTE: ...&#10;GRADO: ...&#10;DEPENDENCIAS: ...&#10;ASIGNATURA: ...&#10;FALTAS: ..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="Novedades.procesarTexto()">Analizar novedades</button>
+      <p class="helper">El sistema busca al estudiante en tu directorio (por nombre, aunque esté escrito distinto o en otro orden) y genera un aviso ya redactado y anclado a su acudiente principal.</p>
     </div>
 
     <div id="importPreviewZone"></div>
@@ -697,7 +718,20 @@ const Storage = (() => {
     evt.target.value = '';
   }
 
-  return { cargar, guardar, nuevoId, descargarBackup, restaurarBackup, vacio };
+  function reiniciarDatos(){
+    const ok1 = confirm('¿Vaciar TODOS los datos cargados (estudiantes, acudientes, mensajes, plantillas e historial) y empezar de cero?\n\nSi quieres conservarlos, cancela y usa primero "Exportar respaldo".');
+    if(!ok1) return;
+    const ok2 = confirm('Esta acción no se puede deshacer. ¿Confirmas que quieres borrar todo?');
+    if(!ok2) return;
+    DB = vacio();
+    guardar(DB);
+    currentGrado = null;
+    UI.renderAll();
+    UI.irA('dashboard');
+    UI.toast('Datos reiniciados — MAvisos está vacío y listo para una nueva importación');
+  }
+
+  return { cargar, guardar, nuevoId, descargarBackup, restaurarBackup, vacio, reiniciarDatos };
 })();
 
 /* ---------------------------------------------------------------
@@ -1196,6 +1230,201 @@ const Import = (() => {
   }
 
   return { manejarArchivo, procesarMarkdown, confirmar, manejarArchivoMensajes, actualizarFusion };
+})();
+
+/* ---------------------------------------------------------------
+   MÓDULO: Novedades — importa bloques de texto tipo MNovedades
+   (ESTUDIANTE / GRADO / DEPENDENCIAS / ASIGNATURA / FALTAS, u otros
+   campos "Campo: valor") y los ancla al estudiante y acudiente
+   correspondientes en el directorio.
+   --------------------------------------------------------------- */
+const Novedades = (() => {
+  let pendiente = null; // resultados de la última previsualización
+
+  const GRADO_PALABRAS = {
+    'primero':1,'segundo':2,'tercero':3,'cuarto':4,'quinto':5,'sexto':6,
+    'septimo':7,'séptimo':7,'octavo':8,'noveno':9,'decimo':10,'décimo':10,
+    'once':11,'undecimo':11,'undécimo':11
+  };
+
+  function normalizarGrado(texto){
+    if(!texto) return '';
+    let t = String(texto).trim();
+    const soloNumero = t.match(/(\d{1,2})/);
+    const sinPrefijo = t.replace(/^grado\s*/i,'').trim().toLowerCase();
+    if(GRADO_PALABRAS[sinPrefijo] !== undefined) return `Grado ${GRADO_PALABRAS[sinPrefijo]}`;
+    if(soloNumero) return `Grado ${soloNumero[1]}`;
+    return /^grado/i.test(t) ? t : `Grado ${t}`;
+  }
+
+  // Divide el texto en bloques: cada línea "ESTUDIANTE: ..." abre un bloque nuevo.
+  function parsearBloques(texto){
+    const lineas = texto.split('\n');
+    const bloques = [];
+    let actual = null;
+    lineas.forEach(linea => {
+      const lineaLimpia = linea.replace(/^[-*]\s*/, '').trim(); // tolera viñetas de Markdown
+      if(!lineaLimpia) return;
+      const esInicio = /^estudiante\s*:/i.test(lineaLimpia);
+      const campo = lineaLimpia.match(/^([^:]{2,40}):\s*(.*)$/);
+      if(esInicio){
+        if(actual) bloques.push(actual);
+        actual = {};
+      }
+      if(campo && actual){
+        const clave = Dedupe.normalizar(campo[1]).replace(/\s+/g,'_');
+        actual[clave] = (campo[2]||'').trim();
+      }
+    });
+    if(actual) bloques.push(actual);
+    return bloques;
+  }
+
+  function buscarEstudiante(nombreBuscado, gradoNormalizado){
+    if(!nombreBuscado) return { resultado:null, coincidenciaExacta:false };
+    const candidatosGrado = gradoNormalizado
+      ? DB.estudiantes.filter(e => e.grado.toLowerCase()===gradoNormalizado.toLowerCase())
+      : DB.estudiantes;
+    let match = candidatosGrado.find(e => e.nombre.toLowerCase()===nombreBuscado.toLowerCase());
+    if(match) return { resultado:match, coincidenciaExacta:true };
+    match = candidatosGrado.find(e => Dedupe.nombresSimilares(nombreBuscado, e.nombre));
+    if(match) return { resultado:match, coincidenciaExacta:false };
+    // si no hubo coincidencia respetando el grado indicado, se intenta en todo el directorio
+    if(gradoNormalizado){
+      match = DB.estudiantes.find(e => e.nombre.toLowerCase()===nombreBuscado.toLowerCase()) ||
+              DB.estudiantes.find(e => Dedupe.nombresSimilares(nombreBuscado, e.nombre));
+      if(match) return { resultado:match, coincidenciaExacta:false, gradoDistinto:true };
+    }
+    return { resultado:null, coincidenciaExacta:false };
+  }
+
+  function construirMensaje(ctx){
+    const partes = [];
+    if(ctx.asignatura) partes.push(`Asignatura: ${ctx.asignatura}`);
+    if(ctx.dependencias) partes.push(`Dependencia: ${ctx.dependencias}`);
+    if(ctx.faltas) partes.push(`Detalle: ${ctx.faltas}`);
+    return `Hola ${ctx.acudiente}, me comunico con usted para informarle que ${ctx.estudiante}, del ${ctx.grado}, presenta la siguiente novedad:\n\n${partes.join('\n')}\n\nAgradezco su atención y colaboración.`;
+  }
+
+  function validar(bloques){
+    return bloques.map(b => {
+      const estudianteRaw = b['estudiante'] || '';
+      const gradoRaw = b['grado'] || '';
+      const dependencias = b['dependencias'] || '';
+      const asignatura = b['asignatura'] || '';
+      const faltas = b['faltas'] || b['motivo'] || b['novedad'] || '';
+      const gradoNorm = normalizarGrado(gradoRaw);
+
+      const problemas = [];
+      if(!estudianteRaw) problemas.push('Bloque sin campo ESTUDIANTE');
+
+      const { resultado: estudiante, coincidenciaExacta, gradoDistinto } = buscarEstudiante(estudianteRaw, gradoNorm);
+      let acudiente = null, relacion = null;
+      if(estudiante){
+        relacion = DB.relaciones.find(r=>r.estudianteId===estudiante.id && r.principal) || DB.relaciones.find(r=>r.estudianteId===estudiante.id);
+        acudiente = relacion ? DB.acudientes.find(a=>a.id===relacion.acudienteId) : null;
+      }
+
+      const advertencias = [];
+      if(estudiante && !coincidenciaExacta) advertencias.push(`Coincidencia aproximada con "${estudiante.nombre}" — verifica que sea el mismo estudiante`);
+      if(estudiante && gradoDistinto) advertencias.push(`El grado indicado (${gradoRaw}) no coincide con el registrado (${estudiante.grado})`);
+      if(estudiante && !acudiente) problemas.push('El estudiante no tiene acudiente registrado');
+      if(!estudiante && !problemas.length) problemas.push('No se encontró ningún estudiante parecido en el directorio');
+
+      const motivo = [dependencias, asignatura].filter(Boolean).join(' — ') || 'Novedad';
+      const mensaje = (estudiante && acudiente)
+        ? construirMensaje({ acudiente:acudiente.nombre, estudiante:estudiante.nombre, grado:estudiante.grado, asignatura, dependencias, faltas })
+        : '';
+
+      const estado = problemas.length ? 'error' : (advertencias.length ? 'advertencia' : 'ok');
+      return { estudianteRaw, gradoRaw, dependencias, asignatura, faltas, estudiante, acudiente, motivo, mensaje, problemas, advertencias, estado };
+    });
+  }
+
+  function mostrarPreview(resultados){
+    pendiente = resultados;
+    const total = resultados.length;
+    const ok = resultados.filter(r=>r.estado==='ok').length;
+    const warn = resultados.filter(r=>r.estado==='advertencia').length;
+    const err = resultados.filter(r=>r.estado==='error').length;
+
+    const filas = resultados.map(r => {
+      const cls = r.estado==='error' ? 'row-err' : (r.estado==='advertencia' ? 'row-warn' : '');
+      const tagCls = r.estado==='error'?'err':(r.estado==='advertencia'?'warn':'ok');
+      const tagTxt = r.estado==='error'?'Error':(r.estado==='advertencia'?'Revisar':'Correcto');
+      const detalle = [...r.problemas, ...r.advertencias].join('; ') || '—';
+      return `<tr class="${cls}">
+        <td><span class="status-tag ${tagCls}">${tagTxt}</span></td>
+        <td>${UI.esc(r.estudianteRaw)}</td>
+        <td>${UI.esc(r.estudiante ? r.estudiante.nombre : '—')}</td>
+        <td>${UI.esc(r.estudiante ? r.estudiante.grado : r.gradoRaw)}</td>
+        <td>${UI.esc(r.acudiente ? r.acudiente.nombre : '—')}</td>
+        <td>${UI.esc(r.motivo)}</td>
+        <td style="max-width:220px;white-space:normal;color:var(--gris-600);font-size:12px;">${UI.esc(detalle)}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('importPreviewZone').innerHTML = `
+      <div class="section-head"><h2>Novedades encontradas</h2></div>
+      <div class="preview-summary">
+        <div class="pill total">Registros: ${total}</div>
+        <div class="pill ok">Correctos: ${ok}</div>
+        <div class="pill warn">Advertencias: ${warn}</div>
+        <div class="pill err">Errores: ${err}</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Estado</th><th>Estudiante (MNovedades)</th><th>Coincidencia en directorio</th><th>Grado</th><th>Acudiente</th><th>Motivo</th><th>Detalle</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>
+      <div class="aviso-actions" style="margin-top:14px;">
+        <button class="btn btn-primary" ${(ok+warn)===0?'disabled':''} onclick="Novedades.confirmar()">Generar avisos (${ok+warn})</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('importPreviewZone').innerHTML=''">Cancelar</button>
+      </div>
+      ${err>0 ? `<p class="helper" style="color:var(--rojo);">${err} registro(s) no se pudieron vincular a un estudiante o acudiente y se omitirán. Revisa que ese estudiante ya esté en tu directorio.</p>` : ''}
+    `;
+  }
+
+  function confirmar(){
+    if(!pendiente) return;
+    let generados = 0;
+    pendiente.filter(r=>r.estado!=='error').forEach(r => {
+      DB.mensajes.push({
+        id: Storage.nuevoId('AV'),
+        estudianteId: r.estudiante.id,
+        acudienteId: r.acudiente.id,
+        motivo: r.motivo,
+        mensaje: r.mensaje,
+        estado: 'Pendiente',
+        tipo: 'texto',
+        fecha: new Date().toISOString()
+      });
+      generados++;
+    });
+    Storage.guardar(DB);
+    UI.renderAll();
+    document.getElementById('importPreviewZone').innerHTML = `<div class="empty-state"><div class="big">📮</div><b>${generados} avisos generados</b><br>Ya están redactados y esperando en la Bandeja de avisos.</div>`;
+    pendiente = null;
+  }
+
+  function procesarTexto(textoOpt){
+    const texto = textoOpt !== undefined ? textoOpt : document.getElementById('novInput').value;
+    if(!texto || !texto.trim()){ UI.toast('Pega o carga el contenido de las novedades primero'); return; }
+    const bloques = parsearBloques(texto);
+    if(bloques.length===0){ UI.toast('No se reconoció ningún bloque con el campo ESTUDIANTE'); return; }
+    mostrarPreview(validar(bloques));
+  }
+
+  function manejarArchivo(file){
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => procesarTexto(reader.result);
+    reader.onerror = () => UI.toast('No se pudo leer el archivo');
+    reader.readAsText(file);
+  }
+
+  return { procesarTexto, manejarArchivo, confirmar };
 })();
 
 /* ---------------------------------------------------------------
