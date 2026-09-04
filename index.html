@@ -17,7 +17,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/responsive.css">
@@ -51,33 +52,61 @@
 <!-- ============ HERO ============ -->
 <section class="hero" id="inicio">
   <div class="hero-inner">
-    <p class="hero-kicker">Riohacha, La Guajira · Colombia</p>
-    <h1 class="hero-name">Yonatha<br>Mendoza</h1>
-    <p class="hero-role">Ingeniero de Sistemas · Docente · Creador de Productos Digitales</p>
-    <p class="hero-line">Construyo tecnología que resuelve problemas reales.</p>
-    <p class="hero-sub">Desarrollo productos digitales, plataformas web y soluciones tecnológicas para educación, empresas y rendimiento.</p>
-    <div class="hero-actions">
-      <a href="#perfil" class="btn btn-primary">Conocer mi perfil</a>
-      <a href="#proyectos" class="btn btn-ghost">Ver proyectos</a>
+    <!--
+      Falta tu foto: agrégala en img/profile/mifoto.png (mismo nombre y
+      carpeta que usabas antes). Mientras no exista el archivo, se muestra
+      un avatar con tus iniciales en su lugar, para que nada se vea roto.
+    -->
+    <div class="profile-pic-container" id="profilePicContainer">
+      <img src="img/profile/mifoto.png" alt="Yonatha Mendoza" class="profile-pic" id="profilePic"
+           onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');">
+      <div class="profile-card">
+        <h3>Yonatha Mendoza</h3>
+        <p>Ingeniero de Sistemas · Docente · Creador Digital</p>
+        <div class="profile-social">
+          <!-- El enlace de WhatsApp se agrega por JS solo si hay número confirmado (ver js/main.js) -->
+          <a href="#" id="heroWaLink" aria-label="WhatsApp" class="hidden"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://github.com/yont23" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-text">
+      <p class="hero-kicker">Riohacha, La Guajira · Colombia</p>
+      <h1 class="hero-name">Yonatha<br>Mendoza</h1>
+      <p class="hero-role">Ingeniero de Sistemas · Docente · Creador de Productos Digitales</p>
+      <p class="hero-line">Construyo tecnología que resuelve problemas reales.</p>
+      <p class="hero-sub">Desarrollo productos digitales, plataformas web y soluciones tecnológicas para educación, empresas y rendimiento.</p>
+      <div class="hero-actions">
+        <a href="#perfil" class="btn btn-primary">Conocer mi perfil</a>
+        <a href="#proyectos" class="btn btn-ghost">Ver proyectos</a>
+      </div>
     </div>
   </div>
 
   <div class="doors" id="perfil">
     <a href="#docente" class="door door-docente">
       <span class="door-tag">01</span>
-      <span class="door-emoji">🧑‍🏫</span>
+      <span class="door-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5 12 5l10 4.5-10 4.5L2 9.5Z"/><path d="M6.5 11.5v4.6c0 .8 2.5 2.4 5.5 2.4s5.5-1.6 5.5-2.4v-4.6"/><path d="M21 9.5v6"/></svg>
+      </span>
       <h2>Docente</h2>
       <p>Educación · Tecnología · IA · Metodologías</p>
     </a>
     <a href="#ingeniero" class="door door-ingeniero">
       <span class="door-tag">02</span>
-      <span class="door-emoji">🧑‍💻</span>
+      <span class="door-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 5 5 5"/><path d="m16 8 5 5-5 5"/><path d="m13.5 5-3 15"/></svg>
+      </span>
       <h2>Ingeniero</h2>
       <p>Software · Web · Apps · SaaS · IA</p>
     </a>
     <a href="#productos" class="door door-productos">
       <span class="door-tag">03</span>
-      <span class="door-emoji">🚀</span>
+      <span class="door-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c2.8 2.2 4.5 5.6 4.5 9.5 0 2-.5 3.8-1.3 5.3l-3.2 3.2-3.2-3.2C7.8 15.3 7.3 13.5 7.3 11.5 7.3 7.6 9 4.2 12 2Z"/><circle cx="12" cy="10.5" r="1.8"/><path d="M8.2 15.5 5 17.5l.7-3.8"/><path d="M15.8 15.5 19 17.5l-.7-3.8"/></svg>
+      </span>
       <h2>Productos</h2>
       <p>Productos propios · Innovación · Emprendimiento</p>
     </a>
@@ -86,13 +115,18 @@
 
 <!-- ============ NARRATIVE STRIP ============ -->
 <section class="narrative">
-  <p>No solamente programo. También entiendo problemas educativos, empresariales y de usuarios porque he trabajado directamente con ellos.</p>
+  <div class="narrative-inner">
+    <span class="narrative-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 6C4.5 8 3 11 3 14c0 2.8 1.8 4.5 4 4.5 2 0 3.5-1.5 3.5-3.5 0-1.8-1.2-3.2-3-3.4.3-1.6 1.6-3.4 3.5-4.6L7.5 6Zm9 0C13.5 8 12 11 12 14c0 2.8 1.8 4.5 4 4.5 2 0 3.5-1.5 3.5-3.5 0-1.8-1.2-3.2-3-3.4.3-1.6 1.6-3.4 3.5-4.6L16.5 6Z"/></svg>
+    </span>
+    <p>No solamente programo. También entiendo problemas educativos, empresariales y de usuarios porque he trabajado directamente con ellos.</p>
+  </div>
   <ol class="process">
-    <li><span>01</span>Problema</li>
-    <li><span>02</span>Diseño</li>
-    <li><span>03</span>Desarrollo</li>
-    <li><span>04</span>Implementación</li>
-    <li><span>05</span>Mejora</li>
+    <li><span class="process-node">01</span><p>Problema</p></li>
+    <li><span class="process-node">02</span><p>Diseño</p></li>
+    <li><span class="process-node">03</span><p>Desarrollo</p></li>
+    <li><span class="process-node">04</span><p>Implementación</p></li>
+    <li><span class="process-node">05</span><p>Mejora</p></li>
   </ol>
 </section>
 
@@ -168,7 +202,8 @@
     <article class="mini-project" data-filter="educacion">
       <p class="mini-status status-desarrollo">🟡 En desarrollo</p>
       <h4>MAvisos</h4>
-      <p>Proyecto relacionado, actualmente en desarrollo. <span class="tbc">[DATO POR CONFIRMAR]</span></p>
+      <p>Proyecto relacionado, actualmente en desarrollo.</p>
+      <!-- DATO POR CONFIRMAR: funcionalidades de MAvisos aún sin evidencia pública -->
     </article>
   </div>
 </section>
@@ -198,15 +233,29 @@
     <div class="stack-groups">
       <div>
         <p class="stack-group-label">Frontend</p>
-        <div class="stack-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>React</span></div>
+        <div class="stack-tags">
+          <span><i class="fab fa-html5" style="color:#e34f26"></i> HTML5</span>
+          <span><i class="fab fa-css3-alt" style="color:#264de4"></i> CSS3</span>
+          <span><i class="fab fa-js-square" style="color:#d4b106"></i> JavaScript</span>
+          <span><i class="fab fa-react" style="color:#149eca"></i> React</span>
+        </div>
       </div>
       <div>
         <p class="stack-group-label">Backend</p>
-        <div class="stack-tags"><span>PHP</span><span>MySQL</span><span>Python</span><span>APIs</span></div>
+        <div class="stack-tags">
+          <span><i class="fab fa-php" style="color:#777bb4"></i> PHP</span>
+          <span><i class="fas fa-database" style="color:#4479a1"></i> MySQL</span>
+          <span><i class="fab fa-python" style="color:#3776ab"></i> Python</span>
+          <span><i class="fas fa-server" style="color:var(--blue)"></i> APIs</span>
+        </div>
       </div>
       <div>
         <p class="stack-group-label">Herramientas</p>
-        <div class="stack-tags"><span>Git</span><span>GitHub</span><span>IA / LLMs</span></div>
+        <div class="stack-tags">
+          <span><i class="fab fa-git-alt" style="color:#f05032"></i> Git</span>
+          <span><i class="fab fa-github" style="color:var(--ink)"></i> GitHub</span>
+          <span><i class="fas fa-robot" style="color:#0f9488"></i> IA / LLMs</span>
+        </div>
       </div>
     </div>
   </div>
@@ -231,7 +280,8 @@
 
   <div class="mini-project-grid">
     <article class="mini-project" data-filter="fitness"><p class="mini-status status-uso">🔵 En uso</p><h4>MLab</h4><p>Plataforma digital de entrenamiento.</p></article>
-    <article class="mini-project" data-filter="software fitness mobile"><p class="mini-status status-tbc">⚪ [DATO POR CONFIRMAR]</p><h4>MRunning</h4><p>Aplicación móvil para running.</p></article>
+    <!-- DATO POR CONFIRMAR: estado de MRunning (no visible al público hasta confirmarlo) -->
+    <article class="mini-project" data-filter="software fitness mobile"><h4>MRunning</h4><p>Aplicación móvil para running.</p></article>
     <article class="mini-project" data-filter="educacion"><p class="mini-status status-uso">🔵 En uso</p><h4>MEscolar</h4><p>Producto EdTech.</p></article>
     <article class="mini-project" data-filter="fitness software"><p class="mini-status status-uso">🔵 En uso</p><h4>MFit</h4><p>Gestión deportiva: métricas, planes y recepción.</p></article>
   </div>
@@ -262,6 +312,7 @@
         <p class="project-status status-produccion">🟢 En producción</p>
         <span class="project-tier">Destacado</span>
       </div>
+      <div class="card-icon blue-bg"><i class="fas fa-building-columns"></i></div>
       <h3>MCoop</h3>
       <p class="project-cat">Software empresarial · Gestión · Plataforma</p>
       <p class="project-desc">Plataforma de software desarrollada para cooperativas.</p>
@@ -276,6 +327,7 @@
         <p class="project-status status-uso">🔵 En uso</p>
         <span class="project-tier">Destacado</span>
       </div>
+      <div class="card-icon orange-bg"><i class="fas fa-dumbbell"></i></div>
       <h3>MLab</h3>
       <p class="project-cat">Fitness Technology · Plataforma digital</p>
       <p class="project-desc">Plataforma de entrenamiento, desarrollada, probada y actualmente utilizada por algunos clientes. Permite trabajar planes de entrenamiento y reproducir video de técnica de los ejercicios.</p>
@@ -290,9 +342,10 @@
         <p class="project-status status-uso">🔵 En uso</p>
         <span class="project-tier">Destacado</span>
       </div>
+      <div class="card-icon blue-bg"><i class="fas fa-graduation-cap"></i></div>
       <h3>MEscolar</h3>
       <p class="project-cat">EdTech · Gestión educativa</p>
-      <p class="project-desc">Plataforma de gestión escolar activa en instituciones educativas.</p>
+      <p class="project-desc">Plataforma de gestión escolar activa en instituciones educativas. 100% de notas centralizadas, con ~80% menos tiempo dedicado a la generación de boletines.</p>
       <div class="project-actions">
         <span class="access-note">Acceso privado</span>
         <button class="case-toggle" data-case="mescolar">Caso de estudio</button>
@@ -304,6 +357,7 @@
         <p class="project-status status-uso">🔵 En uso</p>
         <span class="project-tier">Destacado</span>
       </div>
+      <div class="card-icon" style="background:#E8F1FF;color:#2F6FCE;"><i class="fas fa-clipboard-check"></i></div>
       <h3>MNovedades</h3>
       <p class="project-cat">EdTech · PWA · Gestión</p>
       <p class="project-desc">Aplicación mobile-first para registrar novedades académicas y disciplinarias. Almacenamiento local/offline y comunicación vía WhatsApp.</p>
@@ -318,9 +372,10 @@
         <p class="project-status status-uso">🔵 En uso</p>
         <span class="project-tier">Destacado</span>
       </div>
+      <div class="card-icon purple-bg"><i class="fas fa-brain"></i></div>
       <h3>Teacher AI</h3>
       <p class="project-cat">IA · EdTech</p>
-      <p class="project-desc">Solución de IA aplicada a la planeación, generación de contenidos y evaluación por competencias.</p>
+      <p class="project-desc">Solución de IA aplicada a la planeación, generación de contenidos y evaluación por competencias. ~90% menos tiempo en planeación, con motor GPT-4.</p>
       <div class="project-actions">
         <span class="access-note">Acceso privado</span>
         <button class="case-toggle" data-case="teacherai">Caso de estudio</button>
@@ -328,10 +383,9 @@
     </article>
 
     <!-- Nivel 2 -->
+    <!-- DATO POR CONFIRMAR: estado de MRunning (producción / uso / desarrollo) -->
     <article class="project-card tier-2" data-filter="fitness mobile" data-project="mrunning">
-      <div class="project-card-top">
-        <p class="project-status status-tbc">⚪ [DATO POR CONFIRMAR]</p>
-      </div>
+      <div class="card-icon orange-bg"><i class="fas fa-person-running"></i></div>
       <h3>MRunning</h3>
       <p class="project-cat">Mobile · Fitness · Running</p>
       <p class="project-desc">App móvil para registrar actividades de running: tiempo, distancia, ritmo, registro de actividad y personalización de imagen con resultados.</p>
@@ -344,11 +398,12 @@
       <div class="project-card-top">
         <p class="project-status status-uso">🔵 En uso</p>
       </div>
+      <div class="card-icon orange-bg"><i class="fas fa-heart-pulse"></i></div>
       <h3>MFit Suite</h3>
       <p class="project-cat">Performance Tech · SaaS · Analytics</p>
-      <p class="project-desc">SaaS de gestión deportiva: métricas físicas, planes y recepción, con gimnasios activos usándolo hoy.</p>
+      <p class="project-desc">SaaS de gestión deportiva: métricas físicas, planes y recepción. 2+ gimnasios activos, 3 módulos integrados.</p>
       <div class="project-actions">
-        <span class="access-note">Acceso privado</span>
+        <a href="https://yont23.github.io/M/MLab.html" target="_blank" rel="noopener">Probar demo</a>
         <button class="case-toggle" data-case="mfit">Caso de estudio</button>
       </div>
     </article>
@@ -357,9 +412,10 @@
       <div class="project-card-top">
         <p class="project-status status-uso">🔵 En uso</p>
       </div>
+      <div class="card-icon green-bg"><i class="fas fa-building"></i></div>
       <h3>SGA Institutos</h3>
       <p class="project-cat">Software administrativo · Gestión financiera</p>
-      <p class="project-desc">Sistema administrativo para instituciones: control de cartera y flujo de caja en tiempo real.</p>
+      <p class="project-desc">Sistema administrativo para instituciones: 100% de control de cartera y flujo de caja en tiempo real.</p>
       <div class="project-actions">
         <span class="access-note">Acceso privado</span>
         <button class="case-toggle" data-case="sga">Caso de estudio</button>
@@ -447,19 +503,25 @@
     </div>
   </div>
 
-  <h3 class="subgroup-title">Educación</h3>
-  <div class="edu-grid">
-    <div class="edu-item">
-      <p class="edu-title">Ingeniería de Sistemas</p>
-      <p class="edu-org tbc">[DATO POR CONFIRMAR — universidad]</p>
-      <p class="edu-year tbc">[DATO POR CONFIRMAR — año]</p>
+  <!--
+    DATO POR CONFIRMAR: sección "Educación" oculta al público hasta tener
+    universidad/año de grado e institución certificadora/año reales.
+    Para reactivarla, quita este comentario y reemplaza los valores:
+
+    <h3 class="subgroup-title">Educación</h3>
+    <div class="edu-grid">
+      <div class="edu-item">
+        <p class="edu-title">Ingeniería de Sistemas</p>
+        <p class="edu-org">[universidad]</p>
+        <p class="edu-year">[año]</p>
+      </div>
+      <div class="edu-item">
+        <p class="edu-title">Docente Bilingüe Certificado</p>
+        <p class="edu-org">[institución certificadora]</p>
+        <p class="edu-year">[año]</p>
+      </div>
     </div>
-    <div class="edu-item">
-      <p class="edu-title">Docente Bilingüe Certificado</p>
-      <p class="edu-org tbc">[DATO POR CONFIRMAR — institución certificadora]</p>
-      <p class="edu-year tbc">[DATO POR CONFIRMAR — año]</p>
-    </div>
-  </div>
+  -->
 </section>
 
 <!-- ============ M-LAB ============ -->
@@ -477,7 +539,8 @@
     <div class="mlab-card">
       <p class="mini-status status-desarrollo">🟡 En desarrollo</p>
       <h4>Próximos experimentos</h4>
-      <p>Este espacio está preparado para sumar nuevos prototipos, automatizaciones y pruebas de IA a medida que se desarrollen. <span class="tbc">[DATO POR CONFIRMAR]</span></p>
+      <p>Este espacio está preparado para sumar nuevos prototipos, automatizaciones y pruebas de IA a medida que se desarrollen.</p>
+      <!-- DATO POR CONFIRMAR: aún no hay experimentos públicos de M-LAB para listar -->
     </div>
   </div>
 </section>
@@ -503,9 +566,13 @@
         <label>Mensaje<textarea name="mensaje" rows="4" required></textarea></label>
         <button type="submit" class="btn btn-primary">Enviar por WhatsApp</button>
       </form>
-      <div class="contact-side">
-        <a class="contact-link" href="#" id="whatsappLink" target="_blank" rel="noopener">WhatsApp <span class="tbc">[DATO POR CONFIRMAR — número]</span></a>
-        <a class="contact-link" href="mailto:correo@dominio.co" id="emailLink">Correo <span class="tbc">[DATO POR CONFIRMAR — correo]</span></a>
+      <!--
+        DATO POR CONFIRMAR: número de WhatsApp y correo de contacto.
+        Los enlaces se agregan por JS (ver js/main.js, WHATSAPP_NUMBER y
+        EMAIL_ADDRESS) y solo aparecen en el sitio una vez definidos, para
+        no mostrar datos sin confirmar a los visitantes.
+      -->
+      <div class="contact-side" id="contactSide">
         <a class="contact-link" href="https://github.com/yont23" target="_blank" rel="noopener">GitHub ↗</a>
         <a class="contact-link" href="https://www.linkedin.com/in/yonatha-mendoza-molina-3871a2188" target="_blank" rel="noopener">LinkedIn ↗</a>
       </div>
