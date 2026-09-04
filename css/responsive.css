@@ -37,8 +37,11 @@
   .nav-toggle{display:flex;}
 
   .hero{padding-top:2.8rem;}
+  .hero-inner{flex-direction:column;align-items:center;text-align:center;}
+  .hero-text{text-align:center;}
+  .hero-sub{margin-left:auto;margin-right:auto;}
   .hero-name{font-size:clamp(2.4rem,13vw,3.2rem);}
-  .hero-actions{flex-direction:column;align-items:flex-start;}
+  .hero-actions{flex-direction:column;align-items:stretch;width:100%;}
   .btn{width:100%;text-align:center;}
 
   .doors{grid-template-columns:1fr;}
@@ -46,9 +49,9 @@
 
   .metrics{grid-template-columns:1fr 1fr;gap:1.6rem 1.2rem;}
 
-  .process{flex-direction:column;}
-  .process li{border-left:none;border-top:1px solid var(--line);}
-  .process li:first-child{border-top:none;}
+  .process{flex-direction:column;gap:1.6rem;}
+  .process::before{left:19px;right:auto;top:8%;bottom:8%;width:1px;height:auto;}
+  .process li{flex-direction:row;justify-content:flex-start;gap:1rem;}
 
   .mini-project-grid{grid-template-columns:1fr;}
   .build-items{grid-template-columns:1fr;}
