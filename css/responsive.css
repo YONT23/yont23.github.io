@@ -1,0 +1,67 @@
+/* ==========================================================================
+   Responsive — mobile first adjustments layered on top of style.css
+   ========================================================================== */
+
+/* Tablet */
+@media (max-width: 960px){
+  .doors{grid-template-columns:1fr 1fr;}
+  .doors .door:first-child{grid-column:1 / -1;}
+  .metrics{grid-template-columns:repeat(3,1fr);}
+  .split-block{grid-template-columns:1fr;}
+  .mini-project-grid{grid-template-columns:repeat(2,1fr);}
+  .build-items{grid-template-columns:repeat(2,1fr);}
+  .stack-groups{grid-template-columns:1fr;}
+  .project-grid{grid-template-columns:repeat(2,1fr);}
+  .client-grid{grid-template-columns:1fr;}
+  .testimonials{grid-template-columns:1fr;}
+  .exp-columns{grid-template-columns:1fr;}
+  .edu-grid{grid-template-columns:1fr;}
+  .mlab-grid{grid-template-columns:repeat(2,1fr);}
+  .contact-grid{grid-template-columns:1fr;}
+  .case-steps{grid-template-columns:1fr;}
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  .main-nav{
+    position:fixed;top:60px;left:0;right:0;bottom:0;
+    background:var(--navy-950);
+    flex-direction:column;align-items:flex-start;gap:0;
+    padding:1.5rem;
+    transform:translateX(100%);
+    transition:transform .25s ease;
+  }
+  .main-nav.open{transform:translateX(0);}
+  .main-nav a{padding:.9rem 0;width:100%;border-bottom:1px solid var(--line);}
+  .nav-cta{border:none;padding:.9rem 0;border-radius:0;}
+  .nav-toggle{display:flex;}
+
+  .hero{padding-top:2.8rem;}
+  .hero-name{font-size:clamp(2.4rem,13vw,3.2rem);}
+  .hero-actions{flex-direction:column;align-items:flex-start;}
+  .btn{width:100%;text-align:center;}
+
+  .doors{grid-template-columns:1fr;}
+  .doors .door:first-child{grid-column:auto;}
+
+  .metrics{grid-template-columns:1fr 1fr;gap:1.6rem 1.2rem;}
+
+  .process{flex-direction:column;}
+  .process li{border-left:none;border-top:1px solid var(--line);}
+  .process li:first-child{border-top:none;}
+
+  .mini-project-grid{grid-template-columns:1fr;}
+  .build-items{grid-template-columns:1fr;}
+  .project-grid{grid-template-columns:1fr;}
+  .mlab-grid{grid-template-columns:1fr;}
+
+  .section-head{padding:0 1.2rem;}
+  .profile-section,.projects-section,.clients-section,.experience-section,.mlab-section{padding-left:0;padding-right:0;}
+  .split-block,.mini-project-grid,.build-grid,.stack-block,.innovation-flow,.project-grid,
+  .filters,.client-grid,.testimonials,.exp-columns,.edu-grid,.mlab-grid,.case-study,
+  .contact-inner,.subgroup-title,.skill-cloud{padding-left:1.2rem;padding-right:1.2rem;}
+
+  .case-study{margin-left:1.2rem;margin-right:1.2rem;padding:1.6rem;}
+
+  .site-footer{flex-direction:column;text-align:left;}
+}
