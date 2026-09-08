@@ -1,0 +1,1176 @@
+html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruleta Amigo Secreto</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SheetJS para importar y exportar archivos Excel (.xlsx) y CSV -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Canvas Confetti para celebración visual -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            festive: {
+              50: '#fdf2f4',
+              100: '#fbe8ec',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Efectos de brillo y puntero de la ruleta */
+    .wheel-pointer {
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+    }
+    .neon-border {
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.25), inset 0 0 15px rgba(244, 63, 94, 0.15);
+    }
+    /* Ocultar barra de scroll en listas horizontales */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Animación de pulso suave para elementos interactivos */
+    @keyframes subtle-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    .animate-subtle {
+      animation: subtle-pulse 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-rose-500 selection:text-white flex flex-col justify-between">
+
+  <!-- Encabezado Principal -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-900/40 text-xl">
+          🎁
+        </div>
+        <div>
+          <h1 class="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-2">
+            Ruleta Amigo Secreto
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">Sin Repetición</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Sorteo visual seguro y exportable a Excel</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btnSoundToggle" class="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs font-medium flex items-center gap-1.5 transition text-slate-300">
+          <span id="soundIcon">🔊</span> Sonido
+        </button>
+        <button id="btnRulesModal" class="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs font-medium flex items-center gap-1.5 transition text-slate-300">
+          ℹ️ Reglas
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow">
+    
+    <!-- Pestañas de Vista: Configuración vs Juego -->
+    <div class="flex justify-center mb-6">
+      <div class="bg-slate-900 border border-slate-800 p-1 rounded-2xl inline-flex gap-1 shadow-inner">
+        <button id="tabBtnSetup" class="px-5 py-2 rounded-xl text-sm font-semibold transition bg-rose-600 text-white shadow-md">
+          1. Participantes y Excel
+        </button>
+        <button id="tabBtnRoulette" class="px-5 py-2 rounded-xl text-sm font-semibold transition text-slate-400 hover:text-white">
+          2. Girar Ruleta 🎯
+        </button>
+        <button id="tabBtnResults" class="px-5 py-2 rounded-xl text-sm font-semibold transition text-slate-400 hover:text-white">
+          3. Resultados y Descarga
+        </button>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 1: CONFIGURACIÓN DE PARTICIPANTES & EXCEL -->
+    <section id="sectionSetup" class="block">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Panel Izquierdo: Gestión de Nombres -->
+        <div class="lg:col-span-7 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-heading font-bold text-xl text-white">Lista de Participantes</h2>
+              <p class="text-xs text-slate-400">Agrega al menos 3 personas para realizar el sorteo sin que nadie se toque a sí mismo.</p>
+            </div>
+            <span id="participantBadge" class="bg-slate-800 text-rose-400 border border-rose-500/20 text-xs font-bold px-3 py-1 rounded-full">
+              10 Personas
+            </span>
+          </div>
+
+          <!-- Input para agregar personas -->
+          <form id="addParticipantForm" class="flex gap-2 mb-4">
+            <input 
+              type="text" 
+              id="participantInput" 
+              placeholder="Escribe un nombre (ej. Nicolás)" 
+              maxlength="30"
+              class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition"
+            >
+            <button type="submit" class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-md transition flex items-center gap-1">
+              <span>+</span> Agregar
+            </button>
+          </form>
+
+          <!-- Lista de participantes agregados -->
+          <div class="bg-slate-950/60 rounded-2xl border border-slate-800/80 p-3 max-h-72 overflow-y-auto mb-4">
+            <ul id="participantsList" class="space-y-2">
+              <!-- Renderizado dinámico vía JS -->
+            </ul>
+          </div>
+
+          <div class="flex flex-wrap gap-2 justify-between items-center pt-2 border-t border-slate-800">
+            <div class="flex gap-2">
+              <button id="btnLoadExample" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                Cargar 10 por defecto
+              </button>
+              <button id="btnClearAll" class="text-xs bg-rose-950/30 hover:bg-rose-900/50 text-rose-300 px-3 py-1.5 rounded-lg border border-rose-800/40 transition">
+                Limpiar lista
+              </button>
+            </div>
+            <button id="btnStartGame" class="bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-rose-950/50 transition flex items-center gap-2">
+              Preparar Ruleta 🎲
+            </button>
+          </div>
+        </div>
+
+        <!-- Panel Derecho: Integración con Excel & GitHub -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-base">
+                📊
+              </div>
+              <h3 class="font-heading font-bold text-lg text-white">Importar / Exportar Excel</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+              Ideal para GitHub Pages: Puedes guardar tu lista en un archivo <strong>.xlsx</strong> o <strong>.csv</strong> sin necesidad de pagar ningún servidor ni base de datos externa.
+            </p>
+
+            <div class="space-y-3">
+              <!-- Input para cargar Excel -->
+              <label class="block">
+                <span class="sr-only">Subir archivo Excel</span>
+                <div class="w-full border-2 border-dashed border-slate-700 hover:border-emerald-500/60 rounded-2xl p-4 text-center cursor-pointer transition bg-slate-950/40 group">
+                  <span class="text-2xl block mb-1">📂</span>
+                  <span class="text-xs font-semibold text-slate-300 group-hover:text-emerald-400">Haz clic para subir un Excel o CSV</span>
+                  <span class="text-[11px] text-slate-500 block mt-0.5">(Columna con encabezado "Nombre" o primera fila)</span>
+                  <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden">
+                </div>
+              </label>
+
+              <div class="grid grid-cols-2 gap-2">
+                <button id="btnDownloadTemplate" class="text-xs bg-slate-800/90 hover:bg-slate-700 text-slate-300 py-2 px-3 rounded-xl border border-slate-700 flex items-center justify-center gap-1 transition">
+                  📥 Plantilla Excel
+                </button>
+                <button id="btnExportCurrentList" class="text-xs bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 py-2 px-3 rounded-xl border border-emerald-800/40 flex items-center justify-center gap-1 transition">
+                  📤 Exportar Nombres
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta informativa de reglas matemáticas -->
+          <div class="bg-gradient-to-br from-slate-900 to-rose-950/30 border border-rose-900/30 rounded-3xl p-5 shadow-xl">
+            <h4 class="font-heading font-semibold text-sm text-rose-300 flex items-center gap-2 mb-1.5">
+              🛡️ Garantía de Asignación Perfecta
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              El algoritmo utiliza una <strong>desarreglación matemática (derangement)</strong>: nadie se sacará a sí mismo, nadie quedará repetido y el último turno jamás quedará bloqueado. La ruleta excluye visual y dinámicamente a quienes ya fueron elegidos.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: SIMULACIÓN DE LA RULETA -->
+    <section id="sectionRoulette" class="hidden">
+      <div class="max-w-4xl mx-auto">
+
+        <!-- Barra de Estado del Turno Actual -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-5 mb-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3 text-center md:text-left">
+            <div class="w-12 h-12 rounded-2xl bg-rose-600/20 border border-rose-500/30 text-rose-400 flex items-center justify-center text-2xl font-bold">
+              👤
+            </div>
+            <div>
+              <span class="text-xs font-semibold text-rose-400 uppercase tracking-wider">Turno para girar:</span>
+              <h2 id="currentGiverName" class="font-heading font-extrabold text-2xl text-white">--</h2>
+            </div>
+          </div>
+
+          <!-- Contador de progreso -->
+          <div class="flex items-center gap-4">
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block">Progreso del sorteo:</span>
+              <span id="progressText" class="font-bold text-sm text-white">0 de 10 completados</span>
+            </div>
+            <div class="w-24 bg-slate-800 rounded-full h-3 border border-slate-700 overflow-hidden">
+              <div id="progressBar" class="bg-gradient-to-r from-rose-500 to-amber-400 h-full w-0 transition-all duration-500"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenedor Central de la Ruleta y Controles -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden neon-border flex flex-col items-center">
+          
+          <!-- Indicador superior del puntero -->
+          <div class="relative flex flex-col items-center">
+            <div class="w-8 h-8 -mb-4 z-20 text-rose-500 wheel-pointer transform rotate-180">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 drop-shadow-[0_2px_8px_rgba(244,63,94,0.8)]">
+                <polygon points="12,2 22,20 2,20" />
+              </svg>
+            </div>
+
+            <!-- Canvas de la Ruleta -->
+            <div class="relative p-2 rounded-full bg-gradient-to-b from-slate-800 to-slate-950 shadow-2xl border-4 border-slate-700/60">
+              <canvas id="rouletteCanvas" width="480" height="480" class="rounded-full max-w-full h-auto cursor-pointer transition transform"></canvas>
+              
+              <!-- Centro Decorativo de la Ruleta -->
+              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-slate-900 rounded-full border-4 border-amber-400 shadow-xl flex items-center justify-center pointer-events-none">
+                <span class="text-lg">🎁</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botonera de Acción para la Ruleta -->
+          <div class="mt-6 flex flex-wrap gap-3 justify-center items-center">
+            <button id="btnSpinWheel" class="bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-heading font-extrabold text-lg px-8 py-3.5 rounded-2xl shadow-xl shadow-rose-900/40 transform active:scale-95 transition flex items-center gap-2">
+              <span>🎡</span> ¡GIRAR RULETA!
+            </button>
+
+            <button id="btnSecretModeToggle" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3.5 rounded-2xl border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition" title="Modo privacidad: tapa la pantalla para que solo tú veas tu amigo secreto">
+              <span id="privacyIcon">🙈</span> Modo Secreto: <strong id="privacyLabel">Activado</strong>
+            </button>
+          </div>
+
+          <!-- Tarjeta de Participantes Aún Disponibles para este Turno -->
+          <div class="mt-6 w-full pt-4 border-t border-slate-800/80 text-center">
+            <span class="text-xs text-slate-400 mb-2 block font-medium">
+              Opciones aún en la bolsa (nadie repetido y sin auto-asignación):
+            </span>
+            <div id="availableBadgesList" class="flex flex-wrap gap-1.5 justify-center max-h-24 overflow-y-auto p-1">
+              <!-- Insignias generadas dinámicamente -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: RESULTADOS Y DESCARGA -->
+    <section id="sectionResults" class="hidden">
+      <div class="max-w-4xl mx-auto bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+          <div>
+            <h2 class="font-heading font-extrabold text-2xl text-white flex items-center gap-2">
+              🎉 ¡Sorteo Completado!
+            </h2>
+            <p class="text-xs text-slate-400">Todos los amigos secretos han sido emparejados con éxito sin repeticiones.</p>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button id="btnExportResultsExcel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/50">
+              📊 Descargar Resultados en Excel (.xlsx)
+            </button>
+            <button id="btnExportResultsCSV" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-xs font-semibold transition border border-slate-700">
+              📄 Descargar CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Control de Visibilidad de la Tabla (Privacidad) -->
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-4 mb-6 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2 text-xs text-amber-300">
+            <span>⚠️</span>
+            <span>Los resultados están ocultos para no arruinar la sorpresa entre amigos. Puedes revelarlos con un clic.</span>
+          </div>
+          <button id="btnToggleRevealAll" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 whitespace-nowrap transition font-medium">
+            👁️ Mostrar Todo
+          </button>
+        </div>
+
+        <!-- Tabla de Resultados -->
+        <div class="rounded-2xl border border-slate-800 overflow-hidden bg-slate-950/50">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-800/60 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                <th class="py-3 px-4">#</th>
+                <th class="py-3 px-4">Persona que regala</th>
+                <th class="py-3 px-4 text-center">Flechazo</th>
+                <th class="py-3 px-4">Amigo Secreto Asignado</th>
+                <th class="py-3 px-4 text-right">Acción Individual</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody" class="divide-y divide-slate-800/60 text-slate-200">
+              <!-- Rellenado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 flex justify-between items-center pt-4 border-t border-slate-800">
+          <button id="btnRestartAll" class="text-xs text-rose-400 hover:text-rose-300 underline font-medium">
+            Reiniciar y hacer nuevo sorteo
+          </button>
+          <span class="text-xs text-slate-500">Listo para subir a GitHub Pages</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Pie de página -->
+  <footer class="border-t border-slate-900 bg-slate-950/80 py-4 text-center text-xs text-slate-500">
+    <p>Simulador de Ruleta Amigo Secreto • 100% estático y compatible con GitHub Pages</p>
+  </footer>
+
+  <!-- MODAL: REVELACIÓN DEL AMIGO SECRETO (PRIVACIDAD) -->
+  <div id="modalReveal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl relative overflow-hidden">
+      <!-- Glow decorativo de fondo -->
+      <div class="absolute -top-16 -left-16 w-36 h-36 bg-rose-500/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-16 w-36 h-36 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="w-16 h-16 bg-rose-500/20 border border-rose-500/40 rounded-2xl flex items-center justify-center mx-auto text-3xl mb-4">
+        ✨
+      </div>
+
+      <p class="text-xs uppercase font-bold text-rose-400 tracking-wider mb-1">¡Resultado de la Ruleta!</p>
+      <h3 id="modalGiverName" class="font-heading font-extrabold text-2xl text-white mb-2">Nombre</h3>
+      
+      <p class="text-xs text-slate-400 mb-6">Tu amigo secreto asignado es:</p>
+
+      <!-- Caja del Amigo Secreto Revelado -->
+      <div id="modalSecretBox" class="bg-gradient-to-r from-rose-950/60 to-amber-950/60 border-2 border-dashed border-rose-500/50 rounded-2xl py-5 px-4 mb-6 shadow-inner">
+        <span class="text-xs text-rose-300 block mb-1">Te tocó regalarle a:</span>
+        <span id="modalReceiverName" class="font-heading font-black text-3xl text-amber-300 tracking-wide block">
+          ???
+        </span>
+      </div>
+
+      <p class="text-[11px] text-slate-400 mb-6 italic">
+        Memorízalo bien o anótalo. Al hacer clic en el botón siguiente, la pantalla se ocultará para que pase la siguiente persona.
+      </p>
+
+      <button id="btnModalCloseNext" class="w-full bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-bold py-3 px-6 rounded-xl text-sm shadow-lg transition">
+        Ocultar y Pasar a la Siguiente Persona ➡️
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: REGLAS DEL SORTEO -->
+  <div id="modalRules" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+        <h3 class="font-heading font-bold text-lg text-white flex items-center gap-2">
+          📜 Reglas y Funcionamiento
+        </h3>
+        <button id="btnCloseRules" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <p><strong>1. Regla de Oro (Sin Repetición):</strong> Si Juan sacó a Sofía en la ruleta, Sofía queda inmediatamente excluida de la ruleta para el resto de los participantes. Nadie puede recibir doble regalo ni quedar sin regalo.</p>
+        <p><strong>2. No Auto-asignación:</strong> Una persona jamás se verá en su propia ruleta ni se sacará a sí misma.</p>
+        <p><strong>3. Algoritmo Antiatascos:</strong> Los emparejamientos se pre-calculan matemáticamente con una permutación sin puntos fijos (desarreglo). De esa forma, la última persona no se quedará forzada a sacarse a sí misma.</p>
+        <p><strong>4. Base de Datos en Excel / CSV:</strong> No necesitas MySQL ni servidores. Puedes subir un Excel con la lista de tus 10 (o más) personas y al terminar puedes descargar el archivo Excel con los resultados listos.</p>
+      </div>
+
+      <div class="mt-6 text-right">
+        <button id="btnOkRules" class="bg-rose-600 hover:bg-rose-500 text-white px-5 py-2 rounded-xl text-xs font-bold transition">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MENSAJES FLOTANTES (REEMPLAZO DE ALERT) -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs">
+      <span id="toastIcon" class="text-base">🔔</span>
+      <span id="toastMessage">Notificación del sistema</span>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================
+       ESTADO DE LA APLICACIÓN
+       ========================================================== */
+    const DEFAULT_PARTICIPANTS = [
+      "Nicolás (N1)", "Valentina (N2)", "Mateo (N3)", "Sofía (N4)", 
+      "Daniel (N5)", "Isabella (N6)", "Juan (N7)", "Mariana (N8)", 
+      "Lucas (N9)", "Elena (N10)"
+    ];
+
+    let participants = [...DEFAULT_PARTICIPANTS];
+    let secretPairing = []; // Array de { giver: string, receiver: string, revealed: boolean }
+    let currentTurnIndex = 0;
+    let isSpinning = false;
+    let currentWheelRotation = 0;
+    let soundEnabled = true;
+    let privacyShieldEnabled = true;
+    let allRevealedInSummary = false;
+
+    // Paleta de colores atractiva para los sectores de la ruleta
+    const WHEEL_COLORS = [
+      "#e11d48", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6",
+      "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#06b6d4"
+    ];
+
+    /* ==========================================================
+       SINTETIZADOR DE AUDIO (Web Audio API - Sin archivos externos)
+       ========================================================== */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTickSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } catch (e) {
+        // Ignorar si el usuario aún no interactúa con audio
+      }
+    }
+
+    function playFanfareSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          const startTime = ctx.currentTime + idx * 0.1;
+          gain.gain.setValueAtTime(0.15, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(startTime);
+          osc.stop(startTime + 0.35);
+        });
+      } catch (e) {}
+    }
+
+    function showToast(message, icon = "🔔") {
+      const toast = document.getElementById("toastNotification");
+      const msg = document.getElementById("toastMessage");
+      const icn = document.getElementById("toastIcon");
+      if (!toast || !msg) return;
+
+      msg.textContent = message;
+      icn.textContent = icon;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("translate-y-20", "opacity-0");
+      }, 3200);
+    }
+
+    /* ==========================================================
+       ALGORITMO MATEMÁTICO: DESARREGLO (SECRET SANTA PERMUTATION)
+       Garantiza que nadie se saque a sí mismo y que no haya
+       repetidos ni bloqueos en el último participante.
+       ========================================================== */
+    function generateValidPairings(namesList) {
+      const n = namesList.length;
+      if (n < 2) return null;
+
+      let validDerangement = null;
+      let attempts = 0;
+
+      while (!validDerangement && attempts < 2000) {
+        attempts++;
+        const shuffled = [...namesList];
+        // Fisher-Yates Shuffle
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        // Verificar que ningún elemento coincida en índice con namesList
+        let isDerangement = true;
+        for (let i = 0; i < n; i++) {
+          if (shuffled[i] === namesList[i]) {
+            isDerangement = false;
+            break;
+          }
+        }
+
+        if (isDerangement) {
+          validDerangement = shuffled;
+        }
+      }
+
+      // Si por alguna razón aleatoria no converge, ciclo hamiltoniano de respaldo
+      if (!validDerangement) {
+        validDerangement = [];
+        for (let i = 0; i < n; i++) {
+          validDerangement.push(namesList[(i + 1) % n]);
+        }
+      }
+
+      return namesList.map((giver, idx) => ({
+        giver: giver,
+        receiver: validDerangement[idx],
+        revealed: false
+      }));
+    }
+
+    function renderParticipantsList() {
+      const listEl = document.getElementById("participantsList");
+      const badgeEl = document.getElementById("participantBadge");
+      if (!listEl) return;
+
+      listEl.innerHTML = "";
+      participants.forEach((name, index) => {
+        const li = document.createElement("li");
+        li.className = "flex items-center justify-between bg-slate-900/90 border border-slate-800 px-3 py-2 rounded-xl text-xs hover:border-slate-700 transition";
+        li.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px]">
+              ${index + 1}
+            </span>
+            <span class="font-medium text-slate-200">${escapeHtml(name)}</span>
+          </div>
+          <button onclick="removeParticipant(${index})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Eliminar">
+            ✕
+          </button>
+        `;
+        listEl.appendChild(li);
+      });
+
+      if (badgeEl) {
+        badgeEl.textContent = `${participants.length} Personas`;
+      }
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function removeParticipant(index) {
+      if (participants.length <= 2) {
+        showToast("Se necesitan al menos 2 personas para el sorteo.", "⚠️");
+        return;
+      }
+      participants.splice(index, 1);
+      renderParticipantsList();
+    }
+
+    function downloadExcelTemplate() {
+      const templateData = [
+        { "Nombre": "Carlos Gómez" },
+        { "Nombre": "Laura Restrepo" },
+        { "Nombre": "Andrés Morales" },
+        { "Nombre": "Camila Torres" },
+        { "Nombre": "Felipe Castro" },
+        { "Nombre": "Manuela Díaz" },
+        { "Nombre": "Sebastián Arias" },
+        { "Nombre": "Natalia Vega" },
+        { "Nombre": "Santiago Rojas" },
+        { "Nombre": "Diana Pardo" }
+      ];
+
+      const ws = XLSX.utils.json_to_sheet(templateData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Participantes");
+      XLSX.writeFile(wb, "Plantilla_Amigo_Secreto.xlsx");
+      showToast("Plantilla descargada con éxito", "📥");
+    }
+
+    function exportParticipantsExcel() {
+      if (participants.length === 0) {
+        showToast("No hay participantes para exportar.", "⚠️");
+        return;
+      }
+      const data = participants.map((name, idx) => ({ "No.": idx + 1, "Nombre": name }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Nombres");
+      XLSX.writeFile(wb, "Lista_Participantes_Amigo_Secreto.xlsx");
+      showToast("Lista exportada a Excel", "📤");
+    }
+
+    function handleExcelUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+          if (!json || json.length === 0) {
+            showToast("El archivo de Excel parece estar vacío.", "❌");
+            return;
+          }
+
+          const extractedNames = [];
+          json.forEach((row, rowIdx) => {
+            if (row && row.length > 0) {
+              const val = String(row[0]).trim();
+              // Ignorar encabezados comunes si coinciden
+              if (rowIdx === 0 && (val.toLowerCase() === "nombre" || val.toLowerCase() === "participantes" || val.toLowerCase() === "nombres")) {
+                return;
+              }
+              if (val.length > 0 && !extractedNames.includes(val)) {
+                extractedNames.push(val);
+              }
+            }
+          });
+
+          if (extractedNames.length < 2) {
+            showToast("El archivo debe contener al menos 2 nombres válidos.", "⚠️");
+            return;
+          }
+
+          participants = extractedNames;
+          renderParticipantsList();
+          showToast(`¡Se importaron ${extractedNames.length} participantes desde el Excel!`, "✅");
+        } catch (error) {
+          showToast("Error al leer el archivo Excel. Verifica su formato.", "❌");
+        }
+      };
+      reader.readAsArrayBuffer(file);
+      event.target.value = ""; // Limpiar input para permitir recargar el mismo archivo
+    }
+
+    const canvas = document.getElementById("rouletteCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function getEligibleReceiversForCurrentTurn() {
+      if (!secretPairing || secretPairing.length === 0) return [];
+      const currentGiver = secretPairing[currentTurnIndex].giver;
+      const targetReceiver = secretPairing[currentTurnIndex].receiver;
+
+      // Obtener qué receptores ya fueron asignados en turnos ANTERIORES
+      const alreadyAssignedReceivers = secretPairing
+        .slice(0, currentTurnIndex)
+        .map(p => p.receiver);
+
+      // Los candidatos disponibles para la ruleta son:
+      // Todos los participantes MENOS los ya asignados y MENOS el participante actual
+      let available = participants.filter(p => !alreadyAssignedReceivers.includes(p) && p !== currentGiver);
+
+      // Asegurar que el receptor verdadero pre-calculado esté siempre en la ruleta
+      if (!available.includes(targetReceiver)) {
+        available.push(targetReceiver);
+      }
+
+      return available;
+    }
+
+    function drawWheel(rotationAngle = 0, slices = []) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = canvas.width / 2 - 12;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (slices.length === 0) {
+        ctx.fillStyle = "#1e293b";
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "14px Inter";
+        ctx.textAlign = "center";
+        ctx.fillText("Sin opciones", centerX, centerY);
+        return;
+      }
+
+      const totalSlices = slices.length;
+      const sliceAngle = (2 * Math.PI) / totalSlices;
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(rotationAngle);
+
+      for (let i = 0; i < totalSlices; i++) {
+        const start = i * sliceAngle;
+        const end = start + sliceAngle;
+        const color = WHEEL_COLORS[i % WHEEL_COLORS.length];
+
+        // Dibujar el sector de la ruleta
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Borde elegante entre sectores
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Texto del participante en el sector
+        ctx.save();
+        ctx.rotate(start + sliceAngle / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = totalSlices > 8 ? "bold 12px Inter" : "bold 14px Inter";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+        ctx.shadowBlur = 4;
+        
+        // Truncar texto largo para que encaje
+        let text = slices[i];
+        if (text.length > 13) {
+          text = text.substring(0, 11) + "...";
+        }
+        ctx.fillText(text, radius - 20, 5);
+        ctx.restore();
+      }
+
+      // Borde circular exterior decorativo con pernos
+      ctx.restore();
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      // Dibujar pernos dorados alrededor
+      const numPins = totalSlices * 2;
+      for (let p = 0; p < numPins; p++) {
+        const pinAngle = rotationAngle + (p * (2 * Math.PI / numPins));
+        const px = centerX + (radius - 2) * Math.cos(pinAngle);
+        const py = centerY + (radius - 2) * Math.sin(pinAngle);
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = "#fbbf24";
+        ctx.fill();
+        ctx.strokeStyle = "#78350f";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    function spinWheel() {
+      if (isSpinning) return;
+      if (currentTurnIndex >= secretPairing.length) {
+        showToast("¡El sorteo ya fue completado!", "🎉");
+        switchTab("results");
+        return;
+      }
+
+      const availableSlices = getEligibleReceiversForCurrentTurn();
+      const currentTarget = secretPairing[currentTurnIndex].receiver;
+      const targetIndex = availableSlices.indexOf(currentTarget);
+
+      if (targetIndex === -1) {
+        showToast("Error en el emparejamiento. Reinicia el sorteo.", "❌");
+        return;
+      }
+
+      isSpinning = true;
+      document.getElementById("btnSpinWheel").disabled = true;
+      document.getElementById("btnSpinWheel").classList.add("opacity-60", "cursor-not-allowed");
+
+      const totalSlices = availableSlices.length;
+      const sliceAngle = (2 * Math.PI) / totalSlices;
+
+      // El puntero está fijo en la parte superior (ángulo = 3*PI/2 rad o -PI/2)
+      // Calculamos el ángulo final para que el sector ganador quede exactamente bajo el puntero
+      const targetCenterAngle = (targetIndex * sliceAngle) + (sliceAngle / 2);
+      const pointerAngle = (3 * Math.PI) / 2; // Arriba
+      let desiredFinalAngle = pointerAngle - targetCenterAngle;
+      
+      // Normalizar dentro de 0 a 2*PI
+      while (desiredFinalAngle < 0) desiredFinalAngle += (2 * Math.PI);
+      desiredFinalAngle %= (2 * Math.PI);
+
+      // Añadir entre 5 y 8 vueltas completas para que el giro sea emocionante
+      const fullRotations = (5 + Math.floor(Math.random() * 3)) * (2 * Math.PI);
+      const startAngle = currentWheelRotation;
+      const totalDelta = fullRotations + desiredFinalAngle - (startAngle % (2 * Math.PI));
+
+      const duration = 4500; // 4.5 segundos
+      const startTime = performance.now();
+      let lastTickAngle = startAngle;
+
+      function animateSpin(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing cúbico hacia afuera para desaceleración realista
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentAngle = startAngle + (totalDelta * easeOut);
+        currentWheelRotation = currentAngle;
+
+        // Sonido de clic cada vez que un sector cruza el puntero
+        if (Math.abs(currentAngle - lastTickAngle) >= sliceAngle * 0.7) {
+          playTickSound();
+          lastTickAngle = currentAngle;
+        }
+
+        drawWheel(currentAngle, availableSlices);
+
+        if (progress < 1) {
+          requestAnimationFrame(animateSpin);
+        } else {
+          // Giro completado
+          isSpinning = false;
+          document.getElementById("btnSpinWheel").disabled = false;
+          document.getElementById("btnSpinWheel").classList.remove("opacity-60", "cursor-not-allowed");
+          
+          playFanfareSound();
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+
+          // Revelar resultado en el modal
+          showRevealModal(secretPairing[currentTurnIndex]);
+        }
+      }
+
+      requestAnimationFrame(animateSpin);
+    }
+
+    function updateTurnUI() {
+      if (currentTurnIndex >= secretPairing.length) {
+        switchTab("results");
+        return;
+      }
+
+      const currentPair = secretPairing[currentTurnIndex];
+      document.getElementById("currentGiverName").textContent = currentPair.giver;
+
+      // Progreso
+      const total = secretPairing.length;
+      document.getElementById("progressText").textContent = `${currentTurnIndex} de ${total} completados`;
+      const pct = (currentTurnIndex / total) * 100;
+      document.getElementById("progressBar").style.width = `${pct}%`;
+
+      // Actualizar insignias de opciones disponibles
+      const available = getEligibleReceiversForCurrentTurn();
+      const badgeContainer = document.getElementById("availableBadgesList");
+      badgeContainer.innerHTML = "";
+
+      available.forEach(name => {
+        const span = document.createElement("span");
+        span.className = "bg-slate-800 text-slate-300 border border-slate-700/80 px-2.5 py-1 rounded-full text-xs font-medium";
+        span.textContent = name;
+        badgeContainer.appendChild(span);
+      });
+
+      // Redibujar la ruleta con los sectores correspondientes a este turno
+      drawWheel(currentWheelRotation, available);
+    }
+
+    function showRevealModal(pair) {
+      const modal = document.getElementById("modalReveal");
+      const giverEl = document.getElementById("modalGiverName");
+      const receiverEl = document.getElementById("modalReceiverName");
+
+      giverEl.textContent = pair.giver;
+      receiverEl.textContent = pair.receiver;
+      pair.revealed = true;
+
+      modal.classList.remove("hidden");
+    }
+
+    function hideRevealModalAndAdvance() {
+      const modal = document.getElementById("modalReveal");
+      modal.classList.add("hidden");
+
+      currentTurnIndex++;
+      if (currentTurnIndex >= secretPairing.length) {
+        showToast("¡Todos han girado! Sorteo finalizado.", "🎉");
+        switchTab("results");
+        renderResultsTable();
+      } else {
+        updateTurnUI();
+        showToast(`Turno de ${secretPairing[currentTurnIndex].giver}`, "🎯");
+      }
+    }
+
+    function renderResultsTable() {
+      const tbody = document.getElementById("resultsTableBody");
+      if (!tbody) return;
+
+      tbody.innerHTML = "";
+      secretPairing.forEach((pair, idx) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-800/40 transition";
+
+        const isVisible = allRevealedInSummary;
+        const displayReceiver = isVisible 
+          ? `<strong class="text-amber-300 font-semibold">${escapeHtml(pair.receiver)}</strong>`
+          : `<span class="text-slate-500 font-mono tracking-wider cursor-pointer select-none" onclick="revealSingleResult(${idx})">•••••••••• (Clic para ver)</span>`;
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 text-slate-500 font-mono text-xs">${idx + 1}</td>
+          <td class="py-3 px-4 font-bold text-white">${escapeHtml(pair.giver)}</td>
+          <td class="py-3 px-4 text-center text-rose-500 text-base">➔</td>
+          <td class="py-3 px-4">${displayReceiver}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="revealSingleResult(${idx})" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+              ${isVisible ? "Ocultar" : "👁️ Revelar"}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function revealSingleResult(index) {
+      if (!secretPairing[index]) return;
+      const pair = secretPairing[index];
+      showToast(`${pair.giver} le regala a 👉 ${pair.receiver}`, "🎁");
+    }
+
+    function exportResultsToExcel() {
+      if (!secretPairing || secretPairing.length === 0) {
+        showToast("No hay resultados de sorteo para exportar.", "⚠️");
+        return;
+      }
+
+      const excelData = secretPairing.map((pair, idx) => ({
+        "No.": idx + 1,
+        "Persona (Giver)": pair.giver,
+        "Amigo Secreto Asignado (Receiver)": pair.receiver,
+        "Fecha del Sorteo": new Date().toLocaleDateString()
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(excelData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Resultados_Sorteo");
+      XLSX.writeFile(wb, "Resultados_Amigo_Secreto_Final.xlsx");
+      showToast("Resultados exportados a Excel correctamente", "📊");
+    }
+
+    function exportResultsToCSV() {
+      if (!secretPairing || secretPairing.length === 0) {
+        showToast("No hay resultados para exportar.", "⚠️");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,No,Quien Regala,Amigo Secreto Asignado\n";
+      secretPairing.forEach((p, i) => {
+        csvContent += `${i + 1},"${p.giver}","${p.receiver}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Resultados_Amigo_Secreto.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Archivo CSV descargado", "📄");
+    }
+
+    function switchTab(tab) {
+      const secSetup = document.getElementById("sectionSetup");
+      const secRoulette = document.getElementById("sectionRoulette");
+      const secResults = document.getElementById("sectionResults");
+
+      const btnSetup = document.getElementById("tabBtnSetup");
+      const btnRoulette = document.getElementById("tabBtnRoulette");
+      const btnResults = document.getElementById("tabBtnResults");
+
+      secSetup.classList.add("hidden");
+      secRoulette.classList.add("hidden");
+      secResults.classList.add("hidden");
+
+      [btnSetup, btnRoulette, btnResults].forEach(btn => {
+        btn.className = "px-5 py-2 rounded-xl text-sm font-semibold transition text-slate-400 hover:text-white";
+      });
+
+      if (tab === "setup") {
+        secSetup.classList.remove("hidden");
+        btnSetup.className = "px-5 py-2 rounded-xl text-sm font-semibold transition bg-rose-600 text-white shadow-md";
+      } else if (tab === "roulette") {
+        secRoulette.classList.remove("hidden");
+        btnRoulette.className = "px-5 py-2 rounded-xl text-sm font-semibold transition bg-rose-600 text-white shadow-md";
+        updateTurnUI();
+      } else if (tab === "results") {
+        secResults.classList.remove("hidden");
+        btnResults.className = "px-5 py-2 rounded-xl text-sm font-semibold transition bg-rose-600 text-white shadow-md";
+        renderResultsTable();
+      }
+    }
+
+    function initGame() {
+      if (participants.length < 3) {
+        showToast("Agrega al menos 3 personas para que el sorteo sea divertido y sin repetición.", "⚠️");
+        return;
+      }
+
+      secretPairing = generateValidPairings(participants);
+      currentTurnIndex = 0;
+      currentWheelRotation = 0;
+      allRevealedInSummary = false;
+
+      switchTab("roulette");
+      showToast("¡Ruleta configurada! Cada quien girará en su turno.", "🎲");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderParticipantsList();
+
+      // Formulario para añadir persona
+      document.getElementById("addParticipantForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("participantInput");
+        const val = input.value.trim();
+        if (!val) return;
+        if (participants.includes(val)) {
+          showToast("Ese nombre ya está en la lista.", "⚠️");
+          return;
+        }
+        participants.push(val);
+        input.value = "";
+        renderParticipantsList();
+      });
+
+      // Botón cargar 10 por defecto
+      document.getElementById("btnLoadExample").addEventListener("click", () => {
+        participants = [...DEFAULT_PARTICIPANTS];
+        renderParticipantsList();
+        showToast("Cargada lista de 10 personas por defecto", "📋");
+      });
+
+      // Limpiar lista
+      document.getElementById("btnClearAll").addEventListener("click", () => {
+        participants = [];
+        renderParticipantsList();
+        showToast("Lista vaciada", "🧹");
+      });
+
+      // Iniciar Juego
+      document.getElementById("btnStartGame").addEventListener("click", initGame);
+
+      // Girar Ruleta
+      document.getElementById("btnSpinWheel").addEventListener("click", spinWheel);
+
+      // Clic directo sobre el canvas de la ruleta también gira
+      canvas.addEventListener("click", () => {
+        if (!isSpinning) spinWheel();
+      });
+
+      // Modal de Revelación: botón para ocultar y avanzar
+      document.getElementById("btnModalCloseNext").addEventListener("click", hideRevealModalAndAdvance);
+
+      // Pestañas
+      document.getElementById("tabBtnSetup").addEventListener("click", () => switchTab("setup"));
+      document.getElementById("tabBtnRoulette").addEventListener("click", () => {
+        if (!secretPairing || secretPairing.length === 0) {
+          initGame();
+        } else {
+          switchTab("roulette");
+        }
+      });
+      document.getElementById("tabBtnResults").addEventListener("click", () => switchTab("results"));
+
+      // Excel y CSV
+      document.getElementById("btnDownloadTemplate").addEventListener("click", downloadExcelTemplate);
+      document.getElementById("btnExportCurrentList").addEventListener("click", exportParticipantsExcel);
+      document.getElementById("excelFileInput").addEventListener("change", handleExcelUpload);
+      document.getElementById("btnExportResultsExcel").addEventListener("click", exportResultsToExcel);
+      document.getElementById("btnExportResultsCSV").addEventListener("click", exportResultsToCSV);
+
+      // Revelar todos en resumen
+      document.getElementById("btnToggleRevealAll").addEventListener("click", () => {
+        allRevealedInSummary = !allRevealedInSummary;
+        document.getElementById("btnToggleRevealAll").textContent = allRevealedInSummary ? "🙈 Ocultar Todo" : "👁️ Mostrar Todo";
+        renderResultsTable();
+      });
+
+      // Reiniciar todo
+      document.getElementById("btnRestartAll").addEventListener("click", () => {
+        secretPairing = [];
+        currentTurnIndex = 0;
+        switchTab("setup");
+        showToast("Sorteo reiniciado.", "🔄");
+      });
+
+      // Sonido
+      document.getElementById("btnSoundToggle").addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        document.getElementById("soundIcon").textContent = soundEnabled ? "🔊" : "🔇";
+        showToast(soundEnabled ? "Sonido activado" : "Sonido desactivado");
+      });
+
+      // Toggle modo secreto
+      document.getElementById("btnSecretModeToggle").addEventListener("click", () => {
+        privacyShieldEnabled = !privacyShieldEnabled;
+        document.getElementById("privacyLabel").textContent = privacyShieldEnabled ? "Activado" : "Desactivado";
+        document.getElementById("privacyIcon").textContent = privacyShieldEnabled ? "🙈" : "👀";
+        showToast(`Modo privacidad ${privacyShieldEnabled ? "activado" : "desactivado"}`);
+      });
+
+      // Modal de Reglas
+      document.getElementById("btnRulesModal").addEventListener("click", () => {
+        document.getElementById("modalRules").classList.remove("hidden");
+      });
+      document.getElementById("btnCloseRules").addEventListener("click", () => {
+        document.getElementById("modalRules").classList.add("hidden");
+      });
+      document.getElementById("btnOkRules").addEventListener("click", () => {
+        document.getElementById("modalRules").classList.add("hidden");
+      });
+    });
+  </script>
+</body>
+</html>
