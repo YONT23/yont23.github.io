@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Educación Física - Grado 7</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E3F2FD; /* Azul muy suave */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            border: 4px solid #1976D2;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #1565C0;
+        }
+        .info-header {
+            background-color: #E8EAF6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #9FA8DA;
+        }
+        .info-header input {
+            font-size: 16px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .question {
+            background-color: #F5F5F5;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #2196F3;
+        }
+        .question-video {
+            background-color: #FFF3E0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #FF9800;
+        }
+        .question p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
+            background-color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .options label:hover {
+            background-color: #BBDEFB;
+            border-color: #2196F3;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #388E3C;
+        }
+        #results {
+            display: none;
+            text-align: center;
+        }
+        .feedback {
+            text-align: left;
+            background-color: #FFEBEE;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #F44336;
+            margin-top: 20px;
+        }
+        .success-msg {
+            color: #2E7D32;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .teacher-note {
+            background-color: #E8F5E9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #4CAF50;
+            margin-top: 30px;
+            font-size: 18px;
+            color: #2E7D32;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            border: 2px solid #1DA851;
+        }
+        .whatsapp-btn:hover {
+            background-color: #1EBE5D;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exam-container">
+    <h1>🧠 Examen de Educación Física 🪑</h1>
+    <h2>Yoga en Silla y Gimnasia Cerebral</h2>
+    
+    <div class="info-header">
+        <p><strong>Nivel:</strong> Grado 7</p>
+        <p><strong>Fecha:</strong> <span id="current-date"></span></p>
+        <p><label for="student-name"><strong>Nombre Completo:</strong></label><br>
+        <input type="text" id="student-name" placeholder="Ejemplo: Laura Rodríguez"></p>
+    </div>
+
+    <p style="text-align: center; font-style: italic;">Lee atentamente cada enunciado y selecciona la respuesta correcta. Concéntrate y confía en tus conocimientos.</p>
+
+    <form id="quiz-form">
+        <!-- Pregunta 1: Yoga en Silla -->
+        <div class="question" id="q1">
+            <p>1. ¿Cuál es el objetivo principal de practicar "Yoga en Silla" en el entorno escolar o en casa?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="a"> a) Desarrollar masa muscular extrema y levantar pesas pesadas.</label>
+                <label><input type="radio" name="q1" value="b"> b) Mejorar la postura, reducir el estrés y estirar el cuerpo sin necesidad de mucho espacio ni equipamiento.</label>
+                <label><input type="radio" name="q1" value="c"> c) Aumentar la velocidad para competencias de atletismo.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 2: Yoga en Silla -->
+        <div class="question" id="q2">
+            <p>2. Al realizar ejercicios de Yoga en Silla, ¿cómo debe ser el control de la respiración?</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="a"> a) Lenta, profunda y consciente, inhalando y exhalando preferiblemente por la nariz.</label>
+                <label><input type="radio" name="q2" value="b"> b) Muy rápida y agitada, siempre respirando únicamente por la boca.</label>
+                <label><input type="radio" name="q2" value="c"> c) Se debe aguantar la respiración el mayor tiempo posible mientras se hace la postura.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 3: Gimnasia Cerebral -->
+        <div class="question" id="q3">
+            <p>3. ¿Cómo se define correctamente la "Gimnasia Cerebral" (Brain Gym)?</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="a"> a) Un deporte olímpico que combina correr con resolver problemas matemáticos.</label>
+                <label><input type="radio" name="q3" value="b"> b) Un videojuego de memoria que solo se puede jugar en la computadora.</label>
+                <label><input type="radio" name="q3" value="c"> c) Una serie de ejercicios físicos y movimientos corporales diseñados para activar y conectar ambos hemisferios del cerebro.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 4: Gimnasia Cerebral -->
+        <div class="question" id="q4">
+            <p>4. Uno de los ejercicios más conocidos de la Gimnasia Cerebral es el "Marcha Cruzada" o "Cross Crawl" (tocar la rodilla derecha con el codo izquierdo y viceversa). ¿Para qué sirve principalmente?</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="a"> a) Para mejorar la coordinación entre el lado derecho e izquierdo del cuerpo y estimular las redes neuronales.</label>
+                <label><input type="radio" name="q4" value="b"> b) Para fortalecer exclusivamente los músculos de la espalda baja.</label>
+                <label><input type="radio" name="q4" value="c"> c) Para prepararse para saltar la cuerda a alta velocidad.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 5: Integración -->
+        <div class="question" id="q5">
+            <p>5. ¿Qué beneficio en común comparten el Yoga en Silla y la Gimnasia Cerebral para un estudiante de séptimo grado?</p>
+            <div class="options">
+                <label><input type="radio" name="q5" value="a"> a) Ayudan a mejorar la concentración, reducen la fatiga mental y preparan al cuerpo para aprender mejor antes de una clase.</label>
+                <label><input type="radio" name="q5" value="b"> b) Ambos requieren la compra de uniformes deportivos muy costosos.</label>
+                <label><input type="radio" name="q5" value="c"> c) Solo tienen efecto si se practican durante más de tres horas seguidas al día.</label>
+            </div>
+        </div>
+
+        <!-- Pregunta 6: El Video -->
+        <div class="question-video">
+            <h3 style="color: #E65100; margin-top: 0;">📹 Pregunta 6: Actividad Práctica (Vale 5 puntos) 📹</h3>
+            <p>
+                Para completar la otra mitad de tu calificación, debes grabar un video corto de ti mismo (entre 30 segundos y 1 minuto).<br><br>
+                <strong>Instrucciones del video:</strong><br>
+                Demuestra <strong>UN</strong> ejercicio de Yoga en Silla (ej. estiramiento de cuello, torsión espinal) <strong>O</strong> un ejercicio de Gimnasia Cerebral (ej. Marcha Cruzada, o dibujar un ocho perezoso en el aire).<br>
+                Mientras lo haces, explica brevemente cómo se llama el ejercicio y para qué sirve.<br><br>
+                <em>Nota: Al finalizar el cuestionario, verás las instrucciones para enviar la captura de tus resultados y este video a tu profesor.</em>
+            </p>
+        </div>
+
+        <button type="button" onclick="submitExam()">Finalizar Examen y Ver Resultados</button>
+    </form>
+</div>
+
+<!-- Contenedor de Resultados -->
+<div class="container" id="results">
+    <h1>📊 Resultados del Examen 📊</h1>
+    <h2 id="result-name"></h2>
+    
+    <div style="background-color: #E3F2FD; padding: 20px; border-radius: 8px; font-size: 20px; border: 2px solid #1976D2; margin-bottom: 20px;">
+        <p class="success-msg" id="score-msg"></p>
+        <p style="color: #D32F2F;"><strong>Atención:</strong> Tienes <span id="points-earned"></span>/5 puntos en la teoría. Faltan los 5 puntos de tu demostración en video para completar tu calificación final sobre 10.</p>
+    </div>
+
+    <p><strong>Tiempo invertido: </strong> <span id="time-spent"></span></p>
+
+    <div id="mistakes-container" class="feedback"></div>
+
+    <div class="teacher-note">
+        <h3>📲 Paso Final: Envío de Evidencias</h3>
+        <p>Debes enviar la evidencia de tu trabajo al Docente <strong>Yonatha Mendoza</strong> por WhatsApp.</p>
+        <ol style="text-align: left;">
+            <li>Toma una captura de pantalla a estos resultados.</li>
+            <li>Asegúrate de tener listo tu video práctico (Pregunta 6).</li>
+            <li>Haz clic en el botón de abajo para abrir el chat y enviar ambos archivos.</li>
+        </ol>
+        
+        <a id="whatsapp-link" class="whatsapp-btn" href="#" target="_blank">
+            💬 Enviar Resultados y Video al 3014032934
+        </a>
+    </div>
+</div>
+
+<script>
+    // Temporizador y clave de respuestas
+    let startTime;
+    const correctAnswers = {
+        q1: 'b', q2: 'a', q3: 'c', q4: 'a', q5: 'a'
+    };
+
+    window.onload = function() {
+        const dateSpan = document.getElementById('current-date');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateSpan.innerText = new Date().toLocaleDateString('es-ES', options);
+        startTime = new Date();
+    };
+
+    function submitExam() {
+        const studentName = document.getElementById('student-name').value.trim();
+        if (studentName === "") {
+            alert("Por favor, ingresa tu nombre completo antes de finalizar el examen.");
+            return;
+        }
+
+        let score = 0;
+        let mistakesHTML = "<h3>📝 Revisión de Respuestas Incorrectas:</h3><ul>";
+        let hasMistakes = false;
+        const form = document.getElementById('quiz-form');
+
+        // Evaluar las 5 preguntas de selección múltiple
+        for (let i = 1; i <= 5; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = form.elements[questionName].value;
+            const questionText = document.querySelector(`#${questionName} p`).innerText;
+
+            if (selectedOption === correctAnswers[questionName]) {
+                score++;
+            } else if (selectedOption !== "") {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>❌ Tu respuesta fue incorrecta. La opción correcta es: <br><em>${correctLabel}</em></li><br>`;
+            } else {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>⚠️ No respondiste esta pregunta. La opción correcta es: <br><em>${correctLabel}</em></li><br>`;
+            }
+        }
+        mistakesHTML += "</ul>";
+
+        // Tiempo
+        const endTime = new Date();
+        const timeDiff = Math.floor((endTime - startTime) / 1000);
+        const minutes = Math.floor(timeDiff / 60);
+        const seconds = timeDiff % 60;
+
+        // Mostrar sección de resultados
+        document.getElementById('exam-container').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+        document.getElementById('result-name').innerText = "Estudiante: " + studentName;
+        document.getElementById('score-msg').innerText = `Puntaje teórico obtenido: ${score} de 5 puntos.`;
+        document.getElementById('points-earned').innerText = score;
+        
+        let timeText = minutes > 0 ? `${minutes} minutos y ${seconds} segundos.` : `${seconds} segundos.`;
+        document.getElementById('time-spent').innerText = timeText;
+
+        const mistakesContainer = document.getElementById('mistakes-container');
+        if (hasMistakes) {
+            mistakesContainer.innerHTML = mistakesHTML;
+        } else {
+            mistakesContainer.innerHTML = "<h3>🌟 ¡Excelente trabajo! Respondiste correctamente toda la sección teórica. 🌟</h3>";
+            mistakesContainer.style.backgroundColor = "#E8F5E9";
+            mistakesContainer.style.borderLeftColor = "#4CAF50";
+        }
+
+        // WhatsApp Link Generator
+        const phoneNumber = "573014032934";
+        const msjWhatsapp = `¡Hola profesor Yonatha! Soy ${studentName} de Grado 7. He finalizado mi examen teórico de Yoga en Silla y Gimnasia Cerebral. Obtuve un puntaje de ${score}/5 y me tomó ${timeText}. A continuación, le envío la captura de mis resultados y el video práctico para completar mi nota sobre 10.`;
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(msjWhatsapp)}`;
+        
+        document.getElementById('whatsapp-link').href = whatsappUrl;
+    }
+</script>
+
+</body>
+</html>
