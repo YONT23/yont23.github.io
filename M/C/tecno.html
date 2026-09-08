@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Tecnología - Programación</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background-color: #E0F7FA; /* Color azul cian muy suave */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 4px solid #00BCD4;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #00838F;
+        }
+        .info-header {
+            background-color: #E8EAF6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed #3F51B5;
+        }
+        .info-header input {
+            font-size: 18px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+        .question {
+            background-color: #E0F2F1;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #009688;
+        }
+        .question p {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 10px 0;
+            font-size: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options label:hover {
+            background-color: #B2EBF2;
+        }
+        .emoji {
+            font-size: 40px;
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #F57C00;
+        }
+        #results {
+            display: none;
+            text-align: center;
+        }
+        .feedback {
+            text-align: left;
+            background-color: #FFEBEE;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #F44336;
+            margin-top: 20px;
+        }
+        .success-msg {
+            color: #00838F;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .teacher-note {
+            background-color: #E3F2FD;
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #2196F3;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1565C0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exam-container">
+    <h1>💻 Examen de Tecnología 💻</h1>
+    <h2>Variables, Condicionales y Mensajes</h2>
+    
+    <div class="info-header">
+        <p><strong>Fecha:</strong> <span id="current-date"></span></p>
+        <p><label for="student-name"><strong>Escribe tu nombre:</strong></label><br>
+        <input type="text" id="student-name" placeholder="Ejemplo: Ana Martínez"></p>
+    </div>
+
+    <h2>Lee con cuidado y elige la respuesta correcta. ¡Tú puedes programar! 🚀</h2>
+
+    <form id="quiz-form">
+        <!-- TEMA: Variables y Datos -->
+        <div class="question" id="q1">
+            <span class="emoji">📦</span>
+            <p>1. ¿Qué es una "Variable" en programación?</p>
+            <div class="options">
+                <label><input type="radio" name="q1" value="a"> a) Un robot físico que se mueve.</label>
+                <label><input type="radio" name="q1" value="b"> b) Una "caja" o espacio en la memoria de la computadora donde guardamos datos que pueden cambiar.</label>
+                <label><input type="radio" name="q1" value="c"> c) Un error en nuestro código.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q2">
+            <span class="emoji">🔤</span>
+            <p>2. Si queremos crear una variable para guardar el NOMBRE de un jugador, ¿qué tipo de dato debemos usar?</p>
+            <div class="options">
+                <label><input type="radio" name="q2" value="a"> a) Dato numérico (números).</label>
+                <label><input type="radio" name="q2" value="b"> b) Dato booleano (verdadero o falso).</label>
+                <label><input type="radio" name="q2" value="c"> c) Dato de texto o cadenas (letras y palabras).</label>
+            </div>
+        </div>
+
+        <div class="question" id="q3">
+            <span class="emoji">💯</span>
+            <p>3. En un videojuego, el puntaje inicial es 0. Si el jugador atrapa una moneda, la variable "Puntaje" cambia a 1. ¿Qué pasa con el 0 anterior?</p>
+            <div class="options">
+                <label><input type="radio" name="q3" value="a"> a) El valor se actualiza y el 0 es reemplazado por el nuevo número (1).</label>
+                <label><input type="radio" name="q3" value="b"> b) El juego se reinicia automáticamente.</label>
+                <label><input type="radio" name="q3" value="c"> c) La computadora no permite que los números cambien nunca.</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Condicionales -->
+        <div class="question" id="q4">
+            <span class="emoji">🤔</span>
+            <p>4. ¿Qué es un "Condicional" (Si... entonces...) en programación?</p>
+            <div class="options">
+                <label><input type="radio" name="q4" value="a"> a) Un botón para apagar la pantalla.</label>
+                <label><input type="radio" name="q4" value="b"> b) Una regla que permite al programa tomar decisiones, dependiendo de si algo es verdadero o falso.</label>
+                <label><input type="radio" name="q4" value="c"> c) Una imagen de fondo para un juego.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q5">
+            <span class="emoji">🎮</span>
+            <p>5. ¿Cuál de estos es un ejemplo correcto de usar un condicional en un juego?</p>
+            <div class="options">
+                <label><input type="radio" name="q5" value="a"> a) SI "vidas = 0", ENTONCES mostrar "Game Over".</label>
+                <label><input type="radio" name="q5" value="b"> b) Mostrar el título del juego al principio.</label>
+                <label><input type="radio" name="q5" value="c"> c) Sumar 10 puntos por siempre.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q6">
+            <span class="emoji">🔀</span>
+            <p>6. ¿Qué hace la instrucción "Si no" (Else) cuando la usamos con un condicional?</p>
+            <div class="options">
+                <label><input type="radio" name="q6" value="a"> a) Borra todo el código que hemos escrito.</label>
+                <label><input type="radio" name="q6" value="b"> b) Le dice a la computadora qué hacer cuando la condición principal NO se cumple.</label>
+                <label><input type="radio" name="q6" value="c"> c) Detiene el internet de la computadora.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q7">
+            <span class="emoji">⚖️</span>
+            <p>7. Para crear una condición, usamos símbolos de comparación. ¿Cuáles son los más comunes?</p>
+            <div class="options">
+                <label><input type="radio" name="q7" value="a"> a) +, -, * (Suma, Resta, Multiplicación)</label>
+                <label><input type="radio" name="q7" value="b"> b) >, <, = (Mayor que, Menor que, Igual a)</label>
+                <label><input type="radio" name="q7" value="c"> c) @, #, $ (Arroba, Numeral, Dólar)</label>
+            </div>
+        </div>
+
+        <!-- TEMA: Mensajes (Broadcasting) -->
+        <div class="question" id="q8">
+            <span class="emoji">📡</span>
+            <p>8. En plataformas como Scratch, ¿para qué sirven los "Mensajes" (Broadcasting)?</p>
+            <div class="options">
+                <label><input type="radio" name="q8" value="a"> a) Para enviar un correo electrónico al profesor.</label>
+                <label><input type="radio" name="q8" value="b"> b) Para que diferentes personajes (objetos) se comuniquen entre sí y sepan cuándo hacer una acción secreta.</label>
+                <label><input type="radio" name="q8" value="c"> c) Para chatear por internet con otros estudiantes.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q9">
+            <span class="emoji">📬</span>
+            <p>9. Para que el sistema de "Mensajes" funcione, se necesitan siempre dos bloques principales. ¿Cuáles son?</p>
+            <div class="options">
+                <label><input type="radio" name="q9" value="a"> a) Un teclado y un ratón.</label>
+                <label><input type="radio" name="q9" value="b"> b) El bloque "Sumar" y el bloque "Restar".</label>
+                <label><input type="radio" name="q9" value="c"> c) El bloque de "Enviar" (Emitir) mensaje y el bloque de "Al recibir" mensaje.</label>
+            </div>
+        </div>
+
+        <div class="question" id="q10">
+            <span class="emoji">🏆</span>
+            <p>10. Imagina que el Personaje 1 toca la meta y envía un mensaje llamado "Ganaste". ¿Qué bloque debe tener el Personaje 2 para celebrar?</p>
+            <div class="options">
+                <label><input type="radio" name="q10" value="a"> a) El bloque: Al recibir "Ganaste", saltar y decir ¡Hurra!</label>
+                <label><input type="radio" name="q10" value="b"> b) El bloque: Esperar 10 segundos.</label>
+                <label><input type="radio" name="q10" value="c"> c) El bloque: Apagar la computadora.</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="submitExam()">Terminar Examen ✅</button>
+    </form>
+</div>
+
+<!-- Contenedor de Resultados -->
+<div class="container" id="results">
+    <h1>🎉 ¡Examen Terminado! 🎉</h1>
+    <h2 id="result-name"></h2>
+    <p class="success-msg" id="score-msg"></p>
+    <p><strong>Tiempo invertido: </strong> <span id="time-spent"></span></p>
+
+    <div id="mistakes-container" class="feedback"></div>
+
+    <div class="teacher-note">
+        📸 ¡ATENCIÓN!<br><br>
+        Por favor, tómale una foto o captura de pantalla a tus resultados y envíasela a tu Docente: <strong>Yonatha Mendoza</strong> por WhatsApp.
+    </div>
+</div>
+
+<script>
+    // Variables para el temporizador y respuestas
+    let startTime;
+    const correctAnswers = {
+        q1: 'b', q2: 'c', q3: 'a', q4: 'b', q5: 'a',
+        q6: 'b', q7: 'b', q8: 'b', q9: 'c', q10: 'a'
+    };
+
+    // Al cargar la página
+    window.onload = function() {
+        // Poner la fecha actual automáticamente
+        const dateSpan = document.getElementById('current-date');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateSpan.innerText = new Date().toLocaleDateString('es-ES', options);
+
+        // Iniciar temporizador
+        startTime = new Date();
+    };
+
+    function submitExam() {
+        const studentName = document.getElementById('student-name').value.trim();
+        if (studentName === "") {
+            alert("¡Hola! Por favor, escribe tu nombre antes de terminar el examen.");
+            return;
+        }
+
+        let score = 0;
+        let mistakesHTML = "<h3>📝 Revisión de tus respuestas:</h3><ul>";
+        let hasMistakes = false;
+        const form = document.getElementById('quiz-form');
+
+        // Evaluar respuestas
+        for (let i = 1; i <= 10; i++) {
+            const questionName = 'q' + i;
+            const selectedOption = form.elements[questionName].value;
+            const questionText = document.querySelector(`#${questionName} p`).innerText;
+
+            if (selectedOption === correctAnswers[questionName]) {
+                score++;
+            } else if (selectedOption !== "") {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>❌ Te equivocaste. La respuesta correcta era: <br><em>${correctLabel}</em></li><br>`;
+            } else {
+                hasMistakes = true;
+                const correctInput = document.querySelector(`input[name="${questionName}"][value="${correctAnswers[questionName]}"]`);
+                const correctLabel = correctInput.parentElement.innerText;
+                mistakesHTML += `<li><strong>${questionText}</strong><br>⚠️ No respondiste. La respuesta correcta era: <br><em>${correctLabel}</em></li><br>`;
+            }
+        }
+        mistakesHTML += "</ul>";
+
+        // Calcular tiempo
+        const endTime = new Date();
+        const timeDiff = Math.floor((endTime - startTime) / 1000); // en segundos
+        const minutes = Math.floor(timeDiff / 60);
+        const seconds = timeDiff % 60;
+
+        // Mostrar resultados
+        document.getElementById('exam-container').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
+
+        document.getElementById('result-name').innerText = "Estudiante: " + studentName;
+        document.getElementById('score-msg').innerText = `Tu calificación es: ${score} de 10`;
+        
+        let timeText = "";
+        if(minutes > 0) {
+            timeText = `${minutes} minutos y ${seconds} segundos.`;
+        } else {
+            timeText = `${seconds} segundos.`;
+        }
+        document.getElementById('time-spent').innerText = timeText;
+
+        const mistakesContainer = document.getElementById('mistakes-container');
+        if (hasMistakes) {
+            mistakesContainer.innerHTML = mistakesHTML;
+        } else {
+            mistakesContainer.innerHTML = "<h3>🌟 ¡Perfecto! No tuviste ningún error. ¡Eres un experto programador! 🌟</h3>";
+            mistakesContainer.style.backgroundColor = "#E0F2F1";
+            mistakesContainer.style.borderLeftColor = "#009688";
+        }
+    }
+</script>
+
+</body>
+</html>
