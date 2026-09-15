@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control de Carreras de Transporte</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Hide spin buttons for number inputs */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    .tap-scale {
+      transition: transform 0.1s ease, background-color 0.15s ease;
+    }
+    .tap-scale:active {
+      transform: scale(0.96);
+    }
+    .toast-enter {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-16 antialiased">
+
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-900 flex items-center justify-center font-black text-xl shadow-md shadow-amber-500/20">
+          🚕
+        </div>
+        <div>
+          <h1 class="text-lg font-bold leading-tight text-slate-900">Control de Carreras</h1>
+          <p class="text-xs text-slate-500 font-medium">Verificador de cobros y tarifas</p>
+        </div>
+      </div>
+
+      <!-- Quick Default Rate Button -->
+    <div class="flex items-center gap-2">
+      <button onclick="openSyncModal()" id="btn-sync-status" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg transition-colors border border-emerald-200">
+        <span id="sync-icon-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="sync-status-text">Conectar Excel</span>
+      </button>
+
+      <button onclick="openConfigModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors border border-slate-200">
+        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>Tarifa Base</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 space-y-6">
+
+    <!-- KPI Totals Summary Banner -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-medium text-slate-500">Total Carreras</span>
+        <div class="mt-2 flex items-baseline gap-1">
+          <span id="stat-total-rides" class="text-2xl font-black text-slate-800">0</span>
+          <span class="text-xs text-slate-400 font-medium">viajes</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-medium text-amber-600">Carreras Extra</span>
+        <div class="mt-2 flex items-baseline gap-1">
+          <span id="stat-extra-rides" class="text-2xl font-black text-amber-600">0</span>
+          <span class="text-xs text-amber-500 font-medium">extras</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-medium text-emerald-600">Total Pendiente</span>
+        <div class="mt-2">
+          <span id="stat-pending-amount" class="text-xl md:text-2xl font-black text-emerald-600">$0</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-medium text-slate-500">Total Pagado</span>
+        <div class="mt-2">
+          <span id="stat-paid-amount" class="text-xl md:text-2xl font-black text-slate-700">$0</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <!-- Section Header -->
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 px-5 py-4 text-white flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-bold flex items-center gap-2">
+            <span>📅 Registro del Día</span>
+            <span id="badge-mode" class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Nuevo</span>
+          </h2>
+          <p class="text-xs text-slate-300">Apunta los viajes habituales y los que te hizo de más</p>
+        </div>
+
+        <!-- Date Picker with 'Today' shortcut -->
+        <div class="flex items-center gap-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700">
+          <input type="date" id="input-date" class="bg-transparent text-white text-xs font-medium focus:outline-none cursor-pointer px-2" />
+          <button onclick="setTodayDate()" type="button" class="px-2 py-1 text-[11px] bg-slate-700 hover:bg-slate-600 rounded-md text-slate-200 font-semibold transition">
+            Hoy
+          </button>
+        </div>
+      </div>
+
+      <div class="p-5 space-y-6">
+
+        <!-- Unit Price Input for This Day -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">Monto Unitario por Carrera</label>
+            <span class="text-xs text-slate-500">¿Cuánto cuesta cada carrera para este día?</span>
+          </div>
+          <div class="relative w-full sm:w-48">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
+            <input 
+              type="number" 
+              id="input-unit-price" 
+              min="0" 
+              step="100" 
+              placeholder="0"
+              class="w-full pl-8 pr-3 py-2 text-right text-base font-extrabold bg-white border border-slate-300 rounded-lg text-slate-800 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
+              oninput="recalculateLive()"
+            />
+          </div>
+        </div>
+
+        <!-- Counters Grid: Regular & Additional Rides -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Habitual / Regular Rides -->
+          <div class="p-4 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 transition flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Carreras Habituales</span>
+                <p class="text-xs text-slate-400">Tus viajes cotidianos fijos</p>
+              </div>
+              <span class="text-lg">🛣️</span>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+              <button 
+                type="button" 
+                onclick="changeCount('regular', -1)" 
+                class="w-12 h-12 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xl flex items-center justify-center tap-scale border border-slate-200"
+                aria-label="Disminuir habituales"
+              >
+                −
+              </button>
+
+              <div class="text-center">
+                <span id="display-regular" class="text-3xl font-black text-slate-800">0</span>
+                <span class="block text-[11px] font-semibold text-slate-400">carreras</span>
+              </div>
+
+              <button 
+                type="button" 
+                onclick="changeCount('regular', 1)" 
+                class="w-12 h-12 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xl flex items-center justify-center tap-scale shadow-sm"
+                aria-label="Aumentar habituales"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Additional / Extra Rides -->
+          <div class="p-4 rounded-xl border-2 border-amber-200 bg-amber-50/40 hover:border-amber-300 transition flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5">
+                  Carreras Adicionales (Extras)
+                  <span class="bg-amber-200 text-amber-900 text-[10px] px-1.5 py-0.5 rounded font-black">+1 Extra</span>
+                </span>
+                <p class="text-xs text-slate-500">Si te hizo una o más de más hoy</p>
+              </div>
+              <span class="text-lg">⚡</span>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+              <button 
+                type="button" 
+                onclick="changeCount('extra', -1)" 
+                class="w-12 h-12 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xl flex items-center justify-center tap-scale border border-amber-200"
+                aria-label="Disminuir adicionales"
+              >
+                −
+              </button>
+
+              <div class="text-center">
+                <span id="display-extra" class="text-3xl font-black text-amber-600">0</span>
+                <span class="block text-[11px] font-semibold text-amber-700">adicionales</span>
+              </div>
+
+              <button 
+                type="button" 
+                onclick="changeCount('extra', 1)" 
+                class="w-12 h-12 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xl flex items-center justify-center tap-scale shadow-sm shadow-amber-500/30"
+                aria-label="Aumentar adicionales"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Notes and Details about the Extra Ride -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Motivo / Detalle de la carrera extra u observaciones (Opcional):
+          </label>
+          <input 
+            type="text" 
+            id="input-notes" 
+            placeholder="Ej: Fui al banco a medio día, desvío por lluvia, etc." 
+            class="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-lg text-slate-700 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
+          />
+        </div>
+
+        <!-- Live Total Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl p-4 sm:p-5 text-white shadow-lg">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700 pb-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Resumen del Día Seleccionado</span>
+              <div class="text-sm text-slate-300 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                <span>Habituales: <b id="calc-regular-count" class="text-white">0</b></span>
+                <span>Adicionales: <b id="calc-extra-count" class="text-amber-400">0</b></span>
+                <span>Total Carreras: <b id="calc-total-rides" class="text-white">0</b></span>
+              </div>
+            </div>
+
+            <div class="text-right sm:text-right flex flex-row sm:flex-col justify-between items-center sm:items-end">
+              <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Monto Total a Pagar</span>
+              <span id="calc-total-money" class="text-2xl sm:text-3xl font-black text-emerald-400">$0</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="input-is-paid" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-600 bg-slate-700">
+              <span class="text-xs font-semibold text-slate-300">Marcar este día como pagado</span>
+            </label>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button 
+                type="button" 
+                id="btn-cancel-edit" 
+                onclick="resetFormToToday()" 
+                class="hidden flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-600 transition tap-scale"
+              >
+                Cancelar Edición
+              </button>
+              <button 
+                type="button" 
+                onclick="saveDailyEntry()" 
+                class="flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 rounded-xl shadow-md shadow-amber-400/20 transition tap-scale flex items-center justify-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+                <span id="btn-save-label">Guardar Registro del Día</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- History & Records Section -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <span>📋 Historial de Carreras por Día</span>
+            <span id="count-history-badge" class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">0 días</span>
+          </h3>
+          <p class="text-xs text-slate-500">Revisa la lista completa para cuadrar con el conductor</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Filter by Status -->
+          <select id="filter-status" onchange="renderHistory()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-700 outline-none">
+            <option value="all">Todos los estados</option>
+            <option value="pending">Solo pendientes</option>
+            <option value="paid">Solo pagados</option>
+          </select>
+
+          <!-- Export CSV -->
+          <button onclick="exportToCSV()" title="Exportar a Excel / CSV" class="p-2 text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition border border-slate-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- History Table / Card List -->
+      <div id="history-container" class="divide-y divide-slate-100">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Configuration Modal (Tarifa Base Predeterminada) -->
+  <div id="modal-config" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center">
+        <h4 class="text-base font-bold text-slate-900">Tarifa Base por Defecto</h4>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+      <p class="text-xs text-slate-500">
+        Configura el precio habitual acordado. Cada vez que abras un nuevo día, se cargará este monto automáticamente.
+      </p>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Valor habitual de la carrera</label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+          <input 
+            type="number" 
+            id="cfg-default-rate" 
+            placeholder="Ej: 8000"
+            class="w-full pl-8 pr-3 py-2 text-right font-bold text-base bg-slate-50 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-amber-400"
+          />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeConfigModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Cancelar</button>
+        <button onclick="saveConfigDefaultRate()" class="px-4 py-2 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-lg">Guardar Tarifa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remote Excel / Google Sheets Sync Modal -->
+  <div id="modal-sync" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📊</span>
+          <h4 class="text-base font-bold text-slate-900">Sincronización en Vivo con Excel / Sheets</h4>
+        </div>
+        <button onclick="closeSyncModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+      
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Conecta esta app directamente a tu hoja de cálculo remota para registrar en tiempo real cada carrera, viajes extras y pagos tanto desde el celular como desde la computadora.
+      </p>
+
+      <!-- Webhook Endpoint Input -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL de la Web App (Google Apps Script)</label>
+        <input 
+          type="url" 
+          id="cfg-sheet-url" 
+          placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
+          class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 font-mono"
+        />
+        <p class="text-[11px] text-slate-400 mt-1">Al guardar, cada viaje se registrará o actualizará automáticamente en tu hoja remota.</p>
+      </div>
+
+      <!-- Instructions Accordion / Guide -->
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2 text-xs text-slate-600">
+        <span class="font-bold text-slate-800 block text-xs flex items-center gap-1.5">
+          <span>⚙️</span> ¿Cómo obtener este enlace en 2 minutos (Gratis)?
+        </span>
+        <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-600 pl-1">
+          <li>Crea una hoja en <b>Google Sheets</b> (o importa tu archivo de Excel).</li>
+          <li>Ve al menú superior: <b>Extensiones &gt; Apps Script</b>.</li>
+          <li>Borra el código que aparece y pega el script de abajo.</li>
+          <li>Haz clic en <b>Implementar &gt; Nueva implementación</b>.</li>
+          <li>Selecciona tipo: <b>Aplicación web</b>. En <i>"Quién tiene acceso"</i> pon: <b>Cualquier usuario (Anyone)</b>.</li>
+          <li>Copia la URL proporcionada y pégala aquí arriba.</li>
+        </ol>
+
+        <div class="mt-2 pt-2 border-t border-slate-200">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-[10px] font-bold uppercase text-slate-500">Código Google Apps Script listo:</span>
+            <button onclick="copyScriptCode()" type="button" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700">Copiar Código</button>
+          </div>
+          <pre id="code-snippet" class="p-2 bg-slate-900 text-emerald-400 text-[10px] rounded-lg overflow-x-auto select-all max-h-36">
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["ID", "Fecha", "Habituales", "Extras", "Total Carreras", "Tarifa Unit", "Monto Total", "Estado", "Notas", "Actualizado"]);
+  }
+  
+  var values = sheet.getDataRange().getValues();
+  var rowIndex = -1;
+  for (var i = 1; i &lt; values.length; i++) {
+    if (values[i][1] == data.date || values[i][0] == data.id) {
+      rowIndex = i + 1;
+      break;
+    }
+  }
+  
+  var rowData = [
+    data.id, data.date, data.regularRides, data.extraRides, 
+    data.totalRides, data.unitPrice, data.totalAmount, 
+    data.isPaid ? "Pagado" : "Pendiente", data.notes || "", new Date()
+  ];
+  
+  if (rowIndex &gt; 0) {
+    sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+  } else {
+    sheet.appendRow(rowData);
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({status: "success"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+          </pre>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeSyncModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Cerrar</button>
+        <button onclick="saveSyncConfig()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg flex items-center gap-1.5 shadow-sm">
+          <span>Guardar y Conectar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Modal (Never using alert/confirm) -->
+  <div id="modal-confirm" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-lg">
+        🗑️
+      </div>
+      <div class="text-center">
+        <h4 id="confirm-title" class="text-base font-bold text-slate-900">¿Eliminar registro?</h4>
+        <p id="confirm-msg" class="text-xs text-slate-500 mt-1">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="flex justify-center gap-3 pt-2">
+        <button onclick="closeConfirmModal(false)" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Cancelar</button>
+        <button onclick="closeConfirmModal(true)" class="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg">Sí, Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-box" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <script>
+    /* State definitions and storage keys */
+    const STORAGE_KEY_RECORDS = 'carreras_app_records_v1';
+    const STORAGE_KEY_CONFIG = 'carreras_app_config_v1';
+
+    let records = [];
+    let config = {
+      defaultRate: 5000, // default fallback
+      sheetUrl: '' // Webhook URL for Google Sheets / Excel
+    };
+
+    let editingDate = null;
+    let pendingConfirmAction = null;
+
+    // Active Day Form State
+    let activeState = {
+      date: getTodayFormatted(),
+      regularRides: 0,
+      extraRides: 0,
+      unitPrice: 5000,
+      notes: '',
+      isPaid: false
+    };
+
+    function getTodayFormatted() {
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, '0');
+      const d = String(today.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+      }).format(amount || 0);
+    }
+
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      const d = new Date(year, month - 1, day);
+      return d.toLocaleDateString('es-ES', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStorage();
+      initForm();
+      renderHistory();
+      updateKPIs();
+      updateSyncStatusBadge();
+    });
+
+    function loadStorage() {
+      try {
+        const storedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
+        if (storedConfig) {
+          config = { ...config, ...JSON.parse(storedConfig) };
+        }
+        const storedRecords = localStorage.getItem(STORAGE_KEY_RECORDS);
+        if (storedRecords) {
+          records = JSON.parse(storedRecords);
+        }
+      } catch (e) {
+        console.error('Error loading data from localStorage', e);
+      }
+    }
+
+    function persistStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_RECORDS, JSON.stringify(records));
+        localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(config));
+      } catch (e) {
+        console.error('Error saving data to localStorage', e);
+        showToast('Error al guardar datos locales', 'error');
+      }
+    }
+
+    async function syncEntryToRemoteSheet(entry) {
+      if (!config.sheetUrl || !config.sheetUrl.startsWith('http')) {
+        return; // Remote sync not configured yet
+      }
+
+      showToast('Sincronizando con Excel en vivo...', 'info');
+
+      try {
+        await fetch(config.sheetUrl, {
+          method: 'POST',
+          mode: 'no-cors', // standard for Google Apps Script deployment
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(entry)
+        });
+        showToast('☁️ Guardado en la hoja remota', 'success');
+      } catch (err) {
+        console.warn('Sync error:', err);
+        showToast('Aviso: Guardado localmente. Error al sincronizar con la nube', 'warning');
+      }
+    }
+
+    function openSyncModal() {
+      document.getElementById('cfg-sheet-url').value = config.sheetUrl || '';
+      document.getElementById('modal-sync').classList.remove('hidden');
+    }
+
+    function closeSyncModal() {
+      document.getElementById('modal-sync').classList.add('hidden');
+    }
+
+    function saveSyncConfig() {
+      const url = document.getElementById('cfg-sheet-url').value.trim();
+      config.sheetUrl = url;
+      persistStorage();
+      updateSyncStatusBadge();
+      closeSyncModal();
+
+      if (url) {
+        showToast('Enlace remoto configurado con éxito', 'success');
+      } else {
+        showToast('Modo desconectado (solo local)', 'info');
+      }
+    }
+
+    function updateSyncStatusBadge() {
+      const badge = document.getElementById('sync-status-text');
+      const icon = document.getElementById('sync-icon-indicator');
+      const btn = document.getElementById('btn-sync-status');
+
+      if (config.sheetUrl && config.sheetUrl.startsWith('http')) {
+        badge.textContent = 'Excel En Vivo';
+        icon.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        btn.className = 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg transition-colors border border-emerald-300';
+      } else {
+        badge.textContent = 'Conectar Excel';
+        icon.className = 'w-2 h-2 rounded-full bg-slate-400';
+        btn.className = 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors border border-slate-200';
+      }
+    }
+
+    function copyScriptCode() {
+      const snippet = document.getElementById('code-snippet').textContent.trim();
+      const textArea = document.createElement('textarea');
+      textArea.value = snippet;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('Código de Apps Script copiado al portapapeles', 'success');
+      } catch (err) {
+        showToast('Selecciona y copia el código manualmente', 'warning');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+      }).format(amount || 0);
+    }
+
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      const d = new Date(year, month - 1, day);
+      return d.toLocaleDateString('es-ES', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStorage();
+      initForm();
+      renderHistory();
+      updateKPIs();
+    });
+
+    function loadStorage() {
+      try {
+        const storedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
+        if (storedConfig) {
+          config = JSON.parse(storedConfig);
+        }
+        const storedRecords = localStorage.getItem(STORAGE_KEY_RECORDS);
+        if (storedRecords) {
+          records = JSON.parse(storedRecords);
+        }
+      } catch (e) {
+        console.error('Error loading data from localStorage', e);
+      }
+    }
+
+    function persistStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_RECORDS, JSON.stringify(records));
+        localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(config));
+      } catch (e) {
+        console.error('Error saving data to localStorage', e);
+        showToast('Error al guardar datos locales', 'error');
+      }
+    }
+
+    function initForm() {
+      setTodayDate(false);
+
+      // Listen to manual date changes to load or clear existing day
+      document.getElementById('input-date').addEventListener('change', (e) => {
+        loadDateData(e.target.value);
+      });
+    }
+
+    function setTodayDate(triggerLoad = true) {
+      const today = getTodayFormatted();
+      document.getElementById('input-date').value = today;
+      if (triggerLoad) {
+        loadDateData(today);
+      } else {
+        loadDateData(today);
+      }
+    }
+
+    function loadDateData(dateStr) {
+      const existing = records.find(r => r.date === dateStr);
+      if (existing) {
+        // Mode: Editing existing record
+        editingDate = dateStr;
+        activeState = { ...existing };
+        document.getElementById('badge-mode').textContent = 'Editando';
+        document.getElementById('badge-mode').className = 'text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        document.getElementById('btn-cancel-edit').classList.remove('hidden');
+        document.getElementById('btn-save-label').textContent = 'Actualizar Día';
+      } else {
+        // Mode: New entry for this date
+        editingDate = null;
+        activeState = {
+          date: dateStr,
+          regularRides: 0,
+          extraRides: 0,
+          unitPrice: config.defaultRate || 5000,
+          notes: '',
+          isPaid: false
+        };
+        document.getElementById('badge-mode').textContent = 'Nuevo';
+        document.getElementById('badge-mode').className = 'text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        document.getElementById('btn-cancel-edit').classList.add('hidden');
+        document.getElementById('btn-save-label').textContent = 'Guardar Registro del Día';
+      }
+
+      // Populate UI
+      document.getElementById('display-regular').textContent = activeState.regularRides;
+      document.getElementById('display-extra').textContent = activeState.extraRides;
+      document.getElementById('input-unit-price').value = activeState.unitPrice;
+      document.getElementById('input-notes').value = activeState.notes || '';
+      document.getElementById('input-is-paid').checked = !!activeState.isPaid;
+
+      recalculateLive();
+    }
+
+    function changeCount(type, delta) {
+      if (type === 'regular') {
+        activeState.regularRides = Math.max(0, activeState.regularRides + delta);
+        document.getElementById('display-regular').textContent = activeState.regularRides;
+      } else if (type === 'extra') {
+        activeState.extraRides = Math.max(0, activeState.extraRides + delta);
+        document.getElementById('display-extra').textContent = activeState.extraRides;
+      }
+      recalculateLive();
+    }
+
+    function recalculateLive() {
+      const priceVal = parseFloat(document.getElementById('input-unit-price').value) || 0;
+      activeState.unitPrice = priceVal;
+
+      const totalRides = (activeState.regularRides || 0) + (activeState.extraRides || 0);
+      const totalAmount = totalRides * activeState.unitPrice;
+
+      // Update live summary texts
+      document.getElementById('calc-regular-count').textContent = activeState.regularRides;
+      document.getElementById('calc-extra-count').textContent = activeState.extraRides;
+      document.getElementById('calc-total-rides').textContent = totalRides;
+      document.getElementById('calc-total-money').textContent = formatCurrency(totalAmount);
+    }
+
+    function resetFormToToday() {
+      setTodayDate(true);
+    }
+
+    function saveDailyEntry() {
+      const dateStr = document.getElementById('input-date').value;
+      if (!dateStr) {
+        showToast('Por favor selecciona una fecha válida', 'warning');
+        return;
+      }
+
+      const unitPrice = parseFloat(document.getElementById('input-unit-price').value) || 0;
+      const regularRides = parseInt(activeState.regularRides, 10) || 0;
+      const extraRides = parseInt(activeState.extraRides, 10) || 0;
+      const totalRides = regularRides + extraRides;
+      const notes = document.getElementById('input-notes').value.trim();
+      const isPaid = document.getElementById('input-is-paid').checked;
+
+      if (totalRides === 0) {
+        showToast('Ingresa al menos 1 carrera (habitual o adicional)', 'warning');
+        return;
+      }
+
+      if (unitPrice <= 0) {
+        showToast('El monto unitario debe ser mayor a cero', 'warning');
+        return;
+      }
+
+      const totalAmount = totalRides * unitPrice;
+
+      const entry = {
+        id: editingDate ? (records.find(r => r.date === dateStr)?.id || 'rec_' + Date.now()) : 'rec_' + Date.now(),
+        date: dateStr,
+        unitPrice: unitPrice,
+        regularRides: regularRides,
+        extraRides: extraRides,
+        totalRides: totalRides,
+        totalAmount: totalAmount,
+        notes: notes,
+        isPaid: isPaid,
+        updatedAt: new Date().toISOString()
+      };
+
+      // Upsert into records
+      const existingIndex = records.findIndex(r => r.date === dateStr);
+      if (existingIndex >= 0) {
+        records[existingIndex] = entry;
+        showToast(`Día ${formatDateDisplay(dateStr)} actualizado con éxito`, 'success');
+      } else {
+        records.push(entry);
+        showToast(`Registro guardado: ${totalRides} carreras (${formatCurrency(totalAmount)})`, 'success');
+      }
+
+      // Sort descending by date
+      records.sort((a, b) => b.date.localeCompare(a.date));
+
+      persistStorage();
+      renderHistory();
+      updateKPIs();
+      loadDateData(dateStr);
+
+      syncEntryToRemoteSheet(entry);
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('history-container');
+      const filter = document.getElementById('filter-status').value;
+
+      let filtered = [...records];
+      if (filter === 'pending') {
+        filtered = filtered.filter(r => !r.isPaid);
+      } else if (filter === 'paid') {
+        filtered = filtered.filter(r => r.isPaid);
+      }
+
+      document.getElementById('count-history-badge').textContent = `${records.length} días`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-slate-400">
+            <span class="text-3xl block mb-2">📭</span>
+            <p class="text-sm font-semibold text-slate-600">No hay registros para mostrar</p>
+            <p class="text-xs text-slate-400 mt-1">Usa el formulario arriba para agregar el conteo del día.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isPaid = item.isPaid;
+        const extraBadge = item.extraRides > 0 
+          ? `<span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2 py-0.5 rounded-full">⚡ +${item.extraRides} extra${item.extraRides > 1 ? 's' : ''}</span>` 
+          : '';
+
+        return `
+          <div class="p-4 sm:p-5 hover:bg-slate-50 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center flex-wrap gap-2">
+                <span class="font-bold text-slate-900 text-sm sm:text-base capitalize">
+                  ${formatDateDisplay(item.date)}
+                </span>
+                <span class="text-xs px-2 py-0.5 rounded-full font-semibold ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                  ${isPaid ? '✓ Pagado' : '⏳ Por Pagar'}
+                </span>
+                ${extraBadge}
+              </div>
+
+              <div class="text-xs text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>Viajes: <b>${item.regularRides} hab.</b> ${item.extraRides > 0 ? `+ <b>${item.extraRides} extra</b>` : ''} = <b>${item.totalRides} tot.</b></span>
+                <span>•</span>
+                <span>Tarifa: <b>${formatCurrency(item.unitPrice)}</b> c/u</span>
+              </div>
+
+              ${item.notes ? `
+                <div class="mt-1 text-xs text-slate-600 bg-slate-100/80 px-2.5 py-1.5 rounded-lg inline-block">
+                  <span class="font-semibold text-slate-700">Nota:</span> ${escapeHtml(item.notes)}
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Total and Actions -->
+            <div class="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
+              <div class="text-left sm:text-right">
+                <span class="block text-[10px] uppercase font-bold text-slate-400">Total Día</span>
+                <span class="text-base sm:text-lg font-black text-slate-900">${formatCurrency(item.totalAmount)}</span>
+              </div>
+
+              <div class="flex items-center gap-1">
+                <!-- Toggle paid status -->
+                <button 
+                  onclick="togglePaidStatus('${item.id}')" 
+                  title="${isPaid ? 'Marcar como pendiente' : 'Marcar como pagado'}" 
+                  class="p-2 rounded-lg text-xs font-semibold ${isPaid ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100' : 'text-slate-600 bg-slate-100 hover:bg-slate-200'} transition"
+                >
+                  ${isPaid ? '✓ Pagado' : 'Cobrar'}
+                </button>
+
+                <!-- Edit date -->
+                <button 
+                  onclick="editRecord('${item.date}')" 
+                  title="Editar este día" 
+                  class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded-lg transition"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+
+                <!-- Delete date -->
+                <button 
+                  onclick="promptDeleteRecord('${item.id}', '${item.date}')" 
+                  title="Eliminar registro" 
+                  class="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateKPIs() {
+      let totalRides = 0;
+      let extraRides = 0;
+      let pendingAmount = 0;
+      let paidAmount = 0;
+
+      records.forEach(r => {
+        totalRides += (r.totalRides || 0);
+        extraRides += (r.extraRides || 0);
+        if (r.isPaid) {
+          paidAmount += (r.totalAmount || 0);
+        } else {
+          pendingAmount += (r.totalAmount || 0);
+        }
+      });
+
+      document.getElementById('stat-total-rides').textContent = totalRides;
+      document.getElementById('stat-extra-rides').textContent = extraRides;
+      document.getElementById('stat-pending-amount').textContent = formatCurrency(pendingAmount);
+      document.getElementById('stat-paid-amount').textContent = formatCurrency(paidAmount);
+    }
+
+    function togglePaidStatus(id) {
+      const rec = records.find(r => r.id === id);
+      if (rec) {
+        rec.isPaid = !rec.isPaid;
+        persistStorage();
+        renderHistory();
+        updateKPIs();
+        showToast(rec.isPaid ? 'Marcado como pagado' : 'Marcado como pendiente', 'info');
+        // If current active form belongs to this date, sync it
+        if (document.getElementById('input-date').value === rec.date) {
+          document.getElementById('input-is-paid').checked = rec.isPaid;
+        }
+
+        syncEntryToRemoteSheet(rec);
+      }
+    }
+
+    function editRecord(dateStr) {
+      document.getElementById('input-date').value = dateStr;
+      loadDateData(dateStr);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function promptDeleteRecord(id, dateStr) {
+      document.getElementById('confirm-title').textContent = '¿Eliminar registro?';
+      document.getElementById('confirm-msg').textContent = `Se eliminará el conteo del día ${formatDateDisplay(dateStr)}.`;
+      
+      pendingConfirmAction = () => {
+        records = records.filter(r => r.id !== id);
+        persistStorage();
+        renderHistory();
+        updateKPIs();
+        showToast('Registro eliminado', 'info');
+
+        if (document.getElementById('input-date').value === dateStr) {
+          loadDateData(dateStr);
+        }
+      };
+
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    }
+
+    function closeConfirmModal(confirmed) {
+      document.getElementById('modal-confirm').classList.add('hidden');
+      if (confirmed && typeof pendingConfirmAction === 'function') {
+        pendingConfirmAction();
+      }
+      pendingConfirmAction = null;
+    }
+
+    function openConfigModal() {
+      document.getElementById('cfg-default-rate').value = config.defaultRate || 5000;
+      document.getElementById('modal-config').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('modal-config').classList.add('hidden');
+    }
+
+    function saveConfigDefaultRate() {
+      const val = parseFloat(document.getElementById('cfg-default-rate').value);
+      if (isNaN(val) || val <= 0) {
+        showToast('Ingresa un monto válido', 'warning');
+        return;
+      }
+      config.defaultRate = val;
+      persistStorage();
+      closeConfigModal();
+      showToast(`Tarifa base predeterminada: ${formatCurrency(val)}`, 'success');
+
+      // If creating a brand new day currently, adapt price
+      if (!editingDate) {
+        document.getElementById('input-unit-price').value = val;
+        recalculateLive();
+      }
+    }
+
+    function exportToCSV() {
+      if (records.length === 0) {
+        showToast('No hay registros para exportar', 'warning');
+        return;
+      }
+
+      let csv = 'Fecha,Carreras Habituales,Carreras Adicionales,Total Carreras,Tarifa Unitaria,Monto Total,Estado,Notas\n';
+
+      records.forEach(r => {
+        const state = r.isPaid ? 'Pagado' : 'Pendiente';
+        const notesClean = (r.notes || '').replace(/"/g, '""');
+        csv += `"${r.date}",${r.regularRides},${r.extraRides},${r.totalRides},${r.unitPrice},${r.totalAmount},"${state}","${notesClean}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `control_carreras_${getTodayFormatted()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast('Descargando archivo CSV...', 'success');
+    }
+
+    function showToast(message, type = 'info') {
+      const box = document.getElementById('toast-box');
+      const toast = document.createElement('div');
+
+      let bg = 'bg-slate-900 text-white';
+      let icon = 'ℹ️';
+
+      if (type === 'success') {
+        bg = 'bg-emerald-600 text-white';
+        icon = '✅';
+      } else if (type === 'warning') {
+        bg = 'bg-amber-500 text-slate-950 font-semibold';
+        icon = '⚠️';
+      } else if (type === 'error') {
+        bg = 'bg-rose-600 text-white';
+        icon = '❌';
+      }
+
+      toast.className = `${bg} toast-enter px-4 py-2.5 rounded-xl shadow-xl text-xs flex items-center gap-2 pointer-events-auto border border-white/10`;
+      toast.innerHTML = `<span>${icon}</span> <span>${escapeHtml(message)}</span>`;
+
+      box.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.3s, transform 0.3s';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
