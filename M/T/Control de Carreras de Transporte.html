@@ -396,75 +396,18 @@
       </div>
       
       <p class="text-xs text-slate-600 leading-relaxed">
-        Conecta esta app directamente a tu hoja de cálculo remota para registrar en tiempo real cada carrera, viajes extras y pagos tanto desde el celular como desde la computadora.
+        Tu aplicación ya está conectada. Los cambios que realices se enviarán a Google Sheets automáticamente.
       </p>
 
       <!-- Webhook Endpoint Input -->
       <div>
-        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL de la Web App (Google Apps Script)</label>
+        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL de la Web App (Conectada)</label>
         <input 
           type="url" 
           id="cfg-sheet-url" 
-          placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
+          placeholder="https://script.google.com/macros/s/.../exec"
           class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 font-mono"
         />
-        <p class="text-[11px] text-slate-400 mt-1">Al guardar, cada viaje se registrará o actualizará automáticamente en tu hoja remota.</p>
-      </div>
-
-      <!-- Instructions Accordion / Guide -->
-      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2 text-xs text-slate-600">
-        <span class="font-bold text-slate-800 block text-xs flex items-center gap-1.5">
-          <span>⚙️</span> ¿Cómo obtener este enlace en 2 minutos (Gratis)?
-        </span>
-        <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-600 pl-1">
-          <li>Crea una hoja en <b>Google Sheets</b> (o importa tu archivo de Excel).</li>
-          <li>Ve al menú superior: <b>Extensiones &gt; Apps Script</b>.</li>
-          <li>Borra el código que aparece y pega el script de abajo.</li>
-          <li>Haz clic en <b>Implementar &gt; Nueva implementación</b>.</li>
-          <li>Selecciona tipo: <b>Aplicación web</b>. En <i>"Quién tiene acceso"</i> pon: <b>Cualquier usuario (Anyone)</b>.</li>
-          <li>Copia la URL proporcionada y pégala aquí arriba.</li>
-        </ol>
-
-        <div class="mt-2 pt-2 border-t border-slate-200">
-          <div class="flex justify-between items-center mb-1">
-            <span class="text-[10px] font-bold uppercase text-slate-500">Código Google Apps Script listo:</span>
-            <button onclick="copyScriptCode()" type="button" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700">Copiar Código</button>
-          </div>
-          <pre id="code-snippet" class="p-2 bg-slate-900 text-emerald-400 text-[10px] rounded-lg overflow-x-auto select-all max-h-36">
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["ID", "Fecha", "Habituales", "Extras", "Total Carreras", "Tarifa Unit", "Monto Total", "Estado", "Notas", "Actualizado"]);
-  }
-  
-  var values = sheet.getDataRange().getValues();
-  var rowIndex = -1;
-  for (var i = 1; i &lt; values.length; i++) {
-    if (values[i][1] == data.date || values[i][0] == data.id) {
-      rowIndex = i + 1;
-      break;
-    }
-  }
-  
-  var rowData = [
-    data.id, data.date, data.regularRides, data.extraRides, 
-    data.totalRides, data.unitPrice, data.totalAmount, 
-    data.isPaid ? "Pagado" : "Pendiente", data.notes || "", new Date()
-  ];
-  
-  if (rowIndex &gt; 0) {
-    sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
-  } else {
-    sheet.appendRow(rowData);
-  }
-  
-  return ContentService.createTextOutput(JSON.stringify({status: "success"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-          </pre>
-        </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-2">
@@ -503,8 +446,8 @@ function doPost(e) {
 
     let records = [];
     let config = {
-      defaultRate: 5000, // default fallback
-      sheetUrl: '' // Webhook URL for Google Sheets / Excel
+      defaultRate: 2000,
+      sheetUrl: 'https://script.google.com/macros/s/AKfycbzuAUczm02WYS5kViuxs5djtez61ggF3FsPpWVb2-GQbkaiC3qBYOBhgb_Ugktog_UvHA/exec'
     };
 
     let editingDate = null;
@@ -515,7 +458,7 @@ function doPost(e) {
       date: getTodayFormatted(),
       regularRides: 0,
       extraRides: 0,
-      unitPrice: 5000,
+      unitPrice: 2000,
       notes: '',
       isPaid: false
     };
@@ -561,6 +504,10 @@ function doPost(e) {
         const storedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
         if (storedConfig) {
           config = { ...config, ...JSON.parse(storedConfig) };
+          // Forzamos a que si la URL de la configuración local estaba mal o vacía, asuma la nueva.
+          if (!config.sheetUrl || config.sheetUrl.includes('AKfycby_f6QE')) {
+              config.sheetUrl = 'https://script.google.com/macros/s/AKfycbzuAUczm02WYS5kViuxs5djtez61ggF3FsPpWVb2-GQbkaiC3qBYOBhgb_Ugktog_UvHA/exec';
+          }
         }
         const storedRecords = localStorage.getItem(STORAGE_KEY_RECORDS);
         if (storedRecords) {
@@ -643,73 +590,6 @@ function doPost(e) {
       }
     }
 
-    function copyScriptCode() {
-      const snippet = document.getElementById('code-snippet').textContent.trim();
-      const textArea = document.createElement('textarea');
-      textArea.value = snippet;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        showToast('Código de Apps Script copiado al portapapeles', 'success');
-      } catch (err) {
-        showToast('Selecciona y copia el código manualmente', 'warning');
-      }
-      document.body.removeChild(textArea);
-    }
-
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        maximumFractionDigits: 0
-      }).format(amount || 0);
-    }
-
-    function formatDateDisplay(dateStr) {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      const d = new Date(year, month - 1, day);
-      return d.toLocaleDateString('es-ES', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadStorage();
-      initForm();
-      renderHistory();
-      updateKPIs();
-    });
-
-    function loadStorage() {
-      try {
-        const storedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
-        if (storedConfig) {
-          config = JSON.parse(storedConfig);
-        }
-        const storedRecords = localStorage.getItem(STORAGE_KEY_RECORDS);
-        if (storedRecords) {
-          records = JSON.parse(storedRecords);
-        }
-      } catch (e) {
-        console.error('Error loading data from localStorage', e);
-      }
-    }
-
-    function persistStorage() {
-      try {
-        localStorage.setItem(STORAGE_KEY_RECORDS, JSON.stringify(records));
-        localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(config));
-      } catch (e) {
-        console.error('Error saving data to localStorage', e);
-        showToast('Error al guardar datos locales', 'error');
-      }
-    }
-
     function initForm() {
       setTodayDate(false);
 
@@ -746,7 +626,7 @@ function doPost(e) {
           date: dateStr,
           regularRides: 0,
           extraRides: 0,
-          unitPrice: config.defaultRate || 5000,
+          unitPrice: config.defaultRate || 2000,
           notes: '',
           isPaid: false
         };
@@ -1029,7 +909,7 @@ function doPost(e) {
     }
 
     function openConfigModal() {
-      document.getElementById('cfg-default-rate').value = config.defaultRate || 5000;
+      document.getElementById('cfg-default-rate').value = config.defaultRate || 2000;
       document.getElementById('modal-config').classList.remove('hidden');
     }
 
