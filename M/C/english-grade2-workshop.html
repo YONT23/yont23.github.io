@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Adventure · Grado 2°</title>
+<style>
+:root{
+  --sky:#3FB6F0;
+  --sky-dark:#1E8FCB;
+  --sun:#FFC93C;
+  --sun-dark:#F2A900;
+  --grass:#5FC77E;
+  --coral:#FF8B6A;
+  --purple:#9B7EDE;
+  --cream:#FFFBF2;
+  --gray-700:#4B5563;
+  --white:#FFFFFF;
+  --green:#3AA655;
+  --green-bg:#E7F8EC;
+  --red:#E4574C;
+  --red-bg:#FCEAEA;
+  --radius:20px;
+  --shadow: 0 6px 18px rgba(30,90,150,0.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Comic Sans MS','Trebuchet MS',Verdana,sans-serif;
+  background:var(--cream);
+  color:#2B3444;
+  line-height:1.5;
+}
+.hidden{display:none !important;}
+button{font-family:inherit;cursor:pointer;}
+input,select{font-family:inherit;}
+
+/* ---------- TOPBAR ---------- */
+#topbar{
+  background:linear-gradient(90deg,var(--sky-dark),var(--purple));
+  color:var(--white);
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:var(--shadow);
+}
+#topbar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;}
+.student-info{font-size:12.5px;background:rgba(255,255,255,0.18);padding:5px 12px;border-radius:20px;}
+nav#menu-nav{display:flex;gap:6px;flex-wrap:wrap;}
+nav#menu-nav button{
+  background:rgba(255,255,255,0.14);
+  border:2px solid rgba(255,255,255,0.3);
+  color:var(--white);
+  padding:7px 13px;
+  border-radius:20px;
+  font-size:12.5px;
+  font-weight:700;
+}
+nav#menu-nav button.active{background:var(--sun);border-color:var(--sun);color:#5A3E00;}
+
+.wrap{max-width:900px;margin:0 auto;padding:26px 18px 70px;}
+.screen{animation:pop .25s ease;}
+@keyframes pop{from{opacity:0;transform:scale(.97);}to{opacity:1;transform:scale(1);}}
+
+/* ---------- START ---------- */
+#screen-start{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 10% 15%, rgba(255,201,60,0.35), transparent 40%),
+    radial-gradient(circle at 90% 85%, rgba(63,182,240,0.30), transparent 45%),
+    var(--cream);
+  padding:20px;
+}
+.start-card{
+  background:var(--white);
+  border-radius:28px;
+  box-shadow:0 16px 40px rgba(30,90,150,0.18);
+  max-width:480px;width:100%;overflow:hidden;
+  border:4px solid var(--sun);
+}
+.start-header{
+  background:linear-gradient(135deg,var(--sky),var(--purple));
+  color:var(--white);
+  padding:30px 28px 24px;
+  text-align:center;
+}
+.start-header .emoji-row{font-size:34px;margin-bottom:8px;}
+.start-header h1{margin:0 0 6px;font-size:23px;}
+.start-header p{margin:0;font-size:13px;color:#EFEBFF;}
+.start-body{padding:26px 28px 30px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:13.5px;font-weight:800;color:var(--sky-dark);margin-bottom:6px;}
+.field input,.field select{
+  width:100%;padding:11px 13px;border-radius:14px;border:2px solid #DCE6EE;
+  font-size:15px;background:#F7FAFC;
+}
+.field input:focus,.field select:focus{outline:none;border-color:var(--sky);background:var(--white);}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--coral);color:var(--white);border:none;
+  padding:14px 22px;border-radius:18px;font-weight:800;font-size:15px;
+  width:100%;box-shadow:0 6px 0 #D8613F;transition:.1s;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #D8613F;}
+.btn:disabled{background:#CBD5DE;box-shadow:none;cursor:not-allowed;}
+.btn-secondary{background:var(--white);color:var(--sky-dark);border:2px solid var(--sky);box-shadow:none;}
+.error-msg{color:var(--red);font-size:12.5px;margin-top:2px;min-height:14px;}
+
+/* ---------- MENU ---------- */
+.hero-menu{
+  background:linear-gradient(120deg,var(--sky),var(--purple) 70%);
+  color:var(--white);border-radius:24px;padding:26px 26px;margin-bottom:22px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.hero-menu h2{margin:0 0 6px;font-size:21px;}
+.hero-menu p{margin:0;font-size:13px;color:#EFEBFF;}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
+.menu-card{
+  background:var(--white);border:3px solid var(--sun);border-radius:20px;padding:18px;
+  box-shadow:var(--shadow);text-align:center;
+}
+.menu-card .icon{font-size:38px;margin-bottom:8px;}
+.menu-card h3{margin:0 0 5px;font-size:14.5px;color:var(--sky-dark);}
+.menu-card p{margin:0 0 10px;font-size:12px;color:var(--gray-700);}
+.menu-card button{
+  background:var(--grass);color:var(--white);border:none;padding:8px 14px;border-radius:14px;font-weight:800;font-size:12.5px;
+}
+.menu-card.test-card{border-color:var(--coral);}
+.menu-card.test-card .icon{}
+.status-pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 10px;border-radius:16px;background:#EFEBFF;color:var(--purple);margin-bottom:8px;}
+
+/* ---------- SECTION HEAD ---------- */
+.section-head{text-align:center;margin-bottom:20px;}
+.section-head .tag{
+  display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--white);background:var(--purple);padding:5px 14px;border-radius:20px;margin-bottom:10px;
+}
+.section-head h2{margin:0 0 6px;color:var(--sky-dark);font-size:22px;}
+.section-head p{margin:0;color:var(--gray-700);font-size:13.5px;}
+
+/* ---------- FLASHCARDS ---------- */
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:24px;}
+.flashcard{
+  background:var(--white);border-radius:18px;border:3px solid #EAF4FB;box-shadow:var(--shadow);
+  padding:16px 10px;text-align:center;transition:.15s;
+}
+.flashcard:hover{border-color:var(--sun);transform:translateY(-3px);}
+.flashcard .emoji{font-size:38px;margin-bottom:8px;}
+.flashcard .word{font-weight:800;color:var(--sky-dark);font-size:14px;}
+.flashcard .sub{font-size:11px;color:var(--gray-700);margin-top:2px;}
+.nav-bottom{display:flex;justify-content:center;margin-top:6px;}
+.nav-bottom .btn{width:auto;padding:12px 26px;}
+
+/* ---------- TEST ---------- */
+.part-banner{
+  background:var(--sun);color:#5A3E00;text-align:center;font-weight:800;font-size:13.5px;
+  padding:8px 14px;border-radius:16px;margin-bottom:14px;
+}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.quiz-counter{font-size:13px;font-weight:800;color:var(--sky-dark);}
+.quiz-score{font-size:12.5px;}
+.quiz-score span.ok{color:var(--green);font-weight:800;}
+.quiz-score span.bad{color:var(--red);font-weight:800;}
+.progress-bar{height:10px;background:#EAF4FB;border-radius:8px;overflow:hidden;margin-bottom:16px;}
+.progress-bar-fill{height:100%;background:var(--grass);border-radius:8px;transition:width .3s;}
+.quiz-card{background:var(--white);border-radius:24px;box-shadow:var(--shadow);padding:24px;border:3px solid #EAF4FB;}
+.quiz-stem{
+  font-size:14.5px;color:#233;background:#F0F7FF;padding:14px 16px;border-radius:16px;margin-bottom:16px;
+}
+.quiz-image{font-size:56px;text-align:center;margin-bottom:14px;}
+.quiz-question{font-size:16px;font-weight:800;color:var(--sky-dark);margin-bottom:16px;text-align:center;}
+.option{
+  display:flex;gap:12px;align-items:center;border:2.5px solid #E2ECF3;border-radius:16px;
+  padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:.15s;background:var(--white);
+}
+.option:hover{border-color:var(--sky);background:#F0F7FF;}
+.option.disabled{cursor:default;}
+.option .letter{
+  flex:0 0 30px;height:30px;border-radius:50%;background:#EAF4FB;color:var(--sky-dark);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;
+}
+.option .opt-text{font-size:14.5px;}
+.option.correct{border-color:var(--green);background:var(--green-bg);}
+.option.correct .letter{background:var(--green);color:var(--white);}
+.option.incorrect{border-color:var(--red);background:var(--red-bg);}
+.option.incorrect .letter{background:var(--red);color:var(--white);}
+.explain-box{margin-top:14px;padding:12px 14px;border-radius:14px;background:#FFF7E5;border:2px solid #FFE7A8;font-size:13.3px;display:none;}
+.explain-box.show{display:block;}
+.quiz-nav{display:flex;justify-content:center;margin-top:18px;}
+.quiz-nav .btn{width:auto;padding:12px 26px;}
+
+/* ---------- RESULTS ---------- */
+.results-header{
+  background:linear-gradient(135deg,var(--sky),var(--purple));color:var(--white);
+  border-radius:24px;padding:32px;text-align:center;margin-bottom:20px;
+}
+.results-header .stars{font-size:34px;margin-bottom:6px;}
+.results-header .score-num{font-size:48px;font-weight:800;line-height:1;}
+.results-header .score-den{font-size:18px;opacity:.85;}
+.results-header .level{font-size:14px;font-weight:800;margin-top:8px;background:rgba(255,255,255,0.2);display:inline-block;padding:5px 16px;border-radius:20px;}
+.results-student{font-size:13.5px;color:#EFEBFF;margin-top:10px;}
+.breakdown-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px;}
+.breakdown-item{background:var(--white);border:3px solid #EAF4FB;border-radius:18px;padding:16px;text-align:center;box-shadow:var(--shadow);}
+.breakdown-item .val{font-size:22px;font-weight:800;color:var(--sky-dark);}
+.breakdown-item .lab{font-size:11.5px;color:var(--gray-700);margin-top:4px;}
+.feedback-summary{background:var(--white);border:3px solid #EAF4FB;border-radius:20px;padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow);}
+.feedback-summary h3{margin:0 0 10px;color:var(--sky-dark);font-size:15.5px;}
+.feedback-summary ul{margin:0;padding-left:20px;font-size:13.8px;}
+.feedback-summary li{margin-bottom:6px;}
+.print-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.print-actions .btn{width:auto;padding:12px 22px;}
+footer.note{text-align:center;font-size:11px;color:var(--gray-700);margin-top:24px;}
+
+@media print{
+  #topbar,.print-actions,nav#menu-nav,.no-print{display:none !important;}
+  body{background:var(--white);}
+  .wrap{max-width:100%;padding:0;}
+  .breakdown-item,.feedback-summary,.results-header{box-shadow:none;border:1px solid #ccc;}
+  #screen-resultados{display:block !important;}
+  .results-header{background:var(--sky-dark) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+@media (max-width:600px){
+  .start-header{padding:24px 20px 20px;}
+  .start-body{padding:22px;}
+  .wrap{padding:20px 12px 60px;}
+  .results-header .score-num{font-size:38px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= START ================= -->
+<div id="screen-start" class="screen">
+  <div class="start-card">
+    <div class="start-header">
+      <div class="emoji-row">🌤️👨‍👩‍👧‍👦🔢🖐️</div>
+      <h1>English Adventure</h1>
+      <p>Numbers · Family · Body · Weather &amp; Clothes — Grado 2°</p>
+    </div>
+    <div class="start-body">
+      <div class="field">
+        <label for="input-name">¿Cuál es tu nombre?</label>
+        <input type="text" id="input-name" placeholder="Escribe tu nombre">
+      </div>
+      <div class="field">
+        <label for="input-grade">¿Cuál es tu curso?</label>
+        <select id="input-grade">
+          <option value="">Elige tu curso</option>
+          <option>2°A</option><option>2°B</option><option>2°C</option><option>2°D</option>
+        </select>
+      </div>
+      <div class="error-msg" id="start-error"></div>
+      <button class="btn" id="btn-start">¡Empezar la aventura! 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TOPBAR ================= -->
+<div id="topbar" class="hidden">
+  <div class="brand">🌈 English Adventure</div>
+  <nav id="menu-nav">
+    <button data-target="menu">Inicio</button>
+    <button data-target="review-numbers">Numbers</button>
+    <button data-target="review-family">Family</button>
+    <button data-target="review-body">Body</button>
+    <button data-target="review-weather">Weather</button>
+    <button data-target="test">Prueba</button>
+    <button data-target="resultados">Resultados</button>
+  </nav>
+  <div class="student-info" id="student-info-tag"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= MENU ================= -->
+  <section id="screen-menu" class="screen hidden">
+    <div class="hero-menu">
+      <h2 id="menu-greeting">¡Hola!</h2>
+      <p>Repasa los 4 temas y luego responde la Prueba Final tipo Saber, dividida en 4 partes.</p>
+    </div>
+    <div class="card-grid">
+      <div class="menu-card">
+        <div class="icon">🔢</div>
+        <h3>Numbers 50–100</h3>
+        <p>Aprende a leer y decir los números del 50 al 100.</p>
+        <button data-target="review-numbers">Repasar →</button>
+      </div>
+      <div class="menu-card">
+        <div class="icon">👨‍👩‍👧‍👦</div>
+        <h3>Family Members</h3>
+        <p>Conoce el vocabulario de la familia en inglés.</p>
+        <button data-target="review-family">Repasar →</button>
+      </div>
+      <div class="menu-card">
+        <div class="icon">🙆</div>
+        <h3>Parts of the Body</h3>
+        <p>Repasa y aprende nuevas partes del cuerpo.</p>
+        <button data-target="review-body">Repasar →</button>
+      </div>
+      <div class="menu-card">
+        <div class="icon">🌦️</div>
+        <h3>Weather &amp; Clothes</h3>
+        <p>El clima y la ropa que usamos en inglés.</p>
+        <button data-target="review-weather">Repasar →</button>
+      </div>
+      <div class="menu-card test-card">
+        <div class="icon">🏆</div>
+        <span class="status-pill" id="status-test">Sin iniciar</span>
+        <h3>Prueba Final (Partes 1–4)</h3>
+        <p>20 preguntas tipo Saber que mezclan los 4 temas.</p>
+        <button data-target="test">¡Empezar! →</button>
+      </div>
+      <div class="menu-card">
+        <div class="icon">📊</div>
+        <span class="status-pill" id="status-resultados">Completa la prueba</span>
+        <h3>Resultados</h3>
+        <p>Mira tu puntaje y descarga tu reporte.</p>
+        <button data-target="resultados">Ver →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REVIEW: NUMBERS ================= -->
+  <section id="screen-review-numbers" class="screen hidden">
+    <div class="section-head">
+      <span class="tag">Tema 1</span>
+      <h2>Numbers from 50 to 100</h2>
+      <p>Lee cada número en voz alta antes de continuar.</p>
+    </div>
+    <div class="flash-grid">
+      <div class="flashcard"><div class="emoji">5️⃣0️⃣</div><div class="word">Fifty</div><div class="sub">50</div></div>
+      <div class="flashcard"><div class="emoji">5️⃣5️⃣</div><div class="word">Fifty-five</div><div class="sub">55</div></div>
+      <div class="flashcard"><div class="emoji">6️⃣0️⃣</div><div class="word">Sixty</div><div class="sub">60</div></div>
+      <div class="flashcard"><div class="emoji">6️⃣3️⃣</div><div class="word">Sixty-three</div><div class="sub">63</div></div>
+      <div class="flashcard"><div class="emoji">7️⃣0️⃣</div><div class="word">Seventy</div><div class="sub">70</div></div>
+      <div class="flashcard"><div class="emoji">7️⃣8️⃣</div><div class="word">Seventy-eight</div><div class="sub">78</div></div>
+      <div class="flashcard"><div class="emoji">8️⃣0️⃣</div><div class="word">Eighty</div><div class="sub">80</div></div>
+      <div class="flashcard"><div class="emoji">8️⃣2️⃣</div><div class="word">Eighty-two</div><div class="sub">82</div></div>
+      <div class="flashcard"><div class="emoji">9️⃣0️⃣</div><div class="word">Ninety</div><div class="sub">90</div></div>
+      <div class="flashcard"><div class="emoji">9️⃣9️⃣</div><div class="word">Ninety-nine</div><div class="sub">99</div></div>
+      <div class="flashcard"><div class="emoji">💯</div><div class="word">One hundred</div><div class="sub">100</div></div>
+    </div>
+    <div class="nav-bottom"><button class="btn" style="background:var(--sky-dark);box-shadow:0 6px 0 #145E85;" data-target="menu">Volver al mapa 🗺️</button></div>
+  </section>
+
+  <!-- ================= REVIEW: FAMILY ================= -->
+  <section id="screen-review-family" class="screen hidden">
+    <div class="section-head">
+      <span class="tag">Tema 2</span>
+      <h2>Family Members</h2>
+      <p>Estas son las personas de tu familia en inglés.</p>
+    </div>
+    <div class="flash-grid">
+      <div class="flashcard"><div class="emoji">👩</div><div class="word">Mother</div></div>
+      <div class="flashcard"><div class="emoji">👨</div><div class="word">Father</div></div>
+      <div class="flashcard"><div class="emoji">👧</div><div class="word">Sister</div></div>
+      <div class="flashcard"><div class="emoji">👦</div><div class="word">Brother</div></div>
+      <div class="flashcard"><div class="emoji">👵</div><div class="word">Grandmother</div></div>
+      <div class="flashcard"><div class="emoji">👴</div><div class="word">Grandfather</div></div>
+      <div class="flashcard"><div class="emoji">👩‍🦰</div><div class="word">Aunt</div></div>
+      <div class="flashcard"><div class="emoji">👨‍🦱</div><div class="word">Uncle</div></div>
+      <div class="flashcard"><div class="emoji">🧑</div><div class="word">Cousin</div></div>
+      <div class="flashcard"><div class="emoji">👶</div><div class="word">Baby</div></div>
+    </div>
+    <div class="nav-bottom"><button class="btn" style="background:var(--sky-dark);box-shadow:0 6px 0 #145E85;" data-target="menu">Volver al mapa 🗺️</button></div>
+  </section>
+
+  <!-- ================= REVIEW: BODY ================= -->
+  <section id="screen-review-body" class="screen hidden">
+    <div class="section-head">
+      <span class="tag">Tema 3</span>
+      <h2>Parts of the Body — Review &amp; Expansion</h2>
+      <p>Repasa lo que ya sabes y aprende palabras nuevas.</p>
+    </div>
+    <div class="flash-grid">
+      <div class="flashcard"><div class="emoji">👁️</div><div class="word">Eyes</div><div class="sub">Repaso</div></div>
+      <div class="flashcard"><div class="emoji">👂</div><div class="word">Ears</div><div class="sub">Repaso</div></div>
+      <div class="flashcard"><div class="emoji">👃</div><div class="word">Nose</div><div class="sub">Repaso</div></div>
+      <div class="flashcard"><div class="emoji">👄</div><div class="word">Mouth</div><div class="sub">Repaso</div></div>
+      <div class="flashcard"><div class="emoji">✋</div><div class="word">Hands</div><div class="sub">Repaso</div></div>
+      <div class="flashcard"><div class="emoji">🦶</div><div class="word">Feet</div><div class="sub">Repaso</div></div>
+      <div class="flashcard"><div class="emoji">💪</div><div class="word">Arms</div><div class="sub">Nuevo</div></div>
+      <div class="flashcard"><div class="emoji">🦵</div><div class="word">Legs</div><div class="sub">Nuevo</div></div>
+      <div class="flashcard"><div class="emoji">💇</div><div class="word">Hair</div><div class="sub">Nuevo</div></div>
+      <div class="flashcard"><div class="emoji">🧍</div><div class="word">Shoulder</div><div class="sub">Nuevo</div></div>
+      <div class="flashcard"><div class="emoji">🦴</div><div class="word">Knee</div><div class="sub">Nuevo</div></div>
+      <div class="flashcard"><div class="emoji">🤰</div><div class="word">Stomach</div><div class="sub">Nuevo</div></div>
+    </div>
+    <div class="nav-bottom"><button class="btn" style="background:var(--sky-dark);box-shadow:0 6px 0 #145E85;" data-target="menu">Volver al mapa 🗺️</button></div>
+  </section>
+
+  <!-- ================= REVIEW: WEATHER & CLOTHES ================= -->
+  <section id="screen-review-weather" class="screen hidden">
+    <div class="section-head">
+      <span class="tag">Tema 4</span>
+      <h2>Weather and Clothes</h2>
+      <p>¿Qué clima hace hoy? ¿Qué ropa usas?</p>
+    </div>
+    <div class="flash-grid">
+      <div class="flashcard"><div class="emoji">☀️</div><div class="word">Sunny</div></div>
+      <div class="flashcard"><div class="emoji">🌧️</div><div class="word">Rainy</div></div>
+      <div class="flashcard"><div class="emoji">☁️</div><div class="word">Cloudy</div></div>
+      <div class="flashcard"><div class="emoji">🌬️</div><div class="word">Windy</div></div>
+      <div class="flashcard"><div class="emoji">❄️</div><div class="word">Snowy</div></div>
+      <div class="flashcard"><div class="emoji">🥵</div><div class="word">Hot</div></div>
+      <div class="flashcard"><div class="emoji">🥶</div><div class="word">Cold</div></div>
+      <div class="flashcard"><div class="emoji">👕</div><div class="word">T-shirt</div></div>
+      <div class="flashcard"><div class="emoji">🩳</div><div class="word">Shorts</div></div>
+      <div class="flashcard"><div class="emoji">🧥</div><div class="word">Jacket</div></div>
+      <div class="flashcard"><div class="emoji">👢</div><div class="word">Boots</div></div>
+      <div class="flashcard"><div class="emoji">🧣</div><div class="word">Scarf</div></div>
+      <div class="flashcard"><div class="emoji">🧤</div><div class="word">Gloves</div></div>
+      <div class="flashcard"><div class="emoji">🧢</div><div class="word">Hat</div></div>
+      <div class="flashcard"><div class="emoji">☂️</div><div class="word">Umbrella</div></div>
+      <div class="flashcard"><div class="emoji">🕶️</div><div class="word">Sunglasses</div></div>
+    </div>
+    <div class="nav-bottom"><button class="btn" style="background:var(--sky-dark);box-shadow:0 6px 0 #145E85;" data-target="menu">Volver al mapa 🗺️</button></div>
+  </section>
+
+  <!-- ================= TEST ================= -->
+  <section id="screen-test" class="screen hidden">
+    <div class="section-head">
+      <span class="tag">Prueba Final</span>
+      <h2>Prueba tipo Saber — Partes 1 a 4</h2>
+      <p>Responde una pregunta a la vez. ¡Tú puedes! 🌟</p>
+    </div>
+    <div class="part-banner" id="part-banner">Parte 1 · Empareja la imagen con la palabra</div>
+    <div class="quiz-header">
+      <div class="quiz-counter" id="quiz-counter">Pregunta 1 de 20</div>
+      <div class="quiz-score">✅ <span class="ok" id="quiz-ok-count">0</span> &nbsp; ❌ <span class="bad" id="quiz-bad-count">0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-bar-fill" id="quiz-progress" style="width:5%"></div></div>
+    <div class="quiz-card" id="quiz-card"></div>
+  </section>
+
+  <!-- ================= RESULTS ================= -->
+  <section id="screen-resultados" class="screen hidden">
+    <div class="section-head no-print">
+      <span class="tag">Reporte final</span>
+      <h2>¡Estos son tus resultados!</h2>
+      <p>Puedes descargar tu reporte en PDF.</p>
+    </div>
+
+    <div class="results-header">
+      <div class="stars" id="results-stars">⭐⭐⭐</div>
+      <div class="score-num" id="final-score">--</div>
+      <div class="score-den">/ 20 puntos</div>
+      <div class="level" id="results-level">Desempeño</div>
+      <div class="results-student" id="results-student">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="breakdown-item"><div class="val" id="part1-score">0/5</div><div class="lab">Parte 1<br>Palabra e imagen</div></div>
+      <div class="breakdown-item"><div class="val" id="part2-score">0/5</div><div class="lab">Parte 2<br>Frase y elección</div></div>
+      <div class="breakdown-item"><div class="val" id="part3-score">0/5</div><div class="lab">Parte 3<br>Completa la frase</div></div>
+      <div class="breakdown-item"><div class="val" id="part4-score">0/5</div><div class="lab">Parte 4<br>Lectura corta</div></div>
+    </div>
+
+    <div class="feedback-summary">
+      <h3>Mensaje para ti 💬</h3>
+      <ul id="feedback-list"></ul>
+    </div>
+
+    <div class="print-actions no-print">
+      <button class="btn" style="background:var(--sky-dark);width:auto;box-shadow:0 6px 0 #145E85;" id="btn-print">⬇ Descargar Reporte PDF</button>
+      <button class="btn btn-secondary" id="btn-restart">Reiniciar 🔄</button>
+    </div>
+
+    <footer class="note no-print">English Adventure · Grado 2° — Numbers, Family, Body, Weather &amp; Clothes</footer>
+  </section>
+
+</div>
+
+<script>
+/* ===================== STATE ===================== */
+const state = {
+  name: '',
+  grade: '',
+  quizIndex: 0,
+  quizAnswers: {},
+  quizCorrect: 0,
+  quizIncorrect: 0
+};
+
+/* ===================== DATA: 20 QUESTIONS, 4 PARTS ===================== */
+const partLabels = [
+  "Parte 1 · Empareja la imagen con la palabra",
+  "Parte 2 · Lee la frase y elige la imagen correcta",
+  "Parte 3 · Completa la frase con la palabra correcta",
+  "Parte 4 · Lee el texto corto y responde"
+];
+
+const quizQuestions = [
+  // ---------- PARTE 1 (Q1-5): imagen -> palabra ----------
+  { part:0, image:"7️⃣0️⃣", stem:"Mira el número.", question:"¿Cómo se escribe este número en inglés?",
+    options:["Seventy","Seventeen","Seven","Seventy-one"], correct:0,
+    explain:"70 se escribe Seventy en inglés." },
+  { part:0, image:"👵", stem:"Mira la imagen.", question:"¿Qué palabra corresponde a esta imagen?",
+    options:["Mother","Grandmother","Aunt","Sister"], correct:1,
+    explain:"👵 es la abuela: Grandmother." },
+  { part:0, image:"👂", stem:"Mira la imagen.", question:"¿Qué parte del cuerpo es esta?",
+    options:["Eye","Nose","Ear","Mouth"], correct:2,
+    explain:"👂 es Ear (oreja)." },
+  { part:0, image:"☂️", stem:"Mira la imagen.", question:"¿Qué palabra corresponde a esta imagen?",
+    options:["Sunglasses","Umbrella","Raincoat","Boots"], correct:1,
+    explain:"☂️ es Umbrella (paraguas)." },
+  { part:0, image:"9️⃣0️⃣", stem:"Mira el número.", question:"¿Cómo se escribe este número en inglés?",
+    options:["Nineteen","Ninety","Nine","Ninety-one"], correct:1,
+    explain:"90 se escribe Ninety en inglés." },
+
+  // ---------- PARTE 2 (Q6-10): frase -> imagen/opción ----------
+  { part:1, image:"👵👴👩", stem:"Lee la frase:", question:"\"This is my father's mother.\" ¿Quién es?",
+    options:["Grandfather","Grandmother","Mother","Sister"], correct:1,
+    explain:"La mamá de mi papá es mi Grandmother (abuela)." },
+  { part:1, image:"🙌", stem:"Lee la frase:", question:"\"I clap with these.\" ¿Con qué aplaudo?",
+    options:["Feet","Eyes","Hands","Nose"], correct:2,
+    explain:"Aplaudimos con las manos: Hands." },
+  { part:1, image:"❄️🧤", stem:"Lee la frase:", question:"\"It is snowing. I wear this on my hands.\" ¿Qué me pongo?",
+    options:["Gloves","Shorts","Sunglasses","Hat"], correct:0,
+    explain:"Cuando nieva, usamos guantes: Gloves." },
+  { part:1, image:"💯", stem:"Lee la frase:", question:"\"There are 100 candies in the jar.\" ¿Qué número es?",
+    options:["10","100","1000","90"], correct:1,
+    explain:"100 candies significa 100 dulces." },
+  { part:1, image:"👩‍🦰", stem:"Lee la frase:", question:"\"She is my mother's sister.\" ¿Quién es ella?",
+    options:["Aunt","Cousin","Grandmother","Sister"], correct:0,
+    explain:"La hermana de mi mamá es mi Aunt (tía)." },
+
+  // ---------- PARTE 3 (Q11-15): completar la frase ----------
+  { part:2, image:"👁️", stem:"Completa la frase:", question:"\"I see with my ___.\"",
+    options:["ears","eyes","nose","hands"], correct:1,
+    explain:"Vemos con los ojos: eyes." },
+  { part:2, image:"🥵👕", stem:"Completa la frase:", question:"\"It is very hot today, so I wear my ___.\"",
+    options:["sweater","t-shirt","raincoat","gloves"], correct:1,
+    explain:"Cuando hace calor, usamos una camiseta: t-shirt." },
+  { part:2, image:"👵", stem:"Completa la frase:", question:"\"My grandmother is ___ years old.\" (80)",
+    options:["eight","eighty","eighteen","eighty-one"], correct:1,
+    explain:"80 años se dice eighty years old." },
+  { part:2, image:"👨‍🦱", stem:"Completa la frase:", question:"\"My father's brother is my ___.\"",
+    options:["Uncle","Cousin","Grandfather","Brother"], correct:0,
+    explain:"El hermano de mi papá es mi Uncle (tío)." },
+  { part:2, image:"🦵", stem:"Completa la frase:", question:"\"I walk with my ___.\"",
+    options:["hands","legs","ears","nose"], correct:1,
+    explain:"Caminamos con las piernas: legs." },
+
+  // ---------- PARTE 4 (Q16-20): texto corto + pregunta ----------
+  { part:3, image:"🌬️🧣", stem:"Lee el texto: \"Today is cold and windy. Ana wears a warm sweater, a scarf, and gloves.\"", question:"¿Cómo está el clima hoy?",
+    options:["Hot and sunny","Cold and windy","Rainy and warm","Snowy and calm"], correct:1,
+    explain:"El texto dice: 'Today is cold and windy' (hoy hace frío y viento)." },
+  { part:3, image:"💯", stem:"Lee el texto: \"There are 100 students in the school. 50 are boys and 50 are girls.\"", question:"¿Cuántas niñas hay?",
+    options:["100","60","50","90"], correct:2,
+    explain:"El texto dice: '50 are girls' (50 son niñas)." },
+  { part:3, image:"👨‍👩‍👧", stem:"Lee el texto: \"This is Luis. His mother is Carla, and his father is Pedro. Carla's mother, Rosa, is Luis's grandmother.\"", question:"¿Quién es la abuela de Luis?",
+    options:["Carla","Pedro","Rosa","Luis"], correct:2,
+    explain:"El texto dice que Rosa es la abuela (grandmother) de Luis." },
+  { part:3, image:"✋🎨", stem:"Lee el texto: \"Sofia has long hair, two big eyes, and small hands. She uses her hands to draw pictures.\"", question:"¿Con qué dibuja Sofía?",
+    options:["Her eyes","Her hair","Her hands","Her feet"], correct:2,
+    explain:"El texto dice: 'She uses her hands to draw pictures' (usa sus manos para dibujar)." },
+  { part:3, image:"🌧️👢", stem:"Lee el texto: \"It is raining outside. Juan puts on his raincoat and boots before going to school.\"", question:"¿Qué se pone Juan porque está lloviendo?",
+    options:["Sunglasses and shorts","Raincoat and boots","Sweater and hat","T-shirt and sandals"], correct:1,
+    explain:"El texto dice que Juan se pone su raincoat (impermeable) y boots (botas)." }
+];
+
+/* ===================== NAVIGATION ===================== */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  const target = document.getElementById('screen-' + name);
+  if(target) target.classList.remove('hidden');
+  document.querySelectorAll('#menu-nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.target === name);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(name === 'menu') updateMenuStatuses();
+  if(name === 'resultados') renderResults();
+}
+
+document.querySelectorAll('[data-target]').forEach(el => {
+  el.addEventListener('click', () => showScreen(el.dataset.target));
+});
+
+/* ===================== START ===================== */
+document.getElementById('btn-start').addEventListener('click', () => {
+  const name = document.getElementById('input-name').value.trim();
+  const grade = document.getElementById('input-grade').value;
+  const err = document.getElementById('start-error');
+  if(!name || !grade){
+    err.textContent = 'Escribe tu nombre y elige tu curso para continuar.';
+    return;
+  }
+  err.textContent = '';
+  state.name = name;
+  state.grade = grade;
+  document.getElementById('screen-start').classList.add('hidden');
+  document.getElementById('topbar').classList.remove('hidden');
+  document.getElementById('student-info-tag').textContent = name + ' · ' + grade;
+  document.getElementById('menu-greeting').textContent = '¡Hola, ' + name.split(' ')[0] + '! 🌟';
+  buildQuizCard();
+  showScreen('menu');
+});
+
+/* ===================== TEST ===================== */
+function buildQuizCard(){
+  const idx = state.quizIndex;
+  const item = quizQuestions[idx];
+  const card = document.getElementById('quiz-card');
+  const answered = state.quizAnswers.hasOwnProperty(idx);
+
+  let optionsHtml = '';
+  item.options.forEach((opt, i) => {
+    optionsHtml += `<div class="option ${answered ? 'disabled' : ''}" data-i="${i}" onclick="${answered ? '' : `selectQuizOption(${i})`}">
+      <div class="letter">${String.fromCharCode(65+i)}</div>
+      <div class="opt-text">${opt}</div>
+    </div>`;
+  });
+
+  card.innerHTML = `
+    <div class="quiz-image">${item.image}</div>
+    <div class="quiz-stem">${item.stem}</div>
+    <div class="quiz-question">${item.question}</div>
+    <div id="options-wrap">${optionsHtml}</div>
+    <div class="explain-box ${answered ? 'show' : ''}" id="quiz-explain"><b>💡</b> ${item.explain}</div>
+    <div class="quiz-nav">
+      <button class="btn" style="background:var(--grass);box-shadow:0 6px 0 #379452;" id="quiz-next-btn" ${answered ? '' : 'disabled'} onclick="nextQuizQuestion()">
+        ${idx === quizQuestions.length - 1 ? 'Ver resultados 🏆' : 'Siguiente →'}
+      </button>
+    </div>
+  `;
+
+  if(answered){
+    markQuizOptions(idx);
+  }
+
+  document.getElementById('part-banner').textContent = partLabels[item.part];
+  document.getElementById('quiz-counter').textContent = `Pregunta ${idx+1} de ${quizQuestions.length}`;
+  document.getElementById('quiz-progress').style.width = ((idx+1)/quizQuestions.length*100) + '%';
+  document.getElementById('quiz-ok-count').textContent = state.quizCorrect;
+  document.getElementById('quiz-bad-count').textContent = state.quizIncorrect;
+}
+
+function selectQuizOption(i){
+  const idx = state.quizIndex;
+  const item = quizQuestions[idx];
+  if(state.quizAnswers.hasOwnProperty(idx)) return;
+  state.quizAnswers[idx] = i;
+  if(i === item.correct){
+    state.quizCorrect++;
+  } else {
+    state.quizIncorrect++;
+  }
+  buildQuizCard();
+}
+
+function markQuizOptions(idx){
+  const item = quizQuestions[idx];
+  const selected = state.quizAnswers[idx];
+  document.querySelectorAll('#options-wrap .option').forEach(el => {
+    const i = parseInt(el.dataset.i);
+    if(i === item.correct){
+      el.classList.add('correct');
+    } else if(i === selected){
+      el.classList.add('incorrect');
+    }
+  });
+}
+
+function nextQuizQuestion(){
+  if(state.quizIndex < quizQuestions.length - 1){
+    state.quizIndex++;
+    buildQuizCard();
+  } else {
+    showScreen('resultados');
+  }
+}
+
+/* ===================== MENU STATUS ===================== */
+function updateMenuStatuses(){
+  const quizAnswered = Object.keys(state.quizAnswers).length;
+  const sEl = document.getElementById('status-test');
+  if(quizAnswered === 0){ sEl.textContent = 'Sin iniciar'; }
+  else if(quizAnswered < quizQuestions.length){ sEl.textContent = quizAnswered + '/20 respondidas'; }
+  else { sEl.textContent = '¡Completada! 🎉'; }
+
+  const rEl = document.getElementById('status-resultados');
+  rEl.textContent = quizAnswered >= quizQuestions.length ? 'Listo para ver' : 'Completa la prueba';
+}
+
+/* ===================== RESULTS ===================== */
+function getPartScore(partIndex){
+  let count = 0;
+  quizQuestions.forEach((q, i) => {
+    if(q.part === partIndex && state.quizAnswers[i] === q.correct) count++;
+  });
+  return count;
+}
+
+function renderResults(){
+  const total = state.quizCorrect;
+  const p1 = getPartScore(0), p2 = getPartScore(1), p3 = getPartScore(2), p4 = getPartScore(3);
+
+  document.getElementById('final-score').textContent = total;
+  document.getElementById('part1-score').textContent = p1 + '/5';
+  document.getElementById('part2-score').textContent = p2 + '/5';
+  document.getElementById('part3-score').textContent = p3 + '/5';
+  document.getElementById('part4-score').textContent = p4 + '/5';
+  document.getElementById('results-student').textContent = state.name + ' · ' + state.grade + ' · ' + new Date().toLocaleDateString('es-CO');
+
+  let level = '', stars = '';
+  if(total >= 18){ level = 'Desempeño Superior 🌟'; stars = '⭐⭐⭐⭐⭐'; }
+  else if(total >= 14){ level = 'Desempeño Alto 🎉'; stars = '⭐⭐⭐⭐'; }
+  else if(total >= 10){ level = 'Desempeño Básico 👍'; stars = '⭐⭐⭐'; }
+  else { level = 'Desempeño Bajo — ¡sigue practicando! 💪'; stars = '⭐⭐'; }
+  document.getElementById('results-level').textContent = level;
+  document.getElementById('results-stars').textContent = stars;
+
+  const list = document.getElementById('feedback-list');
+  list.innerHTML = '';
+  const tips = [];
+  const partNames = ["Numbers y Family (Parte 1)","Family y Body (Parte 2)","Body y Weather/Clothes (Parte 3)","lectura corta (Parte 4)"];
+  const partScores = [p1,p2,p3,p4];
+  const weakestIndex = partScores.indexOf(Math.min(...partScores));
+  tips.push('¡Muy bien! Respondiste ' + total + ' de 20 preguntas correctamente.');
+  if(Math.min(...partScores) < 5){
+    tips.push('La parte donde más puedes mejorar es la <b>' + partLabels[weakestIndex] + '</b>. Repasa esa sección con las tarjetas de vocabulario.');
+  } else {
+    tips.push('¡Excelente! Respondiste todas las partes muy bien. 🎉');
+  }
+  tips.push('Sigue practicando los números, la familia, el cuerpo y el clima en inglés todos los días.');
+  tips.forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = t;
+    list.appendChild(li);
+  });
+}
+
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.getElementById('btn-restart').addEventListener('click', () => {
+  if(confirm('¿Quieres reiniciar la prueba? Se perderán tus respuestas.')){
+    location.reload();
+  }
+});
+</script>
+</body>
+</html>
