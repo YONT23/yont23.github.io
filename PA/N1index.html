@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Social Media Connect | Agencia Digital</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* =========================
+           BARRA DE NAVEGACIÓN
+        ========================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.96);
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #38bdf8;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #38bdf8;
+        }
+
+        /* =========================
+           INICIO
+        ========================= */
+
+        #inicio {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+
+            background:
+                linear-gradient(
+                    rgba(15, 23, 42, 0.9),
+                    rgba(30, 41, 59, 0.9)
+                ),
+                radial-gradient(circle at top, #38bdf8, #0f172a 60%);
+        }
+
+        .hero {
+            max-width: 850px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #38bdf8;
+        }
+
+        .hero h2 {
+            font-size: 27px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .hero p {
+            font-size: 19px;
+            line-height: 1.7;
+            color: #dbeafe;
+            margin-bottom: 35px;
+        }
+
+        .boton {
+            display: inline-block;
+            background: #38bdf8;
+            color: #0f172a;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            transform: translateY(-3px);
+            background: #7dd3fc;
+            box-shadow: 0 8px 20px rgba(56,189,248,0.3);
+        }
+
+        /* =========================
+           SECCIONES
+        ========================= */
+
+        section {
+            padding: 90px 20px;
+        }
+
+        .contenedor {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .titulo h2 {
+            font-size: 38px;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .titulo p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        /* =========================
+           SOBRE NOSOTROS
+        ========================= */
+
+        .sobre {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .sobre-texto h3 {
+            font-size: 28px;
+            color: #0284c7;
+            margin-bottom: 15px;
+        }
+
+        .sobre-texto p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .tarjeta-destacada {
+            background: #0f172a;
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .tarjeta-destacada h3 {
+            color: #38bdf8;
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+
+        .tarjeta-destacada p {
+            line-height: 1.7;
+            color: #dbeafe;
+        }
+
+        /* =========================
+           SERVICIOS
+        ========================= */
+
+        #servicios {
+            background: white;
+        }
+
+        .servicios {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .servicio {
+            background: #f8fafc;
+            padding: 30px 25px;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .servicio:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(15,23,42,0.12);
+        }
+
+        .icono {
+            font-size: 45px;
+            margin-bottom: 18px;
+        }
+
+        .servicio h3 {
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+
+        .servicio p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           COMO TRABAJAMOS
+        ========================= */
+
+        .pasos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .paso {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .numero {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #0284c7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .paso h3 {
+            margin-bottom: 10px;
+        }
+
+        .paso p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           TIC
+        ========================= */
+
+        #tic {
+            background: #e0f2fe;
+        }
+
+        .tic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .tic-item {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        }
+
+        .tic-item span {
+            margin-right: 8px;
+        }
+
+        /* =========================
+           ODS
+        ========================= */
+
+        .ods {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .ods-card {
+            padding: 25px;
+            border-radius: 16px;
+            background: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .ods-card h3 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+
+        .ods-card p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           CONTACTO
+        ========================= */
+
+        #contacto {
+            background: #0f172a;
+            color: white;
+        }
+
+        .contacto {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contacto h2 {
+            font-size: 35px;
+            margin-bottom: 20px;
+        }
+
+        .contacto p {
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #020617;
+            color: #94a3b8;
+            text-align: center;
+            padding: 25px;
+        }
+
+        footer strong {
+            color: #38bdf8;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .sobre,
+            .contacto {
+                grid-template-columns: 1fr;
+            }
+
+            .servicios,
+            .tic-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .pasos,
+            .ods {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .servicios,
+            .tic-grid,
+            .pasos,
+            .ods {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            .hero h2 {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         MENÚ
+    ========================= -->
+
+    <header>
+        <nav>
+
+            <div class="logo">
+                Social<span>Media</span> Connect
+            </div>
+
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#tic">TIC</a></li>
+                <li><a href="#ods">ODS</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+
+    <!-- =========================
+         INICIO
+    ========================= -->
+
+    <section id="inicio">
+
+        <div class="hero">
+
+            <h1>
+                Social <span>Media</span> Connect
+            </h1>
+
+            <h2>
+                “Impulsando negocios a través de las TIC”
+            </h2>
+
+            <p>
+                Somos una agencia digital dedicada al manejo de redes sociales
+                para pequeños negocios, emprendedores y personas que desean
+                mejorar su presencia en internet.
+            </p>
+
+            <a href="#servicios" class="boton">
+                Conoce nuestros servicios
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         NOSOTROS
+    ========================= -->
+
+    <section id="nosotros">
+
+        <div class="contenedor">
+
+            <div class="titulo">
+                <h2>¿Quiénes somos?</h2>
+                <p>Una agencia enfocada en transformar ideas en presencia digital.</p>
+            </div>
+
+            <div class="sobre">
+
+                <div class="sobre-texto">
+
+                    <h3>Nuestra idea</h3>
+
+                    <p>
+                        Social Media Connect es una agencia digital que busca
+                        ayudar a pequeños negocios, emprendedores y personas
+                        a mejorar su presencia en internet.
+                    </p>
+
+                    <p>
+                        Utilizamos plataformas digitales, redes sociales,
+                        herramientas de diseño, edición y marketing digital
+                        para crear contenido moderno y atractivo.
+                    </p>
+
+                    <p>
+                        Nuestro propósito es aprovechar las Tecnologías de la
+                        Información y la Comunicación para ayudar a los negocios
+                        a crecer en el mundo digital.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-destacada">
+
+                    <h3>💡 Nuestra propuesta</h3>
+
+                    <p>
+                        Ofrecer soluciones digitales accesibles para que los
+                        pequeños emprendimientos puedan mejorar su imagen,
+                        comunicarse con sus clientes y ampliar su alcance
+                        mediante internet.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SERVICIOS
+    ========================= -->
+
+    <section id="servicios">
+
+        <div class="contenedor">
+
+            <div class="titulo">
+
+                <h2>Nuestros servicios</h2>
+
+                <p>
+                    Soluciones digitales para mejorar la presencia de tu negocio.
+                </p>
+
+            </div>
+
+            <div class="servicios">
+
+                <div class="servicio">
+                    <div class="icono">🎨</div>
+                    <h3>Diseño de publicaciones</h3>
+                    <p>
+                        Creación de publicaciones atractivas para las redes
+                        sociales de los negocios.
+                    </p>
+                </div>
+
+                <div class="servicio">
+                    <div class="icono">🎬</div>
+                    <h3>Edición de videos</h3>
+                    <p>
+                        Edición de contenido audiovisual para promocionar
+                        productos y servicios.
+                    </p>
+                </div>
+
+                <div class="servicio">
+                    <div class="icono">📢</div>
+                    <h3>Publicidad digital</h3>
+                    <p>
+                        Creación de publicidad moderna para aumentar el alcance
+                        de los emprendimientos.
+                    </p>
+                </div>
+
+                <div class="servicio">
+                    <div class="icono">📱</div>
+                    <h3>Manejo de redes</h3>
+                    <p>
+                        Administración de cuentas en redes sociales y creación
+                        de contenido.
+                    </p>
+                </div>
+
+                <div class="servicio">
+                    <div class="icono">✨</div>
+                    <h3>Contenido creativo</h3>
+                    <p>
+                        Desarrollo de contenido creativo adaptado a cada negocio.
+                    </p>
+                </div>
+
+                <div class="servicio">
+                    <div class="icono">🖌️</div>
+                    <h3>Creación de logos</h3>
+                    <p>
+                        Diseños visuales que ayudan a construir la identidad
+                        de una marca.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         COMO TRABAJAMOS
+    ========================= -->
+
+    <section>
+
+        <div class="contenedor">
+
+            <div class="titulo">
+
+                <h2>¿Cómo trabajamos?</h2>
+
+                <p>
+                    Utilizamos herramientas digitales para ofrecer nuestros servicios.
+                </p>
+
+            </div>
+
+            <div class="pasos">
+
+                <div class="paso">
+                    <div class="numero">1</div>
+                    <h3>Contacto</h3>
+                    <p>
+                        El cliente se comunica con nosotros de manera virtual.
+                    </p>
+                </div>
+
+                <div class="paso">
+                    <div class="numero">2</div>
+                    <h3>Idea</h3>
+                    <p>
+                        Conocemos las necesidades del negocio y su objetivo.
+                    </p>
+                </div>
+
+                <div class="paso">
+                    <div class="numero">3</div>
+                    <h3>Creación</h3>
+                    <p>
+                        Diseñamos contenido, publicidad o estrategias digitales.
+                    </p>
+                </div>
+
+                <div class="paso">
+                    <div class="numero">4</div>
+                    <h3>Entrega</h3>
+                    <p>
+                        Entregamos el trabajo y facilitamos su publicación digital.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         TIC
+    ========================= -->
+
+    <section id="tic">
+
+        <div class="contenedor">
+
+            <div class="titulo">
+
+                <h2>Tecnologías que utilizamos</h2>
+
+                <p>
+                    Las TIC son fundamentales para el funcionamiento del proyecto.
+                </p>
+
+            </div>
+
+            <div class="tic-grid">
+
+                <div class="tic-item">
+                    📸 Redes sociales
+                </div>
+
+                <div class="tic-item">
+                    💻 Computadores y portátiles
+                </div>
+
+                <div class="tic-item">
+                    📱 Celulares inteligentes
+                </div>
+
+                <div class="tic-item">
+                    🌐 Internet y plataformas virtuales
+                </div>
+
+                <div class="tic-item">
+                    🎨 Aplicaciones de diseño gráfico
+                </div>
+
+                <div class="tic-item">
+                    🎬 Herramientas de edición de video
+                </div>
+
+                <div class="tic-item">
+                    ☁️ Almacenamiento en la nube
+                </div>
+
+                <div class="tic-item">
+                    📹 Plataformas de videollamadas
+                </div>
+
+                <div class="tic-item">
+                    🤖 Inteligencia artificial
+                </div>
+
+                <div class="tic-item">
+                    📢 Publicidad digital online
+                </div>
+
+                <div class="tic-item">
+                    🖥️ Página web o catálogo virtual
+                </div>
+
+                <div class="tic-item">
+                    💬 WhatsApp Business
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ODS
+    ========================= -->
+
+    <section id="ods">
+
+        <div class="contenedor">
+
+            <div class="titulo">
+
+                <h2>Objetivos de Desarrollo Sostenible</h2>
+
+                <p>
+                    Nuestro proyecto se relaciona con diferentes ODS.
+                </p>
+
+            </div>
+
+            <div class="ods">
+
+                <div class="ods-card">
+
+                    <h3>ODS 8</h3>
+
+                    <p>
+                        Trabajo decente y crecimiento económico.
+                        Apoyamos el crecimiento de pequeños negocios.
+                    </p>
+
+                </div>
+
+                <div class="ods-card">
+
+                    <h3>ODS 9</h3>
+
+                    <p>
+                        Industria, innovación e infraestructura mediante
+                        tecnología y herramientas digitales.
+                    </p>
+
+                </div>
+
+                <div class="ods-card">
+
+                    <h3>ODS 4</h3>
+
+                    <p>
+                        Educación de calidad mediante el aprendizaje
+                        y uso de herramientas TIC.
+                    </p>
+
+                </div>
+
+                <div class="ods-card">
+
+                    <h3>ODS 10</h3>
+
+                    <p>
+                        Reducción de desigualdades mediante apoyo digital
+                        para pequeños emprendedores.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         PROBLEMÁTICA
+    ========================= -->
+
+    <section>
+
+        <div class="contenedor">
+
+            <div class="titulo">
+
+                <h2>¿Qué problema solucionamos?</h2>
+
+                <p>
+                    Ayudamos a los pequeños negocios a enfrentar sus dificultades digitales.
+                </p>
+
+            </div>
+
+            <div class="sobre">
+
+                <div class="tarjeta-destacada">
+
+                    <h3>📈 El desafío</h3>
+
+                    <p>
+                        Muchos pequeños negocios no cuentan con conocimientos
+                        suficientes sobre redes sociales y publicidad digital,
+                        lo que puede dificultar que lleguen a nuevos clientes.
+                    </p>
+
+                </div>
+
+                <div class="sobre-texto">
+
+                    <h3>💻 Nuestra solución</h3>
+
+                    <p>
+                        Social Media Connect busca mejorar la imagen digital
+                        de estos negocios mediante estrategias de marketing
+                        digital y herramientas TIC accesibles.
+                    </p>
+
+                    <p>
+                        De esta manera se facilita la promoción, comunicación
+                        con los clientes y alcance de los emprendimientos.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CONTACTO
+    ========================= -->
+
+    <section id="contacto">
+
+        <div class="contenedor">
+
+            <div class="contacto">
+
+                <div>
+
+                    <h2>¿Quieres impulsar tu negocio?</h2>
+
+                    <p>
+                        Escríbenos y cuéntanos qué necesita tu emprendimiento.
+                        Podemos trabajar en diseños, campañas publicitarias,
+                        contenido creativo o administración de redes sociales.
+                    </p>
+
+                    <br>
+
+                    <p>
+                        📱 Redes: Instagram · Facebook · TikTok
+                    </p>
+
+                    <p>
+                        💬 WhatsApp Business
+                    </p>
+
+                </div>
+
+
+                <form onsubmit="enviarFormulario(event)">
+
+                    <input
+                        type="text"
+                        id="nombre"
+                        placeholder="Tu nombre"
+                        required
+                    >
+
+                    <input
+                        type="email"
+                        id="correo"
+                        placeholder="Tu correo electrónico"
+                        required
+                    >
+
+                    <select id="servicio" required>
+
+                        <option value="">
+                            Selecciona un servicio
+                        </option>
+
+                        <option>
+                            Diseño de publicaciones
+                        </option>
+
+                        <option>
+                            Edición de videos
+                        </option>
+
+                        <option>
+                            Publicidad digital
+                        </option>
+
+                        <option>
+                            Manejo de redes sociales
+                        </option>
+
+                        <option>
+                            Creación de logos
+                        </option>
+
+                        <option>
+                            Contenido creativo
+                        </option>
+
+                    </select>
+
+                    <textarea
+                        id="mensaje"
+                        placeholder="Cuéntanos qué necesitas..."
+                        required
+                    ></textarea>
+
+                    <button class="boton" type="submit">
+                        Enviar mensaje
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         PIE DE PÁGINA
+    ========================= -->
+
+    <footer>
+
+        <p>
+            © 2026 <strong>Social Media Connect</strong>
+        </p>
+
+        <p>
+            “Impulsando negocios a través de las TIC”
+        </p>
+
+        <p>
+            Proyecto Empresarial · Institución Educativa Siglo XXI
+        </p>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        function enviarFormulario(event) {
+
+            event.preventDefault();
+
+            let nombre = document.getElementById("nombre").value;
+            let servicio = document.getElementById("servicio").value;
+
+            alert(
+                "¡Gracias, " + nombre +
+                "! Hemos recibido tu solicitud sobre: " +
+                servicio +
+                "."
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
