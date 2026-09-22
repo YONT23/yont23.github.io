@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 /* ============================================================
-   MAvisos — MendozaTic
+   MAvisos — Design tokens
    Paleta: Azul institucional + Blanco (fijada por el brief)
    Tipografía: Fraunces (marca / titulares) + Inter (UI / datos)
    ============================================================ */
@@ -482,6 +482,7 @@ tr.row-warn td{background:var(--ambar-bg);}
       <input type="text" id="dirSearch" placeholder="Buscar estudiante o acudiente…" oninput="UI.renderDirectorio()">
       <select id="dirGradoFilter" onchange="UI.renderDirectorio()"></select>
       <button class="btn btn-ghost btn-sm" onclick="UI.buscarDuplicadosDirectorio()">🔎 Buscar posibles duplicados</button>
+      <button class="btn btn-primary btn-sm" onclick="UI.abrirModalManual()">+ Agregar manual</button>
     </div>
     <div id="dupDirectorioZone"></div>
     <div class="directory-list" id="directoryList"></div>
@@ -490,43 +491,78 @@ tr.row-warn td{background:var(--ambar-bg);}
   <!-- ===================== MENSAJES ===================== -->
   <section class="view" id="view-mensajes">
     <div class="section-head"><h2>Mensajes</h2><span class="hint">Redacta y envía en segundos</span></div>
-    <div class="two-col">
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tabMsgIndividual" onclick="UI.cambiarTabMensajes('tabMsgIndividual')">Individual</button>
+      <button class="tab-btn" data-tab="tabMsgGrupo" onclick="UI.cambiarTabMensajes('tabMsgGrupo')">Mensaje a un grupo completo</button>
+    </div>
+
+    <div class="tab-panel active" id="tabMsgIndividual">
+      <div class="two-col">
+        <div class="card">
+          <div class="field">
+            <label>Grado</label>
+            <select id="msgGrado" onchange="UI.msgActualizarEstudiantes()"></select>
+          </div>
+          <div class="field">
+            <label>Estudiante</label>
+            <select id="msgEstudiante" onchange="UI.msgActualizarAcudientes()"></select>
+          </div>
+          <div class="field">
+            <label>Acudiente</label>
+            <select id="msgAcudiente" onchange="UI.msgRenderPreview()"></select>
+          </div>
+          <div class="field">
+            <label>Plantilla</label>
+            <select id="msgPlantilla" onchange="UI.msgAplicarPlantilla()"></select>
+          </div>
+          <div class="field">
+            <label>Motivo (opcional)</label>
+            <input type="text" id="msgMotivo" placeholder="Ej: Actividad pendiente de Inglés" oninput="UI.msgRenderPreview()">
+          </div>
+          <div class="field">
+            <label>Mensaje</label>
+            <textarea id="msgTexto" oninput="UI.msgRenderPreview()" placeholder="Escribe aquí o elige una plantilla…"></textarea>
+            <div class="helper">Variables: {acudiente} {estudiante} {grado} {parentesco} {fecha} {docente} {motivo}</div>
+          </div>
+          <div class="helper" style="margin-top:6px;">¿No encuentras a este acudiente? <button class="link-btn" onclick="UI.abrirModalManual()">Agrégalo manualmente</button>.</div>
+        </div>
+        <div class="card">
+          <label style="font-size:12.5px;font-weight:600;color:var(--gris-600);">Vista previa</label>
+          <div class="msg-preview" id="msgPreview">Selecciona un estudiante y un acudiente para ver el mensaje.</div>
+          <div class="aviso-actions">
+            <button class="btn btn-ghost" onclick="UI.msgCopiar()">📋 Copiar mensaje</button>
+            <button class="btn btn-wa" onclick="UI.msgAbrirWhatsapp()">💬 Abrir WhatsApp</button>
+          </div>
+          <div class="helper" style="margin-top:10px;">Abrir WhatsApp registra el contacto en el historial como "Preparado". Confirma el estado real en Avisos.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tabMsgGrupo">
       <div class="card">
+        <p class="helper" style="margin-top:0;">Escribe el mensaje una sola vez para todo el grado. WhatsApp no permite enviar a varios chats a la vez, así que MAvisos prepara un mensaje personalizado por cada acudiente y los abre <b>uno por uno</b> — no se envía como grupo de WhatsApp, cada padre lo recibe en su chat individual.</p>
         <div class="field">
           <label>Grado</label>
-          <select id="msgGrado" onchange="UI.msgActualizarEstudiantes()"></select>
-        </div>
-        <div class="field">
-          <label>Estudiante</label>
-          <select id="msgEstudiante" onchange="UI.msgActualizarAcudientes()"></select>
-        </div>
-        <div class="field">
-          <label>Acudiente</label>
-          <select id="msgAcudiente" onchange="UI.msgRenderPreview()"></select>
+          <select id="grpGrado" onchange="UI.grpActualizarConteo()"></select>
         </div>
         <div class="field">
           <label>Plantilla</label>
-          <select id="msgPlantilla" onchange="UI.msgAplicarPlantilla()"></select>
+          <select id="grpPlantilla" onchange="UI.grpAplicarPlantilla()"></select>
         </div>
         <div class="field">
           <label>Motivo (opcional)</label>
-          <input type="text" id="msgMotivo" placeholder="Ej: Actividad pendiente de Inglés" oninput="UI.msgRenderPreview()">
+          <input type="text" id="grpMotivo" placeholder="Ej: Reunión de padres de familia" oninput="UI.grpActualizarConteo()">
         </div>
         <div class="field">
           <label>Mensaje</label>
-          <textarea id="msgTexto" oninput="UI.msgRenderPreview()" placeholder="Escribe aquí o elige una plantilla…"></textarea>
-          <div class="helper">Variables: {acudiente} {estudiante} {grado} {parentesco} {fecha} {docente} {motivo}</div>
+          <textarea id="grpTexto" placeholder="Hola {acudiente}, como director(a) de grupo de {grado} le informo que..."></textarea>
+          <div class="helper">Variables: {acudiente} {estudiante} {grado} {parentesco} {fecha} {docente} {motivo}. Se reemplazan distinto para cada padre.</div>
         </div>
+        <div class="helper" id="grpConteo" style="margin-top:6px;">Elige un grado para ver a cuántos acudientes llegará.</div>
+        <button class="btn btn-primary" style="margin-top:10px;" onclick="UI.grpGenerarEnvios()">Preparar envíos al grupo</button>
       </div>
-      <div class="card">
-        <label style="font-size:12.5px;font-weight:600;color:var(--gris-600);">Vista previa</label>
-        <div class="msg-preview" id="msgPreview">Selecciona un estudiante y un acudiente para ver el mensaje.</div>
-        <div class="aviso-actions">
-          <button class="btn btn-ghost" onclick="UI.msgCopiar()">📋 Copiar mensaje</button>
-          <button class="btn btn-wa" onclick="UI.msgAbrirWhatsapp()">💬 Abrir WhatsApp</button>
-        </div>
-        <div class="helper" style="margin-top:10px;">Abrir WhatsApp registra el contacto en el historial como "Preparado". Confirma el estado real en Avisos.</div>
-      </div>
+      <div id="grpEnviosZone" style="margin-top:16px;"></div>
     </div>
   </section>
 
@@ -648,6 +684,41 @@ FALTAS: Cuaderno pendiente, Actividades pendientes de la plataforma English Cent
       <button class="var-chip" onclick="UI.insertarVariableTpl('{motivo}')">{motivo}</button>
     </div>
     <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="UI.guardarPlantilla()">Guardar plantilla</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalManual" onclick="if(event.target===this)UI.cerrarModal('modalManual')">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3>Agregar manualmente</h3><div class="sub">Para un estudiante o acudiente que no está en tu directorio</div></div>
+      <button class="modal-close" onclick="UI.cerrarModal('modalManual')">✕</button>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Grado</label>
+        <select id="manGrado"></select>
+      </div>
+      <div class="field">
+        <label>Estudiante</label>
+        <input type="text" id="manEstudiante" placeholder="Nombre completo del estudiante">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Acudiente</label>
+        <input type="text" id="manAcudiente" placeholder="Nombre del acudiente">
+      </div>
+      <div class="field">
+        <label>Parentesco</label>
+        <input type="text" id="manParentesco" placeholder="Ej: Madre, Padre, Tía…">
+      </div>
+    </div>
+    <div class="field">
+      <label>WhatsApp</label>
+      <input type="text" id="manTelefono" placeholder="Ej: 300 123 4567">
+      <div class="helper">Se normaliza automáticamente a formato internacional (+57).</div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="UI.guardarManual()">Guardar</button>
   </div>
 </div>
 
@@ -1835,6 +1906,88 @@ const UI = (() => {
     }
   }
 
+  /* ---------- Mensaje a un grupo completo (uno por uno, no como grupo de WhatsApp) ---------- */
+  function grpInicializar(){
+    poblarSelectorGrados('grpGrado', false);
+    const selPlt = document.getElementById('grpPlantilla');
+    selPlt.innerHTML = '<option value="">Sin plantilla (mensaje libre)</option>' + DB.plantillas.map(p=>`<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
+    grpActualizarConteo();
+  }
+  function grpDestinatarios(){
+    const grado = document.getElementById('grpGrado').value;
+    if(!grado) return [];
+    const estudiantes = DB.estudiantes.filter(e=>e.grado===grado).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+    return estudiantes.map(est => {
+      const pr = principalDe(est.id);
+      return pr ? { est, acu:pr.acudiente, rel:pr.relacion } : null;
+    }).filter(Boolean);
+  }
+  function grpActualizarConteo(){
+    const grado = document.getElementById('grpGrado').value;
+    const dest = grpDestinatarios();
+    const sinAcudiente = grado ? DB.estudiantes.filter(e=>e.grado===grado).length - dest.length : 0;
+    const cont = document.getElementById('grpConteo');
+    if(!grado){ cont.textContent = 'Elige un grado para ver a cuántos acudientes llegará.'; return; }
+    cont.innerHTML = `Este mensaje se preparará para <b>${dest.length}</b> acudiente(s) principal(es) de ${esc(grado)}${sinAcudiente>0 ? ` — ${sinAcudiente} estudiante(s) sin acudiente registrado se omitirán.` : ''}`;
+  }
+  function grpAplicarPlantilla(){
+    const pid = document.getElementById('grpPlantilla').value;
+    const plt = DB.plantillas.find(p=>p.id===pid);
+    document.getElementById('grpTexto').value = plt ? plt.texto : '';
+  }
+  function grpGenerarEnvios(){
+    const grado = document.getElementById('grpGrado').value;
+    if(!grado){ toast('Elige un grado primero'); return; }
+    const plantillaTexto = document.getElementById('grpTexto').value.trim();
+    if(!plantillaTexto){ toast('Escribe el mensaje o elige una plantilla'); return; }
+    const dest = grpDestinatarios();
+    if(dest.length===0){ toast('No hay acudientes con teléfono registrado en este grado'); return; }
+    const motivo = document.getElementById('grpMotivo').value || 'Mensaje al grupo';
+    const fecha = new Date().toLocaleDateString('es-CO');
+    const lote = 'LOTE-' + Date.now();
+
+    dest.forEach(({est,acu,rel}) => {
+      const texto = reemplazarVariables(plantillaTexto, {
+        acudiente: acu.nombre, estudiante: est.nombre, grado: est.grado, parentesco: rel.parentesco,
+        fecha, docente: 'Docente Yonatha Mendoza', motivo
+      });
+      DB.mensajes.push({ id:Storage.nuevoId('AV'), estudianteId:est.id, acudienteId:acu.id, motivo, mensaje:texto, estado:'Pendiente', tipo:'texto', fecha:new Date().toISOString(), lote });
+    });
+    Storage.guardar(DB);
+    renderAvisos();
+    renderDashboard();
+    grpRenderCola(lote);
+    toast(`${dest.length} avisos preparados — ábrelos uno por uno con el botón de WhatsApp`);
+  }
+  function grpRenderCola(lote){
+    const items = DB.mensajes.filter(m=>m.lote===lote);
+    const enviados = items.filter(m=>m.estado!=='Pendiente').length;
+    document.getElementById('grpEnviosZone').innerHTML = `
+      <div class="section-head"><h2>Cola de envío</h2><span class="hint">${enviados} de ${items.length} preparados/enviados</span></div>
+      ${items.map(m => {
+        const est = DB.estudiantes.find(e=>e.id===m.estudianteId);
+        const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
+        const listo = m.estado!=='Pendiente';
+        return `<div class="aviso-card">
+          <div class="aviso-top"><span class="nombre">${esc(est.nombre)}</span><span class="grado">${esc(acu.nombre)} · ${esc(acu.telefono||'sin teléfono')}</span></div>
+          <div class="aviso-actions">
+            <button class="btn ${listo?'btn-ghost':'btn-wa'} btn-sm" ${acu.telefono?'':'disabled'} onclick="UI.grpEnviarUno('${m.id}','${lote}')">${listo?'✅ Preparado — reabrir':'💬 Enviar WhatsApp'}</button>
+          </div>
+        </div>`;
+      }).join('')}
+    `;
+  }
+  function grpEnviarUno(avisoId, lote){
+    const m = DB.mensajes.find(x=>x.id===avisoId);
+    const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
+    if(WhatsappMod.abrir(acu.telefono, m.mensaje)){
+      if(m.estado==='Pendiente') m.estado='Preparado';
+      Storage.guardar(DB);
+      grpRenderCola(lote);
+      renderAvisos();
+    }
+  }
+
   /* ---------- Plantillas ---------- */
   function renderPlantillas(){
     document.getElementById('tplGrid').innerHTML = DB.plantillas.map(p => `
@@ -1862,6 +2015,46 @@ const UI = (() => {
     }
     document.getElementById('modalPlantilla').classList.add('open');
   }
+
+  /* ---------- Agregar manualmente (estudiante + acudiente sueltos) ---------- */
+  function abrirModalManual(){
+    poblarSelectorGrados('manGrado', false);
+    document.getElementById('manEstudiante').value = '';
+    document.getElementById('manAcudiente').value = '';
+    document.getElementById('manParentesco').value = '';
+    document.getElementById('manTelefono').value = '';
+    document.getElementById('modalManual').classList.add('open');
+  }
+  function guardarManual(){
+    const grado = document.getElementById('manGrado').value;
+    const nombreEst = document.getElementById('manEstudiante').value.trim();
+    const nombreAcu = document.getElementById('manAcudiente').value.trim();
+    const parentesco = document.getElementById('manParentesco').value.trim() || 'Acudiente';
+    const telRaw = document.getElementById('manTelefono').value.trim();
+    if(!grado || !nombreEst || !nombreAcu || !telRaw){ toast('Completa estudiante, acudiente y teléfono'); return; }
+    const telNorm = Contacts.normalizarTelefono(telRaw);
+    if(!Contacts.esTelefonoValido(telNorm)){ toast('Ese teléfono no parece válido — revísalo'); return; }
+
+    let estudiante = DB.estudiantes.find(e => e.nombre.toLowerCase()===nombreEst.toLowerCase() && e.grado.toLowerCase()===grado.toLowerCase());
+    if(!estudiante){
+      estudiante = { id: Storage.nuevoId('EST'), nombre:nombreEst, grado, estado:'activo' };
+      DB.estudiantes.push(estudiante);
+    }
+    let acudiente = DB.acudientes.find(a => a.telefono === telNorm);
+    if(!acudiente){
+      acudiente = { id: Storage.nuevoId('ACU'), nombre:nombreAcu, telefono:telNorm, correo:'' };
+      DB.acudientes.push(acudiente);
+    }
+    const yaExiste = DB.relaciones.some(r => r.estudianteId===estudiante.id && r.acudienteId===acudiente.id);
+    if(!yaExiste){
+      DB.relaciones.push({ id:Storage.nuevoId('REL'), estudianteId:estudiante.id, acudienteId:acudiente.id, parentesco, principal: !DB.relaciones.some(x=>x.estudianteId===estudiante.id), etiqueta:'Personal' });
+    }
+    Storage.guardar(DB);
+    renderAll();
+    cerrarModal('modalManual');
+    toast('Agregado correctamente');
+  }
+
   function insertarVariableTpl(v){
     const ta = document.getElementById('tplTexto');
     const start = ta.selectionStart, end = ta.selectionEnd;
@@ -1971,11 +2164,21 @@ const UI = (() => {
     }).join('') || '<div class="empty-state">Aún no hay historial de contactos.</div>';
   }
 
-  /* ---------- Import tabs ---------- */
+  /* ---------- Tabs (alcance limitado a la sección que las contiene) ---------- */
   function cambiarTabImport(tabId){
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tabId));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id===tabId));
+    const panel = document.getElementById(tabId);
+    const contenedor = panel.closest('.view');
+    contenedor.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tabId));
+    contenedor.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id===tabId));
     document.getElementById('importPreviewZone').innerHTML = '';
+  }
+
+  function cambiarTabMensajes(tabId){
+    const panel = document.getElementById(tabId);
+    const contenedor = panel.closest('.view');
+    contenedor.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tabId));
+    contenedor.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id===tabId));
+    if(tabId==='tabMsgGrupo') grpInicializar();
   }
 
   function renderAll(){
@@ -1993,7 +2196,8 @@ const UI = (() => {
     msgAplicarPlantilla, msgRenderPreview, msgCopiar, msgAbrirWhatsapp, abrirModalPlantilla, insertarVariableTpl,
     guardarPlantilla, duplicarPlantilla, eliminarPlantilla, filtrarAvisos, cambiarEstadoAviso, verMensajeAviso,
     contactarAviso, cambiarTabImport, renderAll, renderDashboard, buscarDuplicadosDirectorio,
-    fusionarEstudiantes, fusionarAcudientes
+    fusionarEstudiantes, fusionarAcudientes, cambiarTabMensajes, grpActualizarConteo, grpAplicarPlantilla,
+    grpGenerarEnvios, grpEnviarUno, abrirModalManual, guardarManual
   };
 })();
 
