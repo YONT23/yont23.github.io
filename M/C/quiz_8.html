@@ -59,6 +59,17 @@ body{font-family:var(--f-b);background:
 .time-display{display:none;align-items:center;justify-content:center;gap:6px;margin-top:8px;font-family:var(--f-m);font-size:.78rem;color:var(--gray-600);background:var(--gray-200);border-radius:20px;padding:5px 12px}
 .time-display.show{display:flex}
 
+/* TEACHER INTEGRITY PANEL — hidden until exam is finished */
+.teacher-panel{display:none;border:2px dashed var(--purple);background:linear-gradient(135deg,#faf8ff,#fff)}
+.teacher-panel.show{display:block}
+.integrity-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.integrity-item{background:var(--cream);border:2px solid var(--gray-200);border-radius:var(--r-s);padding:12px 10px;text-align:center}
+.ii-ico{font-size:1.3rem;display:block;margin-bottom:4px}
+.ii-lbl{font-size:.66rem;color:var(--gray-600);display:block;font-weight:600;line-height:1.3;margin-bottom:5px}
+.ii-val{font-family:var(--f-m);font-size:1.15rem;font-weight:700;color:var(--purple-dk);display:block}
+.ilog-lbl{font-size:.66rem;color:var(--gray-400);margin-top:12px;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.ilog-item{font-family:var(--f-m);font-size:.72rem;background:var(--gray-200);padding:5px 10px;border-radius:8px;margin-bottom:5px;color:var(--ink)}
+
 /* ===== INSTRUCTIONS ===== */
 .instr-card{background:var(--blue-lt);border:2px solid var(--blue);border-radius:var(--r-s);padding:14px 20px;margin-bottom:22px;font-size:.86rem;color:var(--ink);display:flex;gap:12px;align-items:flex-start}
 .instr-card .star{font-size:1.3rem;flex-shrink:0}
@@ -176,6 +187,7 @@ body{font-family:var(--f-b);background:
 @media(max-width:900px){
   .header{grid-template-columns:1fr}
   .grid-2,.q-grid{grid-template-columns:1fr}
+  .integrity-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -246,6 +258,18 @@ body{font-family:var(--f-b);background:
     </div>
   </div>
 
+  <!-- PANEL DE INTEGRIDAD ACADÉMICA (oculto — se revela al terminar las 10 preguntas) -->
+  <div class="card teacher-panel" id="teacher-panel">
+    <div class="card-hd"><div class="card-ico ic-purple">🛡️</div><div><div class="card-title">Panel de Integridad Académica</div><div class="card-lbl">Solo para el Docente · Datos registrados durante el examen</div></div></div>
+    <div class="integrity-grid">
+      <div class="integrity-item"><span class="ii-ico">🔀</span><span class="ii-lbl">Cambios de pestaña</span><span class="ii-val" id="ii-tabs">0</span></div>
+      <div class="integrity-item"><span class="ii-ico">🖱️</span><span class="ii-lbl">Selecciones de texto</span><span class="ii-val" id="ii-sel">0</span></div>
+      <div class="integrity-item"><span class="ii-ico">🌐</span><span class="ii-lbl">Traducción detectada</span><span class="ii-val" id="ii-trans">No</span></div>
+      <div class="integrity-item"><span class="ii-ico">📋</span><span class="ii-lbl">Copias detectadas</span><span class="ii-val" id="ii-copy">0</span></div>
+    </div>
+    <div id="integrity-log"></div>
+  </div>
+
   <div class="footer-doodle">☁️ ⭐ <span class="footer-pill">Small steps... Big progress!</span> ⭐ ✈️ ⭐</div>
 
 </div>
@@ -301,14 +325,15 @@ const HACER_KEYWORDS = ['have','has',"haven't","hasn't",'gone','been','seen','fo
 // =====================================================
 // STATE
 // =====================================================
-let S = (()=>{ try{ return JSON.parse(localStorage.getItem('ym_pp_g8_v1')) || {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null}; } catch { return {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null}; } })();
+let S = (()=>{ try{ return JSON.parse(localStorage.getItem('ym_pp_g8_v1')) || {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null,integrity:{tabSwitches:0,selections:0,translated:false,copies:0,copyLog:[]}}; } catch { return {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null,integrity:{tabSwitches:0,selections:0,translated:false,copies:0,copyLog:[]}}; } })();
+if(!S.integrity) S.integrity = {tabSwitches:0,selections:0,translated:false,copies:0,copyLog:[]};
 
 function save(){ localStorage.setItem('ym_pp_g8_v1', JSON.stringify(S)); }
 
 function resetAll(){
   if(!confirm('¿Reiniciar todas las respuestas y calificación?')) return;
   localStorage.removeItem('ym_pp_g8_v1');
-  S = {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null};
+  S = {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null,integrity:{tabSwitches:0,selections:0,translated:false,copies:0,copyLog:[]}};
   save(); renderAll();
   toast('🔄','Taller reiniciado');
 }
@@ -340,6 +365,83 @@ function updateTimeDisplay(){
     el.classList.add('show');
   } else {
     el.classList.remove('show');
+  }
+}
+
+// =====================================================
+// PANEL DE INTEGRIDAD ACADÉMICA (oculto) — solo visible al Docente al terminar
+// =====================================================
+function escapeHtml(str){
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function initIntegrityMonitoring(){
+  // 1) Cambios de pestaña / ventana en segundo plano
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){
+      S.integrity.tabSwitches++;
+      save();
+      updateIntegrityDisplay();
+    }
+  });
+
+  // 2) Selecciones de texto (arrastrar el cursor para marcar texto)
+  document.addEventListener('mouseup', ()=>{
+    const sel = window.getSelection().toString();
+    if(sel && sel.trim().length>0){
+      S.integrity.selections++;
+      save();
+      updateIntegrityDisplay();
+    }
+  });
+
+  // 3) Traducción automática del navegador (Google Translate inyecta clases en <html>)
+  const htmlEl = document.documentElement;
+  const translateObserver = new MutationObserver((mutations)=>{
+    mutations.forEach(m=>{
+      if(m.attributeName === 'class'){
+        const cls = htmlEl.className || '';
+        if(/translated-ltr|translated-rtl/.test(cls) && !S.integrity.translated){
+          S.integrity.translated = true;
+          save();
+          updateIntegrityDisplay();
+        }
+      }
+    });
+  });
+  translateObserver.observe(htmlEl, {attributes:true, attributeFilter:['class']});
+
+  // 4) Copiar texto de la página (evento copy + contenido copiado)
+  document.addEventListener('copy', ()=>{
+    const text = window.getSelection().toString();
+    S.integrity.copies++;
+    if(text && text.trim().length>0){
+      S.integrity.copyLog.push(text.trim().slice(0,80));
+      if(S.integrity.copyLog.length>12) S.integrity.copyLog.shift();
+    }
+    save();
+    updateIntegrityDisplay();
+  });
+}
+
+function updateIntegrityDisplay(){
+  const panel = document.getElementById('teacher-panel');
+  if(!panel) return;
+  if(S.examEnd){
+    panel.classList.add('show');
+    document.getElementById('ii-tabs').textContent  = S.integrity.tabSwitches;
+    document.getElementById('ii-sel').textContent   = S.integrity.selections;
+    document.getElementById('ii-trans').textContent = S.integrity.translated ? 'Sí ⚠️' : 'No';
+    document.getElementById('ii-copy').textContent  = S.integrity.copies;
+    const logEl = document.getElementById('integrity-log');
+    if(S.integrity.copyLog.length){
+      logEl.innerHTML = '<div class="ilog-lbl">Texto copiado (últimos registros):</div>' +
+        S.integrity.copyLog.map(t=>`<div class="ilog-item">"${escapeHtml(t)}${t.length>=80?'…':''}"</div>`).join('');
+    } else {
+      logEl.innerHTML = '';
+    }
+  } else {
+    panel.classList.remove('show');
   }
 }
 
@@ -377,6 +479,7 @@ function updateGradeBox(){
   document.getElementById('disp-hacer').textContent  = hacer!==null? (hacer/10).toFixed(1)+'/10'  : '—';
   document.getElementById('disp-nota').textContent   = nota!==null ? nota.toFixed(1)+'/10' : '—/10';
   updateTimeDisplay();
+  updateIntegrityDisplay();
 }
 
 // =====================================================
@@ -483,6 +586,7 @@ function renderAll(){
     document.getElementById('hacer-score-txt').innerHTML = `Score: <b>${score}%</b>`;
   }
 }
+initIntegrityMonitoring();
 renderAll();
 </script>
 </body>
