@@ -1869,6 +1869,8 @@ const UI = (() => {
           </div>
         </div>
       `).join('') : '<div class="empty-state">Sin acudientes registrados para este estudiante.</div>'}
+      <div class="divider"></div>
+      <button class="btn btn-danger btn-block" onclick="UI.eliminarEstudiante('${est.id}')">🗑️ Eliminar este estudiante del directorio</button>
     `;
     document.getElementById('modalPerfil').classList.add('open');
   }
@@ -1962,6 +1964,28 @@ const UI = (() => {
     cerrarModal('modalEditar');
     if(DB.estudiantes.some(e=>e.id===estId)) abrirPerfil(estId); else cerrarModal('modalPerfil');
     toast('Contacto eliminado');
+  }
+
+  function eliminarEstudiante(estId){
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    if(!est) return;
+    if(!confirm(`¿Eliminar a ${est.nombre} (${est.grado}) del directorio?\n\nSe quitarán sus avisos pendientes y sus vínculos con acudientes. Los acudientes que solo tenían a este estudiante también se eliminarán. El historial ya registrado se conserva.`)) return;
+
+    const acuIds = [...new Set(DB.relaciones.filter(r => r.estudianteId===estId).map(r => r.acudienteId))];
+    DB.relaciones = DB.relaciones.filter(r => r.estudianteId !== estId);
+    DB.mensajes = DB.mensajes.filter(m => m.estudianteId !== estId);
+    DB.estudiantes = DB.estudiantes.filter(e => e.id !== estId);
+
+    // limpia acudientes que se quedaron sin ningún estudiante vinculado
+    acuIds.forEach(acuId => {
+      const quedan = DB.relaciones.some(r => r.acudienteId===acuId);
+      if(!quedan) DB.acudientes = DB.acudientes.filter(a => a.id!==acuId);
+    });
+
+    Storage.guardar(DB);
+    cerrarModal('modalPerfil');
+    renderAll();
+    toast('Estudiante eliminado del directorio');
   }
 
   function cerrarModal(id){ document.getElementById(id).classList.remove('open'); }
@@ -2406,7 +2430,7 @@ const UI = (() => {
     contactarAviso, cambiarTabImport, renderAll, renderDashboard, buscarDuplicadosDirectorio,
     fusionarEstudiantes, fusionarAcudientes, cambiarTabMensajes, grpActualizarConteo, grpAplicarPlantilla,
     grpGenerarEnvios, grpEnviarUno, abrirModalManual, guardarManual, abrirModalEditar,
-    guardarEdicionContacto, eliminarContacto
+    guardarEdicionContacto, eliminarContacto, eliminarEstudiante
   };
 })();
 
