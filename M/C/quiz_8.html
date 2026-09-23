@@ -225,7 +225,7 @@
                 
                 <div class="mt-8 text-center">
                     <button type="submit" id="submit-quiz-btn" class="bg-pink-500 hover:bg-pink-600 text-white text-xl font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:scale-105">
-                        Submit My Answers! <i class="fa-solid fa-paper-plane ml-2"></i>
+                        Submit my Answers! <i class="fa-solid fa-paper-plane ml-2"></i>
                     </button>
                     <p id="submit-status" class="mt-4 text-lg font-semibold hidden"></p>
                 </div>
@@ -389,12 +389,13 @@
                     // Enviar datos a Google Apps Script
                     await fetch(window.APPS_SCRIPT_URL, {
                         method: 'POST',
+                        // Usamos no-cors para evitar el error de preflight en Google Apps Script
+                        mode: 'no-cors',
                         body: JSON.stringify(payload),
-                        // Usamos text/plain para evitar el error de preflight de CORS en Google Apps Script
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                        headers: { 'Content-Type': 'application/json' }
                     });
 
-                    // Success Feedback
+                    // Success Feedback (Con mode: 'no-cors' la respuesta es opaca, asumimos éxito si no hay excepción)
                     quizForm.reset();
                     submitStatus.textContent = `Excellent job, ${name}! Your score is ${score}/10. Results sent to teacher.`;
                     submitStatus.className = "mt-4 text-lg font-bold text-green-600 block";
