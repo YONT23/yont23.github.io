@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English - Grade 8</title>
+    <title>English Workshop - Grade 8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -80,6 +80,17 @@
         };
         window.correctAnswers = correctAnswers;
     </script>
+    
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted) { 
+        document.getElementById('submit-quiz-btn').disabled = false;
+        document.getElementById('submit-quiz-btn').innerHTML = 'Submit My Answers! <i class=\"fa-solid fa-paper-plane ml-2\"></i>';
+        const status = document.getElementById('submit-status');
+        status.textContent = 'Excellent job! Your results have been sent to your teacher.';
+        status.className = 'mt-4 text-lg font-bold text-green-600 block';
+        document.getElementById('quiz-form').reset();
+        setTimeout(() => { status.style.display = 'none'; }, 8000);
+        window.submitted = false; 
+    }"></iframe>
 
     <div class="max-w-4xl mx-auto">
         
@@ -104,11 +115,15 @@
             <!-- Student Info -->
             <div class="mb-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
                 <label for="student-name" class="block text-lg font-semibold text-gray-700 mb-2">My Name is:</label>
-                <input type="text" id="student-name" placeholder="Enter your full name here..." class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+                <input type="text" id="student-name" name="studentName" placeholder="Enter your full name here..." class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
             </div>
 
             <!-- Quiz Form -->
-            <form id="quiz-form">
+            <form id="quiz-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycbxQ2nrGEvLLryWKrJMWckXpPiOhNbd8uKPO3beYhx2m1lSLYB6tmQyUTXMFZPMpf2X0ew/exec">
+                <!-- Hidden inputs to send extra data -->
+                <input type="hidden" id="hidden-score" name="score" value="">
+                <input type="hidden" id="hidden-answers" name="answers" value="">
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     <!-- Question 1 -->
@@ -225,7 +240,7 @@
                 
                 <div class="mt-8 text-center">
                     <button type="submit" id="submit-quiz-btn" class="bg-pink-500 hover:bg-pink-600 text-white text-xl font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:scale-105">
-                        Submit my Answers! <i class="fa-solid fa-paper-plane ml-2"></i>
+                        Submit My Answers! <i class="fa-solid fa-paper-plane ml-2"></i>
                     </button>
                     <p id="submit-status" class="mt-4 text-lg font-semibold hidden"></p>
                 </div>
@@ -331,11 +346,11 @@
                 return score;
             }
 
-            quizForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
+            quizForm.addEventListener('submit', (e) => {
+                // Prevenimos momentáneamente para validar, pero luego dejaremos que el formulario se envíe solo.
                 const name = studentNameInput.value.trim();
                 if (!name) {
+                    e.preventDefault();
                     alert("Please enter your name before submitting!");
                     studentNameInput.focus();
                     return;
@@ -354,47 +369,22 @@
                 }
 
                 if (!allAnswered) {
+                    e.preventDefault();
                     alert("Please answer all 10 questions before submitting.");
                     return;
                 }
 
+                // Si todo está bien, preparamos los datos ocultos y dejamos que el <form> haga el trabajo
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
                 
                 const score = calculateScore(formData);
-
-                try {
-                    // Preparamos los datos como un FORMULARIO URL-ENCODED (Esto evita los bloqueos del navegador 100%)
-                    const payload = new URLSearchParams({
-                        studentName: name,
-                        score: score,
-                        answers: JSON.stringify(answers)
-                    });
-
-                    // Enviamos usando fetch
-                    await fetch(window.APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        body: payload 
-                    });
-
-                    // Si llega aquí, se envió correctamente sin que el navegador lo bloquee
-                    quizForm.reset();
-                    submitStatus.textContent = `Excellent job, ${name}! Your score is ${score}/10. Results sent to teacher.`;
-                    submitStatus.className = "mt-4 text-lg font-bold text-green-600 block";
-                    
-                } catch (error) {
-                    console.error("Error saving document: ", error);
-                    submitStatus.textContent = "Oops! There was an error sending your results. Please tell your teacher.";
-                    submitStatus.className = "mt-4 text-lg font-bold text-red-500 block";
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Submit My Answers! <i class="fa-solid fa-paper-plane ml-2"></i>';
-                    
-                    setTimeout(() => {
-                        submitStatus.style.display = 'none';
-                        submitStatus.classList.remove('block');
-                    }, 8000);
-                }
+                document.getElementById('hidden-score').value = score;
+                document.getElementById('hidden-answers').value = JSON.stringify(answers);
+                
+                window.submitted = true; // Variable global para que el iframe sepa que debe mostrar el éxito
+                
+                // NO HAREMOS FETCH AQUÍ. El navegador hará un POST nativo gracias al atributo action="..." del <form>.
             });
 
             // Función para traer datos al dashboard
