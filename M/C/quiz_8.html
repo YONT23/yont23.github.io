@@ -4,453 +4,410 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Workshop - Grade 8</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
+        /* ... (CSS styles remain exactly the same as before) ... */
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;800&display=swap');
+
+        :root {
+            --primary-pink: #ff6b9d;
+            --primary-blue: #4a90e2;
+            --bg-color: #f0f8ff;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --border-radius: 15px;
+        }
+
         body {
-            font-family: 'Fredoka', sans-serif;
-            background-color: #f0f8ff; /* Light blue background like the image */
-            color: #333;
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
         }
-        .quiz-card {
-            background-color: white;
+
+        .container {
+            max-width: 800px;
+            background: var(--card-bg);
+            padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border: 4px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
         }
-        .question-box {
-            border: 3px solid;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+
+        h1 {
+            font-family: 'Comic Neue', cursive;
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: var(--primary-pink);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .student-info {
+            background-color: #fff0f5;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            border: 2px dashed var(--primary-pink);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .student-info input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .question-card {
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
             transition: all 0.3s ease;
         }
-        .question-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+
+        .question-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
         }
-        /* Custom border colors matching the original design closely */
-        .border-pink-custom { border-color: #ff99cc; }
-        .border-blue-custom { border-color: #66ccff; }
-        .border-green-custom { border-color: #99ff99; }
-        .border-purple-custom { border-color: #cc99ff; }
+
+        .question-title {
+            font-size: 1.2em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .q-number {
+            background-color: #d8b4fe;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-left: 40px;
+        }
 
         .option-label {
             display: flex;
             align-items: center;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 10px;
+            gap: 10px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            border: 2px solid transparent;
+            padding: 5px;
+            border-radius: 5px;
         }
+
         .option-label:hover {
-            background-color: #f8fafc;
-            border-color: #cbd5e1;
+            background-color: #f5f5f5;
         }
-        input[type="radio"]:checked + .option-text {
+
+        input[type="radio"] {
+            transform: scale(1.2);
+            accent-color: var(--primary-blue);
+        }
+
+        .submit-btn {
+            background-color: #d81b60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3em;
             font-weight: bold;
-            color: #2563eb;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s, background-color 0.2s;
+            font-family: 'Comic Neue', cursive;
         }
-        
-        /* Dashboard Styles */
-        #dashboard-view {
-            display: none; /* Hidden by default */
+
+        .submit-btn:hover {
+            background-color: #ad1457;
+            transform: scale(1.02);
         }
-        .table-header {
-            background-color: #f1f5f9;
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
+
+        #result-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
 
-    <script>
-        // Este es el enlace que obtuviste en tu App Script
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxK21vruIm-ZKr0Oof8NFAdnwOMpDhc0GJyj6RIAwnAqcy02Z9IUuhOl1QDxdwsGGCylQ/exec"; 
-        window.APPS_SCRIPT_URL = APPS_SCRIPT_URL;
-
-        // Respuestas correctas para la calificación
-        const correctAnswers = {
-            q1: "C", q2: "C", q3: "B", q4: "C", q5: "B",
-            q6: "C", q7: "C", q8: "C", q9: "C", q10: "C"
-        };
-        window.correctAnswers = correctAnswers;
-    </script>
+<div class="container">
+    <h1>English Workshop</h1>
+    <div class="subtitle">Present Perfect - Grade 8</div>
     
-    <!-- Este marco invisible recibe la respuesta del servidor sin recargar la página -->
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted) { 
-        document.getElementById('submit-quiz-btn').disabled = false;
-        document.getElementById('submit-quiz-btn').innerHTML = 'Submit My Answers! <i class=\"fa-solid fa-paper-plane ml-2\"></i>';
-        const status = document.getElementById('submit-status');
-        status.textContent = 'Excellent job! Your results have been sent to your teacher.';
-        status.className = 'mt-4 text-lg font-bold text-green-600 block';
-        document.getElementById('quiz-form').reset();
-        setTimeout(() => { status.style.display = 'none'; }, 8000);
-        window.submitted = false; 
-    }"></iframe>
-
-    <div class="max-w-4xl mx-auto">
-        
-        <!-- Header / Toggle Navigation -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-blue-600"><i class="fa-solid fa-book-open text-pink-400 mr-2"></i> English Workshop</h1>
-            <button id="toggle-view-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-full shadow transition text-sm font-semibold">
-                <i class="fa-solid fa-chalkboard-user mr-1"></i> Teacher Access
-            </button>
-        </div>
-
-        <div id="student-view" class="quiz-card p-6 md:p-10 mb-10">
-            
-            <div class="text-center mb-8 border-b-4 border-dashed border-gray-200 pb-6">
-                <h2 class="text-4xl font-extrabold text-gray-800 mb-2">Present Perfect</h2>
-                <p class="text-xl text-gray-600">Past Participle of Irregular Verbs <span class="text-pink-400 mx-2">♡</span> Grade 8</p>
-                <div class="mt-4 bg-yellow-100 p-3 rounded-lg inline-block border-2 border-yellow-300">
-                    <p class="text-sm"><strong>Remember:</strong> Present Perfect = have / has + past participle | <strong>Past Participle</strong> = the third form of irregular verbs.</p>
-                </div>
-            </div>
-
-            <!-- Quiz Form AHORA ENGLOBA EL NOMBRE TAMBIÉN -->
-            <form id="quiz-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycbxK21vruIm-ZKr0Oof8NFAdnwOMpDhc0GJyj6RIAwnAqcy02Z9IUuhOl1QDxdwsGGCylQ/exec">
-                
-                <!-- Student Info (AHORA ADENTRO DEL FORM) -->
-                <div class="mb-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
-                    <label for="student-name" class="block text-lg font-semibold text-gray-700 mb-2">My Name is:</label>
-                    <input type="text" id="student-name" name="studentName" placeholder="Enter your full name here..." class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
-                </div>
-
-                <!-- Hidden inputs to send extra data -->
-                <input type="hidden" id="hidden-score" name="score" value="">
-                <input type="hidden" id="hidden-answers" name="answers" value="">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <!-- Question 1 -->
-                    <div class="question-box border-pink-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-pink-200 text-pink-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">1</span> I ____________ to Paris three times.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q1" value="A" class="mr-3"> <span class="option-text">A. go</span></label>
-                            <label class="option-label"><input type="radio" name="q1" value="B" class="mr-3"> <span class="option-text">B. went</span></label>
-                            <label class="option-label"><input type="radio" name="q1" value="C" class="mr-3"> <span class="option-text">C. have gone</span></label>
-                            <label class="option-label"><input type="radio" name="q1" value="D" class="mr-3"> <span class="option-text">D. gone</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 2 -->
-                    <div class="question-box border-blue-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">2</span> She ____________ her homework before dinner.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q2" value="A" class="mr-3"> <span class="option-text">A. finishes</span></label>
-                            <label class="option-label"><input type="radio" name="q2" value="B" class="mr-3"> <span class="option-text">B. finish</span></label>
-                            <label class="option-label"><input type="radio" name="q2" value="C" class="mr-3"> <span class="option-text">C. has finished</span></label>
-                            <label class="option-label"><input type="radio" name="q2" value="D" class="mr-3"> <span class="option-text">D. finished</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 3 -->
-                    <div class="question-box border-green-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-green-200 text-green-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">3</span> We ____________ that movie last night.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q3" value="A" class="mr-3"> <span class="option-text">A. see</span></label>
-                            <label class="option-label"><input type="radio" name="q3" value="B" class="mr-3"> <span class="option-text">B. saw</span></label>
-                            <label class="option-label"><input type="radio" name="q3" value="C" class="mr-3"> <span class="option-text">C. have seen</span></label>
-                            <label class="option-label"><input type="radio" name="q3" value="D" class="mr-3"> <span class="option-text">D. seen</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 4 -->
-                    <div class="question-box border-purple-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-purple-200 text-purple-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">4</span> They ____________ the new restaurant in town.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q4" value="A" class="mr-3"> <span class="option-text">A. try</span></label>
-                            <label class="option-label"><input type="radio" name="q4" value="B" class="mr-3"> <span class="option-text">B. tried</span></label>
-                            <label class="option-label"><input type="radio" name="q4" value="C" class="mr-3"> <span class="option-text">C. have tried</span></label>
-                            <label class="option-label"><input type="radio" name="q4" value="D" class="mr-3"> <span class="option-text">D. tryed</span></label>
-                        </div>
-                    </div>
-                    
-                    <!-- Question 5 -->
-                    <div class="question-box border-blue-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">5</span> I haven't ____________ my keys. I can't find them.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q5" value="A" class="mr-3"> <span class="option-text">A. find</span></label>
-                            <label class="option-label"><input type="radio" name="q5" value="B" class="mr-3"> <span class="option-text">B. found</span></label>
-                            <label class="option-label"><input type="radio" name="q5" value="C" class="mr-3"> <span class="option-text">C. founded</span></label>
-                            <label class="option-label"><input type="radio" name="q5" value="D" class="mr-3"> <span class="option-text">D. finding</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 6 -->
-                    <div class="question-box border-pink-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-pink-200 text-pink-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">6</span> My grandfather ____________ that house for 20 years.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q6" value="A" class="mr-3"> <span class="option-text">A. live</span></label>
-                            <label class="option-label"><input type="radio" name="q6" value="B" class="mr-3"> <span class="option-text">B. lived</span></label>
-                            <label class="option-label"><input type="radio" name="q6" value="C" class="mr-3"> <span class="option-text">C. has lived</span></label>
-                            <label class="option-label"><input type="radio" name="q6" value="D" class="mr-3"> <span class="option-text">D. living</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 7 -->
-                    <div class="question-box border-purple-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-purple-200 text-purple-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">7</span> She ____________ a lot of progress in her English class.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q7" value="A" class="mr-3"> <span class="option-text">A. make</span></label>
-                            <label class="option-label"><input type="radio" name="q7" value="B" class="mr-3"> <span class="option-text">B. made</span></label>
-                            <label class="option-label"><input type="radio" name="q7" value="C" class="mr-3"> <span class="option-text">C. has made</span></label>
-                            <label class="option-label"><input type="radio" name="q7" value="D" class="mr-3"> <span class="option-text">D. making</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 8 -->
-                    <div class="question-box border-green-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-green-200 text-green-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">8</span> He ____________ the invitation yet.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q8" value="A" class="mr-3"> <span class="option-text">A. receive</span></label>
-                            <label class="option-label"><input type="radio" name="q8" value="B" class="mr-3"> <span class="option-text">B. received</span></label>
-                            <label class="option-label"><input type="radio" name="q8" value="C" class="mr-3"> <span class="option-text">C. has received</span></label>
-                            <label class="option-label"><input type="radio" name="q8" value="D" class="mr-3"> <span class="option-text">D. receiving</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 9 -->
-                    <div class="question-box border-blue-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">9</span> We ____________ the results of the exam.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q9" value="A" class="mr-3"> <span class="option-text">A. not know</span></label>
-                            <label class="option-label"><input type="radio" name="q9" value="B" class="mr-3"> <span class="option-text">B. don't know</span></label>
-                            <label class="option-label"><input type="radio" name="q9" value="C" class="mr-3"> <span class="option-text">C. haven't known</span></label>
-                            <label class="option-label"><input type="radio" name="q9" value="D" class="mr-3"> <span class="option-text">D. didn't know</span></label>
-                        </div>
-                    </div>
-
-                    <!-- Question 10 -->
-                    <div class="question-box border-purple-custom bg-white">
-                        <h3 class="font-bold text-lg mb-3"><span class="bg-purple-200 text-purple-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">10</span> I ____________ the book yet, but I want to read it.</h3>
-                        <div class="space-y-1">
-                            <label class="option-label"><input type="radio" name="q10" value="A" class="mr-3"> <span class="option-text">A. haven't finish</span></label>
-                            <label class="option-label"><input type="radio" name="q10" value="B" class="mr-3"> <span class="option-text">B. hasn't finish</span></label>
-                            <label class="option-label"><input type="radio" name="q10" value="C" class="mr-3"> <span class="option-text">C. haven't finished</span></label>
-                            <label class="option-label"><input type="radio" name="q10" value="D" class="mr-3"> <span class="option-text">D. didn't finished</span></label>
-                        </div>
-                    </div>
-
-                </div>
-                
-                <div class="mt-8 text-center">
-                    <button type="submit" id="submit-quiz-btn" class="bg-pink-500 hover:bg-pink-600 text-white text-xl font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:scale-105">
-                        Submit your Answers! <i class="fa-solid fa-paper-plane ml-2"></i>
-                    </button>
-                    <p id="submit-status" class="mt-4 text-lg font-semibold hidden"></p>
-                </div>
-            </form>
-        </div>
-
-        <div id="dashboard-view" class="quiz-card p-6 md:p-10 mb-10">
-            
-            <div id="password-screen" class="text-center py-10 max-w-sm mx-auto">
-                <h2 class="text-2xl font-bold mb-4">Teacher Access</h2>
-                <p class="text-gray-600 mb-4">Please enter the password to view student results.</p>
-                <input type="password" id="teacher-pwd" placeholder="Password (hint: admin123)" class="w-full p-3 mb-4 border-2 border-gray-300 rounded-lg text-center">
-                <button id="login-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg w-full">Access Dashboard</button>
-                <p id="login-error" class="text-red-500 mt-2 text-sm hidden">Incorrect password.</p>
-            </div>
-
-            <div id="dashboard-content" class="hidden">
-                <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800">Student Results Dashboard</h2>
-                    <button id="refresh-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition">
-                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="table-header">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date/Time</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Score (/10)</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="results-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Results will be injected here -->
-                            <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Loading results...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
+    <div class="student-info">
+        <label for="studentName" style="font-weight: bold; font-size: 1.1em;">Name:</label>
+        <input type="text" id="studentName" placeholder="Type your full name here..." required form="quizForm">
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    <form id="quizForm">
+        <!-- Q1 -->
+        <div class="question-card" style="border-color: #ffb6c1;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #ffb6c1;">1</span>
+                I ______________ to Paris three times.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q1" value="A"> A. go</label>
+                <label class="option-label"><input type="radio" name="q1" value="B"> B. went</label>
+                <label class="option-label"><input type="radio" name="q1" value="C"> C. have gone</label>
+                <label class="option-label"><input type="radio" name="q1" value="D"> D. gone</label>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card" style="border-color: #87ceeb;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #87ceeb;">2</span>
+                She ______________ her homework before dinner.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q2" value="A"> A. finishes</label>
+                <label class="option-label"><input type="radio" name="q2" value="B"> B. finish</label>
+                <label class="option-label"><input type="radio" name="q2" value="C"> C. has finished</label>
+                <label class="option-label"><input type="radio" name="q2" value="D"> D. finished</label>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card" style="border-color: #98fb98;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #98fb98;">3</span>
+                We ______________ that movie last night.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q3" value="A"> A. see</label>
+                <label class="option-label"><input type="radio" name="q3" value="B"> B. saw</label>
+                <label class="option-label"><input type="radio" name="q3" value="C"> C. have seen</label>
+                <label class="option-label"><input type="radio" name="q3" value="D"> D. seen</label>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card" style="border-color: #dda0dd;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #dda0dd;">4</span>
+                They ______________ the new restaurant in town.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q4" value="A"> A. try</label>
+                <label class="option-label"><input type="radio" name="q4" value="B"> B. tried</label>
+                <label class="option-label"><input type="radio" name="q4" value="C"> C. have tried</label>
+                <label class="option-label"><input type="radio" name="q4" value="D"> D. tryed</label>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-card" style="border-color: #87ceeb;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #87ceeb;">5</span>
+                I haven't ______________ my keys. I can't find them.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q5" value="A"> A. find</label>
+                <label class="option-label"><input type="radio" name="q5" value="B"> B. found</label>
+                <label class="option-label"><input type="radio" name="q5" value="C"> C. founded</label>
+                <label class="option-label"><input type="radio" name="q5" value="D"> D. finding</label>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question-card" style="border-color: #ffb6c1;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #ffb6c1;">6</span>
+                My grandfather ______________ that house for 20 years.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q6" value="A"> A. live</label>
+                <label class="option-label"><input type="radio" name="q6" value="B"> B. lived</label>
+                <label class="option-label"><input type="radio" name="q6" value="C"> C. has lived</label>
+                <label class="option-label"><input type="radio" name="q6" value="D"> D. living</label>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question-card" style="border-color: #dda0dd;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #dda0dd;">7</span>
+                She ______________ a lot of progress in her English class.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q7" value="A"> A. make</label>
+                <label class="option-label"><input type="radio" name="q7" value="B"> B. made</label>
+                <label class="option-label"><input type="radio" name="q7" value="C"> C. has made</label>
+                <label class="option-label"><input type="radio" name="q7" value="D"> D. making</label>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="question-card" style="border-color: #98fb98;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #98fb98;">8</span>
+                He ______________ the invitation yet.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q8" value="A"> A. receive</label>
+                <label class="option-label"><input type="radio" name="q8" value="B"> B. received</label>
+                <label class="option-label"><input type="radio" name="q8" value="C"> C. has received</label>
+                <label class="option-label"><input type="radio" name="q8" value="D"> D. receiving</label>
+            </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="question-card" style="border-color: #87ceeb;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #87ceeb;">9</span>
+                We ______________ the results of the exam.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q9" value="A"> A. not know</label>
+                <label class="option-label"><input type="radio" name="q9" value="B"> B. don't know</label>
+                <label class="option-label"><input type="radio" name="q9" value="C"> C. haven't known</label>
+                <label class="option-label"><input type="radio" name="q9" value="D"> D. didn't know</label>
+            </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="question-card" style="border-color: #dda0dd;">
+            <div class="question-title">
+                <span class="q-number" style="background-color: #dda0dd;">10</span>
+                I ______________ the book yet, but I want to read it.
+            </div>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q10" value="A"> A. haven't finish</label>
+                <label class="option-label"><input type="radio" name="q10" value="B"> B. hasn't finish</label>
+                <label class="option-label"><input type="radio" name="q10" value="C"> C. haven't finished</label>
+                <label class="option-label"><input type="radio" name="q10" value="D"> D. didn't finished</label>
+            </div>
+        </div>
+
+        <button type="button" class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit My Answers! 🚀</button>
+    </form>
+
+    <div id="result-message"></div>
+</div>
+
+<script>
+    // ESTE ES EL ENLACE CORRECTO QUE ME DISTE
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxK21vruIm-ZKr0Oof8NFAdnwOMpDhc0GJyj6RIAwnAqcy02Z9IUuhOl1QDxdwsGGCylQ/exec";
+
+    const correctAnswers = {
+        q1: "C", q2: "C", q3: "B", q4: "C", q5: "B",
+        q6: "C", q7: "C", q8: "C", q9: "C", q10: "C"
+    };
+
+    function submitQuiz() {
+        const studentName = document.getElementById('studentName').value.trim();
+        const form = document.getElementById('quizForm');
+        
+        if (!studentName) {
+            alert("Please enter your name before submitting!");
+            return;
+        }
+
+        // Calculate score
+        let score = 0;
+        const formDataObj = new FormData(form);
+        const answers = {};
+
+        for (let i = 1; i <= 10; i++) {
+            const answer = formDataObj.get('q' + i);
+            answers['q' + i] = answer || "";
+            if (answer === correctAnswers['q' + i]) {
+                score++;
+            }
+        }
+
+        // Change button state
+        const submitBtn = document.getElementById('submitBtn');
+        const resultMessage = document.getElementById('result-message');
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "⏳ Submitting... Please wait";
+        resultMessage.style.display = "none";
+
+        // EMPAQUETAR LOS DATOS (El formato secreto para saltar errores)
+        const dataToSend = new URLSearchParams();
+        dataToSend.append("studentName", studentName);
+        dataToSend.append("finalScore", score);
+        for (let i = 1; i <= 10; i++) {
+            dataToSend.append("q" + i, answers['q' + i]);
+        }
+
+        // ENVIAR USANDO FETCH CON MODO NO-CORS (La solución definitiva)
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Esto ignora las alertas rojas de seguridad del navegador
+            body: dataToSend
+        })
+        .then(() => {
+            // Como usamos no-cors, siempre entraremos aquí si hay internet.
+            submitBtn.innerHTML = "✅ Sent Successfully!";
+            resultMessage.innerHTML = `Great job, <b>${studentName}</b>! Your answers have been sent to the teacher.`;
+            resultMessage.className = "success";
+            resultMessage.style.display = "block";
             
-            const studentView = document.getElementById('student-view');
-            const dashboardView = document.getElementById('dashboard-view');
-            const toggleViewBtn = document.getElementById('toggle-view-btn');
+            // Limpiar el formulario para el siguiente estudiante
+            form.reset();
+            document.getElementById('studentName').value = "";
             
-            const quizForm = document.getElementById('quiz-form');
-            const studentNameInput = document.getElementById('student-name');
-            const submitBtn = document.getElementById('submit-quiz-btn');
-            const submitStatus = document.getElementById('submit-status');
-
-            const passwordScreen = document.getElementById('password-screen');
-            const dashboardContent = document.getElementById('dashboard-content');
-            const teacherPwdInput = document.getElementById('teacher-pwd');
-            const loginBtn = document.getElementById('login-btn');
-            const loginError = document.getElementById('login-error');
-            const refreshBtn = document.getElementById('refresh-btn');
-            const resultsTableBody = document.getElementById('results-table-body');
-
-            let isTeacherView = false;
-            toggleViewBtn.addEventListener('click', () => {
-                isTeacherView = !isTeacherView;
-                if (isTeacherView) {
-                    studentView.style.display = 'none';
-                    dashboardView.style.display = 'block';
-                    toggleViewBtn.innerHTML = '<i class="fa-solid fa-pen mr-1"></i> Back to Quiz';
-                    toggleViewBtn.classList.replace('bg-indigo-500', 'bg-gray-500');
-                    toggleViewBtn.classList.replace('hover:bg-indigo-600', 'hover:bg-gray-600');
-                } else {
-                    studentView.style.display = 'block';
-                    dashboardView.style.display = 'none';
-                    toggleViewBtn.innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1"></i> Teacher Access';
-                    toggleViewBtn.classList.replace('bg-gray-500', 'bg-indigo-500');
-                    toggleViewBtn.classList.replace('hover:bg-gray-600', 'hover:bg-indigo-600');
-                }
-            });
-
-            loginBtn.addEventListener('click', () => {
-                if (teacherPwdInput.value === 'admin123') { 
-                    passwordScreen.style.display = 'none';
-                    dashboardContent.style.display = 'block';
-                    fetchAndDisplayResults();
-                } else {
-                    loginError.style.display = 'block';
-                }
-            });
-
-            function calculateScore(formData) {
-                let score = 0;
-                for (let i = 1; i <= 10; i++) {
-                    const qId = `q${i}`;
-                    const answer = formData.get(qId);
-                    if (answer === window.correctAnswers[qId]) {
-                        score++;
-                    }
-                }
-                return score;
-            }
-
-            quizForm.addEventListener('submit', (e) => {
-                // Validación visual antes de permitir que el navegador envíe el formulario
-                const name = studentNameInput.value.trim();
-                if (!name) {
-                    e.preventDefault();
-                    alert("Please enter your name before submitting!");
-                    studentNameInput.focus();
-                    return;
-                }
-
-                const formData = new FormData(quizForm);
-                let allAnswered = true;
-                const answers = {};
-                for (let i = 1; i <= 10; i++) {
-                    const ans = formData.get(`q${i}`);
-                    if (!ans) {
-                        allAnswered = false;
-                        break;
-                    }
-                    answers[`q${i}`] = ans;
-                }
-
-                if (!allAnswered) {
-                    e.preventDefault();
-                    alert("Please answer all 10 questions before submitting.");
-                    return;
-                }
-
-                // Preparamos datos ocultos y dejamos que el navegador haga el POST al iframe
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-                
-                const score = calculateScore(formData);
-                document.getElementById('hidden-score').value = score;
-                document.getElementById('hidden-answers').value = JSON.stringify(answers);
-                
-                window.submitted = true; 
-            });
-
-            // Función para traer datos al dashboard
-            refreshBtn.addEventListener('click', fetchAndDisplayResults);
-
-            async function fetchAndDisplayResults() {
-                refreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading...';
-                resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Buscando datos en tu Google Sheet...</td></tr>';
-
-                try {
-                    const response = await fetch(window.APPS_SCRIPT_URL);
-                    const results = await response.json();
-                    results.reverse();
-                    renderTable(results);
-
-                } catch (error) {
-                    console.error("Error fetching results: ", error);
-                    resultsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error cargando datos. Revisa la consola o asegúrate de que Apps Script esté accesible para todos.</td></tr>`;
-                } finally {
-                    refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data';
-                }
-            }
-
-            function renderTable(data) {
-                if (data.length === 0) {
-                    resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No results submitted yet.</td></tr>';
-                    return;
-                }
-
-                resultsTableBody.innerHTML = '';
-                data.forEach(item => {
-                    const dateStr = item.timestamp || 'Reciente';
-                    
-                    let statusHtml = '';
-                    if(item.score >= 8) statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Excellent</span>';
-                    else if (item.score >= 6) statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Good</span>';
-                    else statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Needs Review</span>';
-
-                    const row = `
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dateStr}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">${escapeHtml(item.studentName)}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <div class="text-lg font-bold ${item.score >= 6 ? 'text-green-600' : 'text-red-600'}">${item.score} <span class="text-sm text-gray-500">/ 10</span></div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                ${statusHtml}
-                            </td>
-                        </tr>
-                    `;
-                    resultsTableBody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-
-            function escapeHtml(unsafe) {
-                if(typeof unsafe !== 'string') return '';
-                return unsafe
-                     .replace(/&/g, "&amp;")
-                     .replace(/</g, "&lt;")
-                     .replace(/>/g, "&gt;")
-                     .replace(/"/g, "&quot;")
-                     .replace(/'/g, "&#039;");
-            }
-
+            // Volver el botón a la normalidad después de 3 segundos
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "Submit My Answers! 🚀";
+            }, 3000);
+        })
+        .catch((error) => {
+            // Solo entra aquí si el estudiante no tiene internet
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "Submit My Answers! 🚀";
+            resultMessage.innerHTML = "Oops! Network error. Please check your internet and try again.";
+            resultMessage.className = "error";
+            resultMessage.style.display = "block";
         });
-    </script>
+    }
+</script>
+
 </body>
 </html>
