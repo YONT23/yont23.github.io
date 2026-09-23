@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Workshop - Grade 8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #f0f8ff; /* Light blue background like the image */
+            color: #333;
+        }
+        .quiz-card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 4px solid #e2e8f0;
+        }
+        .question-box {
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .question-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        /* Custom border colors matching the original design closely */
+        .border-pink-custom { border-color: #ff99cc; }
+        .border-blue-custom { border-color: #66ccff; }
+        .border-green-custom { border-color: #99ff99; }
+        .border-purple-custom { border-color: #cc99ff; }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 2px solid transparent;
+        }
+        .option-label:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        input[type="radio"]:checked + .option-text {
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        /* Dashboard Styles */
+        #dashboard-view {
+            display: none; /* Hidden by default */
+        }
+        .table-header {
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <script>
+        // --- CONFIGURACIÓN DE GOOGLE APPS SCRIPT ---
+        // PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT
+        const APPS_SCRIPT_URL = "URL_DE_TU_APPS_SCRIPT_AQUI"; 
+        window.APPS_SCRIPT_URL = APPS_SCRIPT_URL;
+
+        // Respuestas correctas para la calificación
+        const correctAnswers = {
+            q1: "C", q2: "C", q3: "B", q4: "C", q5: "B",
+            q6: "C", q7: "C", q8: "C", q9: "C", q10: "C"
+        };
+        window.correctAnswers = correctAnswers;
+    </script>
+
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header / Toggle Navigation -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-blue-600"><i class="fa-solid fa-book-open text-pink-400 mr-2"></i> English Workshop</h1>
+            <button id="toggle-view-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-full shadow transition text-sm font-semibold">
+                <i class="fa-solid fa-chalkboard-user mr-1"></i> Teacher Access
+            </button>
+        </div>
+
+        <div id="student-view" class="quiz-card p-6 md:p-10 mb-10">
+            
+            <div class="text-center mb-8 border-b-4 border-dashed border-gray-200 pb-6">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-2">Present Perfect</h2>
+                <p class="text-xl text-gray-600">Past Participle of Irregular Verbs <span class="text-pink-400 mx-2">♡</span> Grade 8</p>
+                <div class="mt-4 bg-yellow-100 p-3 rounded-lg inline-block border-2 border-yellow-300">
+                    <p class="text-sm"><strong>Remember:</strong> Present Perfect = have / has + past participle | <strong>Past Participle</strong> = the third form of irregular verbs.</p>
+                </div>
+            </div>
+
+            <!-- Student Info -->
+            <div class="mb-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
+                <label for="student-name" class="block text-lg font-semibold text-gray-700 mb-2">My Name is:</label>
+                <input type="text" id="student-name" placeholder="Enter your full name here..." class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+            </div>
+
+            <!-- Quiz Form -->
+            <form id="quiz-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Question 1 -->
+                    <div class="question-box border-pink-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-pink-200 text-pink-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">1</span> I ____________ to Paris three times.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q1" value="A" class="mr-3"> <span class="option-text">A. go</span></label>
+                            <label class="option-label"><input type="radio" name="q1" value="B" class="mr-3"> <span class="option-text">B. went</span></label>
+                            <label class="option-label"><input type="radio" name="q1" value="C" class="mr-3"> <span class="option-text">C. have gone</span></label>
+                            <label class="option-label"><input type="radio" name="q1" value="D" class="mr-3"> <span class="option-text">D. gone</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-box border-blue-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">2</span> She ____________ her homework before dinner.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q2" value="A" class="mr-3"> <span class="option-text">A. finishes</span></label>
+                            <label class="option-label"><input type="radio" name="q2" value="B" class="mr-3"> <span class="option-text">B. finish</span></label>
+                            <label class="option-label"><input type="radio" name="q2" value="C" class="mr-3"> <span class="option-text">C. has finished</span></label>
+                            <label class="option-label"><input type="radio" name="q2" value="D" class="mr-3"> <span class="option-text">D. finished</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-box border-green-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-green-200 text-green-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">3</span> We ____________ that movie last night.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q3" value="A" class="mr-3"> <span class="option-text">A. see</span></label>
+                            <label class="option-label"><input type="radio" name="q3" value="B" class="mr-3"> <span class="option-text">B. saw</span></label>
+                            <label class="option-label"><input type="radio" name="q3" value="C" class="mr-3"> <span class="option-text">C. have seen</span></label>
+                            <label class="option-label"><input type="radio" name="q3" value="D" class="mr-3"> <span class="option-text">D. seen</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-box border-purple-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-purple-200 text-purple-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">4</span> They ____________ the new restaurant in town.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q4" value="A" class="mr-3"> <span class="option-text">A. try</span></label>
+                            <label class="option-label"><input type="radio" name="q4" value="B" class="mr-3"> <span class="option-text">B. tried</span></label>
+                            <label class="option-label"><input type="radio" name="q4" value="C" class="mr-3"> <span class="option-text">C. have tried</span></label>
+                            <label class="option-label"><input type="radio" name="q4" value="D" class="mr-3"> <span class="option-text">D. tryed</span></label>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 5 -->
+                    <div class="question-box border-blue-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">5</span> I haven't ____________ my keys. I can't find them.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q5" value="A" class="mr-3"> <span class="option-text">A. find</span></label>
+                            <label class="option-label"><input type="radio" name="q5" value="B" class="mr-3"> <span class="option-text">B. found</span></label>
+                            <label class="option-label"><input type="radio" name="q5" value="C" class="mr-3"> <span class="option-text">C. founded</span></label>
+                            <label class="option-label"><input type="radio" name="q5" value="D" class="mr-3"> <span class="option-text">D. finding</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 6 -->
+                    <div class="question-box border-pink-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-pink-200 text-pink-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">6</span> My grandfather ____________ that house for 20 years.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q6" value="A" class="mr-3"> <span class="option-text">A. live</span></label>
+                            <label class="option-label"><input type="radio" name="q6" value="B" class="mr-3"> <span class="option-text">B. lived</span></label>
+                            <label class="option-label"><input type="radio" name="q6" value="C" class="mr-3"> <span class="option-text">C. has lived</span></label>
+                            <label class="option-label"><input type="radio" name="q6" value="D" class="mr-3"> <span class="option-text">D. living</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 7 -->
+                    <div class="question-box border-purple-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-purple-200 text-purple-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">7</span> She ____________ a lot of progress in her English class.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q7" value="A" class="mr-3"> <span class="option-text">A. make</span></label>
+                            <label class="option-label"><input type="radio" name="q7" value="B" class="mr-3"> <span class="option-text">B. made</span></label>
+                            <label class="option-label"><input type="radio" name="q7" value="C" class="mr-3"> <span class="option-text">C. has made</span></label>
+                            <label class="option-label"><input type="radio" name="q7" value="D" class="mr-3"> <span class="option-text">D. making</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 8 -->
+                    <div class="question-box border-green-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-green-200 text-green-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">8</span> He ____________ the invitation yet.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q8" value="A" class="mr-3"> <span class="option-text">A. receive</span></label>
+                            <label class="option-label"><input type="radio" name="q8" value="B" class="mr-3"> <span class="option-text">B. received</span></label>
+                            <label class="option-label"><input type="radio" name="q8" value="C" class="mr-3"> <span class="option-text">C. has received</span></label>
+                            <label class="option-label"><input type="radio" name="q8" value="D" class="mr-3"> <span class="option-text">D. receiving</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 9 -->
+                    <div class="question-box border-blue-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">9</span> We ____________ the results of the exam.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q9" value="A" class="mr-3"> <span class="option-text">A. not know</span></label>
+                            <label class="option-label"><input type="radio" name="q9" value="B" class="mr-3"> <span class="option-text">B. don't know</span></label>
+                            <label class="option-label"><input type="radio" name="q9" value="C" class="mr-3"> <span class="option-text">C. haven't known</span></label>
+                            <label class="option-label"><input type="radio" name="q9" value="D" class="mr-3"> <span class="option-text">D. didn't know</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 10 -->
+                    <div class="question-box border-purple-custom bg-white">
+                        <h3 class="font-bold text-lg mb-3"><span class="bg-purple-200 text-purple-800 rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">10</span> I ____________ the book yet, but I want to read it.</h3>
+                        <div class="space-y-1">
+                            <label class="option-label"><input type="radio" name="q10" value="A" class="mr-3"> <span class="option-text">A. haven't finish</span></label>
+                            <label class="option-label"><input type="radio" name="q10" value="B" class="mr-3"> <span class="option-text">B. hasn't finish</span></label>
+                            <label class="option-label"><input type="radio" name="q10" value="C" class="mr-3"> <span class="option-text">C. haven't finished</span></label>
+                            <label class="option-label"><input type="radio" name="q10" value="D" class="mr-3"> <span class="option-text">D. didn't finished</span></label>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button type="submit" id="submit-quiz-btn" class="bg-pink-500 hover:bg-pink-600 text-white text-xl font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:scale-105">
+                        Submit My Answers! <i class="fa-solid fa-paper-plane ml-2"></i>
+                    </button>
+                    <p id="submit-status" class="mt-4 text-lg font-semibold hidden"></p>
+                </div>
+            </form>
+        </div>
+
+        <div id="dashboard-view" class="quiz-card p-6 md:p-10 mb-10">
+            
+            <div id="password-screen" class="text-center py-10 max-w-sm mx-auto">
+                <h2 class="text-2xl font-bold mb-4">Teacher Access</h2>
+                <p class="text-gray-600 mb-4">Please enter the password to view student results.</p>
+                <input type="password" id="teacher-pwd" placeholder="Password (hint: admin123)" class="w-full p-3 mb-4 border-2 border-gray-300 rounded-lg text-center">
+                <button id="login-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg w-full">Access Dashboard</button>
+                <p id="login-error" class="text-red-500 mt-2 text-sm hidden">Incorrect password.</p>
+            </div>
+
+            <div id="dashboard-content" class="hidden">
+                <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Student Results Dashboard</h2>
+                    <button id="refresh-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="table-header">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date/Time</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Score (/10)</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Results will be injected here -->
+                            <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Loading results...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Detailed Answers Modal / Expansion could go here, for now keeping it simple with scores -->
+                 <div class="mt-6 bg-blue-50 p-4 rounded-lg text-sm text-gray-600">
+                    <p><strong>Note:</strong> Data is saved to a secure database. Only users with the password can view this summary.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- UI Elements ---
+            const studentView = document.getElementById('student-view');
+            const dashboardView = document.getElementById('dashboard-view');
+            const toggleViewBtn = document.getElementById('toggle-view-btn');
+            
+            const quizForm = document.getElementById('quiz-form');
+            const studentNameInput = document.getElementById('student-name');
+            const submitBtn = document.getElementById('submit-quiz-btn');
+            const submitStatus = document.getElementById('submit-status');
+
+            const passwordScreen = document.getElementById('password-screen');
+            const dashboardContent = document.getElementById('dashboard-content');
+            const teacherPwdInput = document.getElementById('teacher-pwd');
+            const loginBtn = document.getElementById('login-btn');
+            const loginError = document.getElementById('login-error');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const resultsTableBody = document.getElementById('results-table-body');
+
+            // --- Toggle Views ---
+            let isTeacherView = false;
+            toggleViewBtn.addEventListener('click', () => {
+                isTeacherView = !isTeacherView;
+                if (isTeacherView) {
+                    studentView.style.display = 'none';
+                    dashboardView.style.display = 'block';
+                    toggleViewBtn.innerHTML = '<i class="fa-solid fa-pen mr-1"></i> Back to Quiz';
+                    toggleViewBtn.classList.replace('bg-indigo-500', 'bg-gray-500');
+                    toggleViewBtn.classList.replace('hover:bg-indigo-600', 'hover:bg-gray-600');
+                } else {
+                    studentView.style.display = 'block';
+                    dashboardView.style.display = 'none';
+                    toggleViewBtn.innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1"></i> Teacher Access';
+                    toggleViewBtn.classList.replace('bg-gray-500', 'bg-indigo-500');
+                    toggleViewBtn.classList.replace('hover:bg-gray-600', 'hover:bg-indigo-600');
+                }
+            });
+
+            // --- Teacher Login ---
+            loginBtn.addEventListener('click', () => {
+                if (teacherPwdInput.value === 'admin123') { // Simple hardcoded password for demo
+                    passwordScreen.style.display = 'none';
+                    dashboardContent.style.display = 'block';
+                    fetchAndDisplayResults();
+                } else {
+                    loginError.style.display = 'block';
+                }
+            });
+
+            // --- Grading Logic ---
+            function calculateScore(formData) {
+                let score = 0;
+                for (let i = 1; i <= 10; i++) {
+                    const qId = `q${i}`;
+                    const answer = formData.get(qId);
+                    if (answer === window.correctAnswers[qId]) {
+                        score++;
+                    }
+                }
+                return score;
+            }
+
+            // --- Submit Quiz ---
+            quizForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = studentNameInput.value.trim();
+                if (!name) {
+                    alert("Please enter your name before submitting!");
+                    studentNameInput.focus();
+                    return;
+                }
+
+                // Check if all questions are answered
+                const formData = new FormData(quizForm);
+                let allAnswered = true;
+                const answers = {};
+                for (let i = 1; i <= 10; i++) {
+                    const ans = formData.get(`q${i}`);
+                    if (!ans) {
+                        allAnswered = false;
+                        break;
+                    }
+                    answers[`q${i}`] = ans;
+                }
+
+                if (!allAnswered) {
+                    alert("Please answer all 10 questions before submitting.");
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+                
+                const score = calculateScore(formData);
+
+                try {
+                    // Validamos que hayas puesto tu URL
+                    if (window.APPS_SCRIPT_URL === "URL_DE_TU_APPS_SCRIPT_AQUI") {
+                        throw new Error("unconfigured");
+                    }
+
+                    const payload = {
+                        studentName: name,
+                        answers: answers,
+                        score: score
+                    };
+
+                    // Enviar datos a Google Apps Script
+                    await fetch(window.APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        // Usamos text/plain para evitar el error de preflight de CORS en Google Apps Script
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                    });
+
+                    // Success Feedback
+                    quizForm.reset();
+                    submitStatus.textContent = `Excellent job, ${name}! Your score is ${score}/10. Results sent to teacher.`;
+                    submitStatus.className = "mt-4 text-lg font-bold text-green-600 block";
+                    
+                } catch (error) {
+                    console.error("Error saving document: ", error);
+                    if (error.message === "unconfigured") {
+                        submitStatus.textContent = "Profesor: ¡Debes pegar la URL de tu Apps Script en el código HTML!";
+                    } else {
+                        submitStatus.textContent = "Oops! There was an error sending your results. Please tell your teacher.";
+                    }
+                    submitStatus.className = "mt-4 text-lg font-bold text-red-500 block";
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Submit My Answers! <i class="fa-solid fa-paper-plane ml-2"></i>';
+                    
+                    // Hide message after 8 seconds
+                    setTimeout(() => {
+                        submitStatus.style.display = 'none';
+                        submitStatus.classList.remove('block');
+                    }, 8000);
+                }
+            });
+
+            // --- Fetch Dashboard Data ---
+            refreshBtn.addEventListener('click', fetchAndDisplayResults);
+
+            async function fetchAndDisplayResults() {
+                if (window.APPS_SCRIPT_URL === "URL_DE_TU_APPS_SCRIPT_AQUI") {
+                     resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Por favor configura la URL de Apps Script arriba en el código.</td></tr>';
+                     return;
+                }
+
+                refreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading...';
+                resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Buscando datos en tu Google Sheet...</td></tr>';
+
+                try {
+                    const response = await fetch(window.APPS_SCRIPT_URL);
+                    const results = await response.json();
+
+                    // Invertimos el array para que los más recientes salgan primero arriba
+                    results.reverse();
+                    renderTable(results);
+
+                } catch (error) {
+                    console.error("Error fetching results: ", error);
+                    resultsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error cargando datos. Verifica que la URL esté correcta.</td></tr>`;
+                } finally {
+                    refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data';
+                }
+            }
+
+            function renderTable(data) {
+                if (data.length === 0) {
+                    resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No results submitted yet.</td></tr>';
+                    return;
+                }
+
+                resultsTableBody.innerHTML = '';
+                data.forEach(item => {
+                    // La fecha ya viene formateada desde Google Sheets
+                    const dateStr = item.timestamp || 'Reciente';
+                    
+                    // Determine status color based on score
+                    let statusHtml = '';
+                    if(item.score >= 8) statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Excellent</span>';
+                    else if (item.score >= 6) statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Good</span>';
+                    else statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Needs Review</span>';
+
+                    const row = `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dateStr}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">${escapeHtml(item.studentName)}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <div class="text-lg font-bold ${item.score >= 6 ? 'text-green-600' : 'text-red-600'}">${item.score} <span class="text-sm text-gray-500">/ 10</span></div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                ${statusHtml}
+                            </td>
+                        </tr>
+                    `;
+                    resultsTableBody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+
+            // Utility to prevent XSS if students enter weird names
+            function escapeHtml(unsafe) {
+                return unsafe
+                     .replace(/&/g, "&amp;")
+                     .replace(/</g, "&lt;")
+                     .replace(/>/g, "&gt;")
+                     .replace(/"/g, "&quot;")
+                     .replace(/'/g, "&#039;");
+            }
+
+        });
+    </script>
+</body>
+</html>
