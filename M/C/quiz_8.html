@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Workshop - Grade 8</title>
+    <title>English - Grade 8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -69,8 +69,8 @@
 
     <script>
         // --- CONFIGURACIÓN DE GOOGLE APPS SCRIPT ---
-        // PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFmem-EAkOn0CKAxmTgVw0ZqdKLfMPhN49POeZHMwyXN8EYqSI9W7dKXpFKxTj9GPUAQ/exec"; 
+        // ⚠️ PEGA AQUÍ EL NUEVO ENLACE QUE OBTUVISTE EN EL PASO 1 DESPUÉS DE LA "NUEVA IMPLEMENTACIÓN"
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ2nrGEvLLryWKrJMWckXpPiOhNbd8uKPO3beYhx2m1lSLYB6tmQyUTXMFZPMpf2X0ew/exec"; 
         window.APPS_SCRIPT_URL = APPS_SCRIPT_URL;
 
         // Respuestas correctas para la calificación
@@ -266,11 +266,6 @@
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Detailed Answers Modal / Expansion could go here, for now keeping it simple with scores -->
-                 <div class="mt-6 bg-blue-50 p-4 rounded-lg text-sm text-gray-600">
-                    <p><strong>Note:</strong> Data is saved to a secure database. Only users with the password can view this summary.</p>
-                </div>
             </div>
         </div>
 
@@ -279,7 +274,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- UI Elements ---
             const studentView = document.getElementById('student-view');
             const dashboardView = document.getElementById('dashboard-view');
             const toggleViewBtn = document.getElementById('toggle-view-btn');
@@ -297,7 +291,6 @@
             const refreshBtn = document.getElementById('refresh-btn');
             const resultsTableBody = document.getElementById('results-table-body');
 
-            // --- Toggle Views ---
             let isTeacherView = false;
             toggleViewBtn.addEventListener('click', () => {
                 isTeacherView = !isTeacherView;
@@ -316,9 +309,8 @@
                 }
             });
 
-            // --- Teacher Login ---
             loginBtn.addEventListener('click', () => {
-                if (teacherPwdInput.value === 'admin123') { // Simple hardcoded password for demo
+                if (teacherPwdInput.value === 'admin123') { 
                     passwordScreen.style.display = 'none';
                     dashboardContent.style.display = 'block';
                     fetchAndDisplayResults();
@@ -327,7 +319,6 @@
                 }
             });
 
-            // --- Grading Logic ---
             function calculateScore(formData) {
                 let score = 0;
                 for (let i = 1; i <= 10; i++) {
@@ -340,7 +331,6 @@
                 return score;
             }
 
-            // --- Submit Quiz ---
             quizForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -351,7 +341,6 @@
                     return;
                 }
 
-                // Check if all questions are answered
                 const formData = new FormData(quizForm);
                 let allAnswered = true;
                 const answers = {};
@@ -375,44 +364,32 @@
                 const score = calculateScore(formData);
 
                 try {
-                    // Validamos que hayas puesto tu URL
-                    if (window.APPS_SCRIPT_URL === "URL_DE_TU_APPS_SCRIPT_AQUI") {
-                        throw new Error("unconfigured");
-                    }
-
-                    const payload = {
+                    // Preparamos los datos como un FORMULARIO URL-ENCODED (Esto evita los bloqueos del navegador 100%)
+                    const payload = new URLSearchParams({
                         studentName: name,
-                        answers: answers,
-                        score: score
-                    };
-
-                    // Enviar datos a Google Apps Script
-                    await fetch(window.APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        // Usamos no-cors para evitar el error de preflight en Google Apps Script
-                        mode: 'no-cors',
-                        body: JSON.stringify(payload),
-                        headers: { 'Content-Type': 'application/json' }
+                        score: score,
+                        answers: JSON.stringify(answers)
                     });
 
-                    // Success Feedback (Con mode: 'no-cors' la respuesta es opaca, asumimos éxito si no hay excepción)
+                    // Enviamos usando fetch
+                    await fetch(window.APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        body: payload 
+                    });
+
+                    // Si llega aquí, se envió correctamente sin que el navegador lo bloquee
                     quizForm.reset();
                     submitStatus.textContent = `Excellent job, ${name}! Your score is ${score}/10. Results sent to teacher.`;
                     submitStatus.className = "mt-4 text-lg font-bold text-green-600 block";
                     
                 } catch (error) {
                     console.error("Error saving document: ", error);
-                    if (error.message === "unconfigured") {
-                        submitStatus.textContent = "Profesor: ¡Debes pegar la URL de tu Apps Script en el código HTML!";
-                    } else {
-                        submitStatus.textContent = "Oops! There was an error sending your results. Please tell your teacher.";
-                    }
+                    submitStatus.textContent = "Oops! There was an error sending your results. Please tell your teacher.";
                     submitStatus.className = "mt-4 text-lg font-bold text-red-500 block";
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = 'Submit My Answers! <i class="fa-solid fa-paper-plane ml-2"></i>';
                     
-                    // Hide message after 8 seconds
                     setTimeout(() => {
                         submitStatus.style.display = 'none';
                         submitStatus.classList.remove('block');
@@ -420,29 +397,22 @@
                 }
             });
 
-            // --- Fetch Dashboard Data ---
+            // Función para traer datos al dashboard
             refreshBtn.addEventListener('click', fetchAndDisplayResults);
 
             async function fetchAndDisplayResults() {
-                if (window.APPS_SCRIPT_URL === "URL_DE_TU_APPS_SCRIPT_AQUI") {
-                     resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Por favor configura la URL de Apps Script arriba en el código.</td></tr>';
-                     return;
-                }
-
                 refreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading...';
                 resultsTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Buscando datos en tu Google Sheet...</td></tr>';
 
                 try {
                     const response = await fetch(window.APPS_SCRIPT_URL);
                     const results = await response.json();
-
-                    // Invertimos el array para que los más recientes salgan primero arriba
                     results.reverse();
                     renderTable(results);
 
                 } catch (error) {
                     console.error("Error fetching results: ", error);
-                    resultsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error cargando datos. Verifica que la URL esté correcta.</td></tr>`;
+                    resultsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error cargando datos. ¿Actualizaste el enlace tras la Nueva Implementación?</td></tr>`;
                 } finally {
                     refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data';
                 }
@@ -456,10 +426,8 @@
 
                 resultsTableBody.innerHTML = '';
                 data.forEach(item => {
-                    // La fecha ya viene formateada desde Google Sheets
                     const dateStr = item.timestamp || 'Reciente';
                     
-                    // Determine status color based on score
                     let statusHtml = '';
                     if(item.score >= 8) statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Excellent</span>';
                     else if (item.score >= 6) statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Good</span>';
@@ -483,8 +451,8 @@
                 });
             }
 
-            // Utility to prevent XSS if students enter weird names
             function escapeHtml(unsafe) {
+                if(typeof unsafe !== 'string') return '';
                 return unsafe
                      .replace(/&/g, "&amp;")
                      .replace(/</g, "&lt;")
