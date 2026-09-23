@@ -1,413 +1,489 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Workshop - Grade 8</title>
-    <style>
-        /* ... (CSS styles remain exactly the same as before) ... */
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;800&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Workshop · Present Perfect · Grade 8 · Docente Yonatha Mendoza Molina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#ff8fab; --pink-lt:#ffe3ec; --pink-dk:#e0577f;
+  --purple:#b18aff; --purple-lt:#ece2ff; --purple-dk:#8558e0;
+  --blue:#5eb8f5; --blue-lt:#e1f2ff; --blue-dk:#2f8fd6;
+  --mint:#4fd6ab; --mint-lt:#dcfbef; --mint-dk:#1fa87d;
+  --yellow:#ffd93d; --yellow-lt:#fff6d8;
+  --cream:#fffaf3; --white:#fff;
+  --gray-200:#eee3f5; --gray-300:#ddd0ec; --gray-400:#b6a8c9; --gray-600:#6b5c80; --ink:#3a2e50;
+  --red:#ff6b7a; --red-lt:#ffe3e6; --green:#2fbf7a; --green-lt:#dcf9ea;
+  --r:20px; --r-s:14px; --r-xs:8px;
+  --sh-sm:0 2px 8px rgba(90,60,140,.08); --sh-md:0 8px 26px rgba(90,60,140,.12); --sh-lg:0 16px 44px rgba(90,60,140,.18);
+  --f-d:'Baloo 2',cursive; --f-b:'Quicksand',sans-serif; --f-m:'Space Mono',monospace;
+}
+body{font-family:var(--f-b);background:
+  radial-gradient(circle at 10% 10%, #fdf0ff 0%, transparent 40%),
+  radial-gradient(circle at 90% 20%, #e8f7ff 0%, transparent 40%),
+  var(--cream);
+  color:var(--ink);min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:26px 22px 60px}
 
-        :root {
-            --primary-pink: #ff6b9d;
-            --primary-blue: #4a90e2;
-            --bg-color: #f0f8ff;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --border-radius: 15px;
-        }
+/* ===== HEADER ===== */
+.header{display:grid;grid-template-columns:1fr auto;gap:20px;margin-bottom:22px;align-items:stretch}
+.hero-card{background:var(--white);border:3px solid var(--purple-lt);border-radius:var(--r);padding:22px 26px;box-shadow:var(--sh-md);display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
+.hero-card::after{content:'⭐';position:absolute;top:10px;right:14px;font-size:1.1rem;opacity:.5}
+.panda{font-size:4.2rem;line-height:1;flex-shrink:0}
+.hero-titles{flex:1;min-width:0}
+.hero-title{font-family:var(--f-d);font-size:2.1rem;font-weight:800;line-height:1.1}
+.hero-title .a{color:var(--blue-dk)} .hero-title .b{color:var(--purple)}
+.hero-pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.hero-pill{font-family:var(--f-d);font-weight:700;font-size:.85rem;padding:5px 14px;border-radius:20px}
+.pill-yellow{background:var(--yellow-lt);color:#8a6d0f;border:2px solid var(--yellow)}
+.pill-purple{background:var(--purple-lt);color:var(--purple-dk);border:2px solid var(--purple)}
+.hero-sub{font-size:.78rem;color:var(--gray-600);margin-top:8px}
 
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+.grade-card{background:var(--white);border:3px dashed var(--purple);border-radius:var(--r);padding:18px 22px;box-shadow:var(--sh-md);min-width:300px}
+.grade-title{font-family:var(--f-d);font-size:1.05rem;font-weight:700;color:var(--purple-dk);text-align:center;margin-bottom:12px}
+.grade-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.grade-box{border-radius:var(--r-s);padding:10px 8px;text-align:center;border:2px solid}
+.gb-ser{background:var(--pink-lt);border-color:var(--pink)}
+.gb-saber{background:var(--blue-lt);border-color:var(--blue)}
+.gb-hacer{background:var(--mint-lt);border-color:var(--mint)}
+.gb-lbl{font-family:var(--f-d);font-weight:700;font-size:.78rem;color:var(--ink)}
+.gb-sub{font-size:.6rem;color:var(--gray-600);margin-bottom:6px}
+.gb-val{font-family:var(--f-m);font-size:1.15rem;font-weight:700}
+.gb-ser .gb-val{color:var(--pink-dk)} .gb-saber .gb-val{color:var(--blue-dk)} .gb-hacer .gb-val{color:var(--mint-dk)}
+.final-grade{background:var(--yellow-lt);border:2px solid var(--yellow);border-radius:var(--r-s);padding:10px;text-align:center}
+.final-grade-lbl{font-family:var(--f-d);font-weight:700;font-size:.85rem;color:#8a6d0f}
+.final-grade-val{font-family:var(--f-m);font-size:1.6rem;font-weight:700;color:#7a5900}
+.time-display{display:none;align-items:center;justify-content:center;gap:6px;margin-top:8px;font-family:var(--f-m);font-size:.78rem;color:var(--gray-600);background:var(--gray-200);border-radius:20px;padding:5px 12px}
+.time-display.show{display:flex}
 
-        .container {
-            max-width: 800px;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-        }
+/* ===== INSTRUCTIONS ===== */
+.instr-card{background:var(--blue-lt);border:2px solid var(--blue);border-radius:var(--r-s);padding:14px 20px;margin-bottom:22px;font-size:.86rem;color:var(--ink);display:flex;gap:12px;align-items:flex-start}
+.instr-card .star{font-size:1.3rem;flex-shrink:0}
+.instr-card b{color:var(--blue-dk)}
+.instr-tag{background:var(--pink);color:#fff;padding:1px 8px;border-radius:12px;font-weight:700;font-size:.78rem}
+.instr-tag2{background:var(--purple);color:#fff;padding:1px 8px;border-radius:12px;font-weight:700;font-size:.78rem}
 
-        h1 {
-            font-family: 'Comic Neue', cursive;
-            text-align: center;
-            color: var(--primary-blue);
-            font-size: 2.5em;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-        }
+/* ===== SECTION DIVIDER ===== */
+.sec-div{display:flex;align-items:center;gap:12px;margin:26px 0 16px}
+.sec-div-line{flex:1;height:3px;background:repeating-linear-gradient(90deg,var(--gray-300) 0 8px, transparent 8px 14px);border-radius:2px}
+.sec-div-lbl{font-family:var(--f-d);font-size:.9rem;color:var(--purple-dk);font-weight:700;white-space:nowrap;background:var(--purple-lt);padding:5px 16px;border-radius:20px}
 
-        .subtitle {
-            text-align: center;
-            font-size: 1.2em;
-            color: var(--primary-pink);
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+/* ===== CARDS ===== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.card{background:var(--white);border-radius:var(--r);padding:22px;box-shadow:var(--sh-md);border:2px solid var(--gray-200)}
+.card-hd{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.card-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.ic-pink{background:var(--pink-lt)} .ic-blue{background:var(--blue-lt)} .ic-mint{background:var(--mint-lt)} .ic-yellow{background:var(--yellow-lt)} .ic-purple{background:var(--purple-lt)}
+.card-title{font-family:var(--f-d);font-size:1.15rem;font-weight:700;color:var(--ink)}
+.card-lbl{font-size:.68rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 
-        .student-info {
-            background-color: #fff0f5;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            border: 2px dashed var(--primary-pink);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+/* CONCEPT */
+.concept-box{background:linear-gradient(135deg,var(--purple-lt),var(--pink-lt));border:2px solid var(--purple);border-radius:var(--r-s);padding:18px 20px}
+.concept-word{font-family:var(--f-d);font-size:1.9rem;color:var(--purple-dk);font-weight:800;display:block;margin-bottom:8px}
+.concept-def{font-size:.87rem;color:var(--ink);line-height:1.65}
+.concept-def code{background:var(--white);border-radius:4px;padding:1px 6px;font-family:var(--f-m);font-size:.82rem;color:var(--pink-dk)}
+.concept-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.c-tag{background:var(--purple);color:#fff;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:700}
 
-        .student-info input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-family: 'Nunito', sans-serif;
-        }
+/* CONTEXT */
+.ctx-list{list-style:none;display:flex;flex-direction:column;gap:11px}
+.ctx-item{border-left:4px solid var(--blue);padding:9px 14px;background:var(--blue-lt);border-radius:0 var(--r-xs) var(--r-xs) 0}
+.ctx-scene{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--blue-dk);font-weight:700;margin-bottom:3px}
+.ctx-en{font-size:.85rem;color:var(--ink);font-weight:600;line-height:1.4}
+.ctx-hi{background:var(--yellow);color:#5c4500;padding:1px 5px;border-radius:4px}
+.ctx-es{font-size:.75rem;color:var(--gray-600);font-style:italic;margin-top:3px}
 
-        .question-card {
-            border: 2px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
+/* GRAMMAR / VERB TABLE */
+.gram-tip{background:var(--yellow-lt);border:2px solid var(--yellow);border-radius:var(--r-s);padding:14px 16px;margin-bottom:13px;font-size:.84rem;color:#6b5200;line-height:1.6}
+.gram-tip b{color:#8a5a00}
+.verb-table{width:100%;border-collapse:collapse;font-size:.8rem;background:var(--white);border-radius:var(--r-xs);overflow:hidden}
+.verb-table th{background:var(--purple);color:#fff;padding:7px 10px;font-family:var(--f-d);font-weight:600;font-size:.74rem}
+.verb-table td{padding:7px 10px;border-bottom:1px solid var(--gray-200);font-family:var(--f-m);font-size:.76rem}
+.verb-table tr:nth-child(even) td{background:var(--purple-lt)}
 
-        .question-card:hover {
-            border-color: var(--primary-blue);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
-        }
+/* ===== QUIZ QUESTIONS GRID (matches worksheet look) ===== */
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.q-card{border-radius:var(--r-s);border:2.5px solid;padding:16px 18px;background:var(--white)}
+.qc-1{border-color:var(--pink)} .qc-2{border-color:var(--blue)} .qc-3{border-color:var(--mint)} .qc-4{border-color:var(--purple)} .qc-5{border-color:var(--blue)}
+.q-hd{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.q-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-d);font-weight:800;font-size:1rem;flex-shrink:0;color:#fff}
+.qc-1 .q-num{background:var(--pink)} .qc-2 .q-num{background:var(--blue)} .qc-3 .q-num{background:var(--mint)} .qc-4 .q-num{background:var(--purple)} .qc-5 .q-num{background:var(--blue-dk)}
+.q-sent{font-size:.87rem;color:var(--ink);font-weight:600;line-height:1.45}
+.q-blank{display:inline-block;border-bottom:2px solid var(--gray-400);min-width:60px}
+.q-opts{display:flex;flex-direction:column;gap:6px}
+.q-opt{border:2px solid var(--gray-200);border-radius:var(--r-xs);padding:7px 12px;font-size:.8rem;color:var(--gray-600);cursor:pointer;transition:all .15s;background:var(--cream);text-align:left;font-family:var(--f-b);font-weight:600}
+.q-opt:hover{border-color:var(--purple);background:var(--purple-lt);color:var(--purple-dk)}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt);color:#1a8f5c}
+.q-opt.wrong{border-color:var(--red);background:var(--red-lt);color:#c23e4a}
+.q-opt:disabled{cursor:default}
+.q-fb{margin-top:7px;font-size:.73rem;padding:7px 10px;border-radius:var(--r-xs);display:none}
+.q-fb.show{display:block}
+.q-fb.ok{background:var(--green-lt);color:#1a8f5c}
+.q-fb.bad{background:var(--red-lt);color:#c23e4a}
 
-        .question-title {
-            font-size: 1.2em;
-            font-weight: 800;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* ===== SER CHECKLIST ===== */
+.ser-list{display:flex;flex-direction:column;gap:9px}
+.ser-item{display:flex;align-items:center;gap:11px;padding:11px 15px;border:2px solid var(--gray-200);border-radius:var(--r-s);cursor:pointer;transition:all .15s;background:var(--cream)}
+.ser-item:hover{border-color:var(--pink)}
+.ser-item.checked{border-color:var(--pink);background:var(--pink-lt)}
+.ser-box{width:22px;height:22px;border-radius:7px;border:2.5px solid var(--gray-400);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:transparent;transition:all .2s}
+.ser-item.checked .ser-box{background:var(--pink);border-color:var(--pink);color:#fff}
+.ser-txt{font-size:.83rem;color:var(--ink);font-weight:600}
 
-        .q-number {
-            background-color: #d8b4fe;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-        }
+/* ===== DAILY TALK ===== */
+.daily-card{background:linear-gradient(135deg,var(--mint-lt),var(--blue-lt));border:2px solid var(--mint)}
+.daily-prompt{background:var(--white);border:2px solid var(--mint);border-radius:var(--r-s);padding:14px 17px;margin-bottom:13px;font-size:.85rem;color:var(--ink);line-height:1.6}
+.daily-prompt b{color:var(--mint-dk)}
+.kw-strip{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.kw-chip{background:var(--white);border:1.5px solid var(--mint);color:var(--mint-dk);padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;font-family:var(--f-m)}
+.kw-chip.found{background:var(--mint);color:#fff}
+.daily-ta{width:100%;background:var(--white);border:2px solid var(--mint);border-radius:var(--r-s);padding:14px;color:var(--ink);font-family:var(--f-b);font-size:.87rem;font-weight:500;line-height:1.6;resize:vertical;min-height:130px;outline:none}
+.daily-ta:focus{border-color:var(--mint-dk)}
+.daily-acts{display:flex;gap:9px;margin-top:12px;align-items:center}
+.btn-analyze{background:var(--mint-dk);color:#fff;border:none;padding:9px 20px;border-radius:var(--r-s);font-family:var(--f-d);font-weight:700;font-size:.82rem;cursor:pointer}
+.btn-analyze:hover{background:#158060}
+.score-wrap{margin-left:auto;font-size:.78rem;color:var(--mint-dk);font-weight:700}
+.fb-box{margin-top:12px;border-radius:var(--r-s);padding:12px 15px;font-size:.8rem;line-height:1.55;display:none}
+.fb-box.show{display:block}
+.fb-exc{background:var(--green-lt);color:#1a8f5c;border:2px solid #a8e6c4}
+.fb-good{background:var(--yellow-lt);color:#8a6d0f;border:2px solid var(--yellow)}
+.fb-try{background:var(--red-lt);color:#c23e4a;border:2px solid #f5b8bf}
+.fb-ttl{font-weight:800;margin-bottom:5px}
 
-        .options-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-left: 40px;
-        }
+/* ===== FOOTER DOODLES ===== */
+.footer-doodle{text-align:center;margin-top:30px;font-family:var(--f-d);color:var(--gray-400);font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.footer-pill{background:var(--pink);color:#fff;padding:8px 22px;border-radius:20px;font-weight:800;font-size:1rem}
 
-        .option-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-        }
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:20px;font-family:var(--f-d);font-size:.86rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(177,138,255,.4)}
+.btn-primary:hover{background:var(--purple-dk);transform:translateY(-1px)}
+.btn-outline{background:#fff;color:var(--purple-dk);border:2px solid var(--purple-lt)}
+.btn-outline:hover{background:var(--purple-lt)}
+.top-acts{display:flex;justify-content:flex-end;gap:10px;margin-bottom:14px}
 
-        .option-label:hover {
-            background-color: #f5f5f5;
-        }
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:26px;right:26px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:20px;font-size:.83rem;font-weight:700;font-family:var(--f-d);box-shadow:var(--sh-lg);z-index:300;display:none}
+.toast.show{display:flex;align-items:center;gap:8px}
 
-        input[type="radio"] {
-            transform: scale(1.2);
-            accent-color: var(--primary-blue);
-        }
-
-        .submit-btn {
-            background-color: #d81b60;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.3em;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: transform 0.2s, background-color 0.2s;
-            font-family: 'Comic Neue', cursive;
-        }
-
-        .submit-btn:hover {
-            background-color: #ad1457;
-            transform: scale(1.02);
-        }
-
-        .submit-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        #result-message {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            display: none;
-        }
-
-        .success { color: #4caf50; }
-        .error { color: #f44336; }
-    </style>
+@media print{
+  .top-acts,.q-opts,.kw-strip,.daily-acts,.toast,.ser-list{display:none!important}
+  body{background:#fff}
+}
+@media(max-width:900px){
+  .header{grid-template-columns:1fr}
+  .grid-2,.q-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="container">
-    <h1>English Workshop</h1>
-    <div class="subtitle">Present Perfect - Grade 8</div>
-    
-    <div class="student-info">
-        <label for="studentName" style="font-weight: bold; font-size: 1.1em;">Name:</label>
-        <input type="text" id="studentName" placeholder="Type your full name here..." required form="quizForm">
+  <div class="top-acts">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    <button class="btn btn-outline" onclick="resetAll()">🔄 Reiniciar</button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="hero-card">
+      <div class="panda">🐼</div>
+      <div class="hero-titles">
+        <div class="hero-title"><span class="a">English</span> <span class="b">Workshop</span></div>
+        <div class="hero-pill-row">
+          <span class="hero-pill pill-yellow">Present Perfect</span>
+          <span class="hero-pill pill-purple">Past Participle of Irregular Verbs</span>
+        </div>
+        <div class="hero-sub">⭐ Grado 8° · Metodología Del Docente Yonatha Mendoza Molina ⭐</div>
+      </div>
     </div>
 
-    <form id="quizForm">
-        <!-- Q1 -->
-        <div class="question-card" style="border-color: #ffb6c1;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #ffb6c1;">1</span>
-                I ______________ to Paris three times.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q1" value="A"> A. go</label>
-                <label class="option-label"><input type="radio" name="q1" value="B"> B. went</label>
-                <label class="option-label"><input type="radio" name="q1" value="C"> C. have gone</label>
-                <label class="option-label"><input type="radio" name="q1" value="D"> D. gone</label>
-            </div>
-        </div>
+    <div class="grade-card">
+      <div class="grade-title">✎ My Grade ✎</div>
+      <div class="grade-boxes">
+        <div class="grade-box gb-ser"><div class="gb-lbl">Ser</div><div class="gb-sub">I am / I can / I do</div><div class="gb-val" id="disp-ser">—</div></div>
+        <div class="grade-box gb-saber"><div class="gb-lbl">Saber</div><div class="gb-sub">I know / I understand</div><div class="gb-val" id="disp-saber">—</div></div>
+        <div class="grade-box gb-hacer"><div class="gb-lbl">Saber Hacer</div><div class="gb-sub">I can do / I apply</div><div class="gb-val" id="disp-hacer">—</div></div>
+      </div>
+      <div class="final-grade"><div class="final-grade-lbl">Final Grade</div><div class="final-grade-val" id="disp-nota">—/10</div></div>
+      <div class="time-display" id="time-display"><span>⏱</span><span id="time-value">--:--</span></div>
+    </div>
+  </div>
 
-        <!-- Q2 -->
-        <div class="question-card" style="border-color: #87ceeb;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #87ceeb;">2</span>
-                She ______________ her homework before dinner.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q2" value="A"> A. finishes</label>
-                <label class="option-label"><input type="radio" name="q2" value="B"> B. finish</label>
-                <label class="option-label"><input type="radio" name="q2" value="C"> C. has finished</label>
-                <label class="option-label"><input type="radio" name="q2" value="D"> D. finished</label>
-            </div>
-        </div>
+  <!-- INSTRUCTIONS -->
+  <div class="instr-card">
+    <span class="star">⭐</span>
+    <div>
+      Read each sentence carefully and choose the best option (A, B, C or D).<br>
+      Remember: <span class="instr-tag">Present Perfect = have / has + past participle</span> &nbsp; | &nbsp; <span class="instr-tag2">Past Participle = the third form of irregular verbs</span>
+    </div>
+  </div>
 
-        <!-- Q3 -->
-        <div class="question-card" style="border-color: #98fb98;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #98fb98;">3</span>
-                We ______________ that movie last night.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q3" value="A"> A. see</label>
-                <label class="option-label"><input type="radio" name="q3" value="B"> B. saw</label>
-                <label class="option-label"><input type="radio" name="q3" value="C"> C. have seen</label>
-                <label class="option-label"><input type="radio" name="q3" value="D"> D. seen</label>
-            </div>
-        </div>
+  <!-- QUIZ 10 PREGUNTAS -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">📝 SABER (35%) · Las 10 Preguntas del Taller</div><div class="sec-div-line"></div></div>
+  <div class="q-grid" id="quiz-grid"></div>
 
-        <!-- Q4 -->
-        <div class="question-card" style="border-color: #dda0dd;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #dda0dd;">4</span>
-                They ______________ the new restaurant in town.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q4" value="A"> A. try</label>
-                <label class="option-label"><input type="radio" name="q4" value="B"> B. tried</label>
-                <label class="option-label"><input type="radio" name="q4" value="C"> C. have tried</label>
-                <label class="option-label"><input type="radio" name="q4" value="D"> D. tryed</label>
-            </div>
-        </div>
+  <!-- SER + SABER HACER -->
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-lbl">🌟 Autoevaluación y Práctica</div><div class="sec-div-line"></div></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-hd"><div class="card-ico ic-pink">🙋</div><div><div class="card-title">Ser (30%)</div><div class="card-lbl">Marca lo que cumpliste en el taller</div></div></div>
+      <div class="ser-list" id="ser-list"></div>
+    </div>
+    <div class="card daily-card">
+      <div class="card-hd"><div class="card-ico" style="background:#fff">🗣</div><div><div class="card-title">Saber Hacer (35%)</div><div class="card-lbl">Daily Talk · Practica el Present Perfect</div></div></div>
+      <div class="daily-prompt"><b>🎯 Tu misión:</b> Escribe 4 oraciones sobre cosas que HAS o NO HAS hecho en tu vida (experiencias, logros, tareas). Usa have/has + past participle. Ejemplo: "I have visited three countries. I haven't tried sushi yet."</div>
+      <div style="margin-bottom:9px"><div style="font-size:.68rem;color:var(--mint-dk);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;font-weight:700">Palabras clave a incluir:</div><div class="kw-strip" id="kw-strip"></div></div>
+      <textarea class="daily-ta" id="hacer-ta" placeholder="Write in English here..." oninput="onHacerInput()"></textarea>
+      <div class="daily-acts">
+        <button class="btn-analyze" onclick="analyzeHacer()">🔍 Analizar mi texto</button>
+        <div class="score-wrap" id="hacer-score-txt"></div>
+      </div>
+      <div class="fb-box" id="hacer-fb"></div>
+    </div>
+  </div>
 
-        <!-- Q5 -->
-        <div class="question-card" style="border-color: #87ceeb;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #87ceeb;">5</span>
-                I haven't ______________ my keys. I can't find them.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q5" value="A"> A. find</label>
-                <label class="option-label"><input type="radio" name="q5" value="B"> B. found</label>
-                <label class="option-label"><input type="radio" name="q5" value="C"> C. founded</label>
-                <label class="option-label"><input type="radio" name="q5" value="D"> D. finding</label>
-            </div>
-        </div>
+  <div class="footer-doodle">☁️ ⭐ <span class="footer-pill">Small steps... Big progress!</span> ⭐ ✈️ ⭐</div>
 
-        <!-- Q6 -->
-        <div class="question-card" style="border-color: #ffb6c1;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #ffb6c1;">6</span>
-                My grandfather ______________ that house for 20 years.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q6" value="A"> A. live</label>
-                <label class="option-label"><input type="radio" name="q6" value="B"> B. lived</label>
-                <label class="option-label"><input type="radio" name="q6" value="C"> C. has lived</label>
-                <label class="option-label"><input type="radio" name="q6" value="D"> D. living</label>
-            </div>
-        </div>
-
-        <!-- Q7 -->
-        <div class="question-card" style="border-color: #dda0dd;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #dda0dd;">7</span>
-                She ______________ a lot of progress in her English class.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q7" value="A"> A. make</label>
-                <label class="option-label"><input type="radio" name="q7" value="B"> B. made</label>
-                <label class="option-label"><input type="radio" name="q7" value="C"> C. has made</label>
-                <label class="option-label"><input type="radio" name="q7" value="D"> D. making</label>
-            </div>
-        </div>
-
-        <!-- Q8 -->
-        <div class="question-card" style="border-color: #98fb98;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #98fb98;">8</span>
-                He ______________ the invitation yet.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q8" value="A"> A. receive</label>
-                <label class="option-label"><input type="radio" name="q8" value="B"> B. received</label>
-                <label class="option-label"><input type="radio" name="q8" value="C"> C. has received</label>
-                <label class="option-label"><input type="radio" name="q8" value="D"> D. receiving</label>
-            </div>
-        </div>
-
-        <!-- Q9 -->
-        <div class="question-card" style="border-color: #87ceeb;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #87ceeb;">9</span>
-                We ______________ the results of the exam.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q9" value="A"> A. not know</label>
-                <label class="option-label"><input type="radio" name="q9" value="B"> B. don't know</label>
-                <label class="option-label"><input type="radio" name="q9" value="C"> C. haven't known</label>
-                <label class="option-label"><input type="radio" name="q9" value="D"> D. didn't know</label>
-            </div>
-        </div>
-
-        <!-- Q10 -->
-        <div class="question-card" style="border-color: #dda0dd;">
-            <div class="question-title">
-                <span class="q-number" style="background-color: #dda0dd;">10</span>
-                I ______________ the book yet, but I want to read it.
-            </div>
-            <div class="options-group">
-                <label class="option-label"><input type="radio" name="q10" value="A"> A. haven't finish</label>
-                <label class="option-label"><input type="radio" name="q10" value="B"> B. hasn't finish</label>
-                <label class="option-label"><input type="radio" name="q10" value="C"> C. haven't finished</label>
-                <label class="option-label"><input type="radio" name="q10" value="D"> D. didn't finished</label>
-            </div>
-        </div>
-
-        <button type="button" class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit My Answers! 🚀</button>
-    </form>
-
-    <div id="result-message"></div>
 </div>
 
+<div class="toast" id="toast"><span id="t-icon">✅</span><span id="t-msg">¡Guardado!</span></div>
+
 <script>
-    // ESTE ES EL ENLACE CORRECTO QUE ME DISTE
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxK21vruIm-ZKr0Oof8NFAdnwOMpDhc0GJyj6RIAwnAqcy02Z9IUuhOl1QDxdwsGGCylQ/exec";
+// =====================================================
+// DATA — Present Perfect · Grado 8
+// =====================================================
+const QUESTIONS = [
+  {num:1, cls:'qc-1', q:'I <span class="q-blank">______________</span> to Paris three times.', opts:[
+    {t:'A. go',ok:false},{t:'B. went',ok:false},{t:'C. have gone',ok:true},{t:'D. gone',ok:false}],
+    fbOk:'¡Correcto! "Three times" indica experiencia de vida → have + V3.', fbBad:'Pista: "three times" (cuántas veces) es señal de experiencia → have + past participle.'},
+  {num:2, cls:'qc-2', q:'She <span class="q-blank">______________</span> her homework before dinner.', opts:[
+    {t:'A. finishes',ok:false},{t:'B. finish',ok:false},{t:'C. has finished',ok:true},{t:'D. finished',ok:false}],
+    fbOk:'¡Correcto! Sujeto "she" (3ª persona) → has + past participle.', fbBad:'Recuerda: con "she/he/it" el auxiliar es "has", no "have".'},
+  {num:3, cls:'qc-3', q:'We <span class="q-blank">______________</span> that movie last night.', opts:[
+    {t:'A. see',ok:false},{t:'B. saw',ok:true},{t:'C. have seen',ok:false},{t:'D. seen',ok:false}],
+    fbOk:'¡Correcto! "Last night" es un momento EXACTO del pasado → usa Simple Past, no Present Perfect.', fbBad:'Ojo: "last night" es una palabra trampa — con tiempo exacto se usa Simple Past (saw), no Present Perfect.'},
+  {num:4, cls:'qc-4', q:'They <span class="q-blank">______________</span> the new restaurant in town.', opts:[
+    {t:'A. try',ok:false},{t:'B. tried',ok:false},{t:'C. have tried',ok:true},{t:'D. tryed',ok:false}],
+    fbOk:'¡Correcto! Sin tiempo exacto, es una experiencia reciente → have + past participle.', fbBad:'No hay un momento exacto mencionado — esto pide Present Perfect: have + tried.'},
+  {num:5, cls:'qc-5', q:"I haven't <span class=\"q-blank\">______________</span> my keys. I can't find them.", opts:[
+    {t:'A. find',ok:false},{t:'B. found',ok:true},{t:'C. founded',ok:false},{t:'D. finding',ok:false}],
+    fbOk:'¡Correcto! El auxiliar "haven\'t" ya está — solo falta el past participle: found.', fbBad:'El auxiliar "haven\'t" ya está en la oración; después de él siempre va la 3ª forma del verbo (V3).'},
+  {num:6, cls:'qc-1', q:'My grandfather <span class="q-blank">______________</span> that house for 20 years.', opts:[
+    {t:'A. live',ok:false},{t:'B. lived',ok:false},{t:'C. has lived',ok:true},{t:'D. living',ok:false}],
+    fbOk:'¡Correcto! "For 20 years" (duración hasta ahora) es la señal clásica de Present Perfect.', fbBad:'Pista: "for + tiempo" (duración que llega hasta hoy) siempre pide Present Perfect: has lived.'},
+  {num:7, cls:'qc-2', q:'She <span class="q-blank">______________</span> a lot of progress in her English class.', opts:[
+    {t:'A. make',ok:false},{t:'B. made',ok:false},{t:'C. has made',ok:true},{t:'D. making',ok:false}],
+    fbOk:'¡Correcto! Logro sin tiempo exacto → has + past participle (made).', fbBad:'No hay tiempo exacto — se trata de un logro hasta ahora: has made.'},
+  {num:8, cls:'qc-3', q:'He <span class="q-blank">______________</span> the invitation yet.', opts:[
+    {t:'A. receive',ok:false},{t:'B. received',ok:false},{t:'C. has received',ok:true},{t:'D. receiving',ok:false}],
+    fbOk:'¡Correcto! "Yet" es palabra señal de Present Perfect: has received.', fbBad:'"Yet" (todavía/ya) es una palabra señal clásica del Present Perfect.'},
+  {num:9, cls:'qc-4', q:'We <span class="q-blank">______________</span> the results of the exam.', opts:[
+    {t:"A. not know",ok:false},{t:"B. don't know",ok:true},{t:'C. haven\'t known',ok:false},{t:"D. didn't know",ok:false}],
+    fbOk:'¡Correcto! "Know" es un verbo de estado — se usa en presente simple negativo: don\'t know.', fbBad:'"Know" es un verbo de estado (stative verb) — normalmente no se usa en Present Perfect; aquí va presente simple negativo: don\'t know.'},
+  {num:10, cls:'qc-5', q:"I <span class=\"q-blank\">______________</span> the book yet, but I want to read it.", opts:[
+    {t:"A. haven't finish",ok:false},{t:"B. hasn't finish",ok:false},{t:"C. haven't finished",ok:true},{t:"D. didn't finished",ok:false}],
+    fbOk:'¡Correcto! "Yet" + negativo + sujeto "I" → haven\'t finished.', fbBad:'Con "I" el auxiliar negativo es "haven\'t", y siempre seguido de la 3ª forma: finished.'}
+];
 
-    const correctAnswers = {
-        q1: "C", q2: "C", q3: "B", q4: "C", q5: "B",
-        q6: "C", q7: "C", q8: "C", q9: "C", q10: "C"
-    };
+const SER_ITEMS = [
+  'Leí cada oración con atención antes de elegir mi respuesta.',
+  'Identifiqué las palabras señal (last night, for, yet, already) para decidir el tiempo verbal correcto.',
+  'Intenté resolver cada pregunta por mí mismo(a) antes de adivinar.',
+  'Mantuve una actitud positiva frente a los errores y aprendí de ellos.'
+];
 
-    function submitQuiz() {
-        const studentName = document.getElementById('studentName').value.trim();
-        const form = document.getElementById('quizForm');
-        
-        if (!studentName) {
-            alert("Please enter your name before submitting!");
-            return;
-        }
+const HACER_KEYWORDS = ['have','has',"haven't","hasn't",'gone','been','seen','found','made','tried','lived','finished','received','known','ever','never','already','yet','for','since'];
 
-        // Calculate score
-        let score = 0;
-        const formDataObj = new FormData(form);
-        const answers = {};
+// =====================================================
+// STATE
+// =====================================================
+let S = (()=>{ try{ return JSON.parse(localStorage.getItem('ym_pp_g8_v1')) || {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null}; } catch { return {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null}; } })();
 
-        for (let i = 1; i <= 10; i++) {
-            const answer = formDataObj.get('q' + i);
-            answers['q' + i] = answer || "";
-            if (answer === correctAnswers['q' + i]) {
-                score++;
-            }
-        }
+function save(){ localStorage.setItem('ym_pp_g8_v1', JSON.stringify(S)); }
 
-        // Change button state
-        const submitBtn = document.getElementById('submitBtn');
-        const resultMessage = document.getElementById('result-message');
-        
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = "⏳ Submitting... Please wait";
-        resultMessage.style.display = "none";
+function resetAll(){
+  if(!confirm('¿Reiniciar todas las respuestas y calificación?')) return;
+  localStorage.removeItem('ym_pp_g8_v1');
+  S = {answers:{},ser:{},hacerText:'',examStart:null,examEnd:null};
+  save(); renderAll();
+  toast('🔄','Taller reiniciado');
+}
 
-        // EMPAQUETAR LOS DATOS (El formato secreto para saltar errores)
-        const dataToSend = new URLSearchParams();
-        dataToSend.append("studentName", studentName);
-        dataToSend.append("finalScore", score);
-        for (let i = 1; i <= 10; i++) {
-            dataToSend.append("q" + i, answers['q' + i]);
-        }
+// =====================================================
+// CRONÓMETRO OCULTO — mide el tiempo del examen (10 preguntas)
+// =====================================================
+function msToClock(ms){
+  const totalSec = Math.max(0, Math.round(ms/1000));
+  const m = Math.floor(totalSec/60), s = totalSec%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function trackExamTiming(){
+  // Marca el inicio en la primera respuesta
+  if(Object.keys(S.answers).length===1 && !S.examStart){
+    S.examStart = Date.now();
+  }
+  // Marca el final cuando se responden las 10 preguntas
+  if(Object.keys(S.answers).length>=QUESTIONS.length && !S.examEnd && S.examStart){
+    S.examEnd = Date.now();
+  }
+  save();
+}
+function updateTimeDisplay(){
+  const el = document.getElementById('time-display');
+  const val = document.getElementById('time-value');
+  if(S.examStart && S.examEnd){
+    val.textContent = msToClock(S.examEnd - S.examStart);
+    el.classList.add('show');
+  } else {
+    el.classList.remove('show');
+  }
+}
 
-        // ENVIAR USANDO FETCH CON MODO NO-CORS (La solución definitiva)
-        fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Esto ignora las alertas rojas de seguridad del navegador
-            body: dataToSend
-        })
-        .then(() => {
-            // Como usamos no-cors, siempre entraremos aquí si hay internet.
-            submitBtn.innerHTML = "✅ Sent Successfully!";
-            resultMessage.innerHTML = `Great job, <b>${studentName}</b>! Your answers have been sent to the teacher.`;
-            resultMessage.className = "success";
-            resultMessage.style.display = "block";
-            
-            // Limpiar el formulario para el siguiente estudiante
-            form.reset();
-            document.getElementById('studentName').value = "";
-            
-            // Volver el botón a la normalidad después de 3 segundos
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = "Submit My Answers! 🚀";
-            }, 3000);
-        })
-        .catch((error) => {
-            // Solo entra aquí si el estudiante no tiene internet
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = "Submit My Answers! 🚀";
-            resultMessage.innerHTML = "Oops! Network error. Please check your internet and try again.";
-            resultMessage.className = "error";
-            resultMessage.style.display = "block";
-        });
-    }
+// =====================================================
+// SCORING
+// =====================================================
+function getSaberPct(){
+  const answered = Object.keys(S.answers).length;
+  if(answered < QUESTIONS.length) return null;
+  const correct = Object.values(S.answers).filter(a=>a.ok).length;
+  return Math.round((correct/QUESTIONS.length)*100);
+}
+function getSerPct(){
+  const n = Object.values(S.ser).filter(Boolean).length;
+  if(n===0) return null;
+  return Math.round((n/SER_ITEMS.length)*100);
+}
+function getHacerPct(){
+  const text = (S.hacerText||'').toLowerCase();
+  if(text.trim().length < 15) return null;
+  const found = HACER_KEYWORDS.filter(k=>text.includes(k));
+  return Math.min(100, Math.round((found.length/5)*100));
+}
+function getNota(){
+  const ser=getSerPct(), saber=getSaberPct(), hacer=getHacerPct();
+  if(ser===null||saber===null||hacer===null) return null;
+  const nota = ((ser*0.30)+(saber*0.35)+(hacer*0.35))/10;
+  return Math.min(10, Math.round(nota*10)/10);
+}
+
+function updateGradeBox(){
+  const ser=getSerPct(), saber=getSaberPct(), hacer=getHacerPct(), nota=getNota();
+  document.getElementById('disp-ser').textContent   = ser!==null   ? (ser/10).toFixed(1)+'/10'   : '—';
+  document.getElementById('disp-saber').textContent  = saber!==null? (saber/10).toFixed(1)+'/10'  : '—';
+  document.getElementById('disp-hacer').textContent  = hacer!==null? (hacer/10).toFixed(1)+'/10'  : '—';
+  document.getElementById('disp-nota').textContent   = nota!==null ? nota.toFixed(1)+'/10' : '—/10';
+  updateTimeDisplay();
+}
+
+// =====================================================
+// RENDER QUIZ
+// =====================================================
+function renderQuiz(){
+  const grid = document.getElementById('quiz-grid');
+  grid.innerHTML = QUESTIONS.map(q=>{
+    const ans = S.answers[q.num];
+    const optsHtml = q.opts.map((o,oi)=>{
+      let cls='q-opt', disabled='';
+      if(ans){ disabled='disabled style="opacity:.75"'; if(oi===ans.idx) cls += ans.ok?' correct':' wrong'; }
+      return `<button class="${cls}" ${disabled} onclick="answerQ(${q.num},${oi},${o.ok})">${o.t}</button>`;
+    }).join('');
+    const fb = ans ? `<div class="q-fb show ${ans.ok?'ok':'bad'}">${ans.ok?'✅':'❌'} ${ans.ok?q.fbOk:q.fbBad}</div>` : '';
+    return `<div class="q-card ${q.cls}">
+      <div class="q-hd"><div class="q-num">${q.num}</div><div class="q-sent">${q.q}</div></div>
+      <div class="q-opts">${optsHtml}</div>
+      ${fb}
+    </div>`;
+  }).join('');
+}
+function answerQ(num, oi, ok){
+  S.answers[num] = {idx:oi, ok:ok};
+  trackExamTiming();
+  renderQuiz();
+  updateGradeBox();
+  toast(ok?'✅':'❌', ok?'¡Correcto!':'Sigue intentando');
+}
+
+// =====================================================
+// SER
+// =====================================================
+function renderSer(){
+  document.getElementById('ser-list').innerHTML = SER_ITEMS.map((txt,i)=>`
+    <div class="ser-item ${S.ser[i]?'checked':''}" onclick="toggleSer(${i})">
+      <div class="ser-box">✓</div><div class="ser-txt">${txt}</div>
+    </div>`).join('');
+}
+function toggleSer(i){ S.ser[i] = !S.ser[i]; save(); renderSer(); updateGradeBox(); }
+
+// =====================================================
+// SABER HACER
+// =====================================================
+function renderKw(){
+  const text = (S.hacerText||'').toLowerCase();
+  document.getElementById('kw-strip').innerHTML = HACER_KEYWORDS.map(k=>
+    `<span class="kw-chip ${text.includes(k)?'found':''}">${k}</span>`).join('');
+  document.getElementById('hacer-ta').value = S.hacerText||'';
+}
+function onHacerInput(){
+  S.hacerText = document.getElementById('hacer-ta').value;
+  save();
+  renderKwLive();
+  updateGradeBox();
+}
+function renderKwLive(){
+  const text = (S.hacerText||'').toLowerCase();
+  document.querySelectorAll('#kw-strip .kw-chip').forEach((chip)=>{
+    chip.classList.toggle('found', text.includes(chip.textContent.trim().toLowerCase()));
+  });
+}
+function analyzeHacer(){
+  const text = (document.getElementById('hacer-ta').value||'').toLowerCase();
+  if(text.trim().length < 15){ toast('⚠️','Escribe al menos 2-3 oraciones primero.'); return; }
+  S.hacerText = document.getElementById('hacer-ta').value;
+  save();
+  const score = getHacerPct();
+  document.getElementById('hacer-score-txt').innerHTML = `Score: <b>${score}%</b>`;
+  const found = HACER_KEYWORDS.filter(k=>text.includes(k));
+  let fb, cls;
+  if(score>=80){fb={ttl:'🌟 ¡Excelente uso del Present Perfect!',tip:'Dominas have/has + past participle. Intenta ahora usar "already" y "just" para sonar más natural.'};cls='fb-exc';}
+  else if(score>=40){fb={ttl:'👍 Buen intento',tip:'Encontré algunas palabras clave. Revisa que cada verbo esté en su 3ª forma (past participle).'};cls='fb-good';}
+  else{fb={ttl:'💪 Sigue practicando',tip:'Usa este modelo: "I have ___. I haven\'t ___ yet. She has ___."'};cls='fb-try';}
+  const fbEl = document.getElementById('hacer-fb');
+  fbEl.className = `fb-box show ${cls}`;
+  fbEl.innerHTML = `<div class="fb-ttl">${fb.ttl}</div>
+    <div>Palabras clave encontradas: <strong>${found.length}</strong> de ${HACER_KEYWORDS.length} (${score}%)</div>
+    ${found.length?`<div style="margin-top:5px;font-size:.74rem;opacity:.85">Detectadas: ${found.map(k=>`<code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">${k}</code>`).join(' ')}</div>`:''}
+    <div style="margin-top:6px;opacity:.9">💡 ${fb.tip}</div>`;
+  renderKwLive();
+  updateGradeBox();
+  toast(score>=60?'🌟':'💪', `${found.length} palabra(s) clave detectada(s)`);
+}
+
+// =====================================================
+// TOAST & INIT
+// =====================================================
+function toast(icon,msg){
+  const t = document.getElementById('toast');
+  document.getElementById('t-icon').textContent = icon;
+  document.getElementById('t-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+function renderAll(){
+  renderQuiz();
+  renderSer();
+  renderKw();
+  updateGradeBox();
+  const score = getHacerPct();
+  if(score!==null){
+    document.getElementById('hacer-score-txt').innerHTML = `Score: <b>${score}%</b>`;
+  }
+}
+renderAll();
 </script>
-
 </body>
 </html>
