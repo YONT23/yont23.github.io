@@ -714,11 +714,57 @@ FALTAS: Cuaderno pendiente, Actividades pendientes de la plataforma English Cent
       </div>
     </div>
     <div class="field">
-      <label>WhatsApp</label>
+      <label>WhatsApp (teléfono)</label>
       <input type="text" id="manTelefono" placeholder="Ej: 300 123 4567">
       <div class="helper">Se normaliza automáticamente a formato internacional (+57).</div>
     </div>
+    <div class="field">
+      <label>Usuario de WhatsApp (opcional)</label>
+      <input type="text" id="manUsuario" placeholder="Ej: @mariamotos">
+      <div class="helper">Solo si el acudiente oculta su número y usa nombre de usuario — se usa como respaldo cuando no hay teléfono.</div>
+    </div>
     <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="UI.guardarManual()">Guardar</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalEditar" onclick="if(event.target===this)UI.cerrarModal('modalEditar')">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3>Editar contacto</h3><div class="sub">Los cambios al acudiente aplican a todos sus hijos vinculados</div></div>
+      <button class="modal-close" onclick="UI.cerrarModal('modalEditar')">✕</button>
+    </div>
+    <input type="hidden" id="editEstId">
+    <input type="hidden" id="editAcuId">
+    <div class="field-row">
+      <div class="field">
+        <label>Estudiante</label>
+        <input type="text" id="editEstNombre">
+      </div>
+      <div class="field">
+        <label>Grado</label>
+        <select id="editEstGrado"></select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Acudiente</label>
+        <input type="text" id="editAcuNombre">
+      </div>
+      <div class="field">
+        <label>Parentesco</label>
+        <input type="text" id="editAcuParentesco">
+      </div>
+    </div>
+    <div class="field">
+      <label>WhatsApp (teléfono)</label>
+      <input type="text" id="editAcuTelefono" placeholder="Ej: 300 123 4567">
+    </div>
+    <div class="field">
+      <label>Usuario de WhatsApp (opcional)</label>
+      <input type="text" id="editAcuUsuario" placeholder="Ej: @mariamotos">
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="UI.guardarEdicionContacto()">Guardar cambios</button>
+    <button class="btn btn-danger btn-block" style="margin-top:8px;" onclick="UI.eliminarContacto()">🗑️ Eliminar este contacto</button>
   </div>
 </div>
 
@@ -908,7 +954,14 @@ const Contacts = (() => {
 
   function setCodigoPais(c){ codigoPais = c; }
 
-  return { normalizarTelefono, esTelefonoValido, setCodigoPais };
+  function normalizarUsuario(raw){
+    if(!raw) return '';
+    let u = String(raw).trim().replace(/^@+/, '');
+    if(/^no\s*tiene$/i.test(u) || /^no$/i.test(u) || u==='') return '';
+    return u;
+  }
+
+  return { normalizarTelefono, esTelefonoValido, setCodigoPais, normalizarUsuario };
 })();
 
 /* ---------------------------------------------------------------
@@ -936,7 +989,20 @@ const WhatsappMod = (() => {
     }
     window.location.href = `tel:${telefono}`;
   }
-  return { link, abrir, llamar };
+  // WhatsApp aún no ofrece un enlace directo para abrir un chat solo con el
+  // @usuario (a diferencia de wa.me/numero) — se copia el mensaje y se
+  // indica buscarlo manualmente dentro de la app.
+  function copiarParaUsuario(usuario, mensaje){
+    const instruccion = `Copia el mensaje y ábrelo en WhatsApp: Nuevo chat → buscar usuario → @${usuario}`;
+    if(mensaje){
+      navigator.clipboard?.writeText(mensaje)
+        .then(()=>UI.toast(`Mensaje copiado. ${instruccion}`))
+        .catch(()=>UI.toast(instruccion));
+    } else {
+      UI.toast(instruccion);
+    }
+  }
+  return { link, abrir, llamar, copiarParaUsuario };
 })();
 
 /* ---------------------------------------------------------------
@@ -1006,6 +1072,7 @@ const Import = (() => {
     acudiente: ['acudiente','nombre acudiente','padre','madre','responsable'],
     parentesco: ['parentesco','relacion','relación'],
     telefono: ['telefono','teléfono','whatsapp','celular','numero','número'],
+    usuario: ['usuario','usuario whatsapp','usuario de whatsapp','nombre de usuario','username','@usuario'],
     correo: ['correo','email','correo electronico','correo electrónico'],
     motivo: ['motivo','asunto'],
     mensaje: ['mensaje','texto','detalle'],
@@ -1042,6 +1109,7 @@ const Import = (() => {
     const iAcu = detectarColumna(headers,'acudiente');
     const iPar = detectarColumna(headers,'parentesco');
     const iTel = detectarColumna(headers,'telefono');
+    const iUsu = detectarColumna(headers,'usuario');
     const iCorreo = detectarColumna(headers,'correo');
 
     const registros = [];
@@ -1055,6 +1123,7 @@ const Import = (() => {
         acudiente: iAcu>=0 ? String(fila[iAcu]||'').trim() : '',
         parentesco: iPar>=0 ? String(fila[iPar]||'').trim() : '',
         telefono: iTel>=0 ? String(fila[iTel]||'').trim() : '',
+        usuario: iUsu>=0 ? String(fila[iUsu]||'').trim() : '',
         correo: iCorreo>=0 ? String(fila[iCorreo]||'').trim() : '',
       });
     }
@@ -1068,12 +1137,19 @@ const Import = (() => {
     return registros.map((reg, idx) => {
       const problemas = [];
       const telNorm = Contacts.normalizarTelefono(reg.telefono);
+      const telValido = Contacts.esTelefonoValido(telNorm);
+      const usuarioNorm = Contacts.normalizarUsuario(reg.usuario);
       if(!reg.estudiante) problemas.push('Falta nombre de estudiante');
       if(!reg.grado) problemas.push('Falta grado');
       if(!reg.acudiente) problemas.push('Falta acudiente');
-      if(!reg.telefono || !Contacts.esTelefonoValido(telNorm)) problemas.push('Teléfono inválido o vacío');
 
       let advertencias = [];
+      if(!telValido && usuarioNorm){
+        advertencias.push(`Sin teléfono — se usará el usuario de WhatsApp @${usuarioNorm}`);
+      } else if(!telValido){
+        problemas.push('Teléfono inválido o vacío (y sin usuario de WhatsApp de respaldo)');
+      }
+
       const keyEst = `${reg.estudiante.toLowerCase()}|${reg.grado.toLowerCase()}`;
       if(estVistos.has(keyEst)) advertencias.push('Estudiante repetido en el archivo (nombre idéntico)');
       estVistos.set(keyEst,true);
@@ -1104,7 +1180,7 @@ const Import = (() => {
       }
 
       const estado = problemas.length ? 'error' : (advertencias.length ? 'advertencia' : 'ok');
-      const resultado = { ...reg, telefonoNormalizado: telNorm, problemas, advertencias, estado, duplicado, fusionDecision: duplicado ? 'merge' : null, _indice: idx };
+      const resultado = { ...reg, telefonoNormalizado: telNorm, usuarioNormalizado: usuarioNorm, problemas, advertencias, estado, duplicado, fusionDecision: duplicado ? 'merge' : null, _indice: idx };
       procesados.push(resultado);
       return resultado;
     });
@@ -1196,19 +1272,25 @@ const Import = (() => {
       // si coincide con uno ya guardado (aunque el nombre venga escrito distinto,
       // ej. "Génesis Vergara" vs "Génesis Vergara Muñiz"), se reutiliza el mismo
       // acudiente en vez de crear uno nuevo. Así un padre con varios hijos queda
-      // en un solo registro con todos sus hijos vinculados. ----
+      // en un solo registro con todos sus hijos vinculados. Si no hay teléfono
+      // válido pero sí usuario de WhatsApp, se usa el usuario como respaldo. ----
+      const telValido = Contacts.esTelefonoValido(r.telefonoNormalizado);
       let acudiente = null;
-      if(r.telefonoNormalizado){
+      if(telValido){
         acudiente = DB.acudientes.find(a => a.telefono === r.telefonoNormalizado);
       }
-      if(!acudiente){
-        acudiente = DB.acudientes.find(a => a.nombre.toLowerCase()===r.acudiente.toLowerCase() && a.telefono===r.telefonoNormalizado);
+      if(!acudiente && r.usuarioNormalizado){
+        acudiente = DB.acudientes.find(a => a.usuario && a.usuario.toLowerCase()===r.usuarioNormalizado.toLowerCase());
       }
       if(!acudiente){
-        acudiente = { id: Storage.nuevoId('ACU'), nombre:r.acudiente, telefono:r.telefonoNormalizado||r.telefono, correo:r.correo||'' };
+        acudiente = DB.acudientes.find(a => a.nombre.toLowerCase()===r.acudiente.toLowerCase() && (telValido ? a.telefono===r.telefonoNormalizado : (a.usuario||'').toLowerCase()===(r.usuarioNormalizado||'').toLowerCase()));
+      }
+      if(!acudiente){
+        acudiente = { id: Storage.nuevoId('ACU'), nombre:r.acudiente, telefono: telValido ? r.telefonoNormalizado : '', usuario: r.usuarioNormalizado||'', correo:r.correo||'' };
         DB.acudientes.push(acudiente);
-      } else if(!acudiente.correo && r.correo){
-        acudiente.correo = r.correo; // completa el correo si el registro existente no lo tenía
+      } else {
+        if(!acudiente.correo && r.correo) acudiente.correo = r.correo; // completa el correo si el registro existente no lo tenía
+        if(!acudiente.usuario && r.usuarioNormalizado) acudiente.usuario = r.usuarioNormalizado;
       }
 
       const yaExiste = DB.relaciones.some(rel => rel.estudianteId===estudianteId && rel.acudienteId===acudiente.id);
@@ -1243,19 +1325,20 @@ const Import = (() => {
     lineas.forEach(linea => {
       const tGrado = linea.match(/^##\s*Grado\s*(.+)/i);
       const tEstudiante = linea.match(/^-\s+([^\n]+)/);
-      const tCampo = linea.match(/^\s+-\s*(Acudiente|Parentesco|Teléfono|Telefono)\s*:\s*(.+)/i);
+      const tCampo = linea.match(/^\s+-\s*(Acudiente|Parentesco|Teléfono|Telefono|Usuario)\s*:\s*(.+)/i);
       if(tGrado){ gradoActual = `Grado ${tGrado[1].trim()}`; return; }
       if(tCampo && actual){
         const campo = tCampo[1].toLowerCase();
         const valor = tCampo[2].trim();
         if(campo==='acudiente') actual.acudiente = valor;
         else if(campo==='parentesco') actual.parentesco = valor;
+        else if(campo==='usuario') actual.usuario = valor;
         else actual.telefono = valor;
         return;
       }
       if(tEstudiante && !linea.trim().startsWith('- Acudiente') && !tCampo){
         if(actual) registros.push(actual);
-        actual = { grado:gradoActual, estudiante:tEstudiante[1].trim(), acudiente:'', parentesco:'', telefono:'', correo:'' };
+        actual = { grado:gradoActual, estudiante:tEstudiante[1].trim(), acudiente:'', parentesco:'', telefono:'', usuario:'', correo:'' };
       }
     });
     if(actual) registros.push(actual);
@@ -1609,6 +1692,20 @@ const UI = (() => {
     sel.innerHTML = (incluirTodos ? '<option value="">Todos los grados</option>' : '') + orden.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
   }
 
+  /* ---------- Botones de contacto: teléfono si existe, o respaldo por @usuario ---------- */
+  function accionesContacto(acudiente, tam){
+    const cls = tam ? ' '+tam : '';
+    if(!acudiente) return `<button class="btn btn-wa${cls}" disabled>💬</button><button class="btn btn-call${cls}" disabled>📞</button>`;
+    if(Contacts.esTelefonoValido(acudiente.telefono)){
+      return `<button class="btn btn-wa${cls}" onclick="WhatsappMod.abrir('${esc(acudiente.telefono)}','')">💬</button>
+              <button class="btn btn-call${cls}" onclick="WhatsappMod.llamar('${esc(acudiente.telefono)}')">📞</button>`;
+    }
+    if(acudiente.usuario){
+      return `<button class="btn btn-wa${cls}" onclick="WhatsappMod.copiarParaUsuario('${esc(acudiente.usuario)}','')" title="Sin número — copia el mensaje y búscalo en WhatsApp por @${esc(acudiente.usuario)}">👤</button>`;
+    }
+    return `<button class="btn btn-wa${cls}" disabled>💬</button><button class="btn btn-call${cls}" disabled>📞</button>`;
+  }
+
   function renderDirectorio(){
     if(!document.getElementById('dirGradoFilter').dataset.filled){
       poblarSelectorGrados('dirGradoFilter', true);
@@ -1636,14 +1733,14 @@ const UI = (() => {
     document.getElementById('directoryList').innerHTML = lista.map(e => {
       const pr = principalDe(e.id);
       const tel = pr ? pr.acudiente.telefono : '';
+      const contactoTexto = pr ? (tel || (pr.acudiente.usuario ? '@'+pr.acudiente.usuario : 'sin contacto')) : '';
       return `<div class="student-row" onclick="UI.abrirPerfil('${e.id}')">
         <div class="s-main"><span class="s-name">${esc(e.nombre)}</span><span class="s-grade">${esc(e.grado)}</span></div>
         <div class="s-guardian">
-          ${pr ? `<span><b>${esc(pr.acudiente.nombre)}</b></span><span>${esc(pr.relacion.parentesco)} · ${esc(tel||'sin teléfono')}</span>` : '<span>Sin acudiente registrado</span>'}
+          ${pr ? `<span><b>${esc(pr.acudiente.nombre)}</b></span><span>${esc(pr.relacion.parentesco)} · ${esc(contactoTexto)}</span>` : '<span>Sin acudiente registrado</span>'}
         </div>
         <div class="s-actions" onclick="event.stopPropagation()">
-          <button class="btn btn-wa btn-sm" onclick="WhatsappMod.abrir('${esc(tel)}','')" ${tel?'':'disabled'}>💬</button>
-          <button class="btn btn-call btn-sm" onclick="WhatsappMod.llamar('${esc(tel)}')" ${tel?'':'disabled'}>📞</button>
+          ${accionesContacto(pr ? pr.acudiente : null, 'btn-sm')}
         </div>
       </div>`;
     }).join('');
@@ -1764,11 +1861,11 @@ const UI = (() => {
             <span class="g-nombre">${esc(x.acudiente.nombre)}</span>
             ${x.relacion.principal ? '<span class="badge-principal">Principal</span>' : `<button class="link-btn" onclick="UI.marcarPrincipal('${est.id}','${x.acudiente.id}')">Marcar como principal</button>`}
           </div>
-          <div class="g-rel">${esc(x.relacion.parentesco)} · ${esc(x.acudiente.telefono || 'sin teléfono')}${x.acudiente.correo ? ' · '+esc(x.acudiente.correo):''}</div>
+          <div class="g-rel">${esc(x.relacion.parentesco)} · ${esc(x.acudiente.telefono || (x.acudiente.usuario ? '@'+x.acudiente.usuario+' (sin número)' : 'sin contacto'))}${x.acudiente.correo ? ' · '+esc(x.acudiente.correo):''}</div>
           <div class="g-actions">
-            <button class="btn btn-wa btn-sm" ${x.acudiente.telefono?'':'disabled'} onclick="WhatsappMod.abrir('${esc(x.acudiente.telefono)}','')">💬 WhatsApp</button>
-            <button class="btn btn-call btn-sm" ${x.acudiente.telefono?'':'disabled'} onclick="WhatsappMod.llamar('${esc(x.acudiente.telefono)}')">📞 Llamar</button>
+            ${accionesContacto(x.acudiente, 'btn-sm')}
             <button class="btn btn-ghost btn-sm" onclick="UI.irAMensajeDesdePerfil('${est.id}','${x.acudiente.id}')">✉️ Redactar aviso</button>
+            <button class="btn btn-ghost btn-sm" onclick="UI.abrirModalEditar('${est.id}','${x.acudiente.id}')">✏️ Editar</button>
           </div>
         </div>
       `).join('') : '<div class="empty-state">Sin acudientes registrados para este estudiante.</div>'}
@@ -1782,6 +1879,89 @@ const UI = (() => {
     abrirPerfil(estId);
     renderDirectorio();
     toast('Acudiente principal actualizado');
+  }
+
+  /* ---------- Editar / eliminar un contacto (estudiante + acudiente) ---------- */
+  function abrirModalEditar(estId, acuId){
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    const acu = DB.acudientes.find(a=>a.id===acuId);
+    const rel = DB.relaciones.find(r=>r.estudianteId===estId && r.acudienteId===acuId);
+    if(!est || !acu || !rel) return;
+    poblarSelectorGrados('editEstGrado', false);
+    document.getElementById('editEstId').value = estId;
+    document.getElementById('editAcuId').value = acuId;
+    document.getElementById('editEstNombre').value = est.nombre;
+    document.getElementById('editEstGrado').value = est.grado;
+    document.getElementById('editAcuNombre').value = acu.nombre;
+    document.getElementById('editAcuParentesco').value = rel.parentesco || '';
+    document.getElementById('editAcuTelefono').value = acu.telefono || '';
+    document.getElementById('editAcuUsuario').value = acu.usuario || '';
+    document.getElementById('modalEditar').classList.add('open');
+  }
+
+  function guardarEdicionContacto(){
+    const estId = document.getElementById('editEstId').value;
+    const acuId = document.getElementById('editAcuId').value;
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    const acu = DB.acudientes.find(a=>a.id===acuId);
+    const rel = DB.relaciones.find(r=>r.estudianteId===estId && r.acudienteId===acuId);
+    if(!est || !acu || !rel) return;
+
+    const nombreEst = document.getElementById('editEstNombre').value.trim();
+    const gradoEst = document.getElementById('editEstGrado').value;
+    const nombreAcu = document.getElementById('editAcuNombre').value.trim();
+    const parentesco = document.getElementById('editAcuParentesco').value.trim() || 'Acudiente';
+    const telRaw = document.getElementById('editAcuTelefono').value.trim();
+    const usuarioRaw = document.getElementById('editAcuUsuario').value.trim();
+    if(!nombreEst || !nombreAcu){ toast('El estudiante y el acudiente no pueden quedar vacíos'); return; }
+
+    const telNorm = Contacts.normalizarTelefono(telRaw);
+    const telValido = Contacts.esTelefonoValido(telNorm);
+    const usuario = Contacts.normalizarUsuario(usuarioRaw);
+    if(telRaw && !telValido){ toast('Ese teléfono no parece válido — corrígelo o déjalo vacío'); return; }
+    if(!telValido && !usuario){ toast('Agrega un teléfono válido o un usuario de WhatsApp'); return; }
+
+    est.nombre = nombreEst;
+    est.grado = gradoEst;
+    acu.nombre = nombreAcu;
+    acu.telefono = telValido ? telNorm : '';
+    acu.usuario = usuario;
+    rel.parentesco = parentesco;
+
+    Storage.guardar(DB);
+    renderAll();
+    cerrarModal('modalEditar');
+    abrirPerfil(estId);
+    toast('Contacto actualizado');
+  }
+
+  function eliminarContacto(){
+    const estId = document.getElementById('editEstId').value;
+    const acuId = document.getElementById('editAcuId').value;
+    const est = DB.estudiantes.find(e=>e.id===estId);
+    const acu = DB.acudientes.find(a=>a.id===acuId);
+    if(!est || !acu) return;
+    if(!confirm(`¿Eliminar a ${acu.nombre} como acudiente de ${est.nombre}? Esto no borra al estudiante, solo este contacto.`)) return;
+
+    const eraPrincipal = DB.relaciones.some(r=>r.estudianteId===estId && r.acudienteId===acuId && r.principal);
+    DB.relaciones = DB.relaciones.filter(r => !(r.estudianteId===estId && r.acudienteId===acuId));
+
+    // si el acudiente ya no tiene ningún estudiante vinculado, se elimina su registro
+    const quedanRelaciones = DB.relaciones.some(r => r.acudienteId===acuId);
+    if(!quedanRelaciones){
+      DB.acudientes = DB.acudientes.filter(a => a.id!==acuId);
+    }
+    // si era el principal, se promueve a otro acudiente del mismo estudiante (si queda alguno)
+    if(eraPrincipal){
+      const restante = DB.relaciones.find(r => r.estudianteId===estId);
+      if(restante) restante.principal = true;
+    }
+
+    Storage.guardar(DB);
+    renderAll();
+    cerrarModal('modalEditar');
+    if(DB.estudiantes.some(e=>e.id===estId)) abrirPerfil(estId); else cerrarModal('modalPerfil');
+    toast('Contacto eliminado');
   }
 
   function cerrarModal(id){ document.getElementById(id).classList.remove('open'); }
@@ -1898,6 +2078,12 @@ const UI = (() => {
     const { est, acu, rel } = msgContexto();
     if(!est || !acu){ toast('Selecciona estudiante y acudiente'); return; }
     const texto = document.getElementById('msgPreview').textContent;
+    if(!Contacts.esTelefonoValido(acu.telefono) && acu.usuario){
+      WhatsappMod.copiarParaUsuario(acu.usuario, texto);
+      DB.historial.unshift({ fecha:new Date().toISOString(), estudianteId:est.id, acudienteId:acu.id, tipo:'WhatsApp (usuario)', motivo:document.getElementById('msgMotivo').value||'Mensaje directo', mensaje:texto, estado:'Preparado', observaciones:'' });
+      Storage.guardar(DB);
+      return;
+    }
     const abierto = WhatsappMod.abrir(acu.telefono, texto);
     if(abierto){
       DB.historial.unshift({ fecha:new Date().toISOString(), estudianteId:est.id, acudienteId:acu.id, tipo:'WhatsApp', motivo:document.getElementById('msgMotivo').value||'Mensaje directo', mensaje:texto, estado:'Preparado', observaciones:'' });
@@ -1968,10 +2154,12 @@ const UI = (() => {
         const est = DB.estudiantes.find(e=>e.id===m.estudianteId);
         const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
         const listo = m.estado!=='Pendiente';
+        const contactoTexto = acu.telefono || (acu.usuario ? '@'+acu.usuario+' (sin número)' : 'sin contacto');
+        const puedeEnviar = Contacts.esTelefonoValido(acu.telefono) || !!acu.usuario;
         return `<div class="aviso-card">
-          <div class="aviso-top"><span class="nombre">${esc(est.nombre)}</span><span class="grado">${esc(acu.nombre)} · ${esc(acu.telefono||'sin teléfono')}</span></div>
+          <div class="aviso-top"><span class="nombre">${esc(est.nombre)}</span><span class="grado">${esc(acu.nombre)} · ${esc(contactoTexto)}</span></div>
           <div class="aviso-actions">
-            <button class="btn ${listo?'btn-ghost':'btn-wa'} btn-sm" ${acu.telefono?'':'disabled'} onclick="UI.grpEnviarUno('${m.id}','${lote}')">${listo?'✅ Preparado — reabrir':'💬 Enviar WhatsApp'}</button>
+            <button class="btn ${listo?'btn-ghost':'btn-wa'} btn-sm" ${puedeEnviar?'':'disabled'} onclick="UI.grpEnviarUno('${m.id}','${lote}')">${listo?'✅ Preparado — reabrir':'💬 Enviar WhatsApp'}</button>
           </div>
         </div>`;
       }).join('')}
@@ -1980,6 +2168,14 @@ const UI = (() => {
   function grpEnviarUno(avisoId, lote){
     const m = DB.mensajes.find(x=>x.id===avisoId);
     const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
+    if(!Contacts.esTelefonoValido(acu.telefono) && acu.usuario){
+      WhatsappMod.copiarParaUsuario(acu.usuario, m.mensaje);
+      if(m.estado==='Pendiente') m.estado='Preparado';
+      Storage.guardar(DB);
+      grpRenderCola(lote);
+      renderAvisos();
+      return;
+    }
     if(WhatsappMod.abrir(acu.telefono, m.mensaje)){
       if(m.estado==='Pendiente') m.estado='Preparado';
       Storage.guardar(DB);
@@ -2023,6 +2219,7 @@ const UI = (() => {
     document.getElementById('manAcudiente').value = '';
     document.getElementById('manParentesco').value = '';
     document.getElementById('manTelefono').value = '';
+    document.getElementById('manUsuario').value = '';
     document.getElementById('modalManual').classList.add('open');
   }
   function guardarManual(){
@@ -2031,19 +2228,26 @@ const UI = (() => {
     const nombreAcu = document.getElementById('manAcudiente').value.trim();
     const parentesco = document.getElementById('manParentesco').value.trim() || 'Acudiente';
     const telRaw = document.getElementById('manTelefono').value.trim();
-    if(!grado || !nombreEst || !nombreAcu || !telRaw){ toast('Completa estudiante, acudiente y teléfono'); return; }
+    const usuarioRaw = document.getElementById('manUsuario').value.trim();
+    if(!grado || !nombreEst || !nombreAcu){ toast('Completa estudiante y acudiente'); return; }
     const telNorm = Contacts.normalizarTelefono(telRaw);
-    if(!Contacts.esTelefonoValido(telNorm)){ toast('Ese teléfono no parece válido — revísalo'); return; }
+    const telValido = Contacts.esTelefonoValido(telNorm);
+    const usuario = Contacts.normalizarUsuario(usuarioRaw);
+    if(!telValido && !usuario){ toast('Agrega un teléfono válido o, si el acudiente oculta su número, su usuario de WhatsApp'); return; }
+    if(telRaw && !telValido){ toast('Ese teléfono no parece válido — revísalo, o déjalo vacío y usa solo el usuario'); return; }
 
     let estudiante = DB.estudiantes.find(e => e.nombre.toLowerCase()===nombreEst.toLowerCase() && e.grado.toLowerCase()===grado.toLowerCase());
     if(!estudiante){
       estudiante = { id: Storage.nuevoId('EST'), nombre:nombreEst, grado, estado:'activo' };
       DB.estudiantes.push(estudiante);
     }
-    let acudiente = DB.acudientes.find(a => a.telefono === telNorm);
+    let acudiente = telValido ? DB.acudientes.find(a => a.telefono === telNorm) : null;
+    if(!acudiente && usuario) acudiente = DB.acudientes.find(a => a.usuario && a.usuario.toLowerCase()===usuario.toLowerCase());
     if(!acudiente){
-      acudiente = { id: Storage.nuevoId('ACU'), nombre:nombreAcu, telefono:telNorm, correo:'' };
+      acudiente = { id: Storage.nuevoId('ACU'), nombre:nombreAcu, telefono: telValido?telNorm:'', usuario, correo:'' };
       DB.acudientes.push(acudiente);
+    } else if(usuario && !acudiente.usuario){
+      acudiente.usuario = usuario;
     }
     const yaExiste = DB.relaciones.some(r => r.estudianteId===estudiante.id && r.acudienteId===acudiente.id);
     if(!yaExiste){
@@ -2109,8 +2313,7 @@ const UI = (() => {
       <div class="aviso-mid">Acudiente: <b>${esc(acu.nombre)}</b> · Motivo: <b>${esc(m.motivo)}</b></div>
       <div class="aviso-actions">
         <button class="btn btn-ghost btn-sm" onclick="UI.verMensajeAviso('${m.id}')">Ver mensaje</button>
-        <button class="btn btn-wa btn-sm" ${acu.telefono?'':'disabled'} onclick="UI.contactarAviso('${m.id}')">💬 WhatsApp</button>
-        <button class="btn btn-call btn-sm" ${acu.telefono?'':'disabled'} onclick="WhatsappMod.llamar('${esc(acu.telefono)}')">📞 Llamar</button>
+        ${accionesContacto(acu, 'btn-sm')}
       </div>
     </div>`;
   }
@@ -2145,6 +2348,11 @@ const UI = (() => {
     const acu = DB.acudientes.find(a=>a.id===m.acudienteId);
     const est = DB.estudiantes.find(e=>e.id===m.estudianteId);
     const texto = m.mensaje || reemplazarVariables('Hola {acudiente}, me comunico con usted sobre {estudiante} ({grado}). Motivo: {motivo}.', { acudiente:acu.nombre, estudiante:est.nombre, grado:est.grado, motivo:m.motivo });
+    if(!Contacts.esTelefonoValido(acu.telefono) && acu.usuario){
+      WhatsappMod.copiarParaUsuario(acu.usuario, texto);
+      cambiarEstadoAviso(id, 'Preparado');
+      return;
+    }
     if(WhatsappMod.abrir(acu.telefono, texto)){
       cambiarEstadoAviso(id, 'Preparado');
     }
@@ -2197,7 +2405,8 @@ const UI = (() => {
     guardarPlantilla, duplicarPlantilla, eliminarPlantilla, filtrarAvisos, cambiarEstadoAviso, verMensajeAviso,
     contactarAviso, cambiarTabImport, renderAll, renderDashboard, buscarDuplicadosDirectorio,
     fusionarEstudiantes, fusionarAcudientes, cambiarTabMensajes, grpActualizarConteo, grpAplicarPlantilla,
-    grpGenerarEnvios, grpEnviarUno, abrirModalManual, guardarManual
+    grpGenerarEnvios, grpEnviarUno, abrirModalManual, guardarManual, abrirModalEditar,
+    guardarEdicionContacto, eliminarContacto
   };
 })();
 
