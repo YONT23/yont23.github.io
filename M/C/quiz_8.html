@@ -68,9 +68,8 @@
 <body class="p-4 md:p-8">
 
     <script>
-        // --- CONFIGURACIÓN DE GOOGLE APPS SCRIPT ---
-        // ⚠️ PEGA AQUÍ EL NUEVO ENLACE QUE OBTUVISTE EN EL PASO 1 DESPUÉS DE LA "NUEVA IMPLEMENTACIÓN"
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ2nrGEvLLryWKrJMWckXpPiOhNbd8uKPO3beYhx2m1lSLYB6tmQyUTXMFZPMpf2X0ew/exec"; 
+        // Este es el enlace que obtuviste en tu App Script
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxK21vruIm-ZKr0Oof8NFAdnwOMpDhc0GJyj6RIAwnAqcy02Z9IUuhOl1QDxdwsGGCylQ/exec"; 
         window.APPS_SCRIPT_URL = APPS_SCRIPT_URL;
 
         // Respuestas correctas para la calificación
@@ -81,6 +80,7 @@
         window.correctAnswers = correctAnswers;
     </script>
     
+    <!-- Este marco invisible recibe la respuesta del servidor sin recargar la página -->
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted) { 
         document.getElementById('submit-quiz-btn').disabled = false;
         document.getElementById('submit-quiz-btn').innerHTML = 'Submit My Answers! <i class=\"fa-solid fa-paper-plane ml-2\"></i>';
@@ -112,14 +112,15 @@
                 </div>
             </div>
 
-            <!-- Student Info -->
-            <div class="mb-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
-                <label for="student-name" class="block text-lg font-semibold text-gray-700 mb-2">My Name is:</label>
-                <input type="text" id="student-name" name="studentName" placeholder="Enter your full name here..." class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
-            </div>
+            <!-- Quiz Form AHORA ENGLOBA EL NOMBRE TAMBIÉN -->
+            <form id="quiz-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycbxK21vruIm-ZKr0Oof8NFAdnwOMpDhc0GJyj6RIAwnAqcy02Z9IUuhOl1QDxdwsGGCylQ/exec">
+                
+                <!-- Student Info (AHORA ADENTRO DEL FORM) -->
+                <div class="mb-8 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
+                    <label for="student-name" class="block text-lg font-semibold text-gray-700 mb-2">My Name is:</label>
+                    <input type="text" id="student-name" name="studentName" placeholder="Enter your full name here..." class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition">
+                </div>
 
-            <!-- Quiz Form -->
-            <form id="quiz-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycbxQ2nrGEvLLryWKrJMWckXpPiOhNbd8uKPO3beYhx2m1lSLYB6tmQyUTXMFZPMpf2X0ew/exec">
                 <!-- Hidden inputs to send extra data -->
                 <input type="hidden" id="hidden-score" name="score" value="">
                 <input type="hidden" id="hidden-answers" name="answers" value="">
@@ -347,7 +348,7 @@
             }
 
             quizForm.addEventListener('submit', (e) => {
-                // Prevenimos momentáneamente para validar, pero luego dejaremos que el formulario se envíe solo.
+                // Validación visual antes de permitir que el navegador envíe el formulario
                 const name = studentNameInput.value.trim();
                 if (!name) {
                     e.preventDefault();
@@ -374,7 +375,7 @@
                     return;
                 }
 
-                // Si todo está bien, preparamos los datos ocultos y dejamos que el <form> haga el trabajo
+                // Preparamos datos ocultos y dejamos que el navegador haga el POST al iframe
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
                 
@@ -382,9 +383,7 @@
                 document.getElementById('hidden-score').value = score;
                 document.getElementById('hidden-answers').value = JSON.stringify(answers);
                 
-                window.submitted = true; // Variable global para que el iframe sepa que debe mostrar el éxito
-                
-                // NO HAREMOS FETCH AQUÍ. El navegador hará un POST nativo gracias al atributo action="..." del <form>.
+                window.submitted = true; 
             });
 
             // Función para traer datos al dashboard
@@ -402,7 +401,7 @@
 
                 } catch (error) {
                     console.error("Error fetching results: ", error);
-                    resultsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error cargando datos. ¿Actualizaste el enlace tras la Nueva Implementación?</td></tr>`;
+                    resultsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error cargando datos. Revisa la consola o asegúrate de que Apps Script esté accesible para todos.</td></tr>`;
                 } finally {
                     refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data';
                 }
