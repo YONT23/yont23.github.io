@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practice Bank — Part 9: Speaking (Pilot)</title>
+<style>
+:root{
+  --bg:#eef4fb; --card:#ffffff; --ink:#0f2440; --muted:#5c7391;
+  --accent:#123a66; --gold:#2f6fed; --gold-bg:#e7f0fd; --line:#d7e3f3;
+  --ok:#1a8a4a; --ok-bg:#e4f5ea; --warn:#b26a00; --warn-bg:#fff2dc; --bad:#c0392b; --bad-bg:#fde8e6;
+  box-sizing:border-box;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#0f1720; --card:#182432; --ink:#eaf1fb; --muted:#8fa6c4; --gold-bg:#16283f; --line:#28374d; --ok-bg:#12301f; --warn-bg:#3a2b10; --bad-bg:#3b1a16; }
+}
+:root[data-theme="dark"]{ --bg:#0f1720; --card:#182432; --ink:#eaf1fb; --muted:#8fa6c4; --gold-bg:#16283f; --line:#28374d; --ok-bg:#12301f; --warn-bg:#3a2b10; --bad-bg:#3b1a16; }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.topbar h1{font-size:15px;margin:0;color:var(--muted);font-weight:600;}
+.teacher-btn{font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:6px 12px;border-radius:20px;cursor:pointer;}
+.progress-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:6px;}
+.progress-track{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px;}
+.progress-fill{height:100%;background:var(--gold);transition:width .3s;}
+.card{background:var(--card);border-radius:14px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.tag{font-size:12.5px;padding:5px 13px;border-radius:20px;border:1.3px solid var(--gold);color:var(--gold);background:var(--gold-bg);font-weight:600;}
+.tag.level{border-color:var(--line);color:var(--muted);background:transparent;}
+.instr{background:var(--gold-bg);border-radius:10px;padding:12px 14px;font-size:14.5px;color:var(--ink);margin-bottom:16px;line-height:1.5;}
+.target{font-size:30px;font-weight:800;text-align:center;margin:8px 0 6px;line-height:1.3;word-break:break-word;}
+.target.long{font-size:22px;}
+.prompt-q{font-size:21px;font-weight:700;text-align:center;margin:8px 0 6px;line-height:1.4;}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin-bottom:14px;line-height:1.5;}
+.btn-row{display:flex;gap:10px;margin:12px 0;}
+.btn-row .btn{flex:1;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15.5px;font-weight:700;cursor:pointer;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.btn-secondary{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
+.btn-model{background:var(--gold-bg);color:var(--gold);border:1.3px solid var(--gold);}
+.btn-mic{background:var(--gold);color:#fff;font-size:17px;padding:16px;}
+.btn-mic.rec{background:var(--bad);animation:pulse 1.2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(192,57,43,.5);}70%{box-shadow:0 0 0 12px rgba(192,57,43,0);}100%{box-shadow:0 0 0 0 rgba(192,57,43,0);}}
+.status{font-size:14px;text-align:center;min-height:20px;margin:6px 0;color:var(--muted);}
+.status.err{color:var(--bad);}
+.result{border:1.5px solid var(--line);border-radius:12px;padding:16px;margin-top:14px;}
+.score-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.score-num{font-size:42px;font-weight:800;line-height:1;}
+.score-label{font-size:15px;font-weight:700;}
+.score-sub{font-size:12.5px;color:var(--muted);margin-top:2px;}
+.said{font-size:14.5px;margin:8px 0;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.chip{padding:6px 12px;border-radius:16px;font-size:15px;font-weight:700;border:1.5px solid transparent;}
+.chip.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);}
+.chip.close{background:var(--warn-bg);color:var(--warn);border-color:var(--warn);}
+.chip.miss{background:var(--bad-bg);color:var(--bad);border-color:var(--bad);}
+.tipbox{background:var(--gold-bg);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:14px;line-height:1.5;}
+.tipbox b.say{color:var(--gold);}
+.tipbox button{margin-left:6px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:14px;padding:2px 10px;font-size:13px;cursor:pointer;}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px;}
+.banner{border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;margin:12px 0;background:var(--warn-bg);color:var(--ink);border:1px solid var(--warn);}
+.livebox{background:var(--bg);border:1.5px dashed var(--line);border-radius:10px;padding:12px;min-height:70px;font-size:15px;line-height:1.5;margin:10px 0;}
+.metrics{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;}
+.metric{flex:1;min-width:90px;background:var(--bg);border-radius:10px;padding:10px;text-align:center;}
+.metric b{display:block;font-size:20px;}
+.metric span{font-size:12px;color:var(--muted);}
+.nav{margin-top:18px;}
+.skip{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer;}
+.intro h2{font-size:24px;margin:4px 0 8px;}
+.intro p{color:var(--muted);font-size:15px;line-height:1.6;}
+.intro ul{font-size:14.5px;color:var(--ink);line-height:1.9;padding-left:20px;}
+.field{margin-bottom:14px;text-align:left;}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:600;}
+.field input[type=text],.field select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;background:var(--card);color:var(--ink);font-family:inherit;}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;margin:10px 0;}
+.check input{margin-top:3px;}
+.result-score{font-size:44px;font-weight:800;text-align:center;margin:10px 0;}
+.result-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px;}
+.result-row small{color:var(--muted);display:block;font-size:12px;}
+select.rub{padding:6px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);}
+audio{width:100%;margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><h1 id="topLabel">Practice Bank — Part 9: Speaking (Pilot)</h1><button class="teacher-btn" onclick="toggleTeacher()">Teacher access</button></div>
+  <div id="app"></div>
+</div>
+<script>
+/* ============ DATA ============ */
+const LEVELS=["Pre-A1","A1","A1-A2","A2","B1"];
+const TYPE_LABEL={word:"Repeat the word",phrase:"Repeat the phrase",question:"Answer the question",read:"Read aloud",opinion:"Give your opinion"};
+const items=[
+ {theme:"Calle",level:"Pre-A1",type:"word",target:"hello"},
+ {theme:"Restaurante",level:"Pre-A1",type:"word",target:"water"},
+ {theme:"Viajes",level:"A1",type:"phrase",target:"I have a ticket"},
+ {theme:"Deporte",level:"A1",type:"phrase",target:"I play soccer every Saturday"},
+ {theme:"Calle",level:"A1-A2",type:"question",prompt:"Where do you live?",must:[["live","lives"],["in"]],bonus:[["i"]],example:"I live in Riohacha."},
+ {theme:"Vacaciones",level:"A1-A2",type:"question",prompt:"What do you like to do on vacation?",must:[["like","love","enjoy"]],bonus:[["i"],["to","at","in"]],example:"I like to swim at the beach."},
+ {theme:"Trabajo",level:"A2",type:"read",target:"My sister works in an office downtown."},
+ {theme:"Restaurante",level:"A2",type:"read",target:"The waiter brings the menu and we choose our meals."},
+ {theme:"Medio Ambiente",level:"B1",type:"read",target:"Recycling plastic bottles helps protect the environment."},
+ {theme:"Medio Ambiente",level:"B1",type:"opinion",prompt:"Do you think learning English is important? Give two reasons.",minWords:40,connectors:["because","and","also","but","so","first","second","for example","however","finally"]},
+];
+
+// Pronunciation guides for Spanish speakers (approximate respellings; stress in CAPS).
+const TIPS={
+ hello:{say:"je-LÓU",note:"La h es una j suave y termina en 'ou', no en una 'o' seca."},
+ water:{say:"UÓ-der",note:"Empieza con 'uó', no 'gua'. La t del medio suena como una d suave."},
+ ticket:{say:"TÍ-quet",note:"El acento va en TÍ (primera sílaba)."},
+ have:{say:"JAV",note:"La a es corta (entre 'a' y 'e'); la v se hace con los dientes sobre el labio, no como 'b'."},
+ play:{say:"PLEI",note:"Termina en 'ei'; la p lleva un soplo de aire."},
+ soccer:{say:"SÓ-quer",note:"La c suena como 'k' y la r final es suave."},
+ every:{say:"ÉV-ri",note:"Son dos sílabas, no tres ('e-ve-ri')."},
+ saturday:{say:"SÁ-ter-dei",note:"Acento en SÁ; la t del medio suena como d suave."},
+ live:{say:"LIV",note:"Como verbo la i es corta (no 'laiv')."},
+ like:{say:"LAIK",note:"'ai' como en 'aire' y la k final se oye."},
+ works:{say:"UÉRKS",note:"Empieza con 'u'; la 'or' suena como 'er'."},
+ sister:{say:"SÍS-ter",note:"Acento en SÍS; la r final es suave."},
+ office:{say:"Ó-fis",note:"Acento en Ó; la última i es corta."},
+ downtown:{say:"daun-TAUN",note:"Acento en la segunda sílaba."},
+ waiter:{say:"UÉI-ter",note:"Empieza con 'u', no con 'g'."},
+ brings:{say:"BRINGS",note:"Une 'br' rápido y la s final suena."},
+ choose:{say:"CHUUS",note:"La 'oo' es larga y la s final suena como 'z'."},
+ meals:{say:"MIILS",note:"La 'ea' es una 'ii' larga."},
+ recycling:{say:"ri-SÁI-cling",note:"Acento en SÁI."},
+ plastic:{say:"PLÁS-tik",note:"Acento en PLÁS; la a es abierta."},
+ bottles:{say:"BÁ-tels",note:"La tt suena como d suave en inglés americano."},
+ helps:{say:"JELPS",note:"La h es suave y la s final suena."},
+ protect:{say:"pro-TÉKT",note:"Acento en la segunda sílaba."},
+ environment:{say:"en-VÁI-ron-ment",note:"Acento en VÁI; la 'r' sí se pronuncia."},
+};
+
+/* ============ SPEECH SUPPORT ============ */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const HAS_MIC=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
+function speakText(text,rate){
+  try{ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate||0.95; window.speechSynthesis.speak(u); }catch(e){}
+}
+
+/* ============ SCORING ============ */
+function normalize(s){ return (s||"").toLowerCase().replace(/[^a-z0-9'\s]/g," ").replace(/\s+/g," ").trim().split(" ").filter(Boolean); }
+function lev(a,b){
+  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  let prev=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){ const cur=[i]; for(let j=1;j<=n;j++){ cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1)); } prev=cur; }
+  return prev[n];
+}
+function simWord(e,h){
+  if(e===h) return 1;
+  const d=lev(e,h);
+  if((e.length>=3&&d<=1)||(e.length>=7&&d<=2)) return 0.5;
+  return 0;
+}
+// Order-preserving alignment of expected words against heard words.
+function align(exp,heard){
+  const m=exp.length,n=heard.length;
+  const dp=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++){
+    dp[i][j]=Math.max(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]+simWord(exp[i-1],heard[j-1]));
+  }
+  const status=new Array(m).fill("miss"); let i=m,j=n;
+  while(i>0&&j>0){
+    const s=simWord(exp[i-1],heard[j-1]);
+    if(s>0&&dp[i][j]===dp[i-1][j-1]+s){ status[i-1]=s===1?"ok":"close"; i--; j--; }
+    else if(dp[i-1][j]>=dp[i][j-1]) i--; else j--;
+  }
+  return {score:dp[m][n],status};
+}
+function combine(accuracy,confidence){
+  if(confidence&&confidence>0){ const clarity=Math.round(confidence*100); return {clarity,score:Math.round(0.7*accuracy+0.3*clarity)}; }
+  return {clarity:null,score:Math.round(accuracy)};
+}
+function band(score){
+  if(score>=85) return {label:"Excelente",color:"var(--ok)"};
+  if(score>=65) return {label:"Bien, con puntos a mejorar",color:"var(--gold)"};
+  if(score>=40) return {label:"Se entiende en parte",color:"var(--warn)"};
+  return {label:"Inténtalo de nuevo",color:"var(--bad)"};
+}
+function scoreTarget(item,alts){
+  const exp=normalize(item.target); let best=null;
+  alts.forEach((a,k)=>{
+    const heard=normalize(a.transcript); const al=align(exp,heard); const acc=(al.score/exp.length)*100;
+    if(!best||acc>best.acc+0.001) best={acc,al,heard:a.transcript,conf:a.confidence,k};
+  });
+  const c=combine(best.acc,best.conf);
+  return {kind:"target",accuracy:Math.round(best.acc),clarity:c.clarity,score:c.score,heard:best.heard,
+          words:exp.map((w,i)=>({w,status:best.al.status[i]}))};
+}
+function scoreQuestion(item,alts){
+  let best=null;
+  alts.forEach(a=>{
+    const toks=normalize(a.transcript);
+    const mustHit=item.must.map(g=>g.some(w=>toks.includes(w)));
+    const bonusHit=(item.bonus||[]).map(g=>g.some(w=>toks.includes(w)));
+    const content=(mustHit.filter(Boolean).length/item.must.length)*80+((item.bonus||[]).length?(bonusHit.filter(Boolean).length/item.bonus.length)*20:20);
+    if(!best||content>best.content) best={content,mustHit,bonusHit,heard:a.transcript,conf:a.confidence};
+  });
+  const c=combine(best.content,best.conf);
+  const words=[...item.must.map((g,i)=>({w:g[0],status:best.mustHit[i]?"ok":"miss"})),...(item.bonus||[]).map((g,i)=>({w:g[0],status:best.bonusHit[i]?"ok":"close"}))];
+  return {kind:"question",accuracy:Math.round(best.content),clarity:c.clarity,score:c.score,heard:best.heard,words};
+}
+function analyzeOpinion(item,text,seconds,confidence){
+  const toks=normalize(text); const lower=" "+toks.join(" ")+" ";
+  const used=item.connectors.filter(c=>lower.includes(" "+c+" "));
+  const unique=new Set(toks).size;
+  return {kind:"opinion",heard:text,words:toks.length,seconds:Math.round(seconds||0),connectors:used,variety:toks.length?Math.round(unique/toks.length*100):0,clarity:confidence&&confidence>0?Math.round(confidence*100):null};
+}
+
+/* ============ STATE ============ */
+let idx=-1, teacherMode=false, recordAudio=false;
+let student={name:"",grade:""};
+let results={};      // idx -> {attempts, best, skipped, self}
+let rubric={};       // idx -> {f,a,c}
+let audioURLs={};    // idx -> blob URL (session only)
+let ui={state:"idle",msg:"",err:false,interim:"",last:null};
+let currentRec=null, userStopped=false, mediaRec=null, mediaStream=null, mediaChunks=[], timerHandle=null, recStart=0;
+try{ const s=JSON.parse(localStorage.getItem("p9s_student")||"null"); if(s) student=s; }catch(e){}
+try{ const r=JSON.parse(localStorage.getItem("p9s_results")||"null"); if(r) results=r; }catch(e){}
+try{ const r=JSON.parse(localStorage.getItem("p9s_rubric")||"null"); if(r) rubric=r; }catch(e){}
+function persist(){ try{ localStorage.setItem("p9s_results",JSON.stringify(results)); localStorage.setItem("p9s_rubric",JSON.stringify(rubric)); }catch(e){} }
+function toggleTeacher(){ teacherMode=!teacherMode; render(); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ============ OPTIONAL AUDIO RECORDING ============ */
+async function startRecording(){
+  if(!recordAudio||!HAS_MIC) return;
+  try{
+    mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaChunks=[]; mediaRec=new MediaRecorder(mediaStream);
+    mediaRec.ondataavailable=e=>{ if(e.data&&e.data.size) mediaChunks.push(e.data); };
+    mediaRec.start();
+  }catch(e){ mediaRec=null; }
+}
+function stopRecording(forIdx){
+  return new Promise(resolve=>{
+    if(!mediaRec){ resolve(); return; }
+    mediaRec.onstop=()=>{
+      try{ const blob=new Blob(mediaChunks,{type:mediaRec.mimeType||"audio/webm"}); if(audioURLs[forIdx]) URL.revokeObjectURL(audioURLs[forIdx]); audioURLs[forIdx]=URL.createObjectURL(blob); }catch(e){}
+      try{ mediaStream.getTracks().forEach(t=>t.stop()); }catch(e){}
+      mediaRec=null; resolve();
+    };
+    try{ mediaRec.stop(); }catch(e){ resolve(); }
+  });
+}
+
+/* ============ RECOGNITION ============ */
+const ERRORS={
+ "not-allowed":"El micrófono está bloqueado. Permite el acceso al micrófono en tu navegador y vuelve a intentar.",
+ "service-not-allowed":"El micrófono está bloqueado. Permite el acceso al micrófono en tu navegador y vuelve a intentar.",
+ "no-speech":"No te escuché. Acércate al micrófono y vuelve a intentar.",
+ "network":"El reconocimiento de voz de Chrome necesita conexión a internet.",
+ "audio-capture":"No encuentro un micrófono disponible.",
+ "start-failed":"No se pudo iniciar el reconocimiento. Intenta de nuevo."
+};
+function listenOnce(){
+  return new Promise(resolve=>{
+    let done=false; const finish=v=>{ if(!done){ done=true; resolve(v); } };
+    try{
+      const r=new SR(); currentRec=r; r.lang="en-US"; r.interimResults=false; r.continuous=false; r.maxAlternatives=5;
+      r.onresult=e=>{ const res=e.results[0]; const alts=[]; for(let i=0;i<res.length;i++) alts.push({transcript:res[i].transcript,confidence:res[i].confidence}); finish({alts}); };
+      r.onerror=e=>finish({error:e.error});
+      r.onend=()=>finish({error:"no-speech"});
+      r.start();
+    }catch(e){ finish({error:"start-failed"}); }
+  });
+}
+function listenLong(onInterim){
+  return new Promise(resolve=>{
+    let done=false, finalText="", confs=[]; const t0=Date.now();
+    const finish=v=>{ if(!done){ done=true; resolve(v); } };
+    try{
+      const r=new SR(); currentRec=r; r.lang="en-US"; r.continuous=true; r.interimResults=true; r.maxAlternatives=1;
+      r.onresult=e=>{
+        let interim="";
+        for(let i=e.resultIndex;i<e.results.length;i++){ const res=e.results[i]; if(res.isFinal){ finalText+=res[0].transcript+" "; confs.push(res[0].confidence); } else interim+=res[0].transcript; }
+        onInterim((finalText+interim).trim());
+      };
+      r.onerror=e=>{ if(e.error==="no-speech"||e.error==="aborted") return; finish({error:e.error,text:finalText.trim()}); };
+      r.onend=()=>{
+        if(!done&&!userStopped&&Date.now()-t0<90000){ try{ r.start(); return; }catch(_){} }
+        const avg=confs.length?confs.reduce((a,b)=>a+b,0)/confs.length:0;
+        finish({text:finalText.trim(),confidence:avg,seconds:(Date.now()-t0)/1000});
+      };
+      r.start();
+    }catch(e){ finish({error:"start-failed"}); }
+  });
+}
+
+async function onMic(){
+  const it=items[idx];
+  if(ui.state==="listening"){ userStopped=true; try{ currentRec&&currentRec.stop(); }catch(e){} return; }
+  userStopped=false; ui={state:"listening",msg:it.type==="opinion"?"Listening… speak for 30-45 seconds, then tap Stop.":"Listening… speak now.",err:false,interim:"",last:ui.last};
+  recStart=Date.now(); render();
+  await startRecording();
+  if(it.type==="opinion"){
+    timerHandle=setInterval(()=>{ if(ui.state==="listening") render(); },1000);
+    const out=await listenLong(txt=>{ ui.interim=txt; render(); });
+    clearInterval(timerHandle);
+    await stopRecording(idx);
+    if(out.error){ ui={state:"idle",msg:ERRORS[out.error]||ERRORS["start-failed"],err:true,interim:"",last:ui.last}; render(); return; }
+    if(!out.text){ ui={state:"idle",msg:ERRORS["no-speech"],err:true,interim:"",last:ui.last}; render(); return; }
+    saveResult(idx,analyzeOpinion(it,out.text,out.seconds,out.confidence));
+  }else{
+    const out=await listenOnce();
+    await stopRecording(idx);
+    if(out.error){ ui={state:"idle",msg:ERRORS[out.error]||ERRORS["start-failed"],err:true,interim:"",last:ui.last}; render(); return; }
+    saveResult(idx,it.type==="question"?scoreQuestion(it,out.alts):scoreTarget(it,out.alts));
+  }
+}
+function saveResult(i,r){
+  const prev=results[i]||{attempts:0};
+  const attempts=prev.attempts+1;
+  let best=r;
+  if(prev.best&&prev.best.kind!=="opinion"&&r.kind!=="opinion"&&prev.best.score>r.score) best=prev.best;
+  if(r.kind==="opinion") best=r;
+  results[i]={attempts,best,skipped:false};
+  persist();
+  ui={state:"done",msg:"",err:false,interim:"",last:r};
+  render();
+}
+function onSelfRate(v){ results[idx]={attempts:(results[idx]?results[idx].attempts:0)+1,best:{kind:"self",score:v,heard:"",words:[]},skipped:false,self:true}; persist(); ui={state:"done",msg:"",err:false,interim:"",last:results[idx].best}; render(); }
+async function onRecordOnly(){
+  if(ui.state==="listening"){ await stopRecording(idx); ui={state:"idle",msg:"",err:false,interim:"",last:ui.last}; render(); return; }
+  ui={state:"listening",msg:"Recording… tap Stop when you finish.",err:false,interim:"",last:ui.last}; render();
+  const prevFlag=recordAudio; recordAudio=true; await startRecording(); recordAudio=prevFlag;
+  if(!mediaRec){ ui={state:"idle",msg:ERRORS["not-allowed"],err:true,interim:"",last:null}; render(); }
+}
+function skipItem(){ results[idx]={attempts:(results[idx]?results[idx].attempts:0),best:null,skipped:true}; persist(); next(); }
+
+/* ============ NAV ============ */
+function resetUI(){ ui={state:"idle",msg:"",err:false,interim:"",last:null}; userStopped=false; try{ window.speechSynthesis.cancel(); }catch(e){} try{ currentRec&&currentRec.abort(); }catch(e){} }
+function startTest(){
+  student={name:document.getElementById("stuName").value.trim(),grade:document.getElementById("stuGrade").value};
+  recordAudio=document.getElementById("recChk")?document.getElementById("recChk").checked:false;
+  try{ localStorage.setItem("p9s_student",JSON.stringify(student)); }catch(e){}
+  results={}; rubric={}; persist();
+  idx=0; resetUI(); render();
+}
+function next(){ resetUI(); idx++; render(); window.scrollTo(0,0); }
+function prev(){ if(idx>0){ resetUI(); idx--; render(); window.scrollTo(0,0); } }
+
+/* ============ RENDER ============ */
+function tipHTML(word){
+  const t=TIPS[word];
+  const body=t?`<b>${esc(word)}</b> → <b class="say">${esc(t.say)}</b><br>${esc(t.note)}`:`<b>${esc(word)}</b> → escucha el modelo y repítelo despacio.`;
+  return `<div class="tipbox">${body}<button onclick="speakText('${esc(word)}',0.8)">🔊 ${esc(word)}</button></div>`;
+}
+function resultHTML(it,r,isLatest){
+  if(r.kind==="self"){ const b=band(r.score); return `<div class="result"><div class="score-label" style="color:${b.color}">Autoevaluación guardada</div><div class="score-sub">Esta nota la puso el estudiante, no el sistema.</div></div>`; }
+  if(r.kind==="opinion"){
+    const okWords=r.words>=it.minWords;
+    return `<div class="result">
+      <div class="score-label">Tu respuesta fue registrada</div>
+      <div class="metrics">
+        <div class="metric"><b style="color:${okWords?"var(--ok)":"var(--warn)"}">${r.words}</b><span>words (goal ${it.minWords}+)</span></div>
+        <div class="metric"><b>${r.seconds}s</b><span>time</span></div>
+        <div class="metric"><b>${r.connectors.length}</b><span>connectors</span></div>
+      </div>
+      <div class="said"><b>Texto reconocido:</b> “${esc(r.heard)}”</div>
+      <div class="note">Conectores usados: ${r.connectors.length?esc(r.connectors.join(", ")):"ninguno — prueba con <i>because, and, also, for example</i>."}<br>
+      En este tipo de ejercicio el sistema solo mide cantidad y variedad. La calidad la evalúa tu docente con la rúbrica.</div>
+      ${audioURLs[idx]?`<audio controls src="${audioURLs[idx]}"></audio>`:""}
+    </div>`;
+  }
+  const b=band(r.score);
+  const flagged=r.words.filter(w=>w.status!=="ok");
+  const chips=r.words.map(w=>`<span class="chip ${w.status}">${w.status==="ok"?"✔":w.status==="close"?"~":"✘"} ${esc(w.w)}</span>`).join("");
+  const tips=flagged.map(w=>it.type==="question"?`<div class="tipbox">Te faltó decir <b>${esc(w.w)}</b>.</div>`:tipHTML(w.w)).join("");
+  return `<div class="result">
+    <div class="score-row"><div class="score-num" style="color:${b.color}">${r.score}%</div>
+      <div><div class="score-label" style="color:${b.color}">${b.label}</div>
+      <div class="score-sub">${it.type==="question"?"Contenido":"Acierto de palabras"}: ${r.accuracy}%${r.clarity!==null?` · Claridad de la voz: ${r.clarity}%`:""}</div></div></div>
+    <div class="said"><b>Entendí:</b> “${esc(r.heard)}”</div>
+    <div class="chips">${chips}</div>
+    ${flagged.length?`<div class="said"><b>Para mejorar:</b></div>${tips}`:`<div class="tipbox">¡Todas las palabras se entendieron bien!</div>`}
+    ${it.type==="question"?`<div class="note">Ejemplo de respuesta: “${esc(it.example)}”</div>`:""}
+    <div class="note">Este puntaje mide qué tan claro se entiende tu voz y qué palabras reconoció el sistema. No reemplaza la evaluación de tu docente: un sonido puede estar algo desviado y aun así ser entendido.</div>
+    ${audioURLs[idx]?`<audio controls src="${audioURLs[idx]}"></audio>`:""}
+  </div>`;
+}
+function rubricHTML(){
+  const r=rubric[idx]||{f:"",a:"",c:""};
+  const sel=(k,label)=>`<label style="display:flex;justify-content:space-between;align-items:center;margin:6px 0;font-size:14px">${label}<select class="rub" onchange="setRubric('${k}',this.value)"><option value="">–</option>${[1,2,3,4].map(n=>`<option value="${n}" ${String(r[k])===String(n)?"selected":""}>${n}</option>`).join("")}</select></label>`;
+  return `<div class="result" style="border-color:var(--gold)"><b>Rúbrica del docente (1-4)</b>${sel("f","Fluidez")}${sel("a","Precisión (gramática y vocabulario)")}${sel("c","Coherencia")}</div>`;
+}
+function setRubric(k,v){ rubric[idx]=Object.assign({f:"",a:"",c:""},rubric[idx]||{}); rubric[idx][k]=v; persist(); }
+
+function renderIntro(){
+  document.getElementById("topLabel").textContent="Practice Bank — Part 9 (Pilot)";
+  const gradeOpts=[6,7,8,9,10,11].map(g=>`<option value="${g}" ${student.grade==g?"selected":""}>Grado ${g}°</option>`).join("");
+  const warn=!SR?`<div class="banner"><b>Tu navegador no soporta reconocimiento de voz.</b> Usa Chrome o Edge para la evaluación automática. En este navegador podrás grabarte y autoevaluarte.</div>`:"";
+  return `<div class="card intro">
+    <div class="tags"><span class="tag">Part 9 — Speaking</span><span class="tag level">Piloto · 10 ítems</span></div>
+    <h2>Speaking Practice (Pilot)</h2>
+    <p>Escucha el modelo, repite o responde, y la app te dirá qué tan claro se entendió tu voz, qué palabras salieron bien y cómo decir las que fallaron.</p>
+    ${warn}
+    <div class="field"><label>Nombre completo</label><input id="stuName" type="text" value="${esc(student.name)}" placeholder="Tu nombre"></div>
+    <div class="field"><label>Grado</label><select id="stuGrade"><option value="">Selecciona tu grado</option>${gradeOpts}</select></div>
+    ${HAS_MIC?`<label class="check"><input id="recChk" type="checkbox"><span>Guardar mis grabaciones para que mi docente las escuche (solo durante esta sesión). <i>En algunos celulares esto puede interferir con el reconocimiento; si falla, desactívalo.</i></span></label>`:""}
+    <ul><li>Habla cerca del micrófono y en un lugar tranquilo.</li><li>Puedes intentar cada ítem las veces que quieras; se guarda tu mejor intento.</li><li>Si el micrófono pide permiso, acéptalo.</li></ul>
+    <div class="nav"><button class="btn btn-primary" onclick="if(!document.getElementById('stuName').value.trim()||!document.getElementById('stuGrade').value){alert('Escribe tu nombre y elige tu grado.');return;}startTest()">Start</button></div>
+  </div>`;
+}
+function renderItem(){
+  const it=items[idx], total=items.length, pct=Math.round(idx/total*100), res=results[idx];
+  document.getElementById("topLabel").textContent="Tema: "+it.theme;
+  const isTarget=["word","phrase","read"].includes(it.type);
+  const showText=it.type==="question"||it.type==="opinion";
+  const longCls=(it.target&&it.target.length>22)?" long":"";
+  const mainText=isTarget?`<div class="target${longCls}">${esc(it.target)}</div><div class="hint">Listen first, then say it out loud.</div>`
+                 :`<div class="prompt-q">${esc(it.prompt)}</div><div class="hint">${it.type==="question"?"Answer with a complete sentence.":`Speak for 30-45 seconds (goal: ${it.minWords}+ words). Use words like <i>because, also, for example</i>.`}</div>`;
+  const modelBtns=isTarget?`<div class="btn-row"><button class="btn btn-model" onclick="speakText(items[${idx}].target,0.95)">🔊 Model</button><button class="btn btn-model" onclick="speakText(items[${idx}].target,0.6)">🐢 Slow</button></div>`
+                 :it.type==="question"?`<div class="btn-row"><button class="btn btn-model" onclick="speakText(items[${idx}].prompt,0.95)">🔊 Hear the question</button></div>`
+                 :`<div class="btn-row"><button class="btn btn-model" onclick="speakText(items[${idx}].prompt,0.95)">🔊 Hear the question</button></div>`;
+  let micArea="";
+  if(SR){
+    const rec=ui.state==="listening";
+    let elapsed=""; if(rec&&it.type==="opinion") elapsed=` · ${Math.round((Date.now()-recStart)/1000)}s`;
+    micArea=`<button class="btn btn-mic ${rec?"rec":""}" onclick="onMic()">${rec?"⏹ Stop"+elapsed:(res&&res.best?"🎤 Try again":"🎤 Speak")}</button>`;
+    if(it.type==="opinion"&&rec) micArea+=`<div class="livebox">${esc(ui.interim)||"<span style='color:var(--muted)'>…</span>"}</div>`;
+  }else if(HAS_MIC){
+    const rec=ui.state==="listening";
+    micArea=`<button class="btn btn-mic ${rec?"rec":""}" onclick="onRecordOnly()">${rec?"⏹ Stop recording":"🎤 Record myself"}</button>`;
+    if(audioURLs[idx]&&!rec){ micArea+=`<audio controls src="${audioURLs[idx]}"></audio><div class="said" style="margin-top:12px"><b>¿Cómo crees que sonó?</b></div><div class="btn-row"><button class="btn btn-secondary" onclick="onSelfRate(35)">Necesito practicar</button><button class="btn btn-secondary" onclick="onSelfRate(70)">Bien</button><button class="btn btn-secondary" onclick="onSelfRate(95)">Muy bien</button></div>`; }
+  }else{
+    micArea=`<div class="banner">Este navegador no permite usar el micrófono. Abre la página en Chrome o Edge.</div>`;
+  }
+  const status=ui.msg?`<div class="status ${ui.err?"err":""}">${esc(ui.msg)}</div>`:"";
+  const shown=ui.last||(res&&res.best);
+  const resultBlock=shown?resultHTML(it,shown):"";
+  const teacherExtra=teacherMode?(it.type==="opinion"?rubricHTML():"")+(res&&res.best&&res.best.heard?`<div class="note">Docente · intentos: ${res.attempts} · transcripción: “${esc(res.best.heard)}”</div>`:""):"";
+  const canNext=!!(res&&(res.best||res.skipped));
+  return `<div class="progress-row"><span>Item ${idx+1} of ${total}</span><span>${pct}%</span></div>
+  <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  <div class="card">
+    <div class="tags"><span class="tag">${it.theme}</span><span class="tag level">Level ${it.level}</span><span class="tag level">${TYPE_LABEL[it.type]}</span></div>
+    ${mainText}${modelBtns}${micArea}${status}${resultBlock}${teacherExtra}
+    <div class="nav">
+      <button class="btn btn-primary" ${canNext?"":"disabled"} onclick="next()">${idx===total-1?"Finish":"Next"}</button>
+      ${idx>0?`<button class="btn btn-secondary" style="margin-top:10px" onclick="prev()">Previous</button>`:""}
+      ${canNext?"":`<a class="skip" onclick="skipItem()">No puedo hacer este ítem (saltar)</a>`}
+    </div>
+  </div>`;
+}
+function summarize(){
+  const rows=[], byLevel={}, wordsToPractice={};
+  let sum=0,cnt=0;
+  items.forEach((it,i)=>{
+    const r=results[i]; if(!r||!r.best){ rows.push({i,it,label:"Sin respuesta",score:null}); return; }
+    const b=r.best;
+    if(b.kind==="opinion"){ const rb=rubric[i]; const tot=rb&&rb.f&&rb.a&&rb.c?Number(rb.f)+Number(rb.a)+Number(rb.c):null; rows.push({i,it,label:`${b.words} words · ${b.connectors.length} connectors`+(tot?` · rúbrica ${tot}/12`:" · pendiente de rúbrica"),score:null,sub:b.heard}); return; }
+    rows.push({i,it,label:b.kind==="self"?"Autoevaluación":band(b.score).label,score:b.score,sub:b.heard,attempts:r.attempts});
+    sum+=b.score; cnt++;
+    byLevel[it.level]=byLevel[it.level]||{s:0,n:0}; byLevel[it.level].s+=b.score; byLevel[it.level].n++;
+    (b.words||[]).forEach(w=>{ if(w.status!=="ok"&&it.type!=="question") wordsToPractice[w.w]=true; });
+  });
+  return {rows,avg:cnt?Math.round(sum/cnt):null,byLevel,words:Object.keys(wordsToPractice)};
+}
+function renderResults(){
+  document.getElementById("topLabel").textContent="Results";
+  const s=summarize();
+  const lrows=LEVELS.filter(l=>s.byLevel[l]).map(l=>`<div class="result-row"><span>Level ${l}</span><span>${Math.round(s.byLevel[l].s/s.byLevel[l].n)}%</span></div>`).join("");
+  const irows=s.rows.map(r=>`<div class="result-row"><span><b>${r.i+1}. ${esc(r.it.theme)}</b> · ${r.it.level}<small>${esc(r.label)}${teacherMode&&r.sub?` — “${esc(r.sub)}”`:""}</small></span><span><b>${r.score===null?"–":r.score+"%"}</b></span></div>`).join("");
+  const wl=s.words.length?`<h2 style="margin:18px 0 6px;font-size:17px;">Words to practice</h2>${s.words.map(w=>tipHTML(w)).join("")}`:"";
+  const b=s.avg===null?null:band(s.avg);
+  return `<div class="card">
+    <div class="tags"><span class="tag">Speaking complete</span><span class="tag level">${esc(student.name||"Student")}${student.grade?" — Grado "+student.grade+"°":""}</span></div>
+    <h2 style="margin:4px 0;">Your Speaking Score</h2>
+    <div class="result-score" style="color:${b?b.color:"inherit"}">${s.avg===null?"–":s.avg+"%"}</div>
+    <p style="text-align:center;color:var(--muted);margin-top:-10px;">${b?b.label:"Sin ítems puntuados"} · promedio de los ítems calificados automáticamente</p>
+    <h2 style="margin:18px 0 4px;font-size:17px;">By level</h2>${lrows}
+    <h2 style="margin:18px 0 4px;font-size:17px;">By item</h2>${irows}
+    ${wl}
+    <div class="note">El porcentaje mide claridad de la voz y palabras reconocidas por el navegador. El ítem de opinión (B1) lo evalúa tu docente con la rúbrica.</div>
+    <div class="nav"><button class="btn btn-secondary" onclick="downloadCSV()">⬇ Descargar resultados (CSV)</button>
+    <button class="btn btn-secondary" style="margin-top:10px" onclick="idx=0;resetUI();render();window.scrollTo(0,0);">Review items</button></div>
+  </div>`;
+}
+function downloadCSV(){
+  const head=["name","grade","date","item","theme","level","type","expected","heard","accuracy","clarity","score","attempts","words_to_improve","words_spoken","connectors","rubric_f","rubric_a","rubric_c"];
+  const date=new Date().toISOString().slice(0,10);
+  const q=v=>`"${String(v===undefined||v===null?"":v).replace(/"/g,'""')}"`;
+  const lines=[head.join(",")];
+  items.forEach((it,i)=>{
+    const r=results[i]; const b=r&&r.best; const rb=rubric[i]||{};
+    lines.push([student.name,student.grade,date,i+1,it.theme,it.level,it.type,it.target||it.prompt,b?b.heard:"",b&&b.accuracy!==undefined?b.accuracy:"",b&&b.clarity!==undefined&&b.clarity!==null?b.clarity:"",b&&b.score!==undefined?b.score:"",r?r.attempts:0,b&&b.words&&b.kind!=="opinion"?b.words.filter(w=>w.status!=="ok").map(w=>w.w).join(" "):"",b&&b.kind==="opinion"?b.words:"",b&&b.connectors?b.connectors.join(" "):"",rb.f||"",rb.a||"",rb.c||""].map(q).join(","));
+  });
+  const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="speaking_"+(student.name||"student").replace(/\s+/g,"_")+".csv"; document.body.appendChild(a); a.click(); a.remove();
+}
+function render(){
+  const app=document.getElementById("app");
+  if(idx===-1) app.innerHTML=renderIntro();
+  else if(idx>=items.length) app.innerHTML=renderResults();
+  else app.innerHTML=renderItem();
+}
+render();
+</script>
+</body>
+</html>
