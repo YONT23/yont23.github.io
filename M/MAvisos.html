@@ -695,8 +695,8 @@ FALTAS: Cuaderno pendiente, Actividades pendientes de la plataforma English Cent
     </div>
     <div class="field-row">
       <div class="field">
-        <label>Grado</label>
-        <select id="manGrado"></select>
+        <label>Grado / Tipo</label>
+        <input type="text" id="manGrado" list="listaGradosSugeridos" placeholder="Ej: Grado 6, Otros...">
       </div>
       <div class="field">
         <label>Estudiante</label>
@@ -741,8 +741,8 @@ FALTAS: Cuaderno pendiente, Actividades pendientes de la plataforma English Cent
         <input type="text" id="editEstNombre">
       </div>
       <div class="field">
-        <label>Grado</label>
-        <select id="editEstGrado"></select>
+        <label>Grado / Tipo</label>
+        <input type="text" id="editEstGrado" list="listaGradosSugeridos">
       </div>
     </div>
     <div class="field-row">
@@ -767,6 +767,8 @@ FALTAS: Cuaderno pendiente, Actividades pendientes de la plataforma English Cent
     <button class="btn btn-danger btn-block" style="margin-top:8px;" onclick="UI.eliminarContacto()">🗑️ Eliminar este contacto</button>
   </div>
 </div>
+
+<datalist id="listaGradosSugeridos"></datalist>
 
 <div class="toast" id="toast"></div>
 
@@ -1584,7 +1586,7 @@ const Novedades = (() => {
 /* ---------------------------------------------------------------
    Estado global
    --------------------------------------------------------------- */
-const GRADOS_VALIDOS = ['Grado 1','Grado 2','Grado 3','Grado 4','Grado 5','Grado 6','Grado 7','Grado 8','Grado 9','Grado 10','Grado 11'];
+const GRADOS_VALIDOS = ['Grado 1','Grado 2','Grado 3','Grado 4','Grado 5','Grado 6','Grado 7','Grado 8','Grado 9','Grado 10','Grado 11', 'Otros'];
 let DB = Storage.cargar() || DemoData.generar();
 Storage.guardar(DB);
 let currentGrado = null;
@@ -1687,8 +1689,16 @@ const UI = (() => {
   /* ---------- Directorio ---------- */
   function poblarSelectorGrados(selectId, incluirTodos){
     const sel = document.getElementById(selectId);
+    if(!sel) return;
     const gradosPresentes = [...new Set(DB.estudiantes.map(e=>e.grado))];
-    const orden = [...GRADOS_VALIDOS, ...gradosPresentes.filter(g=>!GRADOS_VALIDOS.includes(g))].filter(g=>gradosPresentes.includes(g));
+    
+    let orden = [];
+    if(selectId === 'listaGradosSugeridos') {
+      orden = [...GRADOS_VALIDOS, ...gradosPresentes.filter(g=>!GRADOS_VALIDOS.includes(g))];
+    } else {
+      orden = [...GRADOS_VALIDOS, ...gradosPresentes.filter(g=>!GRADOS_VALIDOS.includes(g))].filter(g=>gradosPresentes.includes(g));
+    }
+
     sel.innerHTML = (incluirTodos ? '<option value="">Todos los grados</option>' : '') + orden.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
   }
 
@@ -1889,7 +1899,7 @@ const UI = (() => {
     const acu = DB.acudientes.find(a=>a.id===acuId);
     const rel = DB.relaciones.find(r=>r.estudianteId===estId && r.acudienteId===acuId);
     if(!est || !acu || !rel) return;
-    poblarSelectorGrados('editEstGrado', false);
+    poblarSelectorGrados('listaGradosSugeridos', false);
     document.getElementById('editEstId').value = estId;
     document.getElementById('editAcuId').value = acuId;
     document.getElementById('editEstNombre').value = est.nombre;
@@ -2181,7 +2191,7 @@ const UI = (() => {
         const contactoTexto = acu.telefono || (acu.usuario ? '@'+acu.usuario+' (sin número)' : 'sin contacto');
         const puedeEnviar = Contacts.esTelefonoValido(acu.telefono) || !!acu.usuario;
         return `<div class="aviso-card">
-          <div class="aviso-top"><span class="nombre">${esc(est.nombre)}</span><span class="grado">${esc(acu.nombre)} · ${esc(contactoTexto)}</span></div>
+          <div class="aviso-top"><span class="nombre">${esc(est.nombre)}</span><span class="grado">${esc(acu.nombre)} ·${esc(contactoTexto)}</span></div>
           <div class="aviso-actions">
             <button class="btn ${listo?'btn-ghost':'btn-wa'} btn-sm" ${puedeEnviar?'':'disabled'} onclick="UI.grpEnviarUno('${m.id}','${lote}')">${listo?'✅ Preparado — reabrir':'💬 Enviar WhatsApp'}</button>
           </div>
@@ -2238,7 +2248,8 @@ const UI = (() => {
 
   /* ---------- Agregar manualmente (estudiante + acudiente sueltos) ---------- */
   function abrirModalManual(){
-    poblarSelectorGrados('manGrado', false);
+    poblarSelectorGrados('listaGradosSugeridos', false);
+    document.getElementById('manGrado').value = '';
     document.getElementById('manEstudiante').value = '';
     document.getElementById('manAcudiente').value = '';
     document.getElementById('manParentesco').value = '';
@@ -2247,13 +2258,13 @@ const UI = (() => {
     document.getElementById('modalManual').classList.add('open');
   }
   function guardarManual(){
-    const grado = document.getElementById('manGrado').value;
+    const grado = document.getElementById('manGrado').value.trim();
     const nombreEst = document.getElementById('manEstudiante').value.trim();
     const nombreAcu = document.getElementById('manAcudiente').value.trim();
     const parentesco = document.getElementById('manParentesco').value.trim() || 'Acudiente';
     const telRaw = document.getElementById('manTelefono').value.trim();
     const usuarioRaw = document.getElementById('manUsuario').value.trim();
-    if(!grado || !nombreEst || !nombreAcu){ toast('Completa estudiante y acudiente'); return; }
+    if(!grado || !nombreEst || !nombreAcu){ toast('Completa estudiante, grado y acudiente'); return; }
     const telNorm = Contacts.normalizarTelefono(telRaw);
     const telValido = Contacts.esTelefonoValido(telNorm);
     const usuario = Contacts.normalizarUsuario(usuarioRaw);
