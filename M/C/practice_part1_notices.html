@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practice Bank — Part 1: Notices</title>
+<style>
+:root{
+  --bg:#eef4fb; --card:#ffffff; --ink:#0f2440; --muted:#5c7391;
+  --accent:#123a66; --gold:#2f6fed; --gold-bg:#e7f0fd; --line:#d7e3f3;
+  box-sizing:border-box;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#0f1720; --card:#182432; --ink:#eaf1fb; --muted:#8fa6c4; --gold-bg:#16283f; --line:#28374d; }
+}
+:root[data-theme="dark"]{ --bg:#0f1720; --card:#182432; --ink:#eaf1fb; --muted:#8fa6c4; --gold-bg:#16283f; --line:#28374d; }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.topbar h1{font-size:15px;margin:0;color:var(--muted);font-weight:600;}
+.teacher-btn{font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:6px 12px;border-radius:20px;cursor:pointer;}
+.progress-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:6px;}
+.progress-track{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px;}
+.progress-fill{height:100%;background:var(--gold);transition:width .3s;}
+.card{background:var(--card);border-radius:14px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.tag{font-size:12.5px;padding:5px 13px;border-radius:20px;border:1.3px solid var(--gold);color:var(--gold);background:var(--gold-bg);font-weight:600;}
+.tag.level{border-color:var(--line);color:var(--muted);background:transparent;}
+.instr{background:var(--gold-bg);border-radius:10px;padding:12px 14px;font-size:14.5px;color:var(--ink);margin-bottom:16px;}
+.passage{border:1.5px dashed var(--line);border-radius:10px;padding:16px;margin-bottom:18px;text-align:center;font-weight:700;font-size:17px;background:var(--bg);}
+.qtext{font-size:19px;font-weight:700;margin:6px 0 18px;line-height:1.4;}
+.opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s;}
+.opt:hover{border-color:var(--gold);}
+.opt.selected{border-color:var(--accent);background:var(--gold-bg);}
+.opt .letter{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.opt.selected .letter{background:var(--accent);border-color:var(--accent);color:#fff;}
+.opt .txt{font-size:15.5px;}
+.nav{margin-top:20px;}
+.btn{width:100%;padding:15px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.btn-secondary{background:transparent;color:var(--ink);border:1.5px solid var(--line);margin-top:10px;}
+.intro h2{font-size:24px;margin:4px 0 8px;}
+.intro p{color:var(--muted);font-size:15px;line-height:1.6;}
+.intro ul{font-size:14.5px;color:var(--ink);line-height:1.9;padding-left:20px;}
+.field{margin-bottom:14px;text-align:left;}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:600;}
+.field input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;background:var(--card);color:var(--ink);font-family:inherit;}
+.result-score{font-size:44px;font-weight:800;text-align:center;margin:10px 0;}
+.result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px;}
+.badge-note{font-size:13px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><h1 id="topLabel">Practice Bank — Part 1: Notices</h1><button class="teacher-btn" onclick="toggleTeacher()">Teacher access</button></div>
+  <div id="app"></div>
+</div>
+<script>
+const items = [
+  // ===== CALLE / STREET =====
+  {theme:"Calle",level:"Pre-A1",passage:"STOP",question:"Where can you see this notice?",options:["on a street","in a kitchen","at a beach","in a bedroom"],answer:0},
+  {theme:"Calle",level:"A1",passage:"NO PARKING",question:"Where can you see this notice?",options:["on a street","in a library","at a pool","on a menu"],answer:0},
+  {theme:"Calle",level:"A1-A2",passage:"PEDESTRIANS ONLY",question:"Where can you see this notice?",options:["on a walking path","in a cinema hall","at a swimming pool","on a kitchen shelf"],answer:0},
+  {theme:"Calle",level:"A2",passage:"CROSS ONLY WHEN THE LIGHT IS GREEN",question:"Where can you see this notice?",options:["at a street crossing","in a classroom corner","at a restaurant table","on a hotel balcony"],answer:0},
+  {theme:"Calle",level:"B1",passage:"CYCLISTS ARE REQUESTED TO DISMOUNT WHILE CROSSING THIS BRIDGE",question:"Where can you see this notice?",options:["on a pedestrian bridge","in a busy office lobby","at a crowded swimming pool","inside a quiet library"],answer:0},
+
+  // ===== RESTAURANTE / RESTAURANT =====
+  {theme:"Restaurante",level:"Pre-A1",passage:"OPEN",question:"Where can you see this notice?",options:["at a restaurant","in a quiet forest area","on a public city bus","in a school classroom"],answer:0},
+  {theme:"Restaurante",level:"A1",passage:"PLEASE WAIT HERE",question:"Where can you see this notice?",options:["at a restaurant entrance","at a crowded bus stop sign","in a peaceful private garden","on a hotel's upper balcony"],answer:0},
+  {theme:"Restaurante",level:"A1-A2",passage:"NO OUTSIDE FOOD ALLOWED",question:"Where can you see this notice?",options:["at a restaurant","at a bus stop","in a public park","on a hiking trail"],answer:0},
+  {theme:"Restaurante",level:"A2",passage:"RESERVATIONS RECOMMENDED ON WEEKENDS",question:"Where can you see this notice?",options:["at a popular restaurant","at a small local hospital","in a school classroom","at a large public library"],answer:0},
+  {theme:"Restaurante",level:"B1",passage:"MANAGEMENT IS NOT RESPONSIBLE FOR ITEMS LEFT UNATTENDED AT THE TABLE",question:"Where can you see this notice?",options:["at a restaurant","at a train station platform","inside a public library","at a busy airport gate"],answer:0},
+
+  // ===== VIAJES / TRAVEL =====
+  {theme:"Viajes",level:"Pre-A1",passage:"GATE 5",question:"Where can you see this notice?",options:["at an airport","at a small school","in a busy kitchen","at a local bakery"],answer:0},
+  {theme:"Viajes",level:"A1",passage:"PLEASE SHOW YOUR TICKET",question:"Where can you see this notice?",options:["at a train station","in a quiet bedroom","at a public park","in a home kitchen"],answer:0},
+  {theme:"Viajes",level:"A1-A2",passage:"BAGGAGE CLAIM THIS WAY",question:"Where can you see this notice?",options:["at an airport","at a restaurant","in a classroom","at a small bakery"],answer:0},
+  {theme:"Viajes",level:"A2",passage:"ALL PASSENGERS MUST ARRIVE TWO HOURS BEFORE DEPARTURE",question:"Where can you see this notice?",options:["at an airport terminal","at a local movie cinema","at a public sports gym","at a small corner bakery"],answer:0},
+  {theme:"Viajes",level:"B1",passage:"PASSENGERS ARE ADVISED THAT FLIGHTS MAY BE DELAYED DUE TO WEATHER CONDITIONS",question:"Where can you see this notice?",options:["at an airport","at a large supermarket","inside a public library","at a quiet museum"],answer:0},
+
+  // ===== DEPORTE / SPORTS =====
+  {theme:"Deporte",level:"Pre-A1",passage:"GO TEAM!",question:"Where can you see this notice?",options:["at a stadium","in an office","at a hospital","in a kitchen"],answer:0},
+  {theme:"Deporte",level:"A1",passage:"NO BALLS ALLOWED",question:"Where can you see this notice?",options:["in a school hallway","at a sports stadium","at a public beach","in a quiet kitchen"],answer:0},
+  {theme:"Deporte",level:"A1-A2",passage:"LOCKER ROOM — MEMBERS ONLY",question:"Where can you see this notice?",options:["at a sports gym","at a public library","in a quiet kitchen","on a city street"],answer:0},
+  {theme:"Deporte",level:"A2",passage:"PLEASE RETURN EQUIPMENT AFTER USE",question:"Where can you see this notice?",options:["at a sports center","at a local bank","in a movie theater","at a train station"],answer:0},
+  {theme:"Deporte",level:"B1",passage:"SPECTATORS ARE KINDLY ASKED TO REMAIN SEATED UNTIL THE MATCH HAS ENDED",question:"Where can you see this notice?",options:["at a sports stadium","at a history museum","in a large supermarket","at a quiet library"],answer:0},
+
+  // ===== FIESTAS / PARTIES =====
+  {theme:"Fiestas",level:"Pre-A1",passage:"PARTY TONIGHT!",question:"Where can you see this notice?",options:["at an event hall","in a public hospital","at a city bank","in a school classroom"],answer:0},
+  {theme:"Fiestas",level:"A1",passage:"DRESS CODE: FORMAL",question:"Where can you see this notice?",options:["on a party invitation","on a printed bus ticket","on a restaurant food menu","on a city parking sign"],answer:0},
+  {theme:"Fiestas",level:"A1-A2",passage:"DOORS OPEN AT 8 P.M.",question:"Where can you see this notice?",options:["at a concert venue","at a public school","in a home kitchen","at a train station"],answer:0},
+  {theme:"Fiestas",level:"A2",passage:"NO ENTRY WITHOUT A TICKET",question:"Where can you see this notice?",options:["at a concert venue","at a public library","in a small park","at a grocery store"],answer:0},
+  {theme:"Fiestas",level:"B1",passage:"GUESTS ARE KINDLY REQUESTED TO CONFIRM ATTENDANCE BY THE END OF THE WEEK",question:"Where can you see this notice?",options:["on a party invitation","on a city parking sign","on a restaurant menu","on a public library card"],answer:0},
+
+  // ===== VACACIONES / VACATION =====
+  {theme:"Vacaciones",level:"Pre-A1",passage:"POOL OPEN",question:"Where can you see this notice?",options:["at a hotel","in an office","at a bank","in a kitchen"],answer:0},
+  {theme:"Vacaciones",level:"A1",passage:"CHECK-OUT AT NOON",question:"Where can you see this notice?",options:["at a hotel","at a school","at a hospital","in a garden"],answer:0},
+  {theme:"Vacaciones",level:"A1-A2",passage:"FREE WI-FI FOR GUESTS",question:"Where can you see this notice?",options:["at a hotel lobby","at a public gym","on a city street","in a school office"],answer:0},
+  {theme:"Vacaciones",level:"A2",passage:"PLEASE DO NOT DISTURB",question:"Where can you see this notice?",options:["on a hotel room door","on a restaurant menu","at a crowded bus stop","on a grocery receipt"],answer:0},
+  {theme:"Vacaciones",level:"B1",passage:"GUESTS ARE REMINDED THAT THE BEACH AREA CLOSES AT SUNSET FOR SAFETY REASONS",question:"Where can you see this notice?",options:["at a beach resort","at a train station","in a school classroom","at a city hospital"],answer:0},
+
+  // ===== TRABAJO / WORK =====
+  {theme:"Trabajo",level:"Pre-A1",passage:"MEETING ROOM",question:"Where can you see this notice?",options:["in an office","at a sunny beach","in a flower garden","at a local bakery"],answer:0},
+  {theme:"Trabajo",level:"A1",passage:"PLEASE KNOCK BEFORE ENTERING",question:"Where can you see this notice?",options:["outside an office","at a crowded bus stop","at a public beach","in a home kitchen"],answer:0},
+  {theme:"Trabajo",level:"A1-A2",passage:"EMPLOYEES MUST WASH HANDS",question:"Where can you see this notice?",options:["in a workplace kitchen","at a crowded sports stadium","in a large public park","on a busy city street"],answer:0},
+  {theme:"Trabajo",level:"A2",passage:"ALL VISITORS MUST SIGN IN AT RECEPTION",question:"Where can you see this notice?",options:["at an office building","at a public beach resort","on a crowded city bus","in a private home garden"],answer:0},
+  {theme:"Trabajo",level:"B1",passage:"STAFF ARE REMINDED THAT OVERTIME MUST BE APPROVED IN ADVANCE BY A SUPERVISOR",question:"Where can you see this notice?",options:["in a workplace","at a movie theater","in a public park","at a train station"],answer:0},
+
+  // ===== MEDIO AMBIENTE / ENVIRONMENT =====
+  {theme:"Medio Ambiente",level:"Pre-A1",passage:"RECYCLE",question:"Where can you see this notice?",options:["near a trash bin","in a tidy bedroom","at a city bank","on a dinner menu"],answer:0},
+  {theme:"Medio Ambiente",level:"A1",passage:"PLANT TREES HERE",question:"Where can you see this notice?",options:["in a public park","on a city bus","in a home kitchen","at a local bank"],answer:0},
+  {theme:"Medio Ambiente",level:"A1-A2",passage:"DO NOT LITTER",question:"Where can you see this notice?",options:["in a public park","in a classroom","at a bank counter","on a dinner plate"],answer:0},
+  {theme:"Medio Ambiente",level:"A2",passage:"SAVE WATER — TURN OFF THE TAP",question:"Where can you see this notice?",options:["in a public restroom","at a train platform","at a sports stadium","on a busy city street"],answer:0},
+  {theme:"Medio Ambiente",level:"B1",passage:"VISITORS ARE ENCOURAGED TO MINIMIZE PLASTIC USE WHILE EXPLORING THE NATURE RESERVE",question:"Where can you see this notice?",options:["at a nature reserve","at a local savings bank","in a small private office","at a large shopping mall"],answer:0},
+];
+
+function hashCode(str){ let h=0; for(let i=0;i<str.length;i++){ h=(h*31+str.charCodeAt(i))|0; } return Math.abs(h); }
+(function rebalanceAnswers(){
+  items.forEach((it,i)=>{
+    const n = it.options.length;
+    const target = hashCode(it.question+it.theme+(i*3)) % n;
+    if(target!==it.answer){
+      const tmp = it.options[target];
+      it.options[target] = it.options[it.answer];
+      it.options[it.answer] = tmp;
+      it.answer = target;
+    }
+  });
+})();
+
+let idx=-1;
+let answers = new Array(items.length).fill(null);
+let teacherMode=false;
+let student={name:'',grade:''};
+try{ const s=JSON.parse(localStorage.getItem('p1np_student')||'null'); if(s) student=s; }catch(e){}
+try{ const saved=JSON.parse(localStorage.getItem('p1np_progress')||'null'); if(saved && saved.length===items.length) answers=saved; }catch(e){}
+function save(){ try{ localStorage.setItem('p1np_progress', JSON.stringify(answers)); }catch(e){} }
+function toggleTeacher(){ teacherMode=!teacherMode; render(); }
+function letter(i){ return String.fromCharCode(65+i); }
+
+function renderIntro(){
+  document.getElementById('topLabel').textContent = "Practice Bank — Part 1";
+  const gradeOpts=[6,7,8,9,10,11].map(g=>`<option value="${g}" ${student.grade==g?'selected':''}>Grado ${g}°</option>`).join('');
+  return `<div class="card intro">
+    <div class="tags"><span class="tag">Part 1 — Notices</span><span class="tag level">Pre-A1 a B1</span></div>
+    <h2>Practice Bank: Notices by Theme</h2>
+    <p>40 avisos y carteles organizados en 8 temáticas (calle, restaurante, viajes, deporte, fiestas, vacaciones, trabajo, medio ambiente), subiendo de Pre-A1 a B1 dentro de cada tema.</p>
+    <div class="field"><label>Nombre (opcional)</label><input id="stuName" type="text" value="${student.name}" placeholder="Tu nombre"></div>
+    <div class="field"><label>Grado (opcional)</label><select id="stuGrade" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;background:var(--card);color:var(--ink);"><option value="">Selecciona tu grado</option>${gradeOpts}</select></div>
+    <ul><li>No hay límite de tiempo.</li><li>Lee cada aviso con calma antes de elegir.</li><li>Tu progreso se guarda en este dispositivo.</li></ul>
+    <div class="nav"><button class="btn btn-primary" onclick="startTest()">Start Practice</button></div>
+  </div>`;
+}
+function startTest(){
+  student = {name:document.getElementById('stuName').value.trim(), grade:document.getElementById('stuGrade').value};
+  try{ localStorage.setItem('p1np_student', JSON.stringify(student)); }catch(e){}
+  idx=0; render();
+}
+function renderItem(){
+  const it=items[idx]; const total=items.length; const pct=Math.round((idx/total)*100);
+  document.getElementById('topLabel').textContent = "Tema: "+it.theme;
+  const optsHtml = it.options.map((o,i)=>`<div class="opt ${answers[idx]===i?'selected':''}" onclick="selectOpt(${i})"><div class="letter">${letter(i)}</div><div class="txt">${o}</div></div>`).join('');
+  const teacherHtml = teacherMode ? `<p style="color:var(--gold);font-size:13px;margin-top:10px;">✔ Correct answer: ${letter(it.answer)}) ${it.options[it.answer]}</p>` : '';
+  return `<div class="progress-row"><span>Question ${idx+1} of ${total}</span><span>${pct}%</span></div>
+  <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  <div class="card">
+    <div class="tags"><span class="tag">${it.theme}</span><span class="tag level">Level ${it.level}</span></div>
+    <div class="instr">Read the notice. Choose where you can see it.</div>
+    <div class="passage">${it.passage}</div>
+    <div class="qtext">${it.question}</div>
+    ${optsHtml}${teacherHtml}
+    <div class="nav">
+      <button class="btn btn-primary" ${answers[idx]===null?'disabled':''} onclick="next()">${idx===total-1?'Finish':'Next'}</button>
+      ${idx>0?`<button class="btn btn-secondary" onclick="prev()">Previous</button>`:''}
+    </div>
+  </div>`;
+}
+function renderResults(){
+  document.getElementById('topLabel').textContent = "Results";
+  let correct=0; items.forEach((it,i)=>{ if(answers[i]===it.answer) correct++; });
+  const pct=Math.round((correct/items.length)*100);
+  const byLevel={}, byTheme={};
+  items.forEach((it,i)=>{
+    byLevel[it.level]=byLevel[it.level]||{c:0,t:0}; byLevel[it.level].t++; if(answers[i]===it.answer) byLevel[it.level].c++;
+    byTheme[it.theme]=byTheme[it.theme]||{c:0,t:0}; byTheme[it.theme].t++; if(answers[i]===it.answer) byTheme[it.theme].c++;
+  });
+  const levelOrder=["Pre-A1","A1","A1-A2","A2","B1"];
+  const lrows = levelOrder.filter(l=>byLevel[l]).map(l=>`<div class="result-row"><span>Level ${l}</span><span>${byLevel[l].c} / ${byLevel[l].t}</span></div>`).join('');
+  const trows = Object.keys(byTheme).map(t=>`<div class="result-row"><span>${t}</span><span>${byTheme[t].c} / ${byTheme[t].t}</span></div>`).join('');
+  return `<div class="card">
+    <div class="tags"><span class="tag">Practice complete</span>${student.name?`<span class="tag level">${student.name}${student.grade?' — Grado '+student.grade+'°':''}</span>`:''}</div>
+    <h2 style="margin:4px 0;">Your Score</h2>
+    <div class="result-score">${correct}/${items.length}</div>
+    <p style="text-align:center;color:var(--muted);margin-top:-10px;">${pct}% correct</p>
+    <h2 style="margin:18px 0 4px;font-size:17px;">Results by Level</h2>${lrows}
+    <h2 style="margin:18px 0 4px;font-size:17px;">Results by Theme</h2>${trows}
+    <div class="nav"><button class="btn btn-secondary" onclick="idx=0;render();window.scrollTo(0,0);">Review Answers</button></div>
+  </div>`;
+}
+function selectOpt(i){ answers[idx]=i; save(); render(); }
+function next(){ idx++; render(); window.scrollTo(0,0); }
+function prev(){ if(idx>0) idx--; render(); window.scrollTo(0,0); }
+function render(){
+  const app=document.getElementById('app');
+  if(idx===-1) app.innerHTML=renderIntro();
+  else if(idx>=items.length) app.innerHTML=renderResults();
+  else app.innerHTML=renderItem();
+}
+render();
+</script>
+</body>
+</html>
